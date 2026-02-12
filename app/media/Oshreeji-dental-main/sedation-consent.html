@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Procedural Sedation Consent Form</title>
+
+    <style>
+        /* Reset + Print Safe */
+        * {
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000;
+            font-size: 13px;
+            line-height: 1.3;
+            background: #fff;
+        }
+
+        .page-container {
+            width: 210mm;
+            /* A4 width */
+            min-height: 297mm;
+            /* A4 height */
+            margin: 0 auto;
+            padding: 15mm;
+            background: #fff;
+            /* page-break-after: always; */
+        }
+
+        .page-container:last-child {
+            page-break-after: auto;
+        }
+
+        /* Addressograph Box (works for both pages) */
+        .header-box,
+        .addressograph {
+            border: 1px solid #000;
+            width: 280px;
+            height: 70px;
+            float: right;
+            padding: 6px 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 90px;
+            margin-bottom: 15px;
+            clear: both;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .label {
+            font-weight: bold;
+            white-space: nowrap;
+            padding-right: 6px;
+            vertical-align: top;
+        }
+
+        .line-cell {
+            border-bottom: 1px solid #000;
+            width: 100%;
+            height: 16px;
+        }
+
+        .section-header,
+        .section-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 12px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .bullet-list {
+            margin: 5px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .bullet-list li {
+            margin-bottom: 3px;
+        }
+
+        /* Full width lines for blank writing areas */
+        .full-line {
+            border-bottom: 1px solid #000;
+            height: 18px;
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        /* Inline blank line */
+        .line {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            min-width: 200px;
+            height: 14px;
+            vertical-align: baseline;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .page-container {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===================== PAGE 1 ===================== -->
+    <div class="page-container">
+        <div class="header-box">ADDRESSOGRAPH</div>
+
+        <div class="title">Informed Consent Form for Administration of Procedural Sedation</div>
+
+        <table style="margin-bottom: 10px;">
+            <tr>
+                <td style="vertical-align: bottom;">
+                    I,
+                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px;">&nbsp;</span>,
+                    hereby give my informed consent to the medical team at [Your Organization/Hospital] to administer
+                    procedural sedation for the purpose of [describe the specific procedure]. I have had the opportunity
+                    to discuss the procedure, its risks, benefits, alternatives, and expected outcomes with the
+                    healthcare provider listed below. I understand the nature of the procedure, the potential risks
+                    involved, and the sedation techniques that will be used.
+                </td>
+            </tr>
+        </table>
+
+        <table style="margin-top: 5px;">
+            <tr>
+                <td colspan="2" class="label" style="padding-bottom: 8px;">Procedure Details:</td>
+            </tr>
+            <tr>
+                <td class="label" style="width: 80px;">Procedure:</td>
+                <td class="line-cell"></td>
+            </tr>
+            <tr>
+                <td class="label" style="padding-top: 8px;">Date and Time:</td>
+                <td class="line-cell"></td>
+            </tr>
+            <tr>
+                <td class="label" style="padding-top: 8px;">Name of the consultant doctor:</td>
+                <td class="line-cell"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top: 8px;">Purpose of the Procedure:</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="font-size: 11px; font-style: italic; color: #444;">
+                    Please describe the purpose of the procedure in simple, understandable terms.
+                </td>
+            </tr>
+        </table>
+
+        <span class="section-header">Risks:</span>
+        <p style="margin: 5px 0;">
+            I have been informed of the potential risks associated with the administration of procedural sedation,
+            including but not limited to:
+        </p>
+        <div class="full-line"></div>
+        <div class="full-line"></div>
+
+        <ul class="bullet-list">
+            <li><strong>Allergic reactions to sedative medications</strong></li>
+            <li>Respiratory depression or difficulty breathing</li>
+            <li>Changes in heart rate or blood pressure</li>
+            <li>Infection or bleeding at the site of the procedure</li>
+            <li>Nausea, vomiting, or other gastrointestinal disturbances</li>
+            <li>Headache or dizziness</li>
+            <li>Adverse drug reactions</li>
+            <li>In extremely rare cases, sedation-related complications resulting in disability or death</li>
+        </ul>
+
+        <span class="section-header">Benefits:</span>
+        <p style="margin: 5px 0;">
+            I have also been informed of the potential benefits of undergoing procedural sedation, which include:
+        </p>
+        <ul class="bullet-list">
+            <li>Increased comfort during the procedure</li>
+            <li>Reduced anxiety and stress</li>
+            <li>Enhanced cooperation and compliance</li>
+            <li>Improved procedural success rate</li>
+        </ul>
+
+        <span class="section-header">Alternatives:</span>
+        <p style="margin: 5px 0;">
+            I have been informed of the alternatives to procedural sedation, including but not limited to:
+        </p>
+        <div class="full-line"></div>
+    </div>
+
+    <!-- ===================== PAGE 2 (same CSS) ===================== -->
+    <div class="page-container">
+        <div class="addressograph">ADDRESSOGRAPH</div>
+
+        <!-- (If your original page-2 image doesn't have title, you can remove this title block) -->
+        <div class="title" style="margin-top:90px;">
+        </div>
+
+        <p style="margin:0 0 10px 0;">Local anesthesia</p>
+        <p style="margin:0 0 10px 0;">General anesthesia</p>
+        <p style="margin:0 0 12px 0;">
+            Non-pharmacological techniques such as distraction, relaxation, or cognitive-behavioral therapy
+        </p>
+
+        <p style="margin:0 0 12px 0;">
+            I understand that I have the right to ask questions about the procedure, its risks and benefits, and
+            the available alternatives. The healthcare provider has addressed all my concerns to my satisfaction,
+            and I am aware that I have the right to withdraw my consent at any time before the procedure.
+        </p>
+
+        <span class="section-title" style="text-decoration:none; font-weight:bold;">Confidentiality and Data
+            Privacy:</span>
+
+        <p style="margin:0 0 12px 0;">
+            I understand that my personal health information will be handled in accordance with the applicable
+            laws and regulations regarding patient confidentiality and data privacy. I authorize the use of my
+            health information for the purpose of this procedure and any related medical documentation or
+            billing processes.
+        </p>
+
+        <p style="margin:0 0 12px 0;">
+            I acknowledge that no guarantees have been made regarding the outcome of the procedure, and
+            unforeseen circumstances or complications may arise during or after the sedation.
+        </p>
+
+        <p style="margin:0 0 16px 0;">
+            By signing below, I confirm that I have read and understood the information provided to me
+            regarding the procedure, risks, benefits, and alternatives. I have had the opportunity to ask questions
+            and have received satisfactory answers. I voluntarily consent to the administration of procedural
+            sedation.
+        </p>
+
+        <div style="margin-top:14px;">Patient Signature and name: <span class="line" style="min-width:140px;"></span>
+        </div>
+        <div style="margin-top:14px;">Witness Signature and name: <span class="line" style="min-width:140px;"></span>
+        </div>
+        <div style="margin-top:14px;">Consultant doctor name and Signature: <span class="line"
+                style="min-width:140px;"></span></div>
+    </div>
+    <!-- ===================== PAGE 1 ===================== -->
+    <div class="page-container">
+        <div class="header-box">ADDRESSOGRAPH</div>
+
+        <div class="title">પ્રક્રિયાત્મક સેડેશન આપવા માટે જાણકારી આધારિત સંમતિ પત્ર</div>
+
+        <table style="margin-bottom: 10px;">
+            <tr>
+                <td style="vertical-align: bottom;">
+                    હું,
+                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px;">&nbsp;</span>,
+                    આથી <strong>[તમારી સંસ્થા/હોસ્પિટલનું નામ]</strong> ની તબીબી ટીમને
+                    <strong>[ચોક્કસ પ્રક્રિયાનું વર્ણન]</strong> કરવા માટે જરૂરી પ્રક્રિયાત્મક સેડેશન આપવા
+                    મારી જાણકારી આધારિત સંમતિ આપું છું.
+                    મને પ્રક્રિયા, તેના જોખમો, લાભો, વિકલ્પો અને અપેક્ષિત પરિણામો અંગે નીચે દર્શાવેલ આરોગ્ય સેવા પ્રદાતા
+                    સાથે
+                    ચર્ચા કરવાની તક આપવામાં આવી છે. હું પ્રક્રિયાની સ્વરૂપતા, તેમાં સામેલ સંભવિત જોખમો અને ઉપયોગમાં
+                    લેવાતી
+                    સેડેશન પદ્ધતિઓને સમજું છું.
+                </td>
+            </tr>
+        </table>
+
+        <table style="margin-top: 5px;">
+            <tr>
+                <td colspan="2" class="label" style="padding-bottom: 8px;">પ્રક્રિયા વિગતો:</td>
+            </tr>
+
+            <tr>
+                <td class="label" style="width: 90px;">પ્રક્રિયા:</td>
+                <td class="line-cell"></td>
+            </tr>
+
+            <tr>
+                <td class="label" style="padding-top: 8px;">તારીખ અને સમય:</td>
+                <td class="line-cell"></td>
+            </tr>
+
+            <tr>
+                <td class="label" style="padding-top: 8px;">કન્સલ્ટન્ટ ડોક્ટરનું નામ:</td>
+                <td class="line-cell"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="padding-top: 8px;"><strong>પ્રક્રિયાનો હેતુ:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="font-size: 11px; font-style: italic; color: #444;">
+                    કૃપા કરીને પ્રક્રિયાનો હેતુ સરળ અને સમજાય તેવી ભાષામાં વર્ણવો.
+                </td>
+            </tr>
+        </table>
+
+        <span class="section-header">જોખમો:</span>
+        <p style="margin: 5px 0;">
+            મને પ્રક્રિયાત્મક સેડેશન આપવાના સંભવિત જોખમો વિશે માહિતગાર કરવામાં આવ્યો છે, જેમાં નીચે મુજબના જોખમો સામેલ
+            છે
+            (પરંતુ માત્ર એટલા સુધી મર્યાદિત નથી):
+        </p>
+
+        <div class="full-line"></div>
+        <div class="full-line"></div>
+
+        <ul class="bullet-list">
+            <li><strong>સેડેટિવ દવાઓથી એલર્જીક પ્રતિક્રિયા</strong></li>
+            <li>શ્વાસ લેવામાં તકલીફ અથવા શ્વાસમાં ઘટાડો</li>
+            <li>હૃદયની ધબકારા અથવા રક્તચાપમાં ફેરફાર</li>
+            <li>પ્રક્રિયા સ્થળે ચેપ અથવા રક્તસ્ત્રાવ</li>
+            <li>ઊબકા, ઉલ્ટી અથવા અન્ય જઠરાંત્રિય તકલીફો</li>
+            <li>માથાનો દુખાવો અથવા ચક્કર</li>
+            <li>દવાઓની પ્રતિકૂળ પ્રતિક્રિયા</li>
+            <li>અત્યંત દુર્લભ કિસ્સાઓમાં સેડેશન સંબંધિત જટિલતાઓ જે અપંગતા અથવા મૃત્યુ સુધી લઈ જઈ શકે</li>
+        </ul>
+
+        <span class="section-header">લાભો:</span>
+        <p style="margin: 5px 0;">
+            મને પ્રક્રિયાત્મક સેડેશનના સંભવિત લાભો વિશે પણ માહિતગાર કરવામાં આવ્યો છે, જેમાં નીચે મુજબનો સમાવેશ થાય છે:
+        </p>
+        <ul class="bullet-list">
+            <li>પ્રક્રિયા દરમિયાન વધુ આરામ</li>
+            <li>ચિંતા અને તણાવમાં ઘટાડો</li>
+            <li>વધુ સહકાર અને અનુપાલન</li>
+            <li>પ્રક્રિયાની સફળતા દરમાં વધારો</li>
+        </ul>
+
+        <span class="section-header">વિકલ્પો:</span>
+        <p style="margin: 5px 0;">
+            મને પ્રક્રિયાત્મક સેડેશનના વિકલ્પો વિશે માહિતગાર કરવામાં આવ્યો છે, જેમાં નીચે મુજબનો સમાવેશ થાય છે (પરંતુ
+            માત્ર
+            એટલા સુધી મર્યાદિત નથી):
+        </p>
+
+        <div class="full-line"></div>
+    </div>
+
+    <!-- ===================== PAGE 2 ===================== -->
+    <div class="page-container">
+        <div class="header-box">ADDRESSOGRAPH</div>
+
+        <div class="title" style="margin-top: 20px;">પ્રક્રિયાત્મક સેડેશન આપવા માટે જાણકારી આધારિત સંમતિ પત્ર</div>
+
+        <p style="margin:0 0 10px 0;">સ્થાનિક એનેસ્થેશિયા</p>
+        <p style="margin:0 0 10px 0;">સામાન્ય એનેસ્થેશિયા</p>
+        <p style="margin:0 0 12px 0;">
+            દવાઓ વિના પદ્ધતિઓ જેમ કે ધ્યાન ભટકાવવું, આરામ તકનીકો અથવા જ્ઞાન-વર્તન થેરાપી
+        </p>
+
+        <p style="margin:0 0 12px 0;">
+            હું સમજું છું કે મને પ્રક્રિયા, તેના જોખમો અને લાભો તથા ઉપલબ્ધ વિકલ્પો વિશે પ્રશ્ન પૂછવાનો અધિકાર છે.
+            આરોગ્ય સેવા પ્રદાતાએ મારા તમામ પ્રશ્નોના સંતોષકારક જવાબ આપ્યા છે અને મને જાણ છે કે પ્રક્રિયા શરૂ થાય તે
+            પહેલાં
+            કોઈ પણ સમયે હું મારી સંમતિ પાછી ખેંચી શકું છું.
+        </p>
+
+        <span class="section-header" style="text-decoration:none; font-weight:bold;">ગોપનીયતા અને માહિતી સુરક્ષા:</span>
+
+        <p style="margin:0 0 12px 0;">
+            હું સમજું છું કે મારી વ્યક્તિગત આરોગ્ય માહિતી દર્દીની ગોપનીયતા અને માહિતી સુરક્ષા સંબંધિત લાગુ કાયદા અને
+            નિયમો
+            અનુસાર સંભાળવામાં આવશે. હું આ પ્રક્રિયા અને સંબંધિત તબીબી દસ્તાવેજીકરણ અથવા બિલિંગ પ્રક્રિયા માટે મારી
+            આરોગ્ય
+            માહિતીના ઉપયોગને અધિકૃત કરું છું.
+        </p>
+
+        <p style="margin:0 0 12px 0;">
+            હું સ્વીકારું છું કે પ્રક્રિયાના પરિણામ અંગે કોઈ ગેરંટી આપવામાં આવી નથી અને સેડેશન દરમિયાન અથવા ત્યારબાદ
+            અનિચ્છનીય પરિસ્થિતિઓ અથવા જટિલતાઓ ઊભી થઈ શકે છે.
+        </p>
+
+        <p style="margin:0 0 16px 0;">
+            નીચે સહી કરીને, હું ખાતરી આપું છું કે પ્રક્રિયા, તેના જોખમો, લાભો અને વિકલ્પો અંગે આપવામાં આવેલી માહિતી મેં
+            વાંચી
+            અને સમજી છે. મને પ્રશ્ન પૂછવાની તક મળી છે અને સંતોષકારક જવાબ મળ્યા છે. હું સ્વૈચ્છિક રીતે પ્રક્રિયાત્મક
+            સેડેશન
+            આપવા માટે સંમતિ આપું છું.
+        </p>
+
+        <div style="margin-top:14px;">દર્દીની સહી અને નામ: <span class="line" style="min-width:200px;"></span></div>
+        <div style="margin-top:14px;">સાક્ષીની સહી અને નામ: <span class="line" style="min-width:200px;"></span></div>
+        <div style="margin-top:14px;">કન્સલ્ટન્ટ ડોક્ટરનું નામ અને સહી: <span class="line"
+                style="min-width:200px;"></span></div>
+    </div>
+</body>
+
+</html>

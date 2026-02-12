@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consent for Anesthesia Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            color: #000;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+            text-transform: uppercase;
+            font-size: 28px;
+            margin-bottom: 50px;
+        }
+
+        .consent-line {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .dotted-line {
+            border-bottom: 1px solid black;
+            display: inline-block;
+            min-width: 150px;
+        }
+
+        ol {
+            padding-left: 40px;
+        }
+
+        ol li {
+            margin-bottom: 10px;
+        }
+
+        .checkbox-section {
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid black;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        /* Table Layout for the Signature Section */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        td {
+            padding: 8px 0;
+            vertical-align: bottom;
+        }
+
+        .label {
+            width: 1%;
+            white-space: nowrap;
+            padding-right: 10px;
+        }
+
+        .input-line {
+            border-bottom: 1px solid black;
+        }
+
+        .colon {
+            width: 1%;
+            padding-right: 5px;
+        }
+
+        .line {
+            border-bottom: 1.5px solid black;
+            /* Solid line looks cleaner for printing, change to 'dotted' if preferred */
+            min-width: 150px;
+        }
+
+        .spacer {
+            width: 5%;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+            }
+
+            .container {
+                width: 100%;
+                border: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Consent for Anesthesia</h1>
+
+        <div class="consent-line">
+            I <span class="dotted-line" style="min-width: 350px;"></span> give my consent to Dr.
+            <span class="dotted-line" style="min-width: 250px;"></span> for my relative Mr./Mrs.
+            <span class="dotted-line" style="min-width: 250px;"></span> for local anaesthesia.
+        </div>
+
+        <ol>
+            <li>The anaesthesia outcome, possible side effects (complications) has been thoroughly explained to me by
+                Anaesthetist/ staff.</li>
+            <li>I have been explained that anaesthesia may not be completely safe and may be risky to any healthy person
+                too.</li>
+            <li>I give the permission to do any required changes or give medications as necessary during anaesthesia.
+            </li>
+            <li>I have been informed that during anaesthesia there may be a possibility of any complication. eg.:
+                cardiac arrest, severe haemorrhage, infection, hypertension, pulmonary embolism etc. I trust fully if it
+                happens anaesthetist Dr. <span class="dotted-line" style="min-width: 350px;"></span> or any other doctor
+                appointed through them me accordingly. I agree with their decisions. I have read this form/ this form
+                has been read out to me.</li>
+            <li>Alternatives: <span class="dotted-line" style="width: 80%;"></span><br>
+                <span class="dotted-line" style="width: 100%; margin-top: 10px;"></span>
+            </li>
+            <li>Benefits: <span class="dotted-line" style="width: 85%;"></span><br>
+                <span class="dotted-line" style="width: 100%; margin-top: 10px;"></span>
+            </li>
+            <li>I understand the above written instructions and I give the permission in fully conscious status; without
+                any pressure.</li>
+        </ol>
+
+        <div class="checkbox-section">
+            <div class="box"></div>
+            We will do patch test for precaution of the allergic complication.
+        </div>
+
+        <table>
+            <tr>
+                <td class="label">Date</td>
+                <td class="colon">:</td>
+                <td class="line" style="width: 25%;"></td>
+                <td class="spacer"></td>
+                <td class="label">Name of the Patient</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+            </tr>
+            <tr>
+                <td class="label">Time</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+                <td class="spacer"></td>
+                <td class="label">Sign. Of the Patient</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+            </tr>
+            <tr>
+                <td class="label">Name of the Unit Nurse</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+                <td class="spacer"></td>
+                <td class="label">Name of the Relative</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+            </tr>
+            <tr>
+                <td class="label">Name of the Medical Officer</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+                <td class="spacer"></td>
+                <td class="label">Relation with Patient</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+            </tr>
+            <tr>
+                <td class="label">Name of the Anaesthetist</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+                <td class="spacer"></td>
+                <td class="label">Sign. Of the Relative</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+            </tr>
+            <tr>
+                <td class="label">Sign. Of Anaesthetist</td>
+                <td class="colon">:</td>
+                <td class="line"></td>
+                <td colspan="4"></td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>

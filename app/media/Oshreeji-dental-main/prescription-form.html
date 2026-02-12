@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            /* background-color: #f0f0f0; */
+        }
+
+        /* Container for the paper */
+        .prescription-paper {
+            /* background-color: white; */
+            width: 210mm;
+            /* A4 Width */
+            min-height: 297mm;
+            /* A4 Height */
+            margin: 0 auto;
+            padding: 50px;
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 40px;
+            text-decoration: none;
+        }
+
+        /* Patient Info Section */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            column-gap: 40px;
+            row-gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .label {
+            font-weight: 500;
+            white-space: nowrap;
+            margin-right: 5px;
+        }
+
+        .dotted-line {
+            flex-grow: 1;
+            border-bottom: 1px solid #333;
+            height: 1.2em;
+        }
+
+        /* Clinical Details */
+        .clinical-section {
+            margin-top: 30px;
+            line-height: 2.2;
+        }
+
+        .clinical-item {
+            margin-bottom: 10px;
+        }
+
+        /* Medicine Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+            height: 25px;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            font-size: 14px;
+        }
+
+        /* Footer sections */
+        .footer-info {
+            margin-top: 30px;
+            line-height: 2;
+        }
+
+        .signature-section {
+            margin-top: 50px;
+        }
+
+        /* Print Specifics */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .prescription-paper {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="prescription-paper">
+        <h1>Prescription form:</h1>
+
+        <div class="info-grid">
+            <div class="info-item"><span class="label">UHID No.</span>
+                <div class="dotted-line"></div>
+            </div>
+            <div class="info-item"><span class="label">Name of the patient:</span>
+                <div class="dotted-line"></div>
+            </div>
+
+            <div class="info-item"><span class="label">Age/Sex:</span>
+                <div class="dotted-line"></div>
+            </div>
+            <div class="info-item"><span class="label">Address:</span>
+                <div class="dotted-line"></div>
+            </div>
+
+            <div class="info-item"><span class="label">Mobile No.:</span>
+                <div class="dotted-line"></div>
+            </div>
+            <div class="info-item"><span class="label">Consultant name:</span>
+                <div class="dotted-line"></div>
+            </div>
+
+            <div class="info-item" style="width: 60%;"><span class="label">Date:</span>
+                <div class="dotted-line"></div>
+            </div>
+        </div>
+
+        <div class="clinical-section">
+            <div class="clinical-item"><strong>Diagnosis:</strong></div>
+            <div class="clinical-item"><strong>Chief complain:</strong></div>
+            <div class="clinical-item"><strong>Symptoms:</strong></div>
+            <div class="clinical-item"><strong>Medicine:</strong></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">Sr. No.</th>
+                    <th style="width: 25%;">Name of the medicine</th>
+                    <th style="width: 15%;">Generic name</th>
+                    <th style="width: 10%;">Dosage</th>
+                    <th style="width: 10%;">Quantity</th>
+                    <th style="width: 15%;">Frequency</th>
+                    <th style="width: 20%;">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer-info">
+            <div><strong>Next follow-up date:</strong> ____________________</div>
+            <div><strong>Remarks :</strong> ______________________________________________________________________</div>
+        </div>
+
+        <div class="signature-section">
+            <strong>SNDTR of consultant doctor:</strong> ____________________
+        </div>
+    </div>
+
+</body>
+
+</html>

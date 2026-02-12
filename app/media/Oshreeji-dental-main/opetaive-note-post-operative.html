@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operation Notes + Post Operative Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f0f0;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        /* ===== A4 Page ===== */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            background: #fff;
+            margin: 12px auto;
+            padding: 16mm 14mm;
+            /* inner white margin like image */
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .12);
+            /* page-break-after: always; */
+            position: relative;
+        }
+
+        /* common light borders like images */
+        .t {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .t td,
+        .t th {
+            border: 1px solid #d0d0d0;
+            padding: 6px 8px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .muted-line {
+            border-top: 4px solid #e2e2e2;
+            border-bottom: 1px solid #d0d0d0;
+        }
+
+        .titleRow {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .titleText {
+            flex: 1;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-top: 18px;
+        }
+
+        .addrBox {
+            width: 120px;
+            height: 70px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .leftSpacer {
+            width: 120px;
+            height: 70px;
+        }
+
+        .sectionHead {
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            padding: 6px 0;
+            border-top: 4px solid #e2e2e2;
+            border-bottom: 1px solid #d0d0d0;
+            margin: 10px 0 0 0;
+        }
+
+        .chk {
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            border: 1px solid #999;
+            margin: 0 6px -2px 10px;
+            background: #fff;
+        }
+
+        /* ===== Page 1 - Operation Notes ===== */
+        .labelCell {
+            width: 18%;
+        }
+
+        .smallCell {
+            width: 12%;
+        }
+
+        .subline {
+            border: none !important;
+            padding: 10px 2px 6px 2px !important;
+            font-size: 13px;
+        }
+
+        .opFindings {
+            height: 240px;
+            vertical-align: top !important;
+        }
+
+        /* ===== Page 2 - Operative steps + events ===== */
+        .bigBox {
+            border: 1px solid #d0d0d0;
+            height: 430px;
+            position: relative;
+            margin-top: 4px;
+            background: #fff;
+        }
+
+        .bigBox .topLabel {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            font-size: 13px;
+            color: #444;
+        }
+
+        .bigBox .bottomText {
+            position: absolute;
+            left: 10px;
+            bottom: 12px;
+            font-size: 13px;
+            line-height: 1.9;
+            color: #333;
+            width: 92%;
+        }
+
+        .midRow {
+            margin-top: 10px;
+            border-top: 4px solid #e2e2e2;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 7px 0;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .sigLine {
+            display: inline-block;
+            border-bottom: 1px solid #777;
+            width: 70%;
+            height: 12px;
+            vertical-align: baseline;
+        }
+
+        /* ===== Page 3 - Post Operative Orders lined page ===== */
+        .outerFrame {
+            position: absolute;
+            top: 10mm;
+            left: 10mm;
+            right: 10mm;
+            bottom: 10mm;
+            border: 1px solid #9a9a9a;
+            pointer-events: none;
+        }
+
+        .innerFrame {
+            position: absolute;
+            top: 18mm;
+            left: 18mm;
+            right: 18mm;
+            bottom: 18mm;
+            border: 2px solid #3a3a3a;
+            box-sizing: border-box;
+        }
+
+        .pooContent {
+            position: absolute;
+            top: 18mm;
+            left: 18mm;
+            right: 18mm;
+            bottom: 18mm;
+            padding: 14mm 14mm;
+            box-sizing: border-box;
+        }
+
+        .continueTxt {
+            font-size: 14px;
+            color: #000;
+            margin: 0 0 8mm 0;
+        }
+
+        .pooSigWrap {
+            text-align: center;
+            margin-top: 70mm;
+            /* keeps signature around middle like image */
+            font-size: 14px;
+            color: #111;
+        }
+
+        .pooSigWrap .line2 {
+            display: inline-block;
+            width: 60%;
+            border-bottom: 1px solid #777;
+            height: 12px;
+            vertical-align: baseline;
+        }
+
+        .pooHeader {
+            margin-top: 10mm;
+            border-top: 1px solid #777;
+            border-bottom: 1px solid #777;
+            padding: 10px 0 8px 0;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .linesTable {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 0;
+        }
+
+        .linesTable td {
+            border-bottom: 1px solid #777;
+            height: 22px;
+            padding: 0;
+        }
+
+        .pooBottomSig {
+            position: absolute;
+            left: 14mm;
+            right: 14mm;
+            bottom: 10mm;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .pooBottomSig .line3 {
+            display: inline-block;
+            width: 62%;
+            border-bottom: 1px solid #777;
+            height: 12px;
+            vertical-align: baseline;
+        }
+
+        /* ===== Print ===== */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                margin: 0;
+                padding: 0;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===================== PAGE 1 (image-0001) ===================== -->
+    <div class="page">
+        <div class="titleRow">
+            <div class="leftSpacer"></div>
+            <div class="titleText">OPERATION NOTES</div>
+            <div class="addrBox">ADDRESSOGRAPH</div>
+        </div>
+
+        <table class="t">
+            <tr>
+                <td class="labelCell">Date:</td>
+                <td></td>
+                <td class="smallCell">Time:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Operating Surgeon:</td>
+                <td></td>
+                <td>Speciality:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Operating Surgeon:</td>
+                <td></td>
+                <td>Speciality:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Asst. Surgeon:</td>
+                <td></td>
+                <td>Speciality:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Anesthetist</td>
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td>Dentist/Dental assistant:</td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr>
+                <td colspan="4" class="subline">Pre operative diagnosis:</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="subline">Post operative diagnosis:</td>
+            </tr>
+
+            <tr>
+                <td colspan="4" style="border-top:none;">
+                    Surgery type:
+                    <span class="chk"></span>Clean
+                    <span class="chk"></span>Clean contaminated
+                    <span class="chk"></span>Dirty
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:26%;">Type of surgery</td>
+                <td colspan="3">Name of operation</td>
+            </tr>
+            <tr>
+                <td>
+                    <div><span class="chk" style="margin-left:0;"></span>Emergency</div>
+                    <div style="margin-top:6px;"><span class="chk" style="margin-left:0;"></span>Elective</div>
+                </td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr>
+                <td>Date:</td>
+                <td colspan="3" style="font-size:13px;">
+                    Start Time: ________&nbsp;&nbsp;M,&nbsp;&nbsp;&nbsp;&nbsp;
+                    End Time: ________&nbsp;&nbsp;M,&nbsp;&nbsp;&nbsp;&nbsp;
+                    Total Hrs: ________
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="4">
+                    Ttpe of anaesthesia
+                    <span class="chk"></span>GA
+                    <span class="chk"></span>LA
+                    <span class="chk"></span>SPINAL
+                    <span class="chk"></span>EPIDURAL
+                    <span class="chk"></span>REGIONAL
+                </td>
+            </tr>
+        </table>
+
+        <div class="sectionHead">OPERATIVE STEPS</div>
+
+        <table class="t" style="margin-top:0;">
+            <tr>
+                <td>Position</td>
+            </tr>
+            <tr>
+                <td>Identification of operating part</td>
+            </tr>
+            <tr>
+                <td>Incision</td>
+            </tr>
+            <tr>
+                <td class="opFindings">Operation findings</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ===================== PAGE 2 (image-0002) ===================== -->
+    <div class="page">
+        <div class="sectionHead" style="margin-top:0;">OPERATIVE STEPS</div>
+
+        <div class="bigBox">
+            <div class="topLabel">Important Steps</div>
+
+            <div class="bottomText">
+                Drain:<br />
+                Sponge &amp; gauze count done:<br />
+                Instrument count done:<br />
+                Closure:<br />
+                Skin closure with:<br />
+                Sterile dressings kept.
+            </div>
+        </div>
+
+        <div class="midRow">INTRAOPERATIVE EVENTS / COMPLICATIONS:</div>
+
+        <table class="t" style="margin-top:0;">
+            <tr>
+                <td>Blood loss:</td>
+                <td>Blood products used:</td>
+            </tr>
+            <tr>
+                <td style="height:44px; vertical-align:top;">Implants used:</td>
+                <td style="height:44px;"></td>
+            </tr>
+            <tr>
+                <td>Specimen send for HPE</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Immidiate post op. recovery</td>
+                <td>
+                    Patient transferred to:
+                    <span class="chk" style="margin-left:10px;"></span>Room
+                    <span class="chk"></span>ICU care
+                </td>
+            </tr>
+        </table>
+
+        <div class="midRow" style="margin-top:14px;">POST OPERATIVE CARE SEE POST OPERATIVE ORDERS</div>
+
+        <div style="margin-top:10px; font-size:13px;">
+            Name of surgeon: <span class="sigLine"></span>
+        </div>
+        <div style="margin-top:10px; font-size:13px;">
+            Sign: <span class="sigLine" style="width:40%;"></span>
+            <span style="display:inline-block; width:30px;"></span>
+            Date / Time: <span class="sigLine" style="width:40%;"></span>
+        </div>
+    </div>
+
+    <!-- ===================== PAGE 3 (image-0003) ===================== -->
+    <div class="page">
+        <div class="outerFrame"></div>
+
+        <div class="pooContent">
+            <p class="continueTxt">Continue...</p>
+
+            <div class="pooSigWrap">
+                Surgeon's Signature : <span class="line2"></span>
+            </div>
+
+            <div class="pooHeader">POST OPERATIVE ORDERS</div>
+
+            <!-- lined writing area -->
+            <table class="linesTable">
+                <!-- adjust number of lines if needed -->
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+            </table>
+
+            <div class="pooBottomSig">
+                Surgeon's Signature : <span class="line3"></span>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

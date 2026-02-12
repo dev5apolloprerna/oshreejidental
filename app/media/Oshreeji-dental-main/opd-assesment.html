@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Assessment Form</title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .page-container {
+            width: 800px;
+            /* Standard A4-ish width */
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .header-title {
+            text-align: center;
+            text-decoration: underline;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .input-line {
+            min-height: 20px;
+        }
+
+        .triage-box {
+            display: inline-block;
+            width: 30px;
+            height: 15px;
+            border: 1px solid black;
+            vertical-align: middle;
+            margin-left: 5px;
+            margin-right: 10px;
+        }
+
+        .med-table td {
+            height: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+        <table>
+            <tr>
+                <td colspan="6" class="header-title">PATIENT ASSESSMENT FORM</td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><span class="label">Name:</span></td>
+                <td colspan="1"><span class="label">Reg. No.:</span></td>
+                <td colspan="1"><span class="label">Date :</span></td>
+                <td colspan="1"><span class="label">Time:</span></td>
+            </tr>
+
+            <tr>
+                <td colspan="3" rowspan="2"><span class="label">Address:</span></td>
+                <td colspan="1"><span class="label">Age :</span></td>
+                <td colspan="2"><span class="label">Sex :</span></td>
+            </tr>
+            <tr>
+                <td colspan="1" style="border-top: none;"></td>
+                <td colspan="2" style="border-top: none;"></td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><span class="label">Allergies:</span></td>
+                <td colspan="3">
+                    <span class="label">Triage Priority : 1</span>
+                    <div class="triage-box"></div>
+                    <span class="label">2</span>
+                    <div class="triage-box"></div>
+                    <span class="label">3</span>
+                    <div class="triage-box"></div>
+                    <span class="label">4</span>
+                    <div class="triage-box"></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" style="height: 40px;">
+                    <span class="label">Chief Complain/ODP :</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="height: 40px;">
+                    <span class="label">Past Medical History:</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="background-color: #ffffff;">
+                    <span class="label">Medicine reconciliation:</span>
+                </td>
+            </tr>
+
+            <tr style="text-align: center; font-weight: bold;">
+                <td colspan="1" style="width: 20%;">List only those medications currently being taken</td>
+                <td colspan="1" style="width: 15%;">(Units)<br>Dosage</td>
+                <td colspan="1">Frequency</td>
+                <td colspan="1">Route</td>
+                <td colspan="2">Home medications continued at discharge?</td>
+            </tr>
+
+            <script>
+                for (let i = 0; i < 8; i++) {
+                    document.write('<tr><td>&nbsp;</td><td></td><td></td><td></td><td colspan="2"></td></tr>');
+                }
+            </script>
+
+            <tr>
+                <td colspan="6" style="height: 30px;">
+                    <span class="label">Past Hospitalization / Surgery:</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="height: 30px;">
+                    <span class="label">Family History:</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="height: 90px;">
+                    <span class="label">Medicines:</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6">
+                    <span class="label">General Examination:</span>
+                    <table style="border: none; margin-top: 10px;">
+                        <tr style="border: none;">
+                            <td style="border: none; width: 25%;">BP :</td>
+                            <td style="border: none; width: 25%;">Pulse:</td>
+                            <td style="border: none; width: 25%;">RR :</td>
+                            <td style="border: none; width: 25%;">Temp :</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">Height:</td>
+                            <td style="border: none;">Weight:</td>
+                            <td style="border: none;"></td>
+                            <td style="border: none;"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td style="height: 100px;">
+                    <span class="label">Investigations :</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="height: 100px;">
+                    <span class="label">Diagnosis :</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="height: 300px; position: relative;">
+                    <span class="label">Advice:</span>
+
+                    <div style="position: absolute; bottom: 15px; left: 10px;">
+                        <span class="label">Doctor Name</span><br>
+                        <span class="label">and Signature:</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>

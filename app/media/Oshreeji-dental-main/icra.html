@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICRA Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        /* Container for the form */
+        .form-container {
+            background-color: white;
+            width: 210mm;
+            margin: 0 auto 18px auto;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: top;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .header-cell {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        .subheader {
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .section-title {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .no-border-bottom {
+            border-bottom: none;
+        }
+
+        .no-border-top {
+            border-top: none;
+        }
+
+        .list-item {
+            margin-bottom: 5px;
+            display: flex;
+        }
+
+        .list-number {
+            min-width: 25px;
+        }
+
+        /* ✅ Yes/No small columns + big content */
+        .yn-col {
+            width: 35px;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            padding: 4px !important;
+        }
+
+        .content-col {
+            width: auto;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .indent {
+            padding-left: 15px;
+        }
+
+        .bullet-list {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        /* Printing logic */
+        @media print {
+
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                margin: 8mm;
+                /* ✅ proper margin */
+            }
+
+            .form-container {
+                width: 100% !important;
+                /* ✅ full printable width */
+                margin: 0 !important;
+                padding: 0 !important;
+                /* ✅ keep border in print */
+                box-sizing: border-box !important;
+                page-break-after: always;
+            }
+
+            table {
+                width: 100% !important;
+                table-layout: fixed !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===================== PAGE 1/2 (your existing) ===================== -->
+    <div class="form-container">
+        <table>
+            <tr>
+                <td colspan="2" class="header-cell">
+                    Infection Control Risk Assessment (ICRA) Form<br>
+                    <span class="subheader">(To be filled by the Engineering department)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width: 55%;">Location of Construction:</td>
+                <td style="width: 45%;">Project Start Date:</td>
+            </tr>
+            <tr>
+                <td>Project Coordinator:</td>
+                <td>Estimated Duration:</td>
+            </tr>
+            <tr>
+                <td>Contractor Performing Work:</td>
+                <td>Permit Expiration Date:</td>
+            </tr>
+            <tr>
+                <td>Supervisor:</td>
+                <td>Telephone:</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="height: 60px;">
+                    Description of project :( Please mention the exact location of the )
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="section-title"
+                    style="border-top:1px solid #000; border-bottom:1px solid #000; font-size:16px;">
+                    Construction Activities
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="padding: 15px;">
+                    <strong>Note:</strong> Kindly check mark <strong>[ &#10004; ]</strong> the exact project being
+                    undertaken and note that the below mentioned 15 types of construction activities do not require
+                    completion of the rest of the Pre-construction risk assessment form.
+
+                    <div style="margin-top: 10px;">
+                        <div class="list-item"><span class="list-number">1.</span> <span>Paint and wallpaper in business
+                                offices and non-patient areas.</span></div>
+                        <div class="list-item"><span class="list-number">2.</span> <span>Paint in patient room if closed
+                                for painting and less than 3 sq.ft. of wall needs patched. Filter for room unit changed
+                                after painting.</span></div>
+                        <div class="list-item"><span class="list-number">3.</span> <span>Installation of soap
+                                dispenser/needle box/paper towel holder in patient room</span></div>
+                        <div class="list-item"><span class="list-number">4.</span> <span>Repair of window blind.</span>
+                        </div>
+                        <div class="list-item"><span class="list-number">5.</span> <span>Ceiling tile replacement for
+                                areas less than 10 2 X 2 tiles, if not in business offices and non-patient areas.</span>
+                        </div>
+                        <div class="list-item"><span class="list-number">6.</span> <span>Ceiling tile replacement for
+                                area less than 5 2 X 2 tiles in a patient area if patient is out of the immediate area
+                                and clean up can be Accomplished before patient returns.</span></div>
+                        <div class="list-item"><span class="list-number">7.</span> <span>Minimum repair of nurse call
+                                system/TV/Bed/Telephone.</span></div>
+                        <div class="list-item"><span class="list-number">8.</span> <span>Check or replace electric
+                                outlet.</span></div>
+                        <div class="list-item"><span class="list-number">9.</span> <span>Replace light bulb.</span>
+                        </div>
+                        <div class="list-item"><span class="list-number">10.</span> <span>Unstop sink/commode with no
+                                water on floor.</span></div>
+                        <div class="list-item"><span class="list-number">11.</span> <span>Unstop commode when water on
+                                floor requires maintenance to have Housekeeping clean area immediately.</span></div>
+                        <div class="list-item"><span class="list-number">12.</span> <span>Repair medical gas outlet.
+                                (Front Body)</span></div>
+                        <div class="list-item"><span class="list-number">13.</span> <span>Air balance readings.</span>
+                        </div>
+                        <div class="list-item"><span class="list-number">14.</span> <span>Check air-conditioning.</span>
+                        </div>
+                        <div class="list-item"><span class="list-number">15.</span> <span>Intermediate jobs that create
+                                a moderate amount of dust inside room and is made negative by use of HEPA-equipped unit
+                                with minimum 10 ACH, and all air discharged outside, HEPA unit must run 2 hours after
+                                completion of job and Housekeeping must clean room before unit is removed from room. All
+                                work and use of HEPA unit must be documented and copy forward to Infection Control and
+                                Safety.</span></div>
+                    </div>
+                    <div style="margin-top: 5px; text-align: center;">
+                        <strong>NOTE: all duct vents to be sealed off during work!</strong>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- ✅ FIX: Your row had 3 TD but table had 2 columns section above (breaks width). Use nested table. -->
+            <tr>
+                <td colspan="2" style="padding:0;">
+                    <table style="width:100%; table-layout:fixed;">
+                        <tr>
+                            <td class="yn-col">Yes</td>
+                            <td class="yn-col">No</td>
+                            <td class="content-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="yn-col" style="height:45px;"></td>
+                            <td class="yn-col"></td>
+                            <td class="content-col" style="font-weight:bold; vertical-align:middle;">
+                                Will there be noise generated that will impact a department adjacent to, above, or below
+                                the
+                                construction area?
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <div class="form-container">
+        <table>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col indent">a. If so, these departments must be notified.</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col indent" style="height: 50px;">
+                    b. How are you going to reduce the noise to an acceptable level? ( Explain in the space
+                    provided below)
+                </td>
+            </tr>
+
+            <tr class="section-title">
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"></td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    <strong>Will there be vibration generated that will impact a department adjacent to, above, or below
+                        the construction area?</strong>
+                </td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col indent">a. If so, these departments must be notified each time this type of work
+                    will be performed.</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col indent" style="height: 50px;">
+                    b. How are you going to reduce the vibration to an acceptable level? ( Explain in the space provided
+                    below)
+                </td>
+            </tr>
+
+            <tr class="section-title">
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"></td>
+            </tr>
+            <tr>
+                <td class="yn-col" style="height: 120px;"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    <strong>Are Emergency Procedures in place and posted on each job for accidental events that could
+                        greatly impact Patient Care or Life Safety to the facility? Included in these procedures are
+                        such things as:</strong><br>
+                    a. Emergency telephone numbers of key departments.<br>
+                    b. A plan that describes where main valves, switches, and controls are for the area in case of an
+                    emergency.<br>
+                    c. A plan for unexpected outages. ( Explain in the space provided below)
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="section-title"></td>
+                <td class="section-title">Environment</td>
+            </tr>
+            <tr>
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"><strong>Are any of the following environmental hazards present?</strong></td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    <ul class="bullet-list">
+                        <li>Will hazardous chemicals be used on this project? How will fumes and odors be controlled?
+                            <strong><i>MSDS Sheets are required.</i></strong>
+                        </li>
+                        <li>Is asbestos abatement required on this job? <strong><i>If so, notify Safety and Maintenance
+                                    at the activation.</i></strong></li>
+                        <li>Will there be hot work done on this project? If there are, then a hot work permit must be
+                            posted on the job site. All hot work must have a fire watch assigned to each area while the
+                            hot work is being performed.</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="section-title"></td>
+                <td class="section-title">Utility Failures</td>
+            </tr>
+            <tr>
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"><strong>Will any of the following systems be out of service at any time during
+                        the project?</strong></td>
+            </tr>
+            <tr>
+                <td class="yn-col" style="height: 150px;"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    <ul class="bullet-list">
+                        <li>Fire alarm <strong><i>(If out for more than 4 hours, Interim Life Safety Measures must be
+                                    implemented.)</i></strong></li>
+                        <li>Sprinkler <strong><i>(If out for more than 4 hours, Interim Life Safety Measures must be
+                                    implemented.)</i></strong></li>
+                        <li>Electrical</li>
+                        <li>Domestic water</li>
+                        <li>Oxygen</li>
+                        <li>Sewage</li>
+                        <li>HVAC</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ===================== PAGE 3 (HVAC + Additional Safety Concerns) ===================== -->
+    <div class="form-container">
+        <table>
+
+
+            <tr class="section-title">
+                <td class="yn-col" style="border-top:1px solid #000;">Yes</td>
+                <td class="yn-col" style="border-top:1px solid #000;">No</td>
+                <td class="content-col" style="border-top:1px solid #000;"></td>
+            </tr>
+
+            <tr>
+                <td class="yn-col" style="height:70px;"></td>
+                <td class="yn-col"></td>
+                <td class="content-col" style="font-weight:bold;">
+                    Will there be any work that will require activation of the Interim Life Safety Measures during this
+                    project?&nbsp; Some things that will ILSM’s to be implemented are but not limited to:
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col" style="padding-top:6px; padding-bottom:6px;">
+                    <ul class="bullet-list" style="margin:0; padding-left:22px;">
+                        <li>Any construction that impacts an EXIT or stairs,</li>
+                        <li>Any construction that impacts major breaches in a fire or smoke wall,</li>
+                        <li>Taking the main fire protection system out of service (sprinkler),</li>
+                        <li>Taking the main fire alarm system out of service,</li>
+                        <li style="list-style-type:disc; ">
+                            Taking the “area” fire or fire alarm systems out of service for more than 4 hours within a
+                            24-hour period
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col" style="border-top:1px solid #000; height:40px;"></td>
+                <td class="yn-col" style="border-top:1px solid #000;"></td>
+                <td class="content-col" style="border-top:1px solid #000; font-weight:bold; vertical-align:middle;">
+                    Implementation of the ILSM requires a fire watch and the ILSM forms to be completed.
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" style="height:26px; border-top:1px solid #000; border-bottom:1px solid #000;"></td>
+            </tr>
+
+            <tr>
+                <td colspan="3" class="section-title" style="border-top:1px solid #000; border-bottom:1px solid #000;">
+                    Additional Safety Concerns
+                </td>
+            </tr>
+
+            <tr class="section-title">
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"></td>
+            </tr>
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    Will construction affect exit routes from occupied areas adjacent to construction site?
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    Will project affect traffic patterns in area?&nbsp; <b><i>If yes, explain plan.</i></b>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col" style="font-weight:bold; vertical-align:middle;">
+                    The following must be completed prior to any construction activities.
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col" style="height:320px;"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    <ul class="bullet-list" style="margin:0; padding-left:22px;">
+                        <li>Separation wall must be constructed prior to project beginning.</li>
+                        <li>Fire protection systems must remain intact.</li>
+                        <li>Provide extra fire extinguishers in work areas.</li>
+                        <li>Maintain exit lights in work area.</li>
+                        <li>Maintain negative air in construction area (24/7) through duration of project.</li>
+                        <li>There cannot be any return air from within the construction area to the rest of the
+                            building.</li>
+                        <li>Redirect exiting not to go through construction area.</li>
+                        <li>Put signs on doors into construction area “Construction Area – Do Not Enter”.</li>
+                        <li>Maintain daily logs and keep a current Hot Work Permit.</li>
+                        <li>Place sticky mats at doors exiting construction area.</li>
+                        <li>All debris removal must be by covered cart.</li>
+                        <li>Maintain clean and orderly work area.</li>
+                        <li>How will this project affect the departments above, below and adjacent to this project?</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" class="section-title" style="border-top:1px solid #000;">
+                    Air Quality and Infection Control
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="padding:6px 10px;">
+                    The construction activity types are defined by the amount of dust that is generated, the duration of
+                    the
+                    activity, and the amount of shared HVAC systems.
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="form-container">
+        <table>
+            <tr class="section-title">
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"></td>
+            </tr>
+
+            <tr>
+                <td class="yn-col" style="height:70px;"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    Will dust be generated during this project?<br>
+                    <b><i>If yes, explain location of and plan for interim dust barriers or attach floor plan with
+                            barriers clearly marked.</i></b>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col" style="height:70px;"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    Will debris removal be necessary?&nbsp;
+                    <b><i>If yes, explain plan for debris removal and control.</i></b>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col" style="padding:4px 8px;">
+                    Negative airflow ventilation and filtration in place and assessed for effectiveness.
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col" style="padding:4px 8px;">
+                    Exhaust fans in place and functioning.
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col" style="padding:4px 8px;">
+                    Is supply duct to area closed and HEPA filtration unit in place and functioning in adjacent patient
+                    care area?
+                </td>
+            </tr>
+
+            <tr>
+                <td class="yn-col" style="height:60px;"></td>
+                <td class="yn-col"></td>
+                <td class="content-col" style="font-weight:bold;">
+                    Will work be done in a sterile area?&nbsp;
+                    <i>If so, how are you going to maintain sterile atmosphere in work area and access to and from work
+                        area?</i>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" style="height:14px; border-top:1px solid #000; border-bottom:1px solid #000;"></td>
+            </tr>
+
+            <tr class="section-title">
+                <td colspan="2" style="width:120px; font-weight:bold;text-align: center;">Type A</td>
+                <td colspan="" style="font-weight:bold;">
+                    Inspections and Non-Invasive Activities or Small scale, Short duration Activities
+                </td>
+            </tr>
+            <tr class="section-title">
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"></td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Removal of ceiling tiles for visual inspection (limited to 1 tile per 50 square
+                    feet)</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Painting (but not sanding)</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Wall covering—Describe work to be done:</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Electrical trim work.&nbsp; Describe:</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Minor plumbing.&nbsp; Describe:</td>
+            </tr>
+
+            <tr class="section-title">
+                <td colspan="2" style="width:90px; font-weight:bold; text-align: center;">Type B</td>
+                <td style="font-weight:bold;">
+                    Small scale, short duration activities that create minimal dust.
+                </td>
+            </tr>
+            <tr class="section-title">
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"></td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Installation of telephone and computer cabling</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Access to chase spaces</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    Sanding of walls for painting or wall covering (minor repairs—not sanding for drywall finishing)
+                </td>
+            </tr>
+
+            <tr class="section-title">
+                <td colspan="2" style="width:90px; font-weight:bold;text-align: center;">Type C</td>
+                <td style="font-weight:bold;">
+                    Any work that generates a moderate to high level of dust or requires demolition or removal of any
+                    fixed building components or assemblies.
+                </td>
+            </tr>
+            <tr>
+                <td class="yn-col" style="height:38px; font-weight:bold;">Yes</td>
+                <td class="yn-col" style="font-weight:bold;">No</td>
+                <td class="content-col">
+                    Sanding of walls--drywall finishing
+                </td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    Removal of
+                    <span
+                        style="display:inline-block; width:14px; height:14px; border:1px solid #000; vertical-align:middle; margin:0 6px;"></span>
+                    floor coverings
+                    <span
+                        style="display:inline-block; width:14px; height:14px; border:1px solid #000; vertical-align:middle; margin:0 6px;"></span>
+                    ceiling tiles
+                    <span
+                        style="display:inline-block; width:14px; height:14px; border:1px solid #000; vertical-align:middle; margin:0 6px;"></span>
+                    casework
+                    &nbsp;&nbsp;&nbsp;&nbsp; Describe:
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Cutting of walls or ceiling.&nbsp; Describe:</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">New wall construction</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Minor ductwork or electrical work above ceilings</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Major cabling activities</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Activity cannot be completed within a single work shift</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Has approval been obtained from State Fire Marshal and Health Department?</td>
+            </tr>
+
+            <tr class="section-title">
+                <td colspan="2" style="width:90px; font-weight:bold; text-align: center;">Type D</td>
+                <td style="font-weight:bold;">
+                    Major demolition and construction
+                    projects.
+                </td>
+            </tr>
+            <tr class="section-title">
+                <td class="yn-col">Yes</td>
+                <td class="yn-col">No</td>
+                <td class="content-col"></td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">Will require heavy demolition or removal of a complete ceiling system</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">New construction</td>
+            </tr>
+            <tr>
+                <td class="yn-col"></td>
+                <td class="yn-col"></td>
+                <td class="content-col">
+                    Has approval been obtained from State Fire Marshal and Health Department?
+                </td>
+            </tr>
+        </table>
+
+        <div style="height:14px;"></div>
+
+        <table style="table-layout:fixed;">
+            <tr class="section-title">
+                <td style="width:25%;">GROUP I<br>LOWEST</td>
+                <td style="width:25%;">GROUP 2<br>MEDIUM</td>
+                <td style="width:25%;">GROUP 3<br>HIGH</td>
+                <td style="width:25%;">GROUP 4<br>HIGHEST</td>
+            </tr>
+            <tr>
+                <td>1) Office areas</td>
+                <td>
+                    1) Physical Therapy<br>
+                    2) Cardiac Rehabilitation department<br>
+                    3) Admission/Discharge area<br>
+                    4) Outpatient areas
+                </td>
+                <td>
+                    1) Emergency Room<br>
+                    2) Radiology<br>
+                    3) Cafeteria<br>
+                    4) Wards<br>
+                    5) Echocardiography<br>
+                    6) Laboratories
+                </td>
+                <td>
+                    1) Operating Rooms; Sterile Processing<br>
+                    2) All Intensive Care Units<br>
+                    3) Cardiac &amp; EP Catheterization &amp; Angiography Areas<br>
+                    4) Dialysis department<br>
+                    5) Cardiology<br>
+                    6) Endoscopy/Minor Surgery<br>
+                    7) Pharmacy Admixture
+                </td>
+            </tr>
+        </table>
+
+        <div style="height:10px;"></div>
+
+        <div style="text-align:center; font-weight:bold; font-size:16px; padding:6px 0;">
+            Infection Control Risk Assessment (ICRA) Permit
+        </div>
+
+        <table>
+            <tr>
+                <td style="width:55%; font-style:italic; font-size:14px;">
+                    CONSTRUCTION ACTIVITY (from previous page)
+                </td>
+                <td style="width:45%; font-weight:bold; font-size:14px;">
+                    INFECTION CONTROL RISK GROUP
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    TYPE A:&nbsp; Inspection, non-invasive activity<br>
+                    TYPE B:&nbsp; Small scale, short duration projects<br>
+                    TYPE C:&nbsp; Activity generates moderate to high levels of dust, requiring &gt;1 work shift for
+                    completion <br>
+                    TYPE D:&nbsp; Major duration and construction activities Requiring consecutive work shifts
+                </td>
+                <td>
+                    GROUP 1: Lowest Risk<br><br>
+                    GROUP 2: Medium Risk<br><br>
+                    GROUP 3: High Risk<br><br>
+                    GROUP 4: Highest Risk
+                </td>
+            </tr>
+        </table>
+
+        <div style="height:10px;"></div>
+
+        <div style="font-size:16px; font-weight:normal; padding:6px 2px;">
+            CLASSIFICATION OF REQUIRED PREVENTIVE MEASURES
+        </div>
+
+        <table>
+            <tr>
+                <td style="width:30%; font-weight:bold;">
+                    CONSTRUCTION ACTIVITY &rarr;<br>
+                    INFECTION CONTROL RISK GROUP<br>&darr;
+                </td>
+                <td style="width:17%; font-weight:bold;">TYPE “A”</td>
+                <td style="width:17%; font-weight:bold;">TYPE “B”</td>
+                <td style="width:18%; font-weight:bold;">TYPE “C”</td>
+                <td style="width:18%; font-weight:bold;">TYPE “D”</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Group I</td>
+                <td style="font-weight:bold;">I</td>
+                <td style="font-weight:bold;">I</td>
+                <td style="font-weight:bold;">II</td>
+                <td style="font-weight:bold; background:#eaeaea;">III/IV</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Group 2</td>
+                <td style="font-weight:bold;">I</td>
+                <td style="font-weight:bold;">I</td>
+                <td style="font-weight:bold;">III</td>
+                <td style="font-weight:bold; background:#eaeaea;">IV</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Group 3</td>
+                <td style="font-weight:bold;">II</td>
+                <td style="background:#eaeaea; font-weight:bold;">III</td>
+                <td style="font-weight:bold;">III/IV</td>
+                <td style="font-weight:bold; background:#eaeaea;">IV</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Group 4</td>
+                <td style="font-weight:bold;">III</td>
+                <td style="font-weight:bold; background:#eaeaea;">III/IV</td>
+                <td style="font-weight:bold;">III/IV</td>
+                <td style="font-weight:bold;">IV</td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div class="form-container">
+
+
+
+        <div style="height:10px;"></div>
+
+        <table>
+            <tr>
+                <td style="width:90px; font-weight:bold;">CLASS I</td>
+                <td style="width:auto;">
+                    1.&nbsp; Execute work by methods to minimize raising dust from construction operations.
+                </td>
+                <td style="width:45%;">
+                    2.&nbsp; Immediately replace any ceiling tile displaced for visual inspection.
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">CLASS II</td>
+                <td>
+                    1.&nbsp; Provide active means to prevent air-borne dust from dispersing into atmosphere<br>
+                    2.&nbsp; Water mist work surfaces to control dust while cutting.<br>
+                    3.&nbsp; Seal unused doors with duct tape.<br>
+                    4.&nbsp; Block off and seal air vents.<br>
+                    5.&nbsp; Wipe surfaces with disinfectant.
+                </td>
+                <td>
+                    6.&nbsp; Contain construction waste before and during transport in tightly covered containers.<br>
+                    7.&nbsp; Wet mop and/or vacuum with HEPA filtered vacuum before leaving work area.<br>
+                    8.&nbsp; Place dust mat at entrance and exit of work area as needed.<br>
+                    9.&nbsp; Remove or isolate HVAC system in areas where work is being performed.
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-weight:bold;">CLASS III</td>
+                <td>
+                    1.&nbsp; Obtain infection control permit before construction begins.<br>
+                    2.&nbsp; Isolate HVAC system in area where work is being done to prevent contamination
+                    of the duct system.<br>
+                    3.&nbsp; Complete all critical barriers before construction begins.<br>
+                    4.&nbsp; Maintain negative air pressure within work site utilizing HEPA equipped air
+                    filtration units.<br>
+                    5.&nbsp; Contain construction waste before and during transport in tightly covered
+                    containers.<br>
+                    6.&nbsp; Seal holes, pipes, conduits, etc. appropriately.
+                </td>
+                <td>
+                    7.&nbsp; Place dust mat at entrance and exit of work area. &nbsp;Replace as needed.<br>
+                    8.&nbsp; Do not remove barriers from work area until completed project is inspected by
+                    Safety and Epidemiology Depts. and thoroughly cleaned.<br><br>
+                    <i>After work is completed:</i><br>
+                    9.&nbsp; Remove barrier materials carefully to minimize spreading of dirt and debris
+                    associated with construction.<br>
+                    10.&nbsp; Remove isolation of HVAC system.
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-weight:bold;">CLASS IV</td>
+                <td>
+                    1.&nbsp; Obtain infection control permit before construction begins.<br>
+                    2.&nbsp; Isolate HVAC system in area where work is being done to prevent contamination
+                    of duct system.<br>
+                    3.&nbsp; Complete all critical barriers or implement control cube method before
+                    construction begins.<br>
+                    4.&nbsp; Maintain negative air pressure within work site utilizing HEPA equipped air
+                    filtration units.<br>
+                    5.&nbsp; Seal holes, pipes, conduits, and punctures appropriately.<br>
+                    6.&nbsp; Construct anteroom and require all personnel to pass through this room so they
+                    can be vacuumed using a HEPA vacuum cleaner before leaving work site or they can wear
+                    cloth or paper coveralls that are removed each time they leave the work site.
+                </td>
+                <td>
+                    7.&nbsp; All personnel entering work site are required to wear shoe covers<br>
+                    8.&nbsp; Contain construction waste before and during transport in tightly covered
+                    containers. Cover transport receptacles or carts. Tape covering.<br>
+                    9.&nbsp; Do not remove barriers from work area until completed project is inspected by
+                    Safety and Epidemiology Depts. and thoroughly cleaned.<br><br>
+                    <i>After work is completed:</i><br>
+                    10.&nbsp; Vacuum work area with HEPA filtered vacuums.<br>
+                    11.&nbsp; Wet mop with disinfectant.<br>
+                    12.&nbsp; Remove barrier materials carefully to minimize spreading of dirt and debris
+                    associated with construction.<br>
+                    13.&nbsp; Remove isolation of HVAC system.
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" style="padding:10px;">
+                    <div style="font-weight:normal;">Additional concerns for all classes:</div>
+                    1.&nbsp; Maintain manpower and equipment including dust mops, wet mops, brooms, buckets, and clean
+                    wiping rags for cleaning fine dust from floors and adjacent occupied areas.<br>
+                    2.&nbsp; Contain work areas outside of construction barriers, including spaces above ceilings, with
+                    full height polyethylene sheet barrier, tightly taped.<br>
+                    3.&nbsp; Clean up dust tracked outside of construction area immediately.<br>
+                    4.&nbsp; Temporary construction barriers and closures above ceiling must be dust tight.<br>
+                    5.&nbsp; Removal of debris must be in covered containers.
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ===================== PAGE 4 (Additional Requirements + Approval Table) ===================== -->
+    <!-- <div class="form-container"> -->
+        <table style="border:1px solid #000;">
+            <tr>
+                <td colspan="4" style="height:210px; vertical-align:top;">
+                    <div style="font-size:14px; font-weight:normal;">Additional Requirements or Concerns:</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="font-size:14px; font-weight:normal;">Work Permission Approved by:</td>
+                <td style="font-size:14px; font-weight:normal; width:24%;">Signature</td>
+                <td style="font-size:14px; font-weight:normal; width:24%;">Date and Time</td>
+            </tr>
+
+            <tr>
+                <td style="width:28%;">Fire Safety Officer</td>
+                <td style="width:24%;">Name of Person-</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Clinical Safety Officer</td>
+                <td>Name of Person-</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Infection Control Nurse</td>
+                <td>Name of Person-</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Quality Department</td>
+                <td>Name of Person-</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Facility Manager</td>
+                <td>Name of Person-</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Engineering Department</td>
+                <td>Name of Person-</td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td colspan="4" style="height:70px;">
+                    <div>Review by: ICO: Signature:</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="4" style="height:70px;">
+                    <div>Approved by: COO/CMA: Signature</div>
+                </td>
+            </tr>
+        </table>
+    <!-- </div> -->
+
+</body>
+
+</html>

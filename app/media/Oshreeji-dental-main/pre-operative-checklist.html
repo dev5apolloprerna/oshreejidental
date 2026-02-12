@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preoperative Checklist</title>
+    <style>
+        /* General Reset for Print Accuracy */
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11.5px;
+            /* Slightly smaller to fit everything */
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* Page setup for A4 */
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        .page-container {
+            width: 210mm;
+            margin: 10px auto;
+            background: white;
+            padding: 15px;
+            border: 2px solid #000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        .main-border {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 3px 2px;
+            vertical-align: middle;
+        }
+
+        .header-box {
+            border: 1px solid black;
+            width: 140px;
+            height: 40px;
+            text-align: center;
+            float: right;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .title-section {
+            text-align: center;
+            clear: both;
+            margin-top: 5px;
+        }
+
+        .title-banner {
+            border: 1.5px solid black;
+            display: inline-block;
+            padding: 3px 15px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .input-line {
+            border-bottom: 1px solid black;
+            display: inline-block;
+            min-height: 14px;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+            border: 1px solid black;
+            width: 35px;
+            font-size: 14px;
+        }
+
+        .border-bottom {
+            border-bottom: 1px solid black;
+        }
+
+        .border-right {
+            border-right: 1px solid black;
+        }
+
+        /* Print Specific Overrides */
+        @media print {
+            body {
+                background: none;
+            }
+
+            .page-container {
+                margin: 0;
+                border: 2px solid black;
+                width: 100%;
+                height: 98vh;
+                /* Force it to stay within viewport height */
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+        <div class="header-box">ADDRESSOGRAPH</div>
+
+        <div class="title-section">
+            <h3 style="margin: 0; text-decoration: underline; text-transform: uppercase;">Preoperative Checklist</h3>
+            <div class="title-banner">TO BE FILLED BY UNIT NURSE & OT NURSE</div>
+        </div>
+
+        <table>
+            <tr>
+                <td style="width: 40%;">Date of Surgery : <span class="input-line" style="width:130px"></span></td>
+                <td style="width: 35%;">Time of Surgery : <span class="input-line" style="width:100px"></span></td>
+                <td style="width: 25%;">Bed No. : <span class="input-line" style="width:70px"></span></td>
+            </tr>
+        </table>
+        <table style="margin-top:-5px">
+            <tr>
+                <td>Name of Surgeon : <span class="input-line" style="width:80%"></span></td>
+            </tr>
+            <tr>
+                <td>Name of Anesthetist : <span class="input-line" style="width:50%"></span></td>
+                <td style="text-align:right">Height : <span class="input-line" style="width:60px"></span> cm</td>
+            </tr>
+            <tr>
+                <td>Name of Surgery / Procedure : <span class="input-line" style="width:50%"></span></td>
+                <td style="text-align:right">Weight : <span class="input-line" style="width:60px"></span> kg</td>
+            </tr>
+        </table>
+
+        <table class="main-border">
+            <tr>
+                <td class="border-right" style="width:25%">High Risk : &nbsp; □ Yes <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
+                <td class="border-right" style="width:25%">HIV +ve : &nbsp;&nbsp; □ Yes <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
+                <td class="border-right" style="width:25%">HbsAg +ve : □ Yes <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
+                <td style="width:25%">Anti HCV +ve : □ Yes <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
+            </tr>
+        </table>
+
+        <table style="margin: 2px 0;">
+            <tr>
+                <td>Allergy : <span class="input-line" style="width:250px"></span></td>
+                <td>Diagnosis : <span class="input-line" style="width:250px"></span></td>
+            </tr>
+        </table>
+
+        <table class="main-border">
+            <tr>
+                <td class="border-right" style="width: 55%; padding: 0;">
+                    <table style="margin:0">
+                        <tr class="border-bottom">
+                            <td style="text-decoration: underline; font-weight: bold;">INVESTIGATIONS</td>
+                            <td style="text-align:center">YES</td>
+                            <td style="text-align:center">No</td>
+                            <td>No. of Copies</td>
+                        </tr>
+                        <tr>
+                            <td>Biopsy Report</td>
+                            <td style="text-align:center">□</td>
+                            <td style="text-align:center">□</td>
+                            <td><span class="input-line" style="width:90%"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Lab Reports</td>
+                            <td style="text-align:center">□</td>
+                            <td style="text-align:center">□</td>
+                            <td><span class="input-line" style="width:90%"></span></td>
+                        </tr>
+                        <tr>
+                            <td>X-Ray</td>
+                            <td style="text-align:center">□</td>
+                            <td style="text-align:center">□</td>
+                            <td><span class="input-line" style="width:90%"></span></td>
+                        </tr>
+                        <tr>
+                            <td>USG</td>
+                            <td style="text-align:center">□</td>
+                            <td style="text-align:center">□</td>
+                            <td><span class="input-line" style="width:90%"></span></td>
+                        </tr>
+                        <tr>
+                            <td>CT Scan</td>
+                            <td style="text-align:center">□</td>
+                            <td style="text-align:center">□</td>
+                            <td><span class="input-line" style="width:90%"></span></td>
+                        </tr>
+                        <tr>
+                            <td>MRI</td>
+                            <td style="text-align:center">□</td>
+                            <td style="text-align:center">□</td>
+                            <td><span class="input-line" style="width:90%"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Doppler</td>
+                            <td style="text-align:center">□</td>
+                            <td style="text-align:center">□</td>
+                            <td><span class="input-line" style="width:90%"></span></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="padding: 0;">
+                    <table style="margin:0">
+                        <tr class="border-bottom">
+                            <td style="font-weight: bold;">LATEST VITALS</td>
+                            <td colspan="2">Time : <span class="input-line" style="width:80px"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Temperature:</td>
+                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td>°F</td>
+                        </tr>
+                        <tr>
+                            <td>Pulse :</td>
+                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td>/ Min</td>
+                        </tr>
+                        <tr>
+                            <td>Respiration :</td>
+                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td>/ Min</td>
+                        </tr>
+                        <tr>
+                            <td>B. P. :</td>
+                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td>mm of Hg</td>
+                        </tr>
+                        <tr>
+                            <td>SpO2 :</td>
+                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td>%</td>
+                        </tr>
+                        <tr>
+                            <td>RBS (If ordered) :</td>
+                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td>mg / dl</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <table class="main-border">
+            <tr class="border-bottom" style="font-weight: bold;">
+                <td></td>
+                <td style="width: 35px; text-align: center;">YES</td>
+                <td style="width: 35px; text-align: center;">NO</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>1) Patient have ID Band with IP No</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>2) Consent for Operation / Procedure taken<br>
+                    <div style="margin-left: 15px; font-size: 10.5px;">
+                        1) Informed Consent for surgery and Anesthesia | 2) High Risk (if applicable)<br>
+                        3) Special Consent for Amputation | 4) Consent for Blood Product Transfusion
+                    </div>
+                </td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>3) OT Clearance done</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>4) Physician reference done</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr>
+                <td>5) Preoperative anaesthetic check up done</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+        </table>
+
+        <table class="main-border">
+            <tr class="border-bottom" style="font-weight: bold;">
+                <td></td>
+                <td style="width: 35px; text-align: center;">YES</td>
+                <td style="width: 35px; text-align: center;">NO</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>1) Any specific medication ordered by Surgeon / Physician / Anesthetist <br><span
+                        style="font-size:10px">(if yes, Name it: <span class="input-line"
+                            style="width:300px"></span>)</span></td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>2) Any specific medication omitted by Surgeon / Physician / Anesthetist <br><span
+                        style="font-size:10px">(if yes, Name it: <span class="input-line"
+                            style="width:300px"></span>)</span></td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>3) NBM from : <span class="input-line" style="width:100px"></span> am / pm. Date : <span
+                        class="input-line" style="width:100px"></span></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr class="border-bottom">
+                <td>4) Preparation of operating part by Betadine / Savlon done.</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>5) Shaving of operating part done.</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>6) Operative site is marked / mentioned right or left.</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>7) Prosthesis / Denture / Ornaments / Contact lens / Nail Polish / Lip stick Removed.</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>8) OT dress (Undergarments Removed)</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>9) Urine Voided / Bag Emptied with <span class="input-line" style="width:50px"></span> ml urine (if
+                    catheterized)</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>10) Bowel Preparation done / Enema / Bowel wash / Laxative</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>11) Mouth care - gargles prescribed.</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr class="border-bottom">
+                <td>12) PCV required</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+            <tr>
+                <td>13) PCV ready in Blood bank / in Hospital.</td>
+                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell">□</td>
+            </tr>
+        </table>
+
+        <table style="margin-top: 5px;">
+            <tr>
+                <td style="width:40%">Dentist / assistant : <span class="input-line" style="width:150px"></span></td>
+                <td style="width:40%">Sign with E.ID: <span class="input-line" style="width:150px"></span></td>
+                <td style="width:20%">Time : <span class="input-line" style="width:70px"></span></td>
+            </tr>
+        </table>
+    </div>
+
+  
+
+</body>
+
+</html>
