@@ -69,6 +69,7 @@ return App_table::find('clients')
 
         foreach ($rResult as $aRow) {
             $row = [];
+            $isPerson = false;
 
             // Bulk actions
             $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['userid'] . '"><label></label></div>';

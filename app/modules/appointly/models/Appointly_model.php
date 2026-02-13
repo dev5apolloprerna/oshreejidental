@@ -1987,4 +1987,141 @@ class Appointly_model extends App_Model
         return $this->db->delete(db_prefix() . 'patient_signatures');
     }
 
+
+/*new code here */
+    /* ============================================================
+     * Appointment Types ↔ PDFs (Multi-select mapping)
+     * Tables:
+     *  - tblappointly_appointment_types (or your actual types table)
+     *  - tblnabh_master (pdf_id, pdf_name, english_file_name, gujarati_file_name)
+     *  - tblappointment_type_pdf_master (id, appointment_type_id, appointment_pdf_id)
+     * ============================================================ */
+
+    private function types_table()
+    {
+        // ✅ IMPORTANT: if your appointment types table name is different, change here
+        // Example: return db_prefix() . 'appointly_appointment_types';
+        return db_prefix() . 'appointly_appointment_types';
+    }
+
+    private function pdf_table()
+    {
+        // user said: tblnabh_master -> Perfex uses db_prefix() = 'tbl'
+        return db_prefix() . 'nabh_master';
+    }
+
+    private function map_table()
+    {
+        return db_prefix() . 'appointment_type_pdf_master';
+    }
+
+    // ✅ All PDFs list
+    public function get_all_pdfs()
+    {
+        return $this->db
+            ->select('pdf_id, pdf_name, english_file_name, gujarati_file_name')
+            ->from($this->pdf_table())
+            ->order_by('pdf_name', 'ASC')
+            ->get()
+            ->result_array();
+    }
+
+    // ✅ Types table list + pdf names (comma separated)
+    public function get_types_with_pdfs()
+    {
+        $types = $this->types_table();
+        $map   = $this->map_table();
+        $pdf   = $this->pdf_table();
+
+        $this->db->select("t.id, t.type, t.color,
+            GROUP_CONCAT(p.pdf_name ORDER BY p.pdf_name SEPARATOR ', ') AS pdf_names", false);
+
+        $this->db->from($types . ' t');
+        $this->db->join($map . ' m', 'm.appointment_type_id = t.id', 'left');
+        $this->db->join($pdf . ' p', 'p.pdf_id = m.appointment_pdf_id', 'left');
+
+        $this->db->group_by('t.id');
+        $this->db->order_by('t.id', 'DESC');
+
+        return $this->db->get()->result_array();
+    }
+
+    // ✅ Single type row
+    public function get_type($id)
+    {
+        return $this->db->where('id', (int)$id)->get($this->types_table())->row_array();
+    }
+
+    // ✅ Selected pdf ids for a type (for edit modal)
+    public function get_type_pdf_ids($type_id)
+    {
+        $rows = $this->db->select('appointment_pdf_id')
+            ->where('appointment_type_id', (int)$type_id)
+            ->get($this->map_table())
+            ->result_array();
+
+        return array_map(function ($r) { return (int)$r['appointment_pdf_id']; }, $rows);
+    }
+
+    // ✅ Insert/Update type + update mapping
+    public function save_type_with_pdfs($data)
+    {
+        $type_id = isset($data['id']) ? (int)$data['id'] : 0;
+
+        $type_name = trim($data['type'] ?? '');
+        $color     = trim($data['color'] ?? '#3D9970');
+
+        $pdf_ids   = $data['pdf_ids'] ?? [];
+        if (!is_array($pdf_ids)) $pdf_ids = [];
+
+        if ($type_name === '') {
+            return ['success' => false, 'message' => 'Type name is required'];
+        }
+
+        // ✅ Save type
+        if ($type_id > 0) {
+            $this->db->where('id', $type_id)->update($this->types_table(), [
+                'type'  => $type_name,
+                'color' => $color,
+            ]);
+        } else {
+            $this->db->insert($this->types_table(), [
+                'type'  => $type_name,
+                'color' => $color,
+            ]);
+            $type_id = (int)$this->db->insert_id();
+        }
+
+        // ✅ Refresh mapping rows
+        $this->db->where('appointment_type_id', $type_id)->delete($this->map_table());
+
+        $batch = [];
+        foreach ($pdf_ids as $pid) {
+            $pid = (int)$pid;
+            if ($pid <= 0) continue;
+
+            $batch[] = [
+                'appointment_type_id' => $type_id,
+                'appointment_pdf_id'  => $pid
+            ];
+        }
+
+        if (!empty($batch)) {
+            $this->db->insert_batch($this->map_table(), $batch);
+        }
+
+        return ['success' => true, 'type_id' => $type_id];
+    }
+
+    // ✅ Delete type + mapping
+    public function delete_type($type_id)
+    {
+        $type_id = (int)$type_id;
+
+        $this->db->where('appointment_type_id', $type_id)->delete($this->map_table());
+        $this->db->where('id', $type_id)->delete($this->types_table());
+
+        return ($this->db->affected_rows() > 0);
+    }
+
 }

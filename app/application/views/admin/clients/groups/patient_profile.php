@@ -10,6 +10,33 @@ $CI = &get_instance();
 // $appointments = $CI->db->get(db_prefix() . 'appointly_appointments')->result_array();
 
 
+//new code start
+
+if (!isset($client) || !$client) {
+    echo '<div class="alert alert-danger">Client not found.</div>';
+    return;
+}
+
+if (!isset($contact) || !$contact) {
+    // ✅ Try to load primary contact
+    $CI->db->where('userid', $client->userid);
+    $CI->db->where('is_primary', 1);
+    $contact = $CI->db->get(db_prefix() . 'contacts')->row();
+
+    // If still not found, load any contact
+    if (!$contact) {
+        $CI->db->where('userid', $client->userid);
+        $contact = $CI->db->get(db_prefix() . 'contacts')->row();
+    }
+}
+
+// If no contact exists at all, show message and stop further contact-dependent code
+if (!$contact) {
+    echo '<div class="alert alert-warning">No contact found for this patient.</div>';
+    // You can still show some client info, but stop appointment queries that need contact_id
+    return;
+}
+ // new code end
 $CI->db->select(db_prefix() . 'appointly_appointments.*,');
 $CI->db->from(db_prefix() . 'appointly_appointments');
 
