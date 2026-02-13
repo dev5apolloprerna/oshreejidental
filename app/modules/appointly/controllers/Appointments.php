@@ -11,6 +11,8 @@ class Appointments extends AdminController
         $this->staff_no_view_permissions = !staff_can('view', 'appointments') && !staff_can('view_own', 'appointments');
 
         $this->load->model('appointly_model', 'apm');
+        $this->load->model('appointly/Appointly_model', 'appointly_model');
+
     }
 
     /**
@@ -429,10 +431,86 @@ class Appointments extends AdminController
         }
 
         $data = getAppointlyUserMeta();
-
         $data['filters'] = get_appointments_table_filters();
 
+        // ✅ PDFs for dropdown
+        $data['all_pdfs'] = $this->appointly_model->get_all_pdfs();
+
+        // ✅ Types table data
+        $data['types_rows'] = $this->appointly_model->get_types_with_pdfs();
+
         $this->load->view('users/index', $data);
+    }
+    public function get_appointment_type($id)
+    {
+        if (!is_staff_member()) {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            die;
+        }
+
+        $type = $this->appointly_model->get_type((int)$id);
+        if (!$type) {
+            echo json_encode(['success' => false, 'message' => 'Type not found']);
+            die;
+        }
+
+        $pdf_ids = $this->appointly_model->get_type_pdf_ids((int)$id);
+
+        echo json_encode([
+            'success' => true,
+            'data' => [
+                'id' => (int)$type['id'],
+                'type' => $type['type'],
+                'color' => $type['color'],
+                'pdf_ids' => $pdf_ids,
+            ]
+        ]);
+        die;
+    }
+
+    // ✅ Save add/edit
+    public function save_appointment_type()
+    {
+        if (!is_staff_member()) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Unauthorized',
+                'csrf_hash' => $this->security->get_csrf_hash(),
+            ]);
+            die;
+        }
+
+        $id   = (int)$this->input->post('id');
+        $type = $this->input->post('appointment_type', true);
+        $color = $this->input->post('color', true);
+        $pdf_ids = $this->input->post('pdf_ids'); // array
+
+        $result = $this->appointly_model->save_type_with_pdfs([
+            'id' => $id,
+            'type' => $type,
+            'color' => $color,
+            'pdf_ids' => $pdf_ids,
+        ]);
+
+        // ✅ add csrf
+        $result['csrf_hash'] = $this->security->get_csrf_hash();
+
+        echo json_encode($result);
+        die;
+    }
+
+
+    // ✅ Delete
+    public function delete_appointment_type($id)
+    {
+        if (!is_staff_member()) {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            die;
+        }
+
+        $ok = $this->appointly_model->delete_type((int)$id);
+        echo json_encode(['success' => (bool)$ok]);
+        die;
     }
 
 
@@ -489,13 +567,13 @@ class Appointments extends AdminController
      *
      * @return boolean
      */
-    public function delete_appointment_type()
+   /* public function delete_appointment_type()
     {
         if (!staff_can('delete', 'appointments') && !staff_appointments_responsible()) {
             access_denied();
         }
         return $this->apm->delete_appointment_type($this->input->post('id'));
-    }
+    }*/
 
     /**
      * Add event to google calendar
