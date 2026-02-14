@@ -984,6 +984,13 @@ if (!empty($check_prescription_exists)) { ?>
                                     onclick="openSignatureModal(<?php echo $value['id']; ?>, <?php echo $client->userid; ?>)"  
                                     style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">Patient Consent
                                 </button>
+
+                                <button class="btn btn-primary add_free_hand_dental"
+                                    onclick="openNabhFormsModal()"
+                                    style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">
+                                    NABH FORMS
+                                </button>
+
                                   
                                 </div>
 
@@ -1384,6 +1391,72 @@ if (!empty($check_prescription_exists)) { ?>
                 <div class="col-xl-4 col-lg-4 card-body"></div>
             </div> -->
         </div>
+
+        <!-- model start -->
+        <!-- NABH List Modal -->
+<div class="modal fade" id="nabhListModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">NABH Forms</h4>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+          <select id="nabhLang" class="form-control" style="width:160px;">
+            <option value="gu">Gujarati</option>
+            <option value="en">English</option>
+          </select>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped" id="nabhTable">
+            <thead>
+              <tr>
+                <th style="width:70px;">#</th>
+                <th>Form Name</th>
+                <th style="width:140px;">Available</th>
+                <th style="width:120px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="nabhTbody">
+              <tr><td colspan="4">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PDF Viewer Modal -->
+<div class="modal fade" id="nabhPdfModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl" role="document" style="width:95%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="nabhPdfTitle">View PDF</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+
+      <div class="modal-body" style="height:80vh;">
+        <iframe id="nabhPdfFrame" src="about:blank" style="width:100%; height:100%; border:0;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+        <!-- model end -->
     </section>
     <?php $this->load->view('appointly/patient_consent'); ?>
     <?php $this->load->view('admin/clients/modals/xray'); ?>
@@ -1466,3 +1539,110 @@ function getClientIdFromUrl() {
 }
 </script>
 
+<!-- nabh js -->
+<script>
+function openNabhFormsModal() {
+  $('#nabhListModal').modal('show');
+  loadNabhList();
+}
+
+$('#nabhLang').on('change', function () {
+  loadNabhList();
+});
+
+function loadNabhList() {
+  const lang = $('#nabhLang').val();
+
+  // CSRF (Perfex/CI)
+  const csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+  const csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+
+  $('#nabhTbody').html('<tr><td colspan="4">Loading...</td></tr>');
+
+  $.ajax({
+    url: admin_url + 'nabh/list-json',
+    type: 'POST',
+    dataType: 'json',
+    data: { [csrfName]: csrfHash },
+    success: function(res) {
+      if (!res || !res.status) {
+        $('#nabhTbody').html('<tr><td colspan="4">No data found</td></tr>');
+        return;
+      }
+
+      const rows = res.data || [];
+      if (!rows.length) {
+        $('#nabhTbody').html('<tr><td colspan="4">No forms found</td></tr>');
+        return;
+      }
+
+      let html = '';
+      rows.forEach((r, i) => {
+        const hasEn = !!r.has_en;
+        const hasGu = !!r.has_gu;
+
+        // Title rule:
+        // If selected lang file exists => show that title
+        // else show other language title (fallback)
+        let title = '-';
+        if (lang === 'gu') title = hasGu ? (r.title_gu || r.title_en) : (r.title_en || r.title_gu);
+        else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);
+
+        // Availability label
+        let avail = '';
+        if (hasEn && hasGu) avail = 'EN + GU';
+        else if (hasEn) avail = 'EN';
+        else if (hasGu) avail = 'GU';
+        else avail = 'Not Uploaded';
+
+        // View: requested language; controller will fallback automatically if missing
+        //const viewUrl = admin_url + 'nabh/view/' + r.pdf_id + '?lang=' + lang;
+        const viewUrl = admin_url + 'nabh/view-html/' + r.pdf_id + '?lang=' + lang;
+
+        const disabled = (!hasEn && !hasGu) ? 'disabled' : '';
+
+        html += `
+          <tr>
+            <td>${i+1}</td>
+            <td>${escapeHtml(title)}</td>
+            <td>${escapeHtml(avail)}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" ${disabled}
+                onclick="openNabhPdf('${viewUrl}', '${escapeHtml(title)}')">
+                View
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      $('#nabhTbody').html(html);
+    },
+    error: function() {
+      $('#nabhTbody').html('<tr><td colspan="4">Error loading forms</td></tr>');
+    }
+  });
+}
+
+function openNabhPdf(url, title) {
+  $('#nabhPdfTitle').text(title || 'View PDF');
+  $('#nabhPdfFrame').attr('src', url);
+  $('#nabhPdfModal').modal('show');
+}
+
+// optional: clear iframe when closing
+$('#nabhPdfModal').on('hidden.bs.modal', function(){
+  $('#nabhPdfFrame').attr('src', 'about:blank');
+});
+
+// basic html escape
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+</script>

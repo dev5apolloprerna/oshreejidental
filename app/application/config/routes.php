@@ -187,3 +187,8 @@ $route['survey/(:num)/(:any)'] = 'surveys/participate/index/$1/$2';
 if (file_exists(APPPATH . 'config/my_routes.php')) {
     include_once(APPPATH . 'config/my_routes.php');
 }
+
+
+$route['admin/nabh/list-json'] = 'admin/nabh/list_json';
+$route['admin/nabh/view/(:num)'] = 'admin/nabh/view_pdf/$1';
+$route['admin/nabh/view-html/(:num)'] = 'admin/nabh/view_html/$1';
