@@ -8,14 +8,21 @@ class Nabh extends AdminController
         $this->load->model('nabh_model');
     }
 
-    // Optional: list for table (same logic as before, checks if file exists)
+    // ✅ return ONLY mapped items by appointment_type_id
     public function list_json()
     {
         if (!is_staff_logged_in()) {
             ajax_access_denied();
         }
 
-        $rows = $this->nabh_model->get_all();
+        $appointment_type_id = (int)$this->input->post('appointment_type_id');
+
+        if ($appointment_type_id <= 0) {
+            echo json_encode(['status' => false, 'message' => 'appointment_type_id missing', 'data' => []]);
+            exit;
+        }
+
+        $rows = $this->nabh_model->get_mapped_forms($appointment_type_id);
 
         $enDir = FCPATH . 'uploads/nabh/english/';
         $guDir = FCPATH . 'uploads/nabh/gujarati/';
@@ -28,16 +35,15 @@ class Nabh extends AdminController
             $hasEn = ($enFile !== '' && file_exists($enDir . basename($enFile)));
             $hasGu = ($guFile !== '' && file_exists($guDir . basename($guFile)));
 
-            // Change these if your table has different title fields
-            $titleEn = (string)($r['english_title'] ?? $r['title'] ?? 'English Form');
-            $titleGu = (string)($r['gujarati_title'] ?? $r['title'] ?? 'Gujarati Form');
+            $titleEn = (string)($r['english_title'] ?? $r['title'] ?? 'English');
+            $titleGu = (string)($r['gujarati_title'] ?? $r['title'] ?? 'Gujarati');
 
             $out[] = [
-                'id'        => (int)$r['id'],
-                'has_en'    => $hasEn,
-                'has_gu'    => $hasGu,
-                'title_en'  => $titleEn,
-                'title_gu'  => $titleGu,
+                'pdf_id'       => (int)$r['pdf_id'],
+                'has_en'   => $hasEn,
+                'has_gu'   => $hasGu,
+                'title_en' => $titleEn,
+                'title_gu' => $titleGu,
             ];
         }
 
@@ -45,8 +51,8 @@ class Nabh extends AdminController
         exit;
     }
 
-    // ✅ Serve HTML in iframe (modal)
-    public function view_html($id)
+    // ✅ Serve HTML/PDF file inline inside iframe
+    public function view_file($id)
     {
         if (!is_staff_logged_in()) {
             access_denied();
@@ -56,9 +62,7 @@ class Nabh extends AdminController
         $lang = in_array($lang, ['en', 'gu'], true) ? $lang : 'gu';
 
         $row = $this->nabh_model->get($id);
-        if (!$row) {
-            show_404();
-        }
+        if (!$row) show_404();
 
         $enDir = FCPATH . 'uploads/nabh/english/';
         $guDir = FCPATH . 'uploads/nabh/gujarati/';
@@ -66,10 +70,10 @@ class Nabh extends AdminController
         $enFile = trim((string)($row['english_file_name'] ?? ''));
         $guFile = trim((string)($row['gujarati_file_name'] ?? ''));
 
-        $enPath = ($enFile !== '') ? ($enDir . basename($enFile)) : '';
-        $guPath = ($guFile !== '') ? ($guDir . basename($guFile)) : '';
+        $enPath = $enFile ? ($enDir . basename($enFile)) : '';
+        $guPath = $guFile ? ($guDir . basename($guFile)) : '';
 
-        // ✅ preferred language, else fallback
+        // pick requested lang else fallback
         $path = '';
         if ($lang === 'gu') {
             if ($guPath && file_exists($guPath)) $path = $guPath;
@@ -79,12 +83,20 @@ class Nabh extends AdminController
             elseif ($guPath && file_exists($guPath)) $path = $guPath;
         }
 
-        if ($path === '' || !file_exists($path)) {
-            show_error('HTML file not found.', 404);
+        if (!$path || !file_exists($path)) show_error('File not found', 404);
+
+        // detect type by extension
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        if ($ext === 'pdf') {
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="' . basename($path) . '"');
+        } else {
+            // html
+            header('Content-Type: text/html; charset=utf-8');
+            header('X-Content-Type-Options: nosniff');
         }
 
-        header('Content-Type: text/html; charset=utf-8');
-        header('X-Content-Type-Options: nosniff');
         readfile($path);
         exit;
     }

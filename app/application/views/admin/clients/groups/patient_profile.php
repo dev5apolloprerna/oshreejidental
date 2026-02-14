@@ -879,7 +879,7 @@ button#edit-patient-profile-btn {
                                 <div class="col-xl-9 col-lg-8 col-md-7 apponment_detail">
                                     <div>
                                         <p class="app_date"><i class="fa-regular fa-calendar calendar-icon" aria-hidden="true"></i>
-<?php echo date("d/m/y", strtotime($value['date'])) . ' ' .date("H:i A", strtotime($value['start_hour']));?></p>
+                                        <?php echo date("d/m/y", strtotime($value['date'])) . ' ' .date("H:i A", strtotime($value['start_hour']));?></p>
                                         <h3><?php echo $value['subject'];?></h3>
                                         <p><?php echo $value['description'];?></p>
                                     </div>
@@ -986,10 +986,11 @@ if (!empty($check_prescription_exists)) { ?>
                                 </button>
 
                                 <button class="btn btn-primary add_free_hand_dental"
-                                    onclick="openNabhFormsModal()"
-                                    style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">
-                                    NABH FORMS
-                                </button>
+    onclick="openNabhFormsModal(<?php echo (int)$value['type_id']; ?>)"
+    style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">
+    NABH FORMS
+</button>
+
 
                                   
                                 </div>
@@ -1539,110 +1540,126 @@ function getClientIdFromUrl() {
 }
 </script>
 
-<!-- nabh js -->
+
+
 <script>
-function openNabhFormsModal() {
-  $('#nabhListModal').modal('show');
-  loadNabhList();
-}
+(function waitForJqAndBootstrap(){
+  // wait until jQuery + bootstrap modal plugin is available
+  if (!window.jQuery || !window.jQuery.fn || !window.jQuery.fn.modal) {
+    return setTimeout(waitForJqAndBootstrap, 80);
+  }
 
-$('#nabhLang').on('change', function () {
-  loadNabhList();
-});
+  var $ = window.jQuery;
 
-function loadNabhList() {
-  const lang = $('#nabhLang').val();
+  // bind once
+  if (window.__nabh_inited__) return;
+  window.__nabh_inited__ = true;
 
-  // CSRF (Perfex/CI)
-  const csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
-  const csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+  // ✅ global function called from onclick button
+  window.openNabhFormsModal = function(appointmentTypeId) {
+    appointmentTypeId = parseInt(appointmentTypeId || "0", 10);
+    $('#appointment_type_id').val(appointmentTypeId);
 
-  $('#nabhTbody').html('<tr><td colspan="4">Loading...</td></tr>');
+    $('#nabhListModal').modal('show');
+    loadNabhList();
+  };
 
-  $.ajax({
-    url: admin_url + 'nabh/list-json',
-    type: 'POST',
-    dataType: 'json',
-    data: { [csrfName]: csrfHash },
-    success: function(res) {
-      if (!res || !res.status) {
-        $('#nabhTbody').html('<tr><td colspan="4">No data found</td></tr>');
-        return;
-      }
-
-      const rows = res.data || [];
-      if (!rows.length) {
-        $('#nabhTbody').html('<tr><td colspan="4">No forms found</td></tr>');
-        return;
-      }
-
-      let html = '';
-      rows.forEach((r, i) => {
-        const hasEn = !!r.has_en;
-        const hasGu = !!r.has_gu;
-
-        // Title rule:
-        // If selected lang file exists => show that title
-        // else show other language title (fallback)
-        let title = '-';
-        if (lang === 'gu') title = hasGu ? (r.title_gu || r.title_en) : (r.title_en || r.title_gu);
-        else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);
-
-        // Availability label
-        let avail = '';
-        if (hasEn && hasGu) avail = 'EN + GU';
-        else if (hasEn) avail = 'EN';
-        else if (hasGu) avail = 'GU';
-        else avail = 'Not Uploaded';
-
-        // View: requested language; controller will fallback automatically if missing
-        //const viewUrl = admin_url + 'nabh/view/' + r.pdf_id + '?lang=' + lang;
-        const viewUrl = admin_url + 'nabh/view-html/' + r.pdf_id + '?lang=' + lang;
-
-        const disabled = (!hasEn && !hasGu) ? 'disabled' : '';
-
-        html += `
-          <tr>
-            <td>${i+1}</td>
-            <td>${escapeHtml(title)}</td>
-            <td>${escapeHtml(avail)}</td>
-            <td>
-              <button class="btn btn-sm btn-primary" ${disabled}
-                onclick="openNabhPdf('${viewUrl}', '${escapeHtml(title)}')">
-                View
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      $('#nabhTbody').html(html);
-    },
-    error: function() {
-      $('#nabhTbody').html('<tr><td colspan="4">Error loading forms</td></tr>');
-    }
+  // lang change
+  $(document).on('change', '#nabhLang', function () {
+    loadNabhList();
   });
-}
 
-function openNabhPdf(url, title) {
-  $('#nabhPdfTitle').text(title || 'View PDF');
-  $('#nabhPdfFrame').attr('src', url);
-  $('#nabhPdfModal').modal('show');
-}
+  function loadNabhList() {
+    var lang = $('#nabhLang').val();
+    var appointmentTypeId = parseInt($('#appointment_type_id').val() || "0", 10);
 
-// optional: clear iframe when closing
-$('#nabhPdfModal').on('hidden.bs.modal', function(){
-  $('#nabhPdfFrame').attr('src', 'about:blank');
-});
+    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+    var csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
 
-// basic html escape
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
+    if (!appointmentTypeId) {
+      $('#nabhTbody').html('<tr><td colspan="4">Appointment type not found</td></tr>');
+      return;
+    }
+
+    $('#nabhTbody').html('<tr><td colspan="4">Loading...</td></tr>');
+
+    var postData = {};
+    postData['appointment_type_id'] = appointmentTypeId;
+    postData[csrfName] = csrfHash;
+
+    $.ajax({
+      url: admin_url + 'nabh/list-json',
+      type: 'POST',
+      dataType: 'json',
+      data: postData,
+      success: function(res) {
+        var rows = (res && res.status) ? (res.data || []) : [];
+
+        if (!rows.length) {
+          $('#nabhTbody').html('<tr><td colspan="4">No forms assigned for this appointment type</td></tr>');
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < rows.length; i++) {
+          var r = rows[i];
+          var hasEn = !!r.has_en;
+          var hasGu = !!r.has_gu;
+
+          var title = '-';
+          if (lang === 'gu') title = hasGu ? (r.title_gu || r.title_en) : (r.title_en || r.title_gu);
+          else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);
+
+          var avail = '';
+          if (hasEn && hasGu) avail = 'EN + GU';
+          else if (hasEn) avail = 'EN';
+          else if (hasGu) avail = 'GU';
+          else avail = 'Not Uploaded';
+
+          // ✅ IMPORTANT: use r.id
+          var viewUrl = admin_url + 'nabh/view-file/' + r.id + '?lang=' + lang;
+          var disabled = (!hasEn && !hasGu) ? 'disabled' : '';
+
+          html += ''
+            + '<tr>'
+            +   '<td>' + (i+1) + '</td>'
+            +   '<td>' + escapeHtml(title) + '</td>'
+            +   '<td>' + escapeHtml(avail) + '</td>'
+            +   '<td>'
+            +     '<button class="btn btn-sm btn-primary" ' + disabled
+            +       ' onclick="openNabhViewer(\'' + viewUrl + '\', \'' + escapeHtml(title) + '\')">View</button>'
+            +   '</td>'
+            + '</tr>';
+        }
+
+        $('#nabhTbody').html(html);
+      },
+      error: function(xhr) {
+        $('#nabhTbody').html('<tr><td colspan="4">Error loading forms</td></tr>');
+        // console.log(xhr.responseText);
+      }
+    });
+  }
+
+  window.openNabhViewer = function(url, title) {
+    $('#nabhPdfTitle').text(title || 'View');
+    $('#nabhPdfFrame').attr('src', url);
+    $('#nabhPdfModal').modal('show');
+  };
+
+  $(document).on('hidden.bs.modal', '#nabhPdfModal', function(){
+    $('#nabhPdfFrame').attr('src', 'about:blank');
+  });
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+})();
 </script>
