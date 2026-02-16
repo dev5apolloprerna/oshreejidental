@@ -5,25 +5,41 @@ class Nabh extends AdminController
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('nabh_model');
     }
 
-    // ✅ return ONLY mapped items by appointment_type_id
+    /**
+     * AJAX
+     * POST: appointment_type_id
+     * Returns only assigned NABH forms for appointment type
+     */
     public function list_json()
     {
         if (!is_staff_logged_in()) {
             ajax_access_denied();
         }
 
-        $appointment_type_id = (int)$this->input->post('appointment_type_id');
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
 
+        $appointment_type_id = (int)$this->input->post('appointment_type_id');
         if ($appointment_type_id <= 0) {
-            echo json_encode(['status' => false, 'message' => 'appointment_type_id missing', 'data' => []]);
+            echo json_encode(['status' => false, 'data' => [], 'message' => 'appointment_type_id required']);
             exit;
         }
 
-        $rows = $this->nabh_model->get_mapped_forms($appointment_type_id);
+        $mapTable  = db_prefix() . 'appointment_type_pdf_master';
+        $nabhTable = db_prefix() . 'nabh_master';
 
+        // ✅ only assigned forms
+        $this->db->select("n.pdf_id, n.pdf_name, n.english_file_name, n.gujarati_file_name", false);
+        $this->db->from($mapTable . ' m');
+        $this->db->join($nabhTable . ' n', 'n.pdf_id = m.appointment_pdf_id', 'inner');
+        $this->db->where('m.appointment_type_id', $appointment_type_id);
+        $this->db->order_by('n.pdf_id', 'ASC');
+        $rows = $this->db->get()->result_array();
+
+        // ✅ same folder logic as your old code
         $enDir = FCPATH . 'uploads/nabh/english/';
         $guDir = FCPATH . 'uploads/nabh/gujarati/';
 
@@ -35,15 +51,19 @@ class Nabh extends AdminController
             $hasEn = ($enFile !== '' && file_exists($enDir . basename($enFile)));
             $hasGu = ($guFile !== '' && file_exists($guDir . basename($guFile)));
 
-            $titleEn = (string)($r['english_title'] ?? $r['title'] ?? 'English');
-            $titleGu = (string)($r['gujarati_title'] ?? $r['title'] ?? 'Gujarati');
+            // you have pdf_name only (same for both languages)
+            $title = (string)($r['pdf_name'] ?? 'NABH Form');
 
             $out[] = [
-                'pdf_id'       => (int)$r['pdf_id'],
-                'has_en'   => $hasEn,
-                'has_gu'   => $hasGu,
-                'title_en' => $titleEn,
-                'title_gu' => $titleGu,
+                // ✅ keep JS compatible: r.id
+                'id'       => (int)$r['pdf_id'],
+
+                // ✅ keep JS compatible: r.title_en / r.title_gu
+                'title_en' => $title,
+                'title_gu' => $title,
+
+                'has_en'   => $hasEn ? 1 : 0,
+                'has_gu'   => $hasGu ? 1 : 0,
             ];
         }
 
@@ -51,18 +71,31 @@ class Nabh extends AdminController
         exit;
     }
 
-    // ✅ Serve HTML/PDF file inline inside iframe
-    public function view_file($id)
+    /**
+     * ✅ Serve HTML in iframe (modal)
+     * URL: admin/nabh/view_html/{pdf_id}?lang=en|gu
+     */
+    public function view_html($pdf_id)
     {
         if (!is_staff_logged_in()) {
             access_denied();
         }
 
+        $pdf_id = (int)$pdf_id;
+        if ($pdf_id <= 0) show_404();
+
         $lang = $this->input->get('lang'); // en / gu
         $lang = in_array($lang, ['en', 'gu'], true) ? $lang : 'gu';
 
-        $row = $this->nabh_model->get($id);
-        if (!$row) show_404();
+        $nabhTable = db_prefix() . 'nabh_master';
+
+        // ✅ pdf_id is primary key in your table
+        $this->db->where('pdf_id', $pdf_id);
+        $row = $this->db->get($nabhTable)->row_array();
+
+        if (!$row) {
+            show_404();
+        }
 
         $enDir = FCPATH . 'uploads/nabh/english/';
         $guDir = FCPATH . 'uploads/nabh/gujarati/';
@@ -70,10 +103,10 @@ class Nabh extends AdminController
         $enFile = trim((string)($row['english_file_name'] ?? ''));
         $guFile = trim((string)($row['gujarati_file_name'] ?? ''));
 
-        $enPath = $enFile ? ($enDir . basename($enFile)) : '';
-        $guPath = $guFile ? ($guDir . basename($guFile)) : '';
+        $enPath = ($enFile !== '') ? ($enDir . basename($enFile)) : '';
+        $guPath = ($guFile !== '') ? ($guDir . basename($guFile)) : '';
 
-        // pick requested lang else fallback
+        // ✅ preferred language, else fallback (same as old code)
         $path = '';
         if ($lang === 'gu') {
             if ($guPath && file_exists($guPath)) $path = $guPath;
@@ -83,20 +116,18 @@ class Nabh extends AdminController
             elseif ($guPath && file_exists($guPath)) $path = $guPath;
         }
 
-        if (!$path || !file_exists($path)) show_error('File not found', 404);
-
-        // detect type by extension
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        if ($ext === 'pdf') {
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: inline; filename="' . basename($path) . '"');
-        } else {
-            // html
-            header('Content-Type: text/html; charset=utf-8');
-            header('X-Content-Type-Options: nosniff');
+        if ($path === '' || !file_exists($path)) {
+            show_error('HTML file not found in uploads/nabh folder.', 404);
         }
 
+        // ✅ HTML only
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($ext, ['html', 'htm'], true)) {
+            show_error('This form file is not an HTML file.', 404);
+        }
+
+        header('Content-Type: text/html; charset=utf-8');
+        header('X-Content-Type-Options: nosniff');
         readfile($path);
         exit;
     }
