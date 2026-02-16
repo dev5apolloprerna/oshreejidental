@@ -1400,7 +1400,7 @@ if (!empty($check_prescription_exists)) { ?>
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">NABH Forms</h4>
-
+        <input type="hidden" id="appointment_type_id" name="appointment_type_id" >
         <div style="display:flex; gap:10px; align-items:center;">
           <select id="nabhLang" class="form-control" style="width:160px;">
             <option value="gu">Gujarati</option>
@@ -1556,7 +1556,9 @@ function getClientIdFromUrl() {
   window.__nabh_inited__ = true;
 
   // ✅ global function called from onclick button
-  window.openNabhFormsModal = function(appointmentTypeId) {
+  window.openNabhFormsModal = function(appointmentTypeId) 
+  {
+
     appointmentTypeId = parseInt(appointmentTypeId || "0", 10);
     $('#appointment_type_id').val(appointmentTypeId);
 
@@ -1570,6 +1572,7 @@ function getClientIdFromUrl() {
   });
 
   function loadNabhList() {
+
     var lang = $('#nabhLang').val();
     var appointmentTypeId = parseInt($('#appointment_type_id').val() || "0", 10);
 
@@ -1586,13 +1589,14 @@ function getClientIdFromUrl() {
     var postData = {};
     postData['appointment_type_id'] = appointmentTypeId;
     postData[csrfName] = csrfHash;
-
     $.ajax({
       url: admin_url + 'nabh/list-json',
+
       type: 'POST',
       dataType: 'json',
       data: postData,
-      success: function(res) {
+      success: function(res) 
+      {
         var rows = (res && res.status) ? (res.data || []) : [];
 
         if (!rows.length) {
@@ -1617,9 +1621,11 @@ function getClientIdFromUrl() {
           else avail = 'Not Uploaded';
 
           // ✅ IMPORTANT: use r.id
-          var viewUrl = admin_url + 'nabh/view-file/' + r.id + '?lang=' + lang;
+          //var viewUrl = admin_url + 'nabh/view-file/' + r.id + '?lang=' + lang;
           var disabled = (!hasEn && !hasGu) ? 'disabled' : '';
+           var viewUrl = admin_url + 'nabh/view_html/' + r.id + '?lang=' + lang;
 
+console.log(viewUrl);
           html += ''
             + '<tr>'
             +   '<td>' + (i+1) + '</td>'
