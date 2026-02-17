@@ -966,7 +966,7 @@ if (!empty($check_prescription_exists)) { ?>
                                     
                                 <!--</div>-->
                                 <?php } ?>
-                                <div class="col-xl-7 col-lg-7 dr_name" style="<?php echo $value['firstname'] != '' ? 'padding' : 'padding: 0 0 0 0px;'?>">
+                                <div class="col-xl-7 col-lg-7 dr_name" style="padding: 0 0 0 0px;">
 
                                 <!--     <select class="form-control" name="staff" id="staff" onchange="update_assginee(this.value, <?php echo $value['id']?>)">-->
                                 <!--          <?php if($value['firstname'] != ''){?>-->
@@ -986,12 +986,17 @@ if (!empty($check_prescription_exists)) { ?>
                                 </button>
 
                                 <button class="btn btn-primary add_free_hand_dental"
-    onclick="openNabhFormsModal(<?php echo (int)$value['type_id']; ?>)"
-    style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">
-    NABH FORMS
-</button>
-
-
+                                  onclick="openNabhFormsModal(
+                                    <?php echo (int)$value['type_id']; ?>,
+                                    <?php echo (int)$value['id']; ?>,
+                                    <?php echo (int)$client->userid; ?>,
+                                    <?php echo (int)$staff_id; ?>,
+                                    '<?php echo addslashes($client->company); ?>',
+                                    '<?php echo addslashes(trim(($value['firstname'] ?? '').' '.($value['lastname'] ?? ''))); ?>'
+                                  )"
+                                  style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">
+                                  NABH FORMS
+                                </button>
                                   
                                 </div>
 
@@ -1544,34 +1549,51 @@ function getClientIdFromUrl() {
 
 <script>
 (function waitForJqAndBootstrap(){
-  // wait until jQuery + bootstrap modal plugin is available
   if (!window.jQuery || !window.jQuery.fn || !window.jQuery.fn.modal) {
     return setTimeout(waitForJqAndBootstrap, 80);
   }
 
   var $ = window.jQuery;
 
-  // bind once
+  // run only once
   if (window.__nabh_inited__) return;
   window.__nabh_inited__ = true;
 
-  // ✅ global function called from onclick button
-  window.openNabhFormsModal = function(appointmentTypeId) 
-  {
+  // ✅ store clicked appointment meta here
+  window.__NABH_META__ = {
+    appointment_id: 0,
+    patient_id: 0,
+    doctor_id: 0,
+    patient_name: '',
+    doctor_name: '',
+    appointment_type_id: 0
+  };
 
-    appointmentTypeId = parseInt(appointmentTypeId || "0", 10);
-    $('#appointment_type_id').val(appointmentTypeId);
+  // ✅ called from button onclick
+  window.openNabhFormsModal = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
+
+    window.__NABH_META__ = {
+      appointment_id: parseInt(appointmentId || "0", 10),
+      patient_id: parseInt(patientId || "0", 10),
+      doctor_id: parseInt(doctorId || "0", 10),
+      patient_name: patientName || '',
+      doctor_name: doctorName || '',
+      appointment_type_id: parseInt(appointmentTypeId || "0", 10)
+    };
+
+    $('#appointment_type_id').val(window.__NABH_META__.appointment_type_id);
 
     $('#nabhListModal').modal('show');
     loadNabhList();
   };
 
-  // lang change
+  // language change reload
   $(document).on('change', '#nabhLang', function () {
     loadNabhList();
   });
 
-  function loadNabhList() {
+  function loadNabhList() 
+  {
 
     var lang = $('#nabhLang').val();
     var appointmentTypeId = parseInt($('#appointment_type_id').val() || "0", 10);
@@ -1589,14 +1611,15 @@ function getClientIdFromUrl() {
     var postData = {};
     postData['appointment_type_id'] = appointmentTypeId;
     postData[csrfName] = csrfHash;
-    $.ajax({
-      url: admin_url + 'nabh/list-json',
 
+    $.ajax({
+      // ✅ use your controller method name exactly
+      url: admin_url + 'nabh/list_json',
       type: 'POST',
       dataType: 'json',
       data: postData,
-      success: function(res) 
-      {
+      success: function(res) {
+
         var rows = (res && res.status) ? (res.data || []) : [];
 
         if (!rows.length) {
@@ -1605,8 +1628,10 @@ function getClientIdFromUrl() {
         }
 
         var html = '';
+
         for (var i = 0; i < rows.length; i++) {
           var r = rows[i];
+
           var hasEn = !!r.has_en;
           var hasGu = !!r.has_gu;
 
@@ -1620,12 +1645,26 @@ function getClientIdFromUrl() {
           else if (hasGu) avail = 'GU';
           else avail = 'Not Uploaded';
 
-          // ✅ IMPORTANT: use r.id
-          //var viewUrl = admin_url + 'nabh/view-file/' + r.id + '?lang=' + lang;
           var disabled = (!hasEn && !hasGu) ? 'disabled' : '';
-           var viewUrl = admin_url + 'nabh/view_html/' + r.id + '?lang=' + lang;
 
-console.log(viewUrl);
+          // ✅ build view url (iframe html) + pass meta
+          //var viewUrl = admin_url + 'nabh/view_html/' + r.id + '?lang=' + encodeURIComponent(lang);
+
+          var viewUrl = admin_url + 'nabh/view_html/' + r.id
+          + '?lang=' + encodeURIComponent(lang)
+          + '&nabh_pdf_id=' + encodeURIComponent(r.id)
+          + '&appointment_id=' + encodeURIComponent(window.__NABH_META__.appointment_id)
+          + '&appointment_type_id=' + encodeURIComponent(parseInt($('#appointment_type_id').val()||"0",10))
+          + '&patient_id=' + encodeURIComponent(window.__NABH_META__.patient_id)
+          + '&doctor_id=' + encodeURIComponent(window.__NABH_META__.doctor_id)
+          + '&patient_name=' + encodeURIComponent(window.__NABH_META__.patient_name)
+          + '&doctor_name=' + encodeURIComponent(window.__NABH_META__.doctor_name)
+          + '&admin_base=' + encodeURIComponent(admin_url)
+          + '&csrf_name=' + encodeURIComponent(csrfName)
+          + '&csrf_hash=' + encodeURIComponent(csrfHash);
+
+
+
           html += ''
             + '<tr>'
             +   '<td>' + (i+1) + '</td>'

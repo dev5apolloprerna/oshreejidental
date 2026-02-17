@@ -131,4 +131,54 @@ class Nabh extends AdminController
         readfile($path);
         exit;
     }
+    public function save_submission()
+    {
+        if (!is_staff_logged_in()) {
+            $this->_json(false, 'Not logged in');
+        }
+
+        // ✅ payload comes from POST (FormData)
+        $payloadStr = $this->input->post('payload');
+        $payload = json_decode($payloadStr, true);
+
+        if (!is_array($payload)) {
+            $this->_json(false, 'Invalid payload JSON');
+        }
+
+        $nabh_pdf_id         = (int)($payload['nabh_pdf_id'] ?? 0);
+        $appointment_id      = (int)($payload['appointment_id'] ?? 0);
+        $appointment_type_id = (int)($payload['appointment_type_id'] ?? 0);
+        $patient_id          = (int)($payload['patient_id'] ?? 0);
+        $doctor_id           = (int)($payload['doctor_id'] ?? 0);
+        $lang                = in_array(($payload['lang'] ?? ''), ['en','gu'], true) ? $payload['lang'] : 'gu';
+
+        if (!$nabh_pdf_id || !$appointment_id || !$patient_id) {
+            $this->_json(false, 'Missing required fields');
+        }
+
+        $formData = $payload['form_data'] ?? [];
+        if (!is_array($formData)) $formData = [];
+
+        $insert = [
+            'nabh_pdf_id'         => $nabh_pdf_id,
+            'appointment_id'      => $appointment_id,
+            'appointment_type_id' => $appointment_type_id,
+            'patient_id'          => $patient_id,
+            'doctor_id'           => $doctor_id,
+            'lang'                => $lang,
+            'patient_name'        => (string)($payload['patient_name'] ?? ''),
+            'doctor_name'         => (string)($payload['doctor_name'] ?? ''),
+            'form_data_json'      => json_encode($formData, JSON_UNESCAPED_UNICODE),
+            'created_by'          => get_staff_user_id(),
+            'created_at'          => date('Y-m-d H:i:s'),
+        ];
+
+        $this->db->insert(db_prefix().'nabh_form_submissions', $insert);
+        $id = $this->db->insert_id();
+
+        $this->_json(true, 'Saved successfully', ['id' => $id]);
+    }
+
+
+
 }
