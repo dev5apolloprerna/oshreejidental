@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consent for Dental Implants</title>
+    <style>
+        /* This forces the printer to use specific margins and hide headers */
+        @page {
+            size: A4;
+            margin: 10mm;
+            /* Reduced margin to ensure fit */
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .print-container {
+                box-shadow: none;
+                width: 100%;
+                padding: 5mm;
+                /* Tighten internal padding for print */
+            }
+        }
+
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.3;
+            color: #000;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .print-container {
+            background-color: white;
+            width: 210mm;
+            height: 297mm;
+            margin: auto;
+            padding: 15mm;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .blank-line {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        p,
+        td {
+            font-size: 10.5pt;
+            /* Slightly smaller to ensure 1-page fit */
+            margin: 0;
+        }
+
+        .endorsement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        .endorsement-table th,
+        .endorsement-table td {
+            border: 1px solid black;
+            padding: 4px;
+            text-align: center;
+            height: 20px;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .dotted-line {
+            border-bottom: 1px dotted #000;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .full-dotted-line {
+            border-bottom: 1px dotted #000;
+            height: 25px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .bullet-cell {
+            width: 25px;
+            text-align: center;
+            font-size: 20px;
+            padding-top: 2px;
+        }
+
+        .text-justify {
+            text-align: justify;
+        }
+
+        /* Make each print-container a separate A4 page */
+
+
+        .print-container:last-of-type {
+            page-break-after: auto;
+            break-after: auto;
+        }
+
+        /* Better Gujarati print */
+        body {
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .gu-font {
+            font-family: "Noto Sans Gujarati", "Shruti", "Nirmala UI", sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="print-container">
+        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td align="center" style="padding-bottom: 10px;">
+                    <h1 style="margin: 0; font-size: 20pt; font-weight: bold;">Consent for Dental Implants</h1>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-bottom: 12px;">
+                    After a careful oral examination and study of my dental condition, Dr. <span id="doctor_name" class="blank-line"
+                        style="min-width: 180px;"></span> has advised me that my missing tooth/teeth may be replaced
+                    with artificial teeth supported by dental implants as follows:
+                    <div style="margin-top: 10px; border-bottom: 1px solid #000; height: 18px;"></div>
+                    <div style="margin-top: 8px; border-bottom: 1px solid #000; height: 18px;"></div>
+                    <div style="margin-top: 8px; border-bottom: 1px solid #000; height: 18px; width: 60%;"></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-bottom: 12px;">
+                    Anesthesia: 1) __ Local Anesthetic, 2) __ Oral Sedation, 3) __ Conscious Sedation.
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-bottom: 12px;">
+                    All risks/benefits and instructions pertaining to sedation and surgical complications appear on the
+                    "Surgical Consent" sheet. I have selected the above treatment and have read and understand all items
+                    pertaining to the "Surgical Consent" sheet.
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; text-align: justify;">
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;">In order to treat this condition, Dr. <span id="doctor_name"
+                                    class="blank-line" style="min-width: 80px;"></span> has recommended that my
+                                treatment include dental implant(s) to be implanted into the jawbone. I understand that
+                                this surgical phase is followed by a prosthetic phase where artificial dentures, bridges
+                                or crowns are placed by the dentist/prosthodontist.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;">I understand that sedation may be utilized and that a local
+                                anesthetic will be administered to me as part of the treatment. My gum tissue will be
+                                opened to expose the bone, implants will be placed and the gum tissue will be sutured
+                                during the healing phase.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;">I understand that the healing phase of surgery varies from
+                                patient to patient and case to case, but typically last between 2-6 months. I understand
+                                that dentures or partial dentures that place pressure on the surgical site are to be
+                                avoided for 1-2 weeks following surgery.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;">I further understand that if during surgery the clinical
+                                situations turn out to be unfavorable for the implant, Dr. <span id="doctor_name" class="blank-line"
+                                    style="min-width: 80px;"></span> will make a professional judgment to manage this.
+                                This includes canceling the procedure, supplemental bone and soft tissue grafting to
+                                allow placement, gum closure and security of the dental implants.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;">I understand that some implants require second stage
+                                surgeries. Overlying tissues will be opened at the appropriate time and the stability of
+                                the implant will be verified. The artificial crown fabrication may begin after healing
+                                of this soft tissue.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;"><strong>Expected benefits:</strong> The purpose of dental
+                                implants is to allow me to have more functional artificial teeth and an improved
+                                appearance. The implants provide support, anchorage and retention for the artificial
+                                replacement.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;"><strong>Principal risks and complications:</strong> I
+                                understand that a small number of patients do not respond successfully to implant
+                                placement. In such cases, implants may have to be removed and replaced. I understand
+                                that complications may result from the implant surgery, drugs or anesthetics.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;">There is no method that will accurately predict or evaluate
+                                how my gum and bone will heal. I understand that there may be a need for a revision
+                                procedure if the initial results are not satisfactory. In addition, the success of
+                                dental implant procedures can be affected by medical conditions, dietary and nutritional
+                                problems, smoking, alcohol consumption, clenching and grinding of teeth, inadequate oral
+                                hygiene and medications that I may be taking.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;">To my knowledge, I have reported to Dr. <span id="doctor_name" 
+                                    class="blank-line" style="min-width: 80px;"></span> any prior drug reactions,
+                                allergies, or diseases. I understand that my diligence in providing personal daily care
+                                and taking all medications as prescribed are important to the success of the procedure.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;"><strong>Alternatives to suggested treatment:</strong> I
+                                understand that alternatives include: No treatment, removable appliances and other
+                                procedures depending on circumstances.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="padding: 2px 8px 8px 0;">&bull;</td>
+                            <td style="padding-bottom: 8px;"><strong>Necessary follow-up and self-care:</strong> I
+                                understand that it is important for me to continue regular visits to dentist. Implants,
+                                natural teeth and appliances must be maintained in a clean, hygienic manner. Implants
+                                and appliances should be examined by the dentist or Dr. <span id="doctor_name" class="blank-line"
+                                    style="min-width: 80px;"></span> periodically.</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-top: 10px;">
+                    <h2 style="color: #00AEEF; font-size: 16pt; margin: 0;">Patient Consent</h2>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="print-container">
+        <p style="text-align: justify; margin-bottom: 5px; text-indent: 30px;">
+            I have been fully informed of the nature of implant surgery, the procedure to be utilized, the risks and
+            benefits of implant surgery and the selected anesthesia, the alternative treatments available and the
+            necessity for follow-up and self-care. I have had an opportunity to ask any questions I may have in
+            connection with the treatment and to discuss my concerns with Dr.<span id="doctor_name" class="blank-line"
+                style="min-width: 80px;"></span></strong>
+        </p>
+
+        <p style="text-align: justify; margin-bottom: 5px; text-indent: 30px;">
+            I have been fully informed of the nature of implant surgery, risks, benefits, and alternatives. I have had
+            an opportunity to ask questions. I hereby consent to the performance of dental implant surgery. <strong>I
+                CERTIFY THAT I HAVE READ AND FULLY UNDERSTAND THIS DOCUMENT.</strong>
+        </p>
+
+        <table border="0" width="100%" style="margin-top: 8px; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 6px 0; font-size: 10.5pt;">
+                    <span style="display:inline-block; min-width: 85px;">Patient Name:</span>
+                    <span id="patient_name" style="display:inline-block; border-bottom:1px solid #000; width: 45%; height: 14px;"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 6px 0; font-size: 10.5pt;">
+                    <span style="display:inline-block; min-width: 220px;">Parent/Legal Guardian (if applicable):</span>
+                    <input type="patient_relative" style="display:inline-block; border-bottom:1px solid #000; width: 45%; height: 14px;"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 6px 0; font-size: 10.5pt;">
+                    <span style="display:inline-block; min-width: 65px;">Signature:</span>
+                    <span style="display:inline-block; border-bottom:1px solid #000; width: 35%; height: 14px;"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 6px 0; font-size: 10.5pt;">
+                    <span style="display:inline-block; min-width: 95px;">Doctor’s Name:</span>
+                    <span style="display:inline-block; border-bottom:1px solid #000; width: 50%; height: 14px;"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 6px 0; font-size: 10.5pt;">
+                    <span style="display:inline-block; min-width: 115px;">Doctor’s Signature:</span>
+                    <span style="display:inline-block; border-bottom:1px solid #000; width: 50%; height: 14px;"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 6px 0; font-size: 10.5pt;">
+                    <span style="display:inline-block; min-width: 35px;">Date:</span>
+                    <span id="today_date" style="display:inline-block; border-bottom:1px solid #000; width: 22%; min-height: 14px;"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 6px 0; font-size: 10.5pt;">
+                    <span style="display:inline-block; min-width: 37px;">Time:</span>
+                    <span style="display:inline-block; border-bottom:1px solid #000; width: 22%; height: 14px;"></span>
+                </td>
+            </tr>
+        </table>
+
+
+        <h3 style="text-align: center;"><strong>CONSENT ENDORSEMENT FOR EACH CYCLE </strong> </h3>
+        <table class="endorsement-table">
+            <thead>
+                <tr>
+                    <th width="10%">Sr. No.</th>
+                    <th width="30%">Date and time</th>
+                    <th width="30%">Signature of patient/relative</th>
+                    <th width="30%">Signature of doctor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>4.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>5.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>6.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>7.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>8.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>9.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>10.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>11.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>12.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>13.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>14.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>15.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    
+   
+    </div>
+
+
+<!-- ====================== SUBMIT SECTION (Added) ====================== -->
+<div style="margin-top:20px; padding: 12px 0; border-top: 1px solid #ddd;">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+    <div style="font-size:12px; color:#444;">
+      <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+    </div>
+    <button id="submitBtn" type="button"
+      style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+      Submit
+    </button>
+  </div>
+</div>
+
+<script>
+(function () {
+  function getParam(name) {
+    return (new URL(window.location.href)).searchParams.get(name) || "";
+  }
+
+  function collectFormData() {
+    var data = {};
+    document.querySelectorAll('input[name], textarea[name], select[name]').forEach(function(el){
+      if (el.type === 'checkbox') data[el.name] = el.checked ? 1 : 0;
+      else if (el.type === 'radio') { if (el.checked) data[el.name] = el.value; }
+      else data[el.name] = el.value;
+    });
+    return data;
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    // ✅ Fill patient/doctor/date (put your element IDs accordingly)
+    var patientName = decodeURIComponent(getParam("patient_name"));
+    var doctorName  = decodeURIComponent(getParam("doctor_name"));
+
+    var p = document.getElementById("patient_name");
+    if (p) (p.value !== undefined ? p.value = patientName : p.textContent = patientName);
+
+    var d = document.getElementById("doctor_name");
+    if (d) (d.value !== undefined ? d.value = doctorName : d.textContent = doctorName);
+
+    var dt = document.getElementById("today_date");
+    if (dt) {
+      var now = new Date();
+      var dd = String(now.getDate()).padStart(2,'0');
+      var mm = String(now.getMonth()+1).padStart(2,'0');
+      var yy = now.getFullYear();
+      var today = dd + "/" + mm + "/" + yy;
+      (dt.value !== undefined ? dt.value = today : dt.textContent = today);
+    }
+  });
+
+  document.addEventListener("click", async function(e){
+    if (!e.target || e.target.id !== "submitBtn") return;
+
+    var adminBase = decodeURIComponent(getParam("admin_base"));
+    var csrfName  = decodeURIComponent(getParam("csrf_name"));
+    var csrfHash  = decodeURIComponent(getParam("csrf_hash"));
+
+    if (!adminBase || !csrfName || !csrfHash) {
+      alert("Missing admin_base/csrf token in iframe url");
+      return;
+    }
+
+    var payload = {
+      nabh_pdf_id: parseInt(getParam("nabh_pdf_id") || "0", 10),
+      appointment_id: parseInt(getParam("appointment_id") || "0", 10),
+      appointment_type_id: parseInt(getParam("appointment_type_id") || "0", 10),
+      patient_id: parseInt(getParam("patient_id") || "0", 10),
+      doctor_id: parseInt(getParam("doctor_id") || "0", 10),
+      lang: getParam("lang") || "gu",
+      patient_name: decodeURIComponent(getParam("patient_name") || ""),
+      doctor_name: decodeURIComponent(getParam("doctor_name") || ""),
+      form_data: collectFormData()
+    };
+
+    try {
+      var fd = new FormData();
+      fd.append(csrfName, csrfHash);          // ✅ CSRF for CI
+      fd.append("payload", JSON.stringify(payload));
+
+      var res = await fetch(adminBase + "nabh/save_submission", {
+        method: "POST",
+        body: fd
+      });
+
+      var text = await res.text();
+      try {
+        var json = JSON.parse(text);
+        if (json.status) alert(json.message || "Saved");
+        else alert("Save failed: " + (json.message || "Unknown"));
+      } catch (err) {
+        console.log("NOT JSON RESPONSE:", text);
+        alert("Save failed: Server returned HTML. Check console.");
+      }
+    } catch (ex) {
+      console.error(ex);
+      alert("Save failed: " + ex.message);
+    }
+  });
+})();
+</script>
+
+
+</body>
+
+</html>
