@@ -178,6 +178,44 @@ class Nabh extends AdminController
 
         $this->_json(true, 'Saved successfully', ['id' => $id]);
     }
+    public function get_submission()
+{
+    if (!$this->input->is_ajax_request()) {
+        show_404();
+    }
+
+    $nabh_pdf_id     = (int) $this->input->get('nabh_pdf_id');
+    $appointment_id  = (int) $this->input->get('appointment_id');
+    $patient_id      = (int) $this->input->get('patient_id');
+    $lang            = $this->input->get('lang', true);
+
+    if ($nabh_pdf_id <= 0) {
+        echo json_encode(['status' => false, 'message' => 'Missing nabh_pdf_id']);
+        return;
+    }
+
+    $this->db->from('tblnabh_pdf_submissions'); // ✅ change table name as per yours
+    $this->db->where('nabh_pdf_id', $nabh_pdf_id);
+
+    // Use whichever key is correct in your project:
+    if ($appointment_id > 0) $this->db->where('appointment_id', $appointment_id);
+    else if ($patient_id > 0) $this->db->where('patient_id', $patient_id);
+
+    if (!empty($lang)) $this->db->where('lang', $lang);
+
+    $row = $this->db->order_by('id', 'DESC')->get()->row_array();
+
+    if (!$row) {
+        echo json_encode(['status' => true, 'found' => false, 'data' => null]);
+        return;
+    }
+
+    // If form_data column is JSON string
+    $row['form_data'] = !empty($row['form_data']) ? json_decode($row['form_data'], true) : [];
+
+    echo json_encode(['status' => true, 'found' => true, 'data' => $row]);
+}
+
 
 
 
