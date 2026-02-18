@@ -1472,9 +1472,7 @@ if (!empty($check_prescription_exists)) { ?>
     
     
     <script>
-document.addEventListener('DOMContentLoaded', function() 
-{
-
+document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('paste', function(event) {
         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
         for (var i = 0; i < items.length; i++) {
@@ -1486,7 +1484,6 @@ document.addEventListener('DOMContentLoaded', function()
             }
         }
     });
-
 });
 function showLoader() {
     var loader = document.getElementById('loader');
