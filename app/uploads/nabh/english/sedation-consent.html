@@ -35,7 +35,7 @@
             margin: 0 auto;
             padding: 15mm;
             background: #fff;
-            /* page-break-after: always; */
+            position: relative;
         }
 
         .page-container:last-child {
@@ -79,6 +79,7 @@
             border-bottom: 1px solid #000;
             width: 100%;
             height: 16px;
+            position: relative;
         }
 
         .section-header,
@@ -106,6 +107,7 @@
             height: 18px;
             width: 100%;
             margin-bottom: 4px;
+            position: relative;
         }
 
         /* Inline blank line */
@@ -115,6 +117,22 @@
             min-width: 200px;
             height: 14px;
             vertical-align: baseline;
+            position: relative;
+        }
+
+        /* Overlay Input - Zero Pixel Shift */
+        .input-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            padding: 0;
+            margin: 0;
         }
 
         @media print {
@@ -132,7 +150,6 @@
 
 <body>
 
-    <!-- ===================== PAGE 1 ===================== -->
     <div class="page-container">
         <div class="header-box">ADDRESSOGRAPH</div>
 
@@ -142,9 +159,14 @@
             <tr>
                 <td style="vertical-align: bottom;">
                     I,
-                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px;">&nbsp;</span>,
+                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px; position: relative;">
+                        <input type="text" id="input1" name="input1" class="input-overlay">
+                    </span>,
                     hereby give my informed consent to the medical team at [Your Organization/Hospital] to administer
-                    procedural sedation for the purpose of [describe the specific procedure]. I have had the opportunity
+                    procedural sedation for the purpose of 
+                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px; position: relative;">
+                        <input type="text" id="input2" name="input2" class="input-overlay">
+                    </span>. I have had the opportunity
                     to discuss the procedure, its risks, benefits, alternatives, and expected outcomes with the
                     healthcare provider listed below. I understand the nature of the procedure, the potential risks
                     involved, and the sedation techniques that will be used.
@@ -158,15 +180,15 @@
             </tr>
             <tr>
                 <td class="label" style="width: 80px;">Procedure:</td>
-                <td class="line-cell"></td>
+                <td class="line-cell"><input type="text" id="input3" name="input3" class="input-overlay"></td>
             </tr>
             <tr>
                 <td class="label" style="padding-top: 8px;">Date and Time:</td>
-                <td class="line-cell"></td>
+                <td class="line-cell"><input type="text" id="input4" name="input4" class="input-overlay"></td>
             </tr>
             <tr>
                 <td class="label" style="padding-top: 8px;">Name of the consultant doctor:</td>
-                <td class="line-cell"></td>
+                <td class="line-cell"><input type="text" id="input5" name="input5" class="input-overlay"></td>
             </tr>
             <tr>
                 <td colspan="2" style="padding-top: 8px;">Purpose of the Procedure:</td>
@@ -183,8 +205,8 @@
             I have been informed of the potential risks associated with the administration of procedural sedation,
             including but not limited to:
         </p>
-        <div class="full-line"></div>
-        <div class="full-line"></div>
+        <div class="full-line"><input type="text" id="input6" name="input6" class="input-overlay"></div>
+        <div class="full-line"><input type="text" id="input7" name="input7" class="input-overlay"></div>
 
         <ul class="bullet-list">
             <li><strong>Allergic reactions to sedative medications</strong></li>
@@ -212,16 +234,13 @@
         <p style="margin: 5px 0;">
             I have been informed of the alternatives to procedural sedation, including but not limited to:
         </p>
-        <div class="full-line"></div>
+        <div class="full-line"><input type="text" id="input8" name="input8" class="input-overlay"></div>
     </div>
 
-    <!-- ===================== PAGE 2 (same CSS) ===================== -->
     <div class="page-container">
         <div class="addressograph">ADDRESSOGRAPH</div>
 
-        <!-- (If your original page-2 image doesn't have title, you can remove this title block) -->
-        <div class="title" style="margin-top:90px;">
-        </div>
+        <div class="title" style="margin-top:90px;"></div>
 
         <p style="margin:0 0 10px 0;">Local anesthesia</p>
         <p style="margin:0 0 10px 0;">General anesthesia</p>
@@ -257,14 +276,14 @@
             sedation.
         </p>
 
-        <div style="margin-top:14px;">Patient Signature and name: <span class="line" style="min-width:140px;"></span>
+        <div style="margin-top:14px;">Patient Signature and name: <span class="line" style="min-width:140px;"><input type="text" id="input9" name="input9" class="input-overlay"></span>
         </div>
-        <div style="margin-top:14px;">Witness Signature and name: <span class="line" style="min-width:140px;"></span>
+        <div style="margin-top:14px;">Witness Signature and name: <span class="line" style="min-width:140px;"><input type="text" id="input10" name="input10" class="input-overlay"></span>
         </div>
         <div style="margin-top:14px;">Consultant doctor name and Signature: <span class="line"
-                style="min-width:140px;"></span></div>
+                style="min-width:140px;"><input type="text" id="input11" name="input11" class="input-overlay"></span></div>
     </div>
-    <!-- ===================== PAGE 1 ===================== -->
+
     <div class="page-container">
         <div class="header-box">ADDRESSOGRAPH</div>
 
@@ -274,9 +293,15 @@
             <tr>
                 <td style="vertical-align: bottom;">
                     હું,
-                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px;">&nbsp;</span>,
+                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px; position: relative;">
+                        <input type="text" id="input12" name="input12" class="input-overlay">
+                    </span>,
                     આથી <strong>[તમારી સંસ્થા/હોસ્પિટલનું નામ]</strong> ની તબીબી ટીમને
-                    <strong>[ચોક્કસ પ્રક્રિયાનું વર્ણન]</strong> કરવા માટે જરૂરી પ્રક્રિયાત્મક સેડેશન આપવા
+                    <strong>
+                        <span style="border-bottom: 1px solid black; display: inline-block; width: 150px; position: relative;">
+                            <input type="text" id="input13" name="input13" class="input-overlay">
+                        </span>
+                    </strong> કરવા માટે જરૂરી પ્રક્રિયાત્મક સેડેશન આપવા
                     મારી જાણકારી આધારિત સંમતિ આપું છું.
                     મને પ્રક્રિયા, તેના જોખમો, લાભો, વિકલ્પો અને અપેક્ષિત પરિણામો અંગે નીચે દર્શાવેલ આરોગ્ય સેવા પ્રદાતા
                     સાથે
@@ -291,22 +316,18 @@
             <tr>
                 <td colspan="2" class="label" style="padding-bottom: 8px;">પ્રક્રિયા વિગતો:</td>
             </tr>
-
             <tr>
                 <td class="label" style="width: 90px;">પ્રક્રિયા:</td>
-                <td class="line-cell"></td>
+                <td class="line-cell"><input type="text" id="input14" name="input14" class="input-overlay"></td>
             </tr>
-
             <tr>
                 <td class="label" style="padding-top: 8px;">તારીખ અને સમય:</td>
-                <td class="line-cell"></td>
+                <td class="line-cell"><input type="text" id="input15" name="input15" class="input-overlay"></td>
             </tr>
-
             <tr>
                 <td class="label" style="padding-top: 8px;">કન્સલ્ટન્ટ ડોક્ટરનું નામ:</td>
-                <td class="line-cell"></td>
+                <td class="line-cell"><input type="text" id="input16" name="input16" class="input-overlay"></td>
             </tr>
-
             <tr>
                 <td colspan="2" style="padding-top: 8px;"><strong>પ્રક્રિયાનો હેતુ:</strong></td>
             </tr>
@@ -320,12 +341,10 @@
         <span class="section-header">જોખમો:</span>
         <p style="margin: 5px 0;">
             મને પ્રક્રિયાત્મક સેડેશન આપવાના સંભવિત જોખમો વિશે માહિતગાર કરવામાં આવ્યો છે, જેમાં નીચે મુજબના જોખમો સામેલ
-            છે
-            (પરંતુ માત્ર એટલા સુધી મર્યાદિત નથી):
+            છે (પરંતુ માત્ર એટલા સુધી મર્યાદિત નથી):
         </p>
-
-        <div class="full-line"></div>
-        <div class="full-line"></div>
+        <div class="full-line"><input type="text" id="input17" name="input17" class="input-overlay"></div>
+        <div class="full-line"><input type="text" id="input18" name="input18" class="input-overlay"></div>
 
         <ul class="bullet-list">
             <li><strong>સેડેટિવ દવાઓથી એલર્જીક પ્રતિક્રિયા</strong></li>
@@ -352,40 +371,31 @@
         <span class="section-header">વિકલ્પો:</span>
         <p style="margin: 5px 0;">
             મને પ્રક્રિયાત્મક સેડેશનના વિકલ્પો વિશે માહિતગાર કરવામાં આવ્યો છે, જેમાં નીચે મુજબનો સમાવેશ થાય છે (પરંતુ
-            માત્ર
-            એટલા સુધી મર્યાદિત નથી):
+            માત્ર એટલા સુધી મર્યાદિત નથી):
         </p>
-
-        <div class="full-line"></div>
+        <div class="full-line"><input type="text" id="input19" name="input19" class="input-overlay"></div>
     </div>
 
-    <!-- ===================== PAGE 2 ===================== -->
     <div class="page-container">
         <div class="header-box">ADDRESSOGRAPH</div>
-
         <div class="title" style="margin-top: 20px;">પ્રક્રિયાત્મક સેડેશન આપવા માટે જાણકારી આધારિત સંમતિ પત્ર</div>
 
         <p style="margin:0 0 10px 0;">સ્થાનિક એનેસ્થેશિયા</p>
         <p style="margin:0 0 10px 0;">સામાન્ય એનેસ્થેશિયા</p>
-        <p style="margin:0 0 12px 0;">
-            દવાઓ વિના પદ્ધતિઓ જેમ કે ધ્યાન ભટકાવવું, આરામ તકનીકો અથવા જ્ઞાન-વર્તન થેરાપી
-        </p>
+        <p style="margin:0 0 12px 0;">દવાઓ વિના પદ્ધતિઓ જેમ કે ધ્યાન ભટકાવવું, આરામ તકનીકો અથવા જ્ઞાન-વર્તન થેરાપી</p>
 
         <p style="margin:0 0 12px 0;">
             હું સમજું છું કે મને પ્રક્રિયા, તેના જોખમો અને લાભો તથા ઉપલબ્ધ વિકલ્પો વિશે પ્રશ્ન પૂછવાનો અધિકાર છે.
             આરોગ્ય સેવા પ્રદાતાએ મારા તમામ પ્રશ્નોના સંતોષકારક જવાબ આપ્યા છે અને મને જાણ છે કે પ્રક્રિયા શરૂ થાય તે
-            પહેલાં
-            કોઈ પણ સમયે હું મારી સંમતિ પાછી ખેંચી શકું છું.
+            પહેલાં કોઈ પણ સમયે હું મારી સંમતિ પાછી ખેંચી શકું છું.
         </p>
 
         <span class="section-header" style="text-decoration:none; font-weight:bold;">ગોપનીયતા અને માહિતી સુરક્ષા:</span>
 
         <p style="margin:0 0 12px 0;">
             હું સમજું છું કે મારી વ્યક્તિગત આરોગ્ય માહિતી દર્દીની ગોપનીયતા અને માહિતી સુરક્ષા સંબંધિત લાગુ કાયદા અને
-            નિયમો
-            અનુસાર સંભાળવામાં આવશે. હું આ પ્રક્રિયા અને સંબંધિત તબીબી દસ્તાવેજીકરણ અથવા બિલિંગ પ્રક્રિયા માટે મારી
-            આરોગ્ય
-            માહિતીના ઉપયોગને અધિકૃત કરું છું.
+            નિયમો અનુસાર સંભાળવામાં આવશે. હું આ પ્રક્રિયા અને સંબંધિત તબીબી દસ્તાવેજીકરણ અથવા બિલિંગ પ્રક્રિયા માટે મારી
+            આરોગ્ય માહિતીના ઉપયોગને અધિકૃત કરું છું.
         </p>
 
         <p style="margin:0 0 12px 0;">
@@ -395,16 +405,13 @@
 
         <p style="margin:0 0 16px 0;">
             નીચે સહી કરીને, હું ખાતરી આપું છું કે પ્રક્રિયા, તેના જોખમો, લાભો અને વિકલ્પો અંગે આપવામાં આવેલી માહિતી મેં
-            વાંચી
-            અને સમજી છે. મને પ્રશ્ન પૂછવાની તક મળી છે અને સંતોષકારક જવાબ મળ્યા છે. હું સ્વૈચ્છિક રીતે પ્રક્રિયાત્મક
-            સેડેશન
-            આપવા માટે સંમતિ આપું છું.
+            વાંચી અને સમજી છે. મને પ્રશ્ન પૂછવાની તક મળી છે અને સંતોષકારક જવાબ મળ્યા છે. હું સ્વૈચ્છિક રીતે પ્રક્રિયાત્મક
+            સેડેશન આપવા માટે સંમતિ આપું છું.
         </p>
 
-        <div style="margin-top:14px;">દર્દીની સહી અને નામ: <span class="line" style="min-width:200px;"></span></div>
-        <div style="margin-top:14px;">સાક્ષીની સહી અને નામ: <span class="line" style="min-width:200px;"></span></div>
-        <div style="margin-top:14px;">કન્સલ્ટન્ટ ડોક્ટરનું નામ અને સહી: <span class="line"
-                style="min-width:200px;"></span></div>
+        <div style="margin-top:14px;">દર્દીની સહી અને નામ: <span class="line" style="min-width:200px;"><input type="text" id="input20" name="input20" class="input-overlay"></span></div>
+        <div style="margin-top:14px;">સાક્ષીની સહી અને નામ: <span class="line" style="min-width:200px;"><input type="text" id="input21" name="input21" class="input-overlay"></span></div>
+        <div style="margin-top:14px;">કન્સલ્ટન્ટ ડોક્ટરનું નામ અને સહી: <span class="line" style="min-width:200px;"><input type="text" id="input22" name="input22" class="input-overlay"></span></div>
     </div>
 </body>
 

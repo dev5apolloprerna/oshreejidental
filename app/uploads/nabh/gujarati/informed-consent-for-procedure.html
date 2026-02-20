@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Informed Consent Form</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+            background: #fff;
+        }
+
+        /* ===== SCREEN VIEW (centered) ===== */
+        .container {
+            width: 210mm;
+            max-width: 100%;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 12mm;
+            overflow: hidden;
+            page-break-after: always;
+        }
+
+        .header-logo {
+            text-align: left;
+            margin-bottom: 6mm;
+        }
+
+        .header-logo img {
+            max-width: 55mm;
+            height: auto;
+            display: block;
+        }
+
+        .title-box {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10mm;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        /* STICKY DESIGN: Input styles to mimic underlines exactly */
+        input[type="text"], input[type="time"] {
+            border: none;
+            border-bottom: 1px solid #000;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Input inside table cells */
+        td input {
+            width: 100%;
+            height: 100%;
+            border-bottom: none !important;
+        }
+
+        .underline {
+            width: 50mm;
+            height: 14px;
+            vertical-align: bottom;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+            font-size: 12px;
+            height: 22px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .col-sr {
+            width: 12mm;
+            text-align: center;
+        }
+
+        .col-cost {
+            width: 40mm;
+        }
+
+        .col-reason {
+            width: 45mm;
+        }
+
+        .consent-text {
+            font-size: 12px;
+            line-height: 1.35;
+            margin: 6px 0 10px;
+        }
+
+        .signature-section {
+            width: 100%;
+            font-size: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 12mm;
+            row-gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .sig-line {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .sig-underline {
+            flex: 1;
+            height: 14px;
+        }
+
+        .divider {
+            border-top: 2px solid #000;
+            margin: 10px 0;
+        }
+
+        .change-title {
+            text-align: center;
+            margin: 6px 0 10px;
+        }
+
+        .change-title h3 {
+            margin: 0;
+            text-decoration: underline;
+            font-size: 13px;
+        }
+
+        .change-title p {
+            margin: 3px 0 0;
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            .container {
+                width: 190mm;
+                max-width: 190mm;
+                margin: 0;
+                border: none;
+                padding: 0;
+            }
+
+            .print-pad {
+                padding: 8mm;
+            }
+            
+            input {
+                border-bottom: 1px solid #000 !important;
+            }
+            td input {
+                border-bottom: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-logo"></div>
+        <div class="title-box">પ્રક્રિયા ખર્ચ માટે માહિતગાર સંમતિ</div>
+
+        <div class="info-row">
+            <div>તારીખ: <input type="text" id="today_date" name="today_date" class="underline"></div>
+            <div>સમય: <input type="text" id="input42" name="input42" class="underline"></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-sr">ક્રમાંક</th>
+                    <th>પ્રક્રિયાનું નામ</th>
+                    <th class="col-cost">અંદાજિત ખર્ચ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="col-sr">1</td><td><input type="text" id="input43" name="input43"></td><td><input type="text" id="input44" name="input44"></td></tr>
+                <tr><td class="col-sr">2</td><td><input type="text" id="input45" name="input45"></td><td><input type="text" id="input46" name="input46"></td></tr>
+                <tr><td class="col-sr">3</td><td><input type="text" id="input47" name="input47"></td><td><input type="text" id="input48" name="input48"></td></tr>
+                <tr><td class="col-sr">4</td><td><input type="text" id="input49" name="input49"></td><td><input type="text" id="input50" name="input50"></td></tr>
+                <tr><td class="col-sr">5</td><td><input type="text" id="input51" name="input51"></td><td><input type="text" id="input52" name="input52"></td></tr>
+                <tr><td class="col-sr">6</td><td><input type="text" id="input53" name="input53"></td><td><input type="text" id="input54" name="input54"></td></tr>
+            </tbody>
+        </table>
+
+        <div class="consent-text">
+            મને ડૉક્ટર દ્વારા પ્રક્રિયાના ખર્ચ વિશે મારી સમજાય તેવી ભાષામાં માહિતી આપવામાં આવી છે.
+            હું ઉપરોક્ત સારવાર / સારવારના કોર્સ માટે સંમત છું.
+        </div>
+
+        <div class="signature-section">
+            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <input type="text" id="input55" name="input55" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input56" name="input56" class="sig-underline"></div>
+            <div class="sig-line">દર્દી / સગાનું નામ: <input type="text" id="patient_name" name="patient_name" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input57" name="input57" class="sig-underline"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="info-row">
+            <div>તારીખ: <input type="text" id="today_date" name="today_date" class="underline"></div>
+            <div>સમય: <input type="text" id="input59" name="input59" class="underline"></div>
+        </div>
+
+        <div class="change-title">
+            <h3>પ્રક્રિયાના ખર્ચમાં ફેરફાર થાય તો</h3>
+            <p>(જો આપેલ અંદાજમાં ફેરફાર થાય તો ભરવું)</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-sr">ક્રમાંક</th>
+                    <th>પ્રક્રિયાનું નામ</th>
+                    <th class="col-cost">અંદાજિત ખર્ચ</th>
+                    <th class="col-reason">ફેરફારનું કારણ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="col-sr">1</td><td><input type="text" id="input60" name="input60"></td><td><input type="text" id="input61" name="input61"></td><td><input type="text" id="input62" name="input62"></td></tr>
+                <tr><td class="col-sr">2</td><td><input type="text" id="input63" name="input63"></td><td><input type="text" id="input64" name="input64"></td><td><input type="text" id="input65" name="input65"></td></tr>
+                <tr><td class="col-sr">3</td><td><input type="text" id="input66" name="input66"></td><td><input type="text" id="input67" name="input67"></td><td><input type="text" id="input68" name="input68"></td></tr>
+                <tr><td class="col-sr">4</td><td><input type="text" id="input69" name="input69"></td><td><input type="text" id="input70" name="input70"></td><td><input type="text" id="input71" name="input71"></td></tr>
+                <tr><td class="col-sr">5</td><td><input type="text" id="input72" name="input72"></td><td><input type="text" id="input73" name="input73"></td><td><input type="text" id="input74" name="input74"></td></tr>
+                <tr><td class="col-sr">6</td><td><input type="text" id="input75" name="input75"></td><td><input type="text" id="input76" name="input76"></td><td><input type="text" id="input77" name="input77"></td></tr>
+            </tbody>
+        </table>
+
+        <div class="consent-text">
+            પ્રક્રિયાના ખર્ચમાં થયેલા ફેરફાર અંગે મને ડૉક્ટર દ્વારા માહિતી આપવામાં આવી છે.
+            હું ઉપરોક્ત સારવાર / સારવારના કોર્સ માટે સંમત છું.
+        </div>
+
+        <div class="signature-section">
+            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <input type="text" id="input78" name="input78" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input79" name="input79" class="sig-underline"></div>
+            <div class="sig-line">દર્દી / સગાનું નામ: <input type="text" id="patient_name" name="patient_name" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input80" name="input80" class="sig-underline"></div>
+        </div>
+    </div>
+    <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+</body>
+</html>

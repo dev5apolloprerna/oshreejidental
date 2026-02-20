@@ -37,12 +37,29 @@
             font-size: 16px;
         }
 
+        /* ✅ original style kept */
         .dotted-line {
             border-bottom: 1px solid black;
             display: inline-block;
             min-width: 150px;
             height: 20px;
             vertical-align: bottom;
+        }
+
+        /* ✅ input that matches dotted-line EXACTLY (no pixel shift) */
+        .dotted-input {
+            border: 0;
+            border-bottom: 1px solid black;
+            background: transparent;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            height: 20px;
+            line-height: 20px;
+            display: inline-block;
+            vertical-align: bottom;
+            font-family: 'Hind Vadodara', sans-serif;
+            font-size: 16px;
         }
 
         .list-item {
@@ -93,46 +110,64 @@
         <table class="content-table">
             <tr>
                 <td colspan="2" style="padding-bottom: 20px;">
-                    હું <span class="dotted-line" style="width: 300px;"></span>
-                    ડૉ <span class="dotted-line" style="width: 300px;"></span> ને
-                    મારા સંબંધી <span class="dotted-line" style="width: 350px;"></span> ને લોકલ એનેસ્થેસિયા આપવા માટે
-                    સંમતિ આપું છું.
+                    હું
+                    <input class="dotted-input" style="width: 300px;" type="text" id="patient_name"
+                        name="patient_name" />
+                    ડૉ
+                    <!-- ✅ CHANGED: input1 -> doctor_name -->
+                    <input class="dotted-input" style="width: 300px;" type="text" id="doctor_name" name="doctor_name" />
+                    ને
+                    મારા સંબંધી
+                    <!-- ✅ Now continue counting from input1 -->
+                    <input class="dotted-input" style="width: 350px;" type="text" id="input1" name="input1" />
+                    ને લોકલ એનેસ્થેસિયા આપવા માટે સંમતિ આપું છું.
                 </td>
             </tr>
+
             <tr>
                 <td class="list-item" style="width: 30px;">1)</td>
                 <td class="list-item">એનેસ્થેસિયાના પરિણામ, સંભવિત આડઅસરો (જટીલતાઓ) મને એનેસ્થેટિસ્ટ/સ્ટાફ દ્વારા
                     સંપૂર્ણ રીતે સમજાવવામાં આવી છે.</td>
             </tr>
+
             <tr>
                 <td class="list-item">2)</td>
                 <td class="list-item">મને સમજાવવામાં આવ્યું છે કે એનેસ્થેસિયા સંપૂર્ણપણે સલામત નથી અને કોઈપણ સ્વસ્થ
                     વ્યક્તિ માટે પણ જોખમી હોઈ શકે છે.</td>
             </tr>
+
             <tr>
                 <td class="list-item">3)</td>
                 <td class="list-item">હું એનેસ્થેસિયા દરમિયાન જરૂરી ફેરફારો કરવા અથવા દવાઓ આપવા માટે પરવાનગી આપું છું.
                 </td>
             </tr>
+
             <tr>
                 <td class="list-item">4)</td>
                 <td class="list-item">
                     મને જાણ કરવામાં આવી છે કે એનેસ્થેસિયા દરમિયાન કોઈ જટિલતાની શક્યતા હોઈ શકે છે.
                     દા.ત.: કાર્ડિયાક અરેસ્ટ, ગંભીર રક્તસ્ત્રાવ, ચેપ, હાયપરટેન્શન, પલ્મોનરી એમબોલિઝમ વગેરે.
-                    મને પૂરો વિશ્વાસ છે કે આવું થાય તો એનેસ્થેટિસ્ટ ડૉ. <span class="dotted-line"
-                        style="width: 250px;"></span>
+                    મને પૂરો વિશ્વાસ છે કે આવું થાય તો એનેસ્થેટિસ્ટ ડૉ.
+                    <input class="dotted-input" style="width: 250px;" type="text" id="doctor_name" name="doctor_name" />
                     અથવા તેમના દ્વારા નિયુક્ત અન્ય કોઈ ડોક્ટર તે મુજબ મારી સારવાર કરશે. હું તેમના નિર્ણયો સાથે સંમત છું.
                     મેં આ ફોર્મ વાંચ્યું છે/ આ ફોર્મ મને વાંચવામાં આવ્યું છે.
                 </td>
             </tr>
+
             <tr>
                 <td class="list-item">5)</td>
-                <td class="list-item">વિકલ્પો: <span class="dotted-line" style="width: 80%;"></span></td>
+                <td class="list-item">વિકલ્પો:
+                    <input class="dotted-input" style="width: 80%;" type="text" id="input2" name="input2" />
+                </td>
             </tr>
+
             <tr>
                 <td class="list-item">6)</td>
-                <td class="list-item">લાભો: <span class="dotted-line" style="width: 80%;"></span></td>
+                <td class="list-item">લાભો:
+                    <input class="dotted-input" style="width: 80%;" type="text" id="input3" name="input3" />
+                </td>
             </tr>
+
             <tr>
                 <td class="list-item">7)</td>
                 <td class="list-item">હું ઉપરોક્ત લેખિત સૂચનાઓને સમજું છું અને હું સંપૂર્ણ સભાન સ્થિતિમાં પરવાનગી આપું
@@ -141,32 +176,60 @@
         </table>
 
         <div style="margin-top: 10px;">
-            <div class="checkbox"></div> <b>અમે એલર્જિક જટિલતાની સાવચેતી માટે પેચ ટેસ્ટ કરીશું.</b>
+            <input class="checkbox" type="checkbox" id="input4" name="input4" /> <b>અમે એલર્જિક જટિલતાની સાવચેતી માટે
+                પેચ ટેસ્ટ કરીશું.</b>
         </div>
 
         <table class="footer-table">
             <tr>
-                <td>તારીખ: <span class="dotted-line" style="width: 150px;"></span></td>
-                <td>દર્દીનું નામ: <span class="dotted-line" style="width: 150px;"></span></td>
+                <td>તારીખ:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input5" name="input5" />
+                </td>
+                <td>દર્દીનું નામ:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input6" name="input6" />
+                </td>
             </tr>
+
             <tr>
-                <td>સમય: <span class="dotted-line" style="width: 150px;"></span></td>
-                <td>દર્દીની સહી: <span class="dotted-line" style="width: 150px;"></span></td>
+                <td>સમય:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input7" name="input7" />
+                </td>
+                <td>દર્દીની સહી:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input8" name="input8" />
+                </td>
             </tr>
+
             <tr>
-                <td>નર્સનું નામ: <span class="dotted-line" style="width: 150px;"></span></td>
-                <td>સંબંધીનું નામ: <span class="dotted-line" style="width: 150px;"></span></td>
+                <td>નર્સનું નામ:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input9" name="input9" />
+                </td>
+                <td>સંબંધીનું નામ:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input10" name="input10" />
+                </td>
             </tr>
+
             <tr>
-                <td>મેડિકલ ઓફિસરનું નામ: <span class="dotted-line" style="width: 150px;"></span></td>
-                <td>દર્દી સાથે સંબંધ: <span class="dotted-line" style="width: 150px;"></span></td>
+                <td>મેડિકલ ઓફિસરનું નામ:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input11" name="input11" />
+                </td>
+                <td>દર્દી સાથે સંબંધ:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input12" name="input12" />
+                </td>
             </tr>
+
             <tr>
-                <td>એનેસ્થેટીસ્ટનું નામ: <span class="dotted-line" style="width: 150px;"></span></td>
-                <td>સંબંધીની સહી: <span class="dotted-line" style="width: 150px;"></span></td>
+                <td>એનેસ્થેટીસ્ટનું નામ:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input13" name="input13" />
+                </td>
+                <td>સંબંધીની સહી:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input14" name="input14" />
+                </td>
             </tr>
+
             <tr>
-                <td>એનેસ્થેટિસ્ટની સહી: <span class="dotted-line" style="width: 150px;"></span></td>
+                <td>એનેસ્થેટિસ્ટની સહી:
+                    <input class="dotted-input" style="width: 150px;" type="text" id="input15" name="input15" />
+                </td>
                 <td></td>
             </tr>
         </table>

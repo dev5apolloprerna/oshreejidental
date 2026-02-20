@@ -89,328 +89,445 @@
             font-size: 14px;
         }
 
-        /* Print Specific Styles */
+        /* FORM INPUT STYLES - ZERO PIXEL SHIFT */
+        input[type="text"] {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .td-check {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .line-input {
+            border-bottom: 1px solid transparent;
+            /* Keeps height consistent */
+        }
+
+
+        /* ✅ FORCE: 1 .page = 1 printed page (NO splitting) */
         @media print {
+
+            html,
             body {
-                background: none;
-                padding: 0;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
+            /* each .page must stay together */
             .page {
-                margin: 0;
-                box-shadow: none;
-                width: 100%;
+                width: 210mm !important;
+                height: 297mm !important;
+                /* IMPORTANT: fixed A4 height */
+                min-height: 297mm !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid-page !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                overflow: hidden !important;
+                /* prevents table from pushing to next page */
             }
 
-            @page {
-                size: A4;
-                margin: 0;
+            .page:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
             }
+
+            /* prevent table from breaking */
+            table,
+            thead,
+            tbody,
+            tr,
+            th,
+            td {
+                page-break-inside: avoid !important;
+                break-inside: avoid-page !important;
+            }
+
+            /* If still splits on some machines, enable this tiny print-only shrink */
+            /* html { zoom: 0.97; } */
         }
     </style>
 </head>
 
 <body>
+    <form>
+        <div class="page">
+            <h2>PATIENT SATISFACTION FORM</h2>
+            <h3 style="text-decoration: none;">OPD patient Feedback</h3>
 
-    <div class="page">
-        <h2>PATIENT SATISFACTION FORM</h2>
-        <h3 style="text-decoration: none;">OPD patient Feedback</h3>
-
-        <div class="header-section">
-            <div class="input-box" style="width: 60%;">
-                Name of the Patient: _________________________________________
+            <div class="header-section">
+                <div class="input-box" style="width: 60%;">
+                    Name of the Patient:
+                    <input type="text" id="patient_name" name="patient_name" style="width: 60%;">
+                </div>
+                <div class="input-box" style="width: 25%;">
+                    OPD No:
+                    <input type="text" id="opd_no" name="opd_no" style="width: 50%;">
+                </div>
             </div>
-            <div class="input-box" style="width: 25%;">
-                OPD No: ____________
+
+            <div class="intro-text">
+                Dear Client,<br>
+                You have spent your valuable time in the hospital in connection with your / relative’s/ friend’s
+                treatment.
+                You are requested to share your opinion about the quality of services, which you experienced, while
+                visiting
+                the hospital. The information provided by you would be kept confidential and would only be used for
+                improving the services.
+                <br>
+                <strong>Please tick the appropriate box and drop the questionnaire in the Suggestion box</strong>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">Sl No</th>
+                        <th style="width: 45%;">Attributes</th>
+                        <th class="center-text">Poor<br>1</th>
+                        <th class="center-text">Fair<br>2</th>
+                        <th class="center-text">Good<br>3</th>
+                        <th class="center-text">Very Good<br>4</th>
+                        <th class="center-text">Excellent<br>5</th>
+                        <th class="center-text">No comments</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td class="center-text">1</td>
+                        <td>Availability of sufficient information in Hospital (Directional & location signages,
+                            Registration counter, Laboratory, Radiology Department, Dispensary, etc)</td>
+                        <td class="td-check"><input type="radio" name="input3" id="input3_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input3" id="input3_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input3" id="input3_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input3" id="input3_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input3" id="input3_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input4" id="input4" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">2</td>
+                        <td>Waiting time at the registration counter</td>
+                        <td class="td-check"><input type="radio" name="input5" id="input5_1" value="1">more than 30 mins
+                        </td>
+                        <td class="td-check"><input type="radio" name="input5" id="input5_2" value="2">10-30 mins</td>
+                        <td class="td-check"><input type="radio" name="input5" id="input5_3" value="3">5-10 mins</td>
+                        <td class="td-check"><input type="radio" name="input5" id="input5_4" value="4">Within 5 mins
+                        </td>
+                        <td class="td-check"><input type="radio" name="input5" id="input5_5" value="5">Immediate</td>
+                        <td class="td-check"><input type="text" name="input6" id="input6" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">3</td>
+                        <td>Behaviour and attitude of Hospital Staff</td>
+                        <td class="td-check"><input type="radio" name="input7" id="input7_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input7" id="input7_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input7" id="input7_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input7" id="input7_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input7" id="input7_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input8" id="input8" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">4</td>
+                        <td>Amenities in waiting area (chairs, fans, drinking water and cleanliness of bathrooms &
+                            toilets)
+                        </td>
+                        <td class="td-check"><input type="radio" name="input9" id="input9_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input9" id="input9_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input9" id="input9_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input9" id="input9_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input9" id="input9_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input10" id="input10" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">5</td>
+                        <td>Attitude & communication of Doctors</td>
+                        <td class="td-check"><input type="radio" name="input11" id="input11_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input11" id="input11_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input11" id="input11_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input11" id="input11_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input11" id="input11_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input12" id="input12" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">6</td>
+                        <td>Time spent on consulting, examination and counselling</td>
+                        <td class="td-check"><input type="radio" name="input13" id="input13_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input13" id="input13_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input13" id="input13_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input13" id="input13_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input13" id="input13_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input14" id="input14" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">7</td>
+                        <td>Availability of Lab and radiology investigation facilities within the hospital</td>
+                        <td class="td-check"><input type="radio" name="input15" id="input15_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input15" id="input15_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input15" id="input15_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input15" id="input15_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input15" id="input15_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input16" id="input16" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">8</td>
+                        <td>Promptness at Medicine distribution counter</td>
+                        <td class="td-check"><input type="radio" name="input17" id="input17_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input17" id="input17_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input17" id="input17_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input17" id="input17_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input17" id="input17_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input18" id="input18" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">9</td>
+                        <td>Availability of prescribed drugs at the hospital dispensary</td>
+                        <td class="td-check"><input type="radio" name="input19" id="input19_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input19" id="input19_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input19" id="input19_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input19" id="input19_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input19" id="input19_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input20" id="input20" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">10</td>
+                        <td>Your overall satisfaction during the visit to the hospital</td>
+                        <td class="td-check"><input type="radio" name="input21" id="input21_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input21" id="input21_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input21" id="input21_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input21" id="input21_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input21" id="input21_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input22" id="input22" value=""></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="question-section">
+                <div class="question">1. What improvement would you like to see in the hospital:
+                    <input type="text" id="input23" name="input23" style="width: 50%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">2. What made you come to this hospital for treatment?
+                    <input type="text" id="input24" name="input24" style="width: 50%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">3. Would you like to return to this hospital next time for treatment:
+                    <input type="text" id="input25" name="input25" style="width: 30%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">4. Your valuable suggestions:
+                    <input type="text" id="input26" name="input26" style="width: 70%; border-bottom: 1px solid #ccc;">
+                </div>
+            </div>
+
+            <div class="footer-line">
+                <span>Date <input type="text" id="input27" name="input27"
+                        style="width: 80px; border-bottom: 1px solid black;"></span>
+                <span>Clinic <input type="text" id="input28" name="input28"
+                        style="width: 80px; border-bottom: 1px solid black;"></span>
+                <span>Age <input type="text" id="input29" name="input29"
+                        style="width: 50px; border-bottom: 1px solid black;"></span>
+                <span>Sex <input type="text" id="input30" name="input30"
+                        style="width: 50px; border-bottom: 1px solid black;"></span>
             </div>
         </div>
 
-        <div class="intro-text">
-            Dear Client,<br>
-            You have spent your valuable time in the hospital in connection with your / relative’s/ friend’s treatment.
-            You are requested to share your opinion about the quality of services, which you experienced, while visiting
-            the hospital. The information provided by you would be kept confidential and would only be used for
-            improving the services.
-            <br>
-            <strong>Please tick the appropriate box and drop the questionnaire in the Suggestion box</strong>
-        </div>
+        <!-- ====================== PAGE 2 (GUJARATI) ====================== -->
+        <div class="page">
+            <div class="hospital-name-box">Name of the Hospital</div>
+            <h2>PATIENT SATISFACTION FORM</h2>
+            <h3 style="text-decoration: none;">OPD patient Feedback</h3>
 
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 5%;">Sl No</th>
-                    <th style="width: 45%;">Attributes</th>
-                    <th class="center-text">Poor<br>1</th>
-                    <th class="center-text">Fair<br>2</th>
-                    <th class="center-text">Good<br>3</th>
-                    <th class="center-text">Very Good<br>4</th>
-                    <th class="center-text">Excellent<br>5</th>
-                    <th class="center-text">No comments</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="center-text">1</td>
-                    <td>Availability of sufficient information in Hospital (Directional & location signages,
-                        Registration counter, Laboratory, Radiology Department, Dispensary, etc)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">2</td>
-                    <td>Waiting time at the registration counter</td>
-                    <td style="font-size: 9px;">more than 30 mins</td>
-                    <td style="font-size: 9px;">10-30 mins</td>
-                    <td style="font-size: 9px;">5-10 mins</td>
-                    <td style="font-size: 9px;">Within 5 mins</td>
-                    <td style="font-size: 9px;">Immediate</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">3</td>
-                    <td>Behaviour and attitude of Hospital Staff</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">4</td>
-                    <td>Amenities in waiting area (chairs, fans, drinking water and cleanliness of bathrooms & toilets)
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">5</td>
-                    <td>Attitude & communication of Doctors</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">6</td>
-                    <td>Time spent on consulting, examination and counselling</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">7</td>
-                    <td>Availability of Lab and radiology investigation facilities within the hospital</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">8</td>
-                    <td>Promptness at Medicine distribution counter</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">9</td>
-                    <td>Availability of prescribed drugs at the hospital dispensary</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">10</td>
-                    <td>Your overall satisfaction during the visit to the hospital</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="question-section">
-            <div class="question">1. What improvement would you like to see in the hospital</div>
-            <div class="question">2. What made you come to this hospital for treatment?</div>
-            <div class="question">3. Would you like to return to this hospital next time for treatment</div>
-            <div class="question">4. Your valuable suggestions</div>
-        </div>
-
-        <div class="footer-line">
-            <span>Date________________</span>
-            <span>Clinic________________</span>
-            <span>Age________________</span>
-            <span>Sex________________</span>
-        </div>
-    </div>
-    <div class="page">
-        <div class="hospital-name-box">Name of the Hospital</div>
-
-        <h2>PATIENT SATISFACTION FORM</h2>
-        <h3 style="text-decoration: none;">OPD patient Feedback</h3>
-
-        <div class="header-section">
-            <div class="input-box" style="width: 60%;">
-                Name of the Patient: _________________________________________
+            <div class="header-section">
+                <div class="input-box" style="width: 60%;">
+                    Name of the Patient:
+                    <input type="text" id="patient_name" name="patient_name" style="width: 60%;">
+                </div>
+                <div class="input-box" style="width: 25%;">
+                    OPD No:
+                    <input type="text" id="opd_no" name="opd_no" style="width: 50%;">
+                </div>
             </div>
-            <div class="input-box" style="width: 25%;">
-                OPD No: ____________
+
+            <div class="intro-text">
+                તમે તમારા મૂલ્યવાન સમયને તમારા સાથી / મિત્રના ઉપચારના સંબંધમાં હોસ્પિટલમાં વિતાવ્યા છે. તમને વિનંતી
+                કરવામાં
+                આવે છે કે તમે જે દર્દીઓની મુલાકાત લીધી છે, તેઓની ગુણવત્તા વિશે તમારા અભિપ્રાય જણાવો. તમારા દ્વારા પ્રદાન
+                કરવામાં આવેલી માહિતી ગોપનીય રાખવામાં આવશે અને સેવાઓનો ઉપયોગ ફક્ત તેના ઉપયોગ કરવામાં આવશે.
+                <br>
+                <strong>મહેરબાની કરીને યોગ્ય બોક્સ પર ટીક કરો અને સૂચન બોક્સમાં પ્રશ્નાવલિ છોડો.</strong>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">ક્રમાંક નં.</th>
+                        <th style="width: 45%;">માપદંડ</th>
+                        <th class="center-text">ખરાબ<br>1</th>
+                        <th class="center-text">ઠીક<br>2</th>
+                        <th class="center-text">સારી<br>3</th>
+                        <th class="center-text">ખૂબ સારી<br>4</th>
+                        <th class="center-text">ઉત્તમ<br>5</th>
+                        <th class="center-text">કોઈ ટીપ્પણીઓ નહિ</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td class="center-text">1</td>
+                        <td>હોસ્પિટલમાં પૂરતી માહિતી ઉપલબ્ધ (દિશાસૂચક અને સ્થાન સંકેતો, નોંધણી કાઉન્ટર, દવા, વગેરે)</td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input32" id="input32" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">2</td>
+                        <td>નોંધણી કાઉન્ટર પર રાહ જોવી</td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_1" value="1">૩૦ મિનિટથી
+                            વધારે</td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_2" value="2">૧૦ થી ૩૦ મિનિટ
+                        </td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_3" value="3">૫ થી ૧૦ મિનિટ
+                        </td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_4" value="4">૫ મિનિટની અંદર
+                        </td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_5" value="5">તરત જ</td>
+                        <td class="td-check"><input type="text" name="input34" id="input34" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">3</td>
+                        <td>વર્તણૂક અને હોસ્પિટલ સ્ટાફનો વલણ</td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input36" id="input36" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">4</td>
+                        <td>રાહ જોવાના વિસ્તારમાં સુવિધાઓ (ખુરશીઓ, પંખો, પીવાનું પાણી અને શૌચાલયની સ્વચ્છતા)</td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input38" id="input38" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">5</td>
+                        <td>ડોક્ટર્સનું વલણ અને સંચાર</td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input40" id="input40" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">6</td>
+                        <td>સલાહ, પરીક્ષા અને પરામર્શ પર સમય પસાર કર્યો</td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input42" id="input42" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">7</td>
+                        <td>મેડિસિન વિતરણ કાઉન્ટર પર શીઘ્રતા</td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input44" id="input44" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">8</td>
+                        <td>હોસ્પિટલ દવાખાનામાં સૂચિત દવાઓની ઉપલબ્ધતા</td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input46" id="input46" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">9</td>
+                        <td>હોસ્પિટલની મુલાકાત દરમિયાન તમારો સંપૂર્ણ સંતોષ</td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input48" id="input48" value=""></td>
+                    </tr>
+                    <tr>
+                        <td class="center-text">10</td>
+                        <td>આ હોસ્પિટલમાં તમે ફરીથી સારવાર માટે આવવા ઇચ્છો છો કે નહીં</td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input50" id="input50" value=""></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="question-section">
+                <div class="question">1. તમે હોસ્પિટલમાં શું સુધારણા જોવા માંગો છો ?
+                    <input type="text" id="input51" name="input51" style="width: 50%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">2. તમે સારવાર માટે આ હોસ્પિટલમાં કેમ આવ્યા છો ?
+                    <input type="text" id="input52" name="input52" style="width: 50%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">3. શું તમે સારવાર માટે આગલી વખતે આ હોસ્પિટલમાં પાછા આવવા માંગો છો ?
+                    <input type="text" id="input53" name="input53" style="width: 30%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">4. તમારા મૂલ્યવાન સૂચનો
+                    <input type="text" id="input54" name="input54" style="width: 70%; border-bottom: 1px solid #ccc;">
+                </div>
+            </div>
+
+            <div class="footer-line">
+                <span>Date: <input type="text" id="input55" name="input55"
+                        style="width: 80px; border-bottom: 1px solid black;"></span>
+                <span>Clinic <input type="text" id="input56" name="input56"
+                        style="width: 80px; border-bottom: 1px solid black;"></span>
+                <span>Age: <input type="text" id="input57" name="input57"
+                        style="width: 50px; border-bottom: 1px solid black;"></span>
+                <span>Sex: <input type="text" id="input58" name="input58"
+                        style="width: 50px; border-bottom: 1px solid black;"></span>
             </div>
         </div>
-
-        <div class="intro-text">
-            તમે તમારા મૂલ્યવાન સમયને તમારા સાથી / મિત્રના ઉપચારના સંબંધમાં હોસ્પિટલમાં વિતાવ્યા છે. તમને વિનંતી કરવામાં
-            આવે છે કે તમે જે દર્દીઓની મુલાકાત લીધી છે, તેઓની ગુણવત્તા વિશે તમારા અભિપ્રાય જણાવો. તમારા દ્વારા પ્રદાન
-            કરવામાં આવેલી માહિતી ગોપનીય રાખવામાં આવશે અને સેવાઓનો ઉપયોગ ફક્ત તેના ઉપયોગ કરવામાં આવશે.
-            <br>
-            <strong>મહેરબાની કરીને યોગ્ય બોક્સ પર ટીક કરો અને સૂચન બોક્સમાં પ્રશ્નાવલિ છોડો.</strong>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 5%;">ક્રમાંક નં.</th>
-                    <th style="width: 45%;">માપદંડ</th>
-                    <th class="center-text">ખરાબ<br>1</th>
-                    <th class="center-text">ઠીક<br>2</th>
-                    <th class="center-text">સારી<br>3</th>
-                    <th class="center-text">ખૂબ સારી<br>4</th>
-                    <th class="center-text">ઉત્તમ<br>5</th>
-                    <th class="center-text">કોઈ ટીપ્પણીઓ નહિ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="center-text">1</td>
-                    <td>હોસ્પિટલમાં પૂરતી માહિતી ઉપલબ્ધ (દિશાસૂચક અને સ્થાન સંકેતો, નોંધણી કાઉન્ટર, દવા, વગેરે)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">2</td>
-                    <td>નોંધણી કાઉન્ટર પર રાહ જોવી</td>
-                    <td style="font-size: 10px;">૩૦ મિનિટથી વધારે</td>
-                    <td style="font-size: 10px;">૧૦ થી ૩૦ મિનિટ</td>
-                    <td style="font-size: 10px;">૫ થી ૧૦ મિનિટ</td>
-                    <td style="font-size: 10px;">૫ મિનિટની અંદર</td>
-                    <td style="font-size: 10px;">તરત જ</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">3</td>
-                    <td>વર્તણૂક અને હોસ્પિટલ સ્ટાફનો વલણ</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">4</td>
-                    <td>રાહ જોવાના વિસ્તારમાં સુવિધાઓ (ખુરશીઓ, પંખો, પીવાનું પાણી અને શૌચાલયની સ્વચ્છતા)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">5</td>
-                    <td>ડોક્ટર્સનું વલણ અને સંચાર</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">6</td>
-                    <td>સલાહ, પરીક્ષા અને પરામર્શ પર સમય પસાર કર્યો</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">7</td>
-                    <td>મેડિસિન વિતરણ કાઉન્ટર પર શીઘ્રતા</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">8</td>
-                    <td>હોસ્પિટલ દવાખાનામાં સૂચિત દવાઓની ઉપલબ્ધતા</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="center-text">9</td>
-                    <td>હોસ્પિટલની મુલાકાત દરમિયાન તમારો સંપૂર્ણ સંતોષ</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="question-section">
-            <div class="question">1. તમે હોસ્પિટલમાં શું સુધારણા જોવા માંગો છો ?</div>
-            <div class="question">2. તમે સારવાર માટે આ હોસ્પિટલમાં કેમ આવ્યા છો ?</div>
-            <div class="question">3. શું તમે સારવાર માટે આગલી વખતે આ હોસ્પિટલમાં પાછા આવવા માંગો છો ?</div>
-            <div class="question">4. તમારા મૂલ્યવાન સૂચનો</div>
-        </div>
-
-        <div class="footer-line">
-            <span>Date: ________________</span>
-            <span>Age: ________________</span>
-            <span>Sex: ________________</span>
-        </div>
-    </div>
+    </form>
 </body>
 
 </html>

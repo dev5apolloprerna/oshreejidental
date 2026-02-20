@@ -18,21 +18,17 @@
             margin: 0;
         }
 
-        /* ===== A4 Page ===== */
         .page {
             width: 210mm;
             height: 297mm;
             background: #fff;
             margin: 12px auto;
             padding: 16mm 14mm;
-            /* inner white margin like image */
             box-sizing: border-box;
             box-shadow: 0 0 10px rgba(0, 0, 0, .12);
-            /* page-break-after: always; */
             position: relative;
         }
 
-        /* common light borders like images */
         .t {
             width: 100%;
             border-collapse: collapse;
@@ -107,7 +103,6 @@
             background: #fff;
         }
 
-        /* ===== Page 1 - Operation Notes ===== */
         .labelCell {
             width: 18%;
         }
@@ -127,7 +122,6 @@
             vertical-align: top !important;
         }
 
-        /* ===== Page 2 - Operative steps + events ===== */
         .bigBox {
             border: 1px solid #d0d0d0;
             height: 430px;
@@ -174,7 +168,6 @@
             vertical-align: baseline;
         }
 
-        /* ===== Page 3 - Post Operative Orders lined page ===== */
         .outerFrame {
             position: absolute;
             top: 10mm;
@@ -183,16 +176,6 @@
             bottom: 10mm;
             border: 1px solid #9a9a9a;
             pointer-events: none;
-        }
-
-        .innerFrame {
-            position: absolute;
-            top: 18mm;
-            left: 18mm;
-            right: 18mm;
-            bottom: 18mm;
-            border: 2px solid #3a3a3a;
-            box-sizing: border-box;
         }
 
         .pooContent {
@@ -214,7 +197,6 @@
         .pooSigWrap {
             text-align: center;
             margin-top: 70mm;
-            /* keeps signature around middle like image */
             font-size: 14px;
             color: #111;
         }
@@ -269,9 +251,17 @@
             vertical-align: baseline;
         }
 
-        /* ===== Print ===== */
-        @page {
-            size: A4;
+        input[type="text"],
+        input[type="time"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
             margin: 0;
         }
 
@@ -293,245 +283,249 @@
 </head>
 
 <body>
-
-    <!-- ===================== PAGE 1 (image-0001) ===================== -->
-    <div class="page">
-        <div class="titleRow">
-            <div class="leftSpacer"></div>
-            <div class="titleText">OPERATION NOTES</div>
-            <div class="addrBox">ADDRESSOGRAPH</div>
-        </div>
-
-        <table class="t">
-            <tr>
-                <td class="labelCell">Date:</td>
-                <td></td>
-                <td class="smallCell">Time:</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Operating Surgeon:</td>
-                <td></td>
-                <td>Speciality:</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Operating Surgeon:</td>
-                <td></td>
-                <td>Speciality:</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Asst. Surgeon:</td>
-                <td></td>
-                <td>Speciality:</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Anesthetist</td>
-                <td colspan="3"></td>
-            </tr>
-            <tr>
-                <td>Dentist/Dental assistant:</td>
-                <td colspan="3"></td>
-            </tr>
-
-            <tr>
-                <td colspan="4" class="subline">Pre operative diagnosis:</td>
-            </tr>
-            <tr>
-                <td colspan="4" class="subline">Post operative diagnosis:</td>
-            </tr>
-
-            <tr>
-                <td colspan="4" style="border-top:none;">
-                    Surgery type:
-                    <span class="chk"></span>Clean
-                    <span class="chk"></span>Clean contaminated
-                    <span class="chk"></span>Dirty
-                </td>
-            </tr>
-
-            <tr>
-                <td style="width:26%;">Type of surgery</td>
-                <td colspan="3">Name of operation</td>
-            </tr>
-            <tr>
-                <td>
-                    <div><span class="chk" style="margin-left:0;"></span>Emergency</div>
-                    <div style="margin-top:6px;"><span class="chk" style="margin-left:0;"></span>Elective</div>
-                </td>
-                <td colspan="3"></td>
-            </tr>
-
-            <tr>
-                <td>Date:</td>
-                <td colspan="3" style="font-size:13px;">
-                    Start Time: ________&nbsp;&nbsp;M,&nbsp;&nbsp;&nbsp;&nbsp;
-                    End Time: ________&nbsp;&nbsp;M,&nbsp;&nbsp;&nbsp;&nbsp;
-                    Total Hrs: ________
-                </td>
-            </tr>
-
-            <tr>
-                <td colspan="4">
-                    Ttpe of anaesthesia
-                    <span class="chk"></span>GA
-                    <span class="chk"></span>LA
-                    <span class="chk"></span>SPINAL
-                    <span class="chk"></span>EPIDURAL
-                    <span class="chk"></span>REGIONAL
-                </td>
-            </tr>
-        </table>
-
-        <div class="sectionHead">OPERATIVE STEPS</div>
-
-        <table class="t" style="margin-top:0;">
-            <tr>
-                <td>Position</td>
-            </tr>
-            <tr>
-                <td>Identification of operating part</td>
-            </tr>
-            <tr>
-                <td>Incision</td>
-            </tr>
-            <tr>
-                <td class="opFindings">Operation findings</td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- ===================== PAGE 2 (image-0002) ===================== -->
-    <div class="page">
-        <div class="sectionHead" style="margin-top:0;">OPERATIVE STEPS</div>
-
-        <div class="bigBox">
-            <div class="topLabel">Important Steps</div>
-
-            <div class="bottomText">
-                Drain:<br />
-                Sponge &amp; gauze count done:<br />
-                Instrument count done:<br />
-                Closure:<br />
-                Skin closure with:<br />
-                Sterile dressings kept.
-            </div>
-        </div>
-
-        <div class="midRow">INTRAOPERATIVE EVENTS / COMPLICATIONS:</div>
-
-        <table class="t" style="margin-top:0;">
-            <tr>
-                <td>Blood loss:</td>
-                <td>Blood products used:</td>
-            </tr>
-            <tr>
-                <td style="height:44px; vertical-align:top;">Implants used:</td>
-                <td style="height:44px;"></td>
-            </tr>
-            <tr>
-                <td>Specimen send for HPE</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Immidiate post op. recovery</td>
-                <td>
-                    Patient transferred to:
-                    <span class="chk" style="margin-left:10px;"></span>Room
-                    <span class="chk"></span>ICU care
-                </td>
-            </tr>
-        </table>
-
-        <div class="midRow" style="margin-top:14px;">POST OPERATIVE CARE SEE POST OPERATIVE ORDERS</div>
-
-        <div style="margin-top:10px; font-size:13px;">
-            Name of surgeon: <span class="sigLine"></span>
-        </div>
-        <div style="margin-top:10px; font-size:13px;">
-            Sign: <span class="sigLine" style="width:40%;"></span>
-            <span style="display:inline-block; width:30px;"></span>
-            Date / Time: <span class="sigLine" style="width:40%;"></span>
-        </div>
-    </div>
-
-    <!-- ===================== PAGE 3 (image-0003) ===================== -->
-    <div class="page">
-        <div class="outerFrame"></div>
-
-        <div class="pooContent">
-            <p class="continueTxt">Continue...</p>
-
-            <div class="pooSigWrap">
-                Surgeon's Signature : <span class="line2"></span>
+    <form>
+        <div class="page">
+            <div class="titleRow">
+                <div class="leftSpacer"></div>
+                <div class="titleText">OPERATION NOTES</div>
+                <div class="addrBox">ADDRESSOGRAPH</div>
             </div>
 
-            <div class="pooHeader">POST OPERATIVE ORDERS</div>
+            <table class="t">
+                <tr>
+                    <td class="labelCell">Date:</td>
+                    <td><input type="text" name="input1" id="input1" /></td>
+                    <td class="smallCell">Time:</td>
+                    <td><input type="text" name="input2" id="input2" /></td>
+                </tr>
+                <tr>
+                    <td>Operating Surgeon:</td>
+                    <td><input type="text" name="input3" id="input3" /></td>
+                    <td>Speciality:</td>
+                    <td><input type="text" name="input4" id="input4" /></td>
+                </tr>
+                <tr>
+                    <td>Operating Surgeon:</td>
+                    <td><input type="text" name="input5" id="input5" /></td>
+                    <td>Speciality:</td>
+                    <td><input type="text" name="input6" id="input6" /></td>
+                </tr>
+                <tr>
+                    <td>Asst. Surgeon:</td>
+                    <td><input type="text" name="input7" id="input7" /></td>
+                    <td>Speciality:</td>
+                    <td><input type="text" name="input8" id="input8" /></td>
+                </tr>
+                <tr>
+                    <td>Anesthetist</td>
+                    <td colspan="3"><input type="text" name="input9" id="input9" /></td>
+                </tr>
+                <tr>
+                    <td>Dentist/Dental assistant:</td>
+                    <td colspan="3"><input type="text" name="input10" id="input10" /></td>
+                </tr>
 
-            <!-- lined writing area -->
-            <table class="linesTable">
-                <!-- adjust number of lines if needed -->
                 <tr>
-                    <td></td>
+                    <td colspan="4" class="subline">Pre operative diagnosis: <input type="text" name="input11"
+                            id="input11" style="width:70%" /></td>
                 </tr>
                 <tr>
-                    <td></td>
+                    <td colspan="4" class="subline">Post operative diagnosis: <input type="text" name="input12"
+                            id="input12" style="width:70%" /></td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="border-top:none;">
+                        Surgery type:
+                        <input type="checkbox" name="input13" id="input13" class="chk" />Clean
+                        <input type="checkbox" name="input14" id="input14" class="chk" />Clean contaminated
+                        <input type="checkbox" name="input15" id="input15" class="chk" />Dirty
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:26%;">Type of surgery</td>
+                    <td colspan="3">Name of operation</td>
                 </tr>
                 <tr>
-                    <td></td>
+                    <td>
+                        <div><input type="checkbox" name="input16" id="input16" class="chk"
+                                style="margin-left:0;" />Emergency</div>
+                        <div style="margin-top:6px;"><input type="checkbox" name="input17" id="input17" class="chk"
+                                style="margin-left:0;" />Elective</div>
+                    </td>
+                    <td colspan="3"><textarea name="input18" id="input18" style="height:40px;"></textarea></td>
                 </tr>
+
                 <tr>
-                    <td></td>
+                    <td>Date:</td>
+                    <td colspan="3" style="font-size:13px;">
+                        Start Time: <input type="text" name="input19" id="input19"
+                            style="width:60px" />&nbsp;&nbsp;M,&nbsp;&nbsp;&nbsp;&nbsp;
+                        End Time: <input type="text" name="input20" id="input20"
+                            style="width:60px" />&nbsp;&nbsp;M,&nbsp;&nbsp;&nbsp;&nbsp;
+                        Total Hrs: <input type="text" name="input21" id="input21" style="width:60px" />
+                    </td>
                 </tr>
+
                 <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
+                    <td colspan="4">
+                        Ttpe of anaesthesia
+                        <input type="checkbox" name="input22" id="input22" class="chk" />GA
+                        <input type="checkbox" name="input23" id="input23" class="chk" />LA
+                        <input type="checkbox" name="input24" id="input24" class="chk" />SPINAL
+                        <input type="checkbox" name="input25" id="input25" class="chk" />EPIDURAL
+                        <input type="checkbox" name="input26" id="input26" class="chk" />REGIONAL
+                    </td>
                 </tr>
             </table>
 
-            <div class="pooBottomSig">
-                Surgeon's Signature : <span class="line3"></span>
+            <div class="sectionHead">OPERATIVE STEPS</div>
+
+            <table class="t" style="margin-top:0;">
+                <tr>
+                    <td>Position: <input type="text" name="input27" id="input27" style="width:80%" /></td>
+                </tr>
+                <tr>
+                    <td>Identification of operating part: <input type="text" name="input28" id="input28"
+                            style="width:60%" /></td>
+                </tr>
+                <tr>
+                    <td>Incision: <input type="text" name="input29" id="input29" style="width:80%" /></td>
+                </tr>
+                <tr>
+                    <td class="opFindings">Operation findings<br />
+                        <textarea name="input30" id="input30" style="height:200px;"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="page">
+            <div class="sectionHead" style="margin-top:0;">OPERATIVE STEPS</div>
+
+            <div class="bigBox">
+                <div class="topLabel">Important Steps</div>
+                <textarea name="input31" id="input31"
+                    style="position:absolute; top:30px; left:10px; width:95%; height:250px;"></textarea>
+                <div class="bottomText">
+                    Drain: <input type="text" name="input32" id="input32" style="width:80%" /><br />
+                    Sponge &amp; gauze count done: <input type="text" name="input33" id="input33"
+                        style="width:60%" /><br />
+                    Instrument count done: <input type="text" name="input34" id="input34" style="width:65%" /><br />
+                    Closure: <input type="text" name="input35" id="input35" style="width:80%" /><br />
+                    Skin closure with: <input type="text" name="input36" id="input36" style="width:75%" /><br />
+                    Sterile dressings kept.
+                </div>
+            </div>
+
+            <div class="midRow">INTRAOPERATIVE EVENTS / COMPLICATIONS:</div>
+
+            <table class="t" style="margin-top:0;">
+                <tr>
+                    <td>Blood loss: <input type="text" name="input37" id="input37" style="width:60%" /></td>
+                    <td>Blood products used: <input type="text" name="input38" id="input38" style="width:50%" /></td>
+                </tr>
+                <tr>
+                    <td style="height:44px; vertical-align:top;">Implants used: <textarea name="input39" id="input39"
+                            style="height:25px"></textarea></td>
+                    <td style="height:44px;"><textarea name="input40" id="input40" style="height:40px"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Specimen send for HPE</td>
+                    <td><input type="text" name="input41" id="input41" /></td>
+                </tr>
+                <tr>
+                    <td>Immidiate post op. recovery</td>
+                    <td>
+                        Patient transferred to:
+                        <input type="checkbox" name="input42" id="input42" class="chk" />Room
+                        <input type="checkbox" name="input43" id="input43" class="chk" />ICU care
+                    </td>
+                </tr>
+            </table>
+
+            <div class="midRow" style="margin-top:14px;">POST OPERATIVE CARE SEE POST OPERATIVE ORDERS</div>
+
+            <div style="margin-top:10px; font-size:13px;">
+                Name of surgeon: <span class="sigLine" style="width:70%"><input type="text" name="input44"
+                        id="input44" /></span>
+            </div>
+            <div style="margin-top:10px; font-size:13px;">
+                Sign: <span class="sigLine" style="width:40%"><input type="text" name="input45" id="input45" /></span>
+                <span style="display:inline-block; width:30px;"></span>
+                Date / Time: <span class="sigLine" style="width:40%"><input type="text" name="input46"
+                        id="input46" /></span>
             </div>
         </div>
-    </div>
 
+        <div class="page">
+            <div class="outerFrame"></div>
+            <div class="pooContent">
+                <p class="continueTxt">Continue...</p>
+                <div class="pooSigWrap">
+                    Surgeon's Signature : <span class="line2"><input type="text" name="input47" id="input47" /></span>
+                </div>
+                <div class="pooHeader">POST OPERATIVE ORDERS</div>
+                <table class="linesTable">
+                    <tr>
+                        <td><input type="text" name="input48" id="input48" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input49" id="input49" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input50" id="input50" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input51" id="input51" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input52" id="input52" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input53" id="input53" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input54" id="input54" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input55" id="input55" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input56" id="input56" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input57" id="input57" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input58" id="input58" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input59" id="input59" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input60" id="input60" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input61" id="input61" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input62" id="input62" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input63" id="input63" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="input64" id="input64" /></td>
+                    </tr>
+                </table>
+                <div class="pooBottomSig">
+                    Surgeon's Signature : <span class="line3"><input type="text" name="input65" id="input65" /></span>
+                </div>
+            </div>
+        </div>
+    </form>
 </body>
 
 </html>

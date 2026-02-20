@@ -20,6 +20,10 @@
                 width: 100%;
                 border: none;
             }
+            input {
+                border: none !important;
+                border-bottom: 1px solid black !important;
+            }
         }
 
         body {
@@ -47,18 +51,16 @@
             vertical-align: bottom;
         }
 
-        .dotted-line {
+        input {
+            border: none;
             border-bottom: 1px solid black;
-            display: inline-block;
-            min-width: 50px;
-        }
-
-        .full-width-line {
-            border-bottom: 1px solid black;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
             width: 100%;
-            display: block;
-            margin-top: 20px;
-            height: 1px;
+            outline: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
         }
     </style>
 </head>
@@ -71,7 +73,7 @@
         <table style="margin-bottom: 20px;">
             <tr>
                 <td style="width: 10px; white-space: nowrap;">I</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input1" name="input1"></td>
                 <td style="width: 120px; white-space: nowrap; text-align: right;">give my consent to</td>
             </tr>
         </table>
@@ -79,7 +81,7 @@
         <table style="margin-bottom: 20px;">
             <tr>
                 <td style="width: 25px; white-space: nowrap;">Dr.</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input2" name="input2"></td>
                 <td style="width: 110px; white-space: nowrap; text-align: right;">for my relative</td>
             </tr>
         </table>
@@ -87,14 +89,13 @@
         <table style="margin-bottom: 20px;">
             <tr>
                 <td style="width: 60px; white-space: nowrap;">Mr./Ms.</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input3" name="input3"></td>
                 <td style="width: 30px; white-space: nowrap; text-align: right;">for</td>
             </tr>
         </table>
 
         <p style="margin-top: 10px;">Procedure.</p>
-        <p>Procedure Name: <span
-                style="display: inline-block; width: 80%; border-bottom: 1px solid black;">&nbsp;</span></p>
+        <p>Procedure Name: <input type="text" id="input4" name="input4" style="width: 80%;"></p>
 
         <div style="margin-top: 20px;">
             <p>(1) The procedures, important outcome, possible side effects (Complications) has been thoroughly
@@ -104,8 +105,7 @@
             <p>(3) I give the permission to do any required changes or give medications as necessary.</p>
             <p>(4) I have been informed that during or after the procedure, there may be a possibility of any
                 complication. e.g., cardiac arrest, severe haemorrhage; infection, hypotension, pulmonary embolism etc.
-                I trust fully that if it happens doctor Dr. <span
-                    style="display: inline-block; width: 300px; border-bottom: 1px solid black;">&nbsp;</span> or any
+                I trust fully that if it happens doctor Dr. <input type="text" id="input5" name="input5" style="width: 300px;"> or any
                 other doctor appointed through them will treat me accordingly. I agree with their decisions. The extra
                 cost of complication will be borne by me.</p>
         </div>
@@ -115,67 +115,60 @@
             pressure.</p>
 
         <div style="margin-top: 20px;">
-            <p style="margin-bottom: 5px;">(5) Risk: <span
-                    style="display: inline-block; width: 90%; border-bottom: 1px solid black;">&nbsp;</span></p>
-            <div style="border-bottom: 1px solid black; width: 100%; height: 20px;"></div>
+            <p style="margin-bottom: 5px;">(5) Risk: <input type="text" id="input6" name="input6" style="width: 90%;"></p>
         </div>
 
         <div style="margin-top: 20px;">
-            <p style="margin-bottom: 5px;">(6) Benefit: <span
-                    style="display: inline-block; width: 85%; border-bottom: 1px solid black;">&nbsp;</span></p>
-            <div style="border-bottom: 1px solid black; width: 100%; height: 20px;"></div>
+            <p style="margin-bottom: 5px;">(6) Benefit: <input type="text" id="input7" name="input7" style="width: 85%;"></p>
         </div>
 
         <div style="margin-top: 20px;">
-            <p style="margin-bottom: 5px;">(7) Specific Complication: <span
-                    style="display: inline-block; width: 75%; border-bottom: 1px solid black;">&nbsp;</span></p>
-            <div style="border-bottom: 1px solid black; width: 100%; height: 20px;"></div>
+            <p style="margin-bottom: 5px;">(7) Specific Complication: <input type="text" id="input8" name="input8" style="width: 75%;"></p>
         </div>
 
         <div style="margin-top: 20px;">
-            <p style="margin-bottom: 5px;">(8) Possible Alternatives: <span
-                    style="display: inline-block; width: 75%; border-bottom: 1px solid black;">&nbsp;</span></p>
+            <p style="margin-bottom: 5px;">(8) Possible Alternatives: <input type="text" id="input9" name="input9" style="width: 75%;"></p>
         </div>
 
         <table style="margin-top: 40px; width: 100%;">
             <tr>
                 <td style="width: 250px;">Date:</td>
-                <td style="border-bottom: 1px solid black; width: 250px;"></td>
+                <td style="width: 250px;"><input type="text" id="input10" name="input10"></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Time:</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input11" name="input11"></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Consent taken by (Doctor):</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input12" name="input12"></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Name of the Patient:</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input13" name="input13"></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Sign. of the Patient:</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="patient_name" name="patient_name"></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Name of the Relative:</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input14" name="input14"></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Relation with Patient:</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input15" name="input15"></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Sign. of the Relative:</td>
-                <td style="border-bottom: 1px solid black;"></td>
+                <td><input type="text" id="input16" name="input16"></td>
                 <td></td>
             </tr>
         </table>

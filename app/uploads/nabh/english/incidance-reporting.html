@@ -36,7 +36,6 @@
         }
 
         td {
-            /* padding: 5px; */
             vertical-align: middle;
         }
 
@@ -50,16 +49,26 @@
             font-size: 16px;
         }
 
-        .underline {
-            border-bottom: 1px solid black;
-            display: inline-block;
-        }
-
         .input-line {
             border: none;
             border-bottom: 1px solid black;
             width: 100%;
             outline: none;
+            background: transparent;
+        }
+
+        /* NEW: Multi-line background to maintain your design while using 1 input */
+        .multi-line-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            line-height: 25px;
+            background-image: linear-gradient(transparent, transparent 24px, black 24px);
+            background-size: 100% 25px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            resize: none;
+            overflow: hidden;
         }
 
         .checkbox-container {
@@ -90,12 +99,10 @@
                 background: none;
                 padding: 0;
             }
-
             .page-container {
                 border: none;
                 width: 100%;
             }
-
             button {
                 display: none;
             }
@@ -112,19 +119,19 @@
 
             <div class="checkbox-container">
                 (Kindly fill & submit to the Quality Department)<br>
-                <input type="checkbox"> Clinical &nbsp; <input type="checkbox"> Non- Clinical
+                <input type="checkbox" id="input1" name="input1"> Clinical &nbsp; 
+                <input type="checkbox" id="input2" name="input2"> Non- Clinical
             </div>
 
             <table>
                 <tr>
                     <td width="15%">Title of Incident :</td>
-                    <td width="45%"><input type="text" class="input-line"></td>
+                    <td width="45%"><input type="text" id="input3" name="input3" class="input-line"></td>
                     <td width="15%" style="text-align: right;">Incident Code :</td>
-                    <td width="25%"><input type="text" class="input-line"></td>
+                    <td width="25%"><input type="text" id="input4" name="input4" class="input-line"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" style="font-size: px; color: #555;">(Please refer Page 2 for Incident Title &
-                        Code)</td>
+                    <td colspan="4" style="font-size: 11px; color: #555;">(Please refer Page 2 for Incident Title & Code)</td>
                 </tr>
             </table>
 
@@ -132,10 +139,10 @@
                 <tr>
                     <td width="15%">Type of Incident :</td>
                     <td>
-                        <input type="checkbox"> No Harm &nbsp;
-                        <input type="checkbox"> Near Miss &nbsp;
-                        <input type="checkbox"> Adverse Event &nbsp;
-                        <input type="checkbox"> Sentinel Event
+                        <input type="checkbox" id="input5" name="input5"> No Harm &nbsp;
+                        <input type="checkbox" id="input6" name="input6"> Near Miss &nbsp;
+                        <input type="checkbox" id="input7" name="input7"> Adverse Event &nbsp;
+                        <input type="checkbox" id="input8" name="input8"> Sentinel Event
                     </td>
                 </tr>
             </table>
@@ -143,16 +150,16 @@
             <table>
                 <tr>
                     <td width="15%">Date of Incident :</td>
-                    <td width="35%"><input type="text" class="input-line"></td>
+                    <td width="35%"><input type="text" id="input9" name="input9" class="input-line"></td>
                     <td width="15%">Time of Incident :</td>
-                    <td width="25%"><input type="text" class="input-line"></td>
+                    <td width="25%"><input type="text" id="input10" name="input10" class="input-line"></td>
                     <td width="10%" style="text-align: right;">AM / PM</td>
                 </tr>
                 <tr>
                     <td>Reporting Date :</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input11" name="input11" class="input-line"></td>
                     <td>Reporting Time :</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input12" name="input12" class="input-line"></td>
                     <td width="10%" style="text-align: right;">AM / PM</td>
                 </tr>
             </table>
@@ -160,35 +167,35 @@
             <table>
                 <tr>
                     <td width="25%">Pertaining to (Unit Department) :</td>
-                    <td width="30%"><input type="text" class="input-line"></td>
+                    <td width="30%"><input type="text" id="input13" name="input13" class="input-line"></td>
                     <td width="10%">Location :</td>
-                    <td width="30%"><input type="text" class="input-line"></td>
+                    <td width="30%"><input type="text" id="input14" name="input14" class="input-line"></td>
                 </tr>
             </table>
 
             <table>
                 <tr>
                     <td width="15%">Name of Patient :</td>
-                    <td width="35%"><input type="text" class="input-line"></td>
+                    <td width="35%"><input type="text" id="input15" name="input15" class="input-line"></td>
                     <td width="15%">Age / Gender :</td>
-                    <td width="15%"><input type="text" class="input-line"></td>
+                    <td width="15%"><input type="text" id="input16" name="input16" class="input-line"></td>
                     <td width="8%">IP No. :</td>
-                    <td width="12%"><input type="text" class="input-line"></td>
+                    <td width="12%"><input type="text" id="input17" name="input17" class="input-line"></td>
                 </tr>
                 <tr>
                     <td>Diagnosis :</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input18" name="input18" class="input-line"></td>
                     <td>Doctor :</td>
-                    <td colspan="3"><input type="text" class="input-line"></td>
+                    <td colspan="3"><input type="text" id="input19" name="input19" class="input-line"></td>
                 </tr>
             </table>
 
             <table>
                 <tr>
                     <td width="20%">Name of staff (in case of injury) :</td>
-                    <td width="50%"><input type="text" class="input-line"></td>
+                    <td width="50%"><input type="text" id="input20" name="input20" class="input-line"></td>
                     <td width="10%">Emp Id :</td>
-                    <td width="20%"><input type="text" class="input-line"></td>
+                    <td width="20%"><input type="text" id="input21" name="input21" class="input-line"></td>
                 </tr>
             </table>
 
@@ -196,51 +203,39 @@
                 <tr>
                     <td width="20%">Staff involved in Incident :</td>
                     <td style="text-align: right;">1.</td>
-                    <td width="25%"><input type="text" class="input-line"></td>
+                    <td width="25%"><input type="text" id="input22" name="input22" class="input-line"></td>
                     <td width="10%">EMP. ID :</td>
-                    <td width="15%"><input type="text" class="input-line"></td>
+                    <td width="15%"><input type="text" id="input23" name="input23" class="input-line"></td>
                     <td width="10%">Designation :</td>
-                    <td width="15%"><input type="text" class="input-line"></td>
+                    <td width="15%"><input type="text" id="input24" name="input24" class="input-line"></td>
                 </tr>
                 <tr>
                     <td width="20%"></td>
                     <td style="text-align: right;">2.</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input25" name="input25" class="input-line"></td>
                     <td>EMP. ID :</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input26" name="input26" class="input-line"></td>
                     <td>Designation :</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input27" name="input27" class="input-line"></td>
                 </tr>
                 <tr>
                     <td width="20%"></td>
                     <td style="text-align: right;">3.</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input28" name="input28" class="input-line"></td>
                     <td>EMP. ID :</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input29" name="input29" class="input-line"></td>
                     <td>Designation :</td>
-                    <td><input type="text" class="input-line"></td>
+                    <td><input type="text" id="input30" name="input30" class="input-line"></td>
                 </tr>
             </table>
 
             <div style="margin-top: 10px;">
                 Incident Description : (Use additional sheet, if required) :
-                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <textarea id="input31" name="input31" class="multi-line-input" rows="12"></textarea>
             </div>
 
             <div style="margin-top: 10px;">
-                Apparent Cause : <span
-                    style="display: inline-block; width: 85%; border-bottom: 1px solid black;">&nbsp;</span>
+                Apparent Cause : <input type="text" id="input32" name="input32" class="input-line" style="width: 85%;">
             </div>
 
             <br>
@@ -269,6 +264,7 @@
 
         </div>
     </div>
+
     <div class="page-container">
         <div class="outer-border">
 
@@ -357,126 +353,93 @@
                     </td>
                     <td>
                         <span class="footer-title">11. ANY OTHER (NOT LISTED ABOVE)</span>
-                        ___________________________________<br>
-                        ___________________________________<br>
-                        ___________________________________<br>
-                        ___________________________________<br>
-                        ___________________________________
+                        <input type="text" id="input33" name="input33" class="input-line"><br>
+                        <input type="text" id="input34" name="input34" class="input-line"><br>
+                        <input type="text" id="input35" name="input35" class="input-line"><br>
+                        <input type="text" id="input36" name="input36" class="input-line"><br>
+                        <input type="text" id="input37" name="input37" class="input-line">
                     </td>
                 </tr>
             </table>
 
             <div style="margin-top:10px;">
                 IMMEDIATE INTERVENTION DONE :
-                ________________________________________________________________________________<br>
-                __________________________________________________________________________________________________<br>
-                __________________________________________________________________________________________________
+                <textarea id="input38" name="input38" class="multi-line-input" rows="3"></textarea>
             </div>
 
             <table style="margin-top:10px;">
                 <tr>
-                    <td>INFORMED TO THE MD BY : _________________________________</td>
-                    <td>ON : _________________________________</td>
+                    <td>INFORMED TO THE MD BY : <input type="text" id="input39" name="input39" class="input-line" style="width: 150px;"></td>
+                    <td>ON : <input type="text" id="input40" name="input40" class="input-line" style="width: 150px;"></td>
                 </tr>
                 <tr>
-                    <td>INFORMED TO THE CEO BY : ________________________________</td>
-                    <td>ON : _________________________________</td>
+                    <td>INFORMED TO THE CEO BY : <input type="text" id="input41" name="input41" class="input-line" style="width: 150px;"></td>
+                    <td>ON : <input type="text" id="input42" name="input42" class="input-line" style="width: 150px;"></td>
                 </tr>
             </table>
 
             <div style="border: 1px solid black; padding: 10px; margin-top: 10px;">
                 <strong>FOR OFFICE USE (DEPT OF CQI) :</strong><br><br>
-                Form received by : _____________________________ Date : __________ Time : __________ AM/ PM<br><br>
-                Cost of poor Quality : ________________________________________________________________________<br><br>
-                Further actions : <input type="checkbox"> RCA <input type="checkbox"> To be addressed by
-                ________________________________ Committee
+                Form received by : <input type="text" id="input43" name="input43" class="input-line" style="width: 150px;"> 
+                Date : <input type="text" id="input44" name="input44" class="input-line" style="width: 80px;"> 
+                Time : <input type="text" id="input45" name="input45" class="input-line" style="width: 80px;"> AM/ PM<br><br>
+                Cost of poor Quality : <input type="text" id="input46" name="input46" class="input-line" style="width: 450px;"><br><br>
+                Further actions : <input type="checkbox" id="input47" name="input47"> RCA 
+                <input type="checkbox" id="input48" name="input48"> To be addressed by
+                <input type="text" id="input49" name="input49" class="input-line" style="width: 150px;"> Committee
             </div>
 
             <table style="margin-top: 20px;">
                 <tr>
-                    <td width="50%">__________________________<br>Clinical Head Sign.</td>
-                    <td width="50%" style="text-align: right;">__________________________<br>Name & Sign of CQI Manager
-                    </td>
+                    <td width="50%"><input type="text" id="input50" name="input50" class="input-line" style="width: 200px;"><br>Clinical Head Sign.</td>
+                    <td width="50%" style="text-align: right;"><input type="text" id="input51" name="input51" class="input-line" style="width: 200px;"><br>Name & Sign of CQI Manager</td>
                 </tr>
             </table>
 
             <div style="margin-top: 10px;">
                 <strong>Root Cause Analysis:</strong>
-                <div style="border-bottom: 1px solid #ccc; height: 20px; margin-top: 5px;"></div>
-                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
-                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
-                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
-                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
+                <textarea id="input52" name="input52" class="multi-line-input" rows="5" style="background-image: linear-gradient(transparent, transparent 19px, #ccc 19px); background-size: 100% 20px; line-height: 20px;"></textarea>
             </div>
         </div>
+    </div>
 
-    </div>
-    </div>
-    </div>
     <div class="page-container">
         <div class="outer-border">
-
             <div style="margin-top: 10px;">
                 <strong>Root Cause Analysis:</strong>
-                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <textarea id="input53" name="input53" class="multi-line-input" rows="5"></textarea>
             </div>
 
             <div style="margin-top: 10px;">
                 <strong>Corrective Actions:</strong>
-                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <textarea id="input54" name="input54" class="multi-line-input" rows="9"></textarea>
             </div>
 
             <div style="margin-top: 10px;">
                 <strong>Preventive Actions:</strong>
-                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
-                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <textarea id="input55" name="input55" class="multi-line-input" rows="11"></textarea>
             </div>
 
-            <div style="border: 1px solid black; height: 60px; margin-top: 15px;"></div>
-
-            <table class="section-footer" style="margin-top: 0px; width: 100%;">
+            <table class="section-footer" style="margin-top: 10px; width: 100%;">
                 <tr>
                     <td width="48%" style="font-weight: bold;">Signature of HOD</td>
                     <td width="22%" style="font-weight: bold;">Date</td>
                     <td width="30%" style="font-weight: bold;">Time</td>
                 </tr>
+                
                 <tr>
                     <td style="font-weight: bold; height: 25px;">Signature of Medical Director</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input56" name="input56" class="input-line"></td>
+                    <td><input type="text" id="input57" name="input57" class="input-line"></td>
                 </tr>
                 <tr>
                     <td style="font-weight: bold; height: 25px;">Signature of quality coordinator</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input58" name="input58" class="input-line"></td>
+                    <td><input type="text" id="input59" name="input59" class="input-line"></td>
                 </tr>
             </table>
 
         </div>
-    </div>
-    </div>
-
     </div>
 </body>
 

@@ -10,7 +10,6 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            /* background-color: #f0f0f0; */
         }
 
         /* Container for A4 feel */
@@ -19,8 +18,6 @@
             min-height: 297mm;
             padding: 20mm;
             margin: 10mm auto;
-            /* background: white; */
-            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
             box-sizing: border-box;
         }
 
@@ -42,6 +39,7 @@
             display: flex;
             align-items: flex-end;
             flex: 1;
+            position: relative; /* Essential for absolute input */
         }
 
         .label {
@@ -54,12 +52,14 @@
             border-bottom: 1px solid #000;
             flex-grow: 1;
             min-height: 20px;
+            position: relative; /* Container for the input */
         }
 
         .section-label {
             margin: 25px 0 10px 0;
             display: flex;
             align-items: flex-end;
+            position: relative;
         }
 
         /* Table Styles */
@@ -75,6 +75,7 @@
             padding: 12px;
             text-align: left;
             height: 30px;
+            position: relative; /* For input positioning inside cells */
         }
 
         th {
@@ -98,6 +99,30 @@
             display: flex;
             justify-content: space-between;
             margin-top: 50px;
+        }
+
+        /* Invisible Input Style - Zero pixel shift */
+        .input-overlay {
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Table-specific input spacing */
+        td .input-overlay {
+            bottom: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 12px;
+            width: calc(100% - 24px);
         }
 
         /* Print Settings */
@@ -129,41 +154,55 @@
         <div class="info-row">
             <div class="info-group" style="margin-right: 40px;">
                 <span class="label">UHID No.</span>
-                <div class="line"></div>
+                <div class="line">
+                    <input type="text" id="input1" name="input1" class="input-overlay">
+                </div>
             </div>
             <div class="info-group">
                 <span class="label">Name of the patient:</span>
-                <div class="line"></div>
+                <div class="line">
+                    <input type="text" id="input2" name="input2" class="input-overlay">
+                </div>
             </div>
         </div>
 
         <div class="info-row">
             <div class="info-group" style="margin-right: 40px;">
                 <span class="label">Age/Sex:</span>
-                <div class="line"></div>
+                <div class="line">
+                    <input type="text" id="input3" name="input3" class="input-overlay">
+                </div>
             </div>
             <div class="info-group">
                 <span class="label">Consultant name:</span>
-                <div class="line"></div>
+                <div class="line">
+                    <input type="text" id="input4" name="input4" class="input-overlay">
+                </div>
             </div>
         </div>
 
         <div class="info-row">
             <div class="info-group" style="max-width: 40%;">
                 <span class="label">Date:</span>
-                <div class="line"></div>
+                <div class="line">
+                    <input type="text" id="input5" name="input5" class="input-overlay">
+                </div>
             </div>
             <div class="info-group"></div>
         </div>
 
         <div class="section-label">
             <span class="label">Chief complain:</span>
-            <div class="line"></div>
+            <div class="line">
+                <input type="text" id="input6" name="input6" class="input-overlay">
+            </div>
         </div>
 
         <div class="section-label">
             <span class="label">Diagnosis:</span>
-            <div class="line"></div>
+            <div class="line">
+                <input type="text" id="input7" name="input7" class="input-overlay">
+            </div>
         </div>
 
         <p style="margin-top: 25px; margin-bottom: 5px;">Treatment plan</p>
@@ -178,61 +217,69 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input8" name="input8" class="input-overlay"></td>
+                    <td><input type="text" id="input9" name="input9" class="input-overlay"></td>
+                    <td><input type="text" id="input10" name="input10" class="input-overlay"></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input11" name="input11" class="input-overlay"></td>
+                    <td><input type="text" id="input12" name="input12" class="input-overlay"></td>
+                    <td><input type="text" id="input13" name="input13" class="input-overlay"></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input14" name="input14" class="input-overlay"></td>
+                    <td><input type="text" id="input15" name="input15" class="input-overlay"></td>
+                    <td><input type="text" id="input16" name="input16" class="input-overlay"></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input17" name="input17" class="input-overlay"></td>
+                    <td><input type="text" id="input18" name="input18" class="input-overlay"></td>
+                    <td><input type="text" id="input19" name="input19" class="input-overlay"></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input20" name="input20" class="input-overlay"></td>
+                    <td><input type="text" id="input21" name="input21" class="input-overlay"></td>
+                    <td><input type="text" id="input22" name="input22" class="input-overlay"></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input23" name="input23" class="input-overlay"></td>
+                    <td><input type="text" id="input24" name="input24" class="input-overlay"></td>
+                    <td><input type="text" id="input25" name="input25" class="input-overlay"></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input26" name="input26" class="input-overlay"></td>
+                    <td><input type="text" id="input27" name="input27" class="input-overlay"></td>
+                    <td><input type="text" id="input28" name="input28" class="input-overlay"></td>
                 </tr>
             </tbody>
         </table>
 
         <div class="section-label">
             <span class="label">Expected result:</span>
-            <div class="line"></div>
+            <div class="line">
+                <input type="text" id="input29" name="input29" class="input-overlay">
+            </div>
         </div>
 
         <div class="section-label">
             <span class="label">Remarks if any:</span>
-            <div class="line"></div>
+            <div class="line">
+                <input type="text" id="input30" name="input30" class="input-overlay">
+            </div>
         </div>
 
         <div class="footer-row">
             <div class="info-group">
                 <span class="label">Name of the consultant doctor:</span>
-                <div class="line"></div>
+                <div class="line">
+                    <input type="text" id="input31" name="input31" class="input-overlay">
+                </div>
             </div>
             <div class="info-group" style="margin-left: 50px;">
                 <span class="label">Signature of doctor:</span>
-                <div class="line"></div>
+                <div class="line">
+                    <input type="text" id="input32" name="input32" class="input-overlay">
+                </div>
             </div>
         </div>
     </div>

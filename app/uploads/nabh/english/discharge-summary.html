@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Medical Forms Collection</title>
@@ -18,7 +19,7 @@
             padding: 25px;
             margin: 10mm auto;
             background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             position: relative;
         }
@@ -76,58 +77,146 @@
             margin-left: 5px;
         }
 
-        @media print {
-            .page-break { page-break-before: always; }
+        /* ✅ Input that looks EXACTLY like .line (same height, same border, same spacing) */
+        .line-input {
+            flex-grow: 1;
+            height: 14px;
+            margin-left: 5px;
+            border: none;
+            border-bottom: 1px solid black;
+            background: transparent;
+            padding: 0;
+            font-size: 14px;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 14px;
+            outline: none;
         }
-        
-        
+
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="page">
         <div class="outer-border">
             <h2>Discharge Summary</h2>
-            
-            <div class="row-line"><span class="label">Name of patient:</span><div class="line"></div></div>
-            
-            <div style="display: flex;">
-                <div class="row-line" style="flex: 1;"><span class="label">Age/Sex:</span><div class="line"></div></div>
-                <div class="row-line" style="flex: 1; margin-left: 40px;"><span class="label">UHID:</span><div class="line"></div></div>
+
+            <!-- ✅ patient_name -->
+            <div class="row-line">
+                <span class="label">Name of patient:</span>
+                <input type="text" id="patient_name" name="patient_name" class="line-input" value="">
             </div>
 
-            <div class="row-line"><span class="label">Name of treating doctor:</span><div class="line"></div></div>
-
             <div style="display: flex;">
-                <div class="row-line" style="flex: 1;"><span class="label">Date of procedure:</span><div class="line"></div></div>
-                <div class="row-line" style="flex: 1; margin-left: 40px;"><span class="label">Time of Admission:</span><div class="line"></div></div>
+                <div class="row-line" style="flex: 1;">
+                    <span class="label">Age/Sex:</span>
+                    <input type="text" id="input1" name="input1" class="line-input" value="">
+                </div>
+                <div class="row-line" style="flex: 1; margin-left: 40px;">
+                    <span class="label">UHID:</span>
+                    <input type="text" id="input2" name="input2" class="line-input" value="">
+                </div>
             </div>
 
-            <div class="row-line"><span class="label">Diagnosis:</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
+            <!-- ✅ doctor_name -->
+            <div class="row-line">
+                <span class="label">Name of treating doctor:</span>
+                <input type="text" id="doctor_name" name="doctor_name" class="line-input" value="">
+            </div>
 
-            <div class="row-line"><span class="label">Procedure Details:</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
+            <div style="display: flex;">
+                <div class="row-line" style="flex: 1;">
+                    <span class="label">Date of procedure:</span>
+                    <input type="text" id="input3" name="input3" class="line-input" value="">
+                </div>
+                <div class="row-line" style="flex: 1; margin-left: 40px;">
+                    <span class="label">Time of Admission:</span>
+                    <input type="text" id="input4" name="input4" class="line-input" value="">
+                </div>
+            </div>
 
-            <div class="row-line"><span class="label">H/O Allergy:</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
+            <!-- ✅ Diagnosis (multiple lines but ONLY ONE input on first line) -->
+            <div class="row-line">
+                <span class="label">Diagnosis:</span>
+                <input type="text" id="input5" name="input5" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
 
-            <div class="row-line"><span class="label">Clinical Notes (Brief details of the procedure):</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
+            <!-- ✅ Procedure Details (multiple lines but ONLY ONE input) -->
+            <div class="row-line">
+                <span class="label">Procedure Details:</span>
+                <input type="text" id="input6" name="input6" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
 
-            <div class="row-line" style="margin-top: 20px;"><span class="label">Investigations:</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
+            <!-- ✅ H/O Allergy (multiple lines but ONLY ONE input) -->
+            <div class="row-line">
+                <span class="label">H/O Allergy:</span>
+                <input type="text" id="input7" name="input7" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+
+            <!-- ✅ Clinical Notes (many lines but ONLY ONE input) -->
+            <div class="row-line">
+                <span class="label">Clinical Notes (Brief details of the procedure):</span>
+                <input type="text" id="input8" name="input8" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+
+            <!-- ✅ Investigations (multiple lines but ONLY ONE input) -->
+            <div class="row-line" style="margin-top: 20px;">
+                <span class="label">Investigations:</span>
+                <input type="text" id="input9" name="input9" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
         </div>
     </div>
 
@@ -135,49 +224,92 @@
 
     <div class="page">
         <div class="outer-border">
-            <!-- <h2>Discharge Summary</h2> -->
+            <!-- ✅ Medication administered (many lines but ONLY ONE input) -->
+            <div class="row-line" style="margin-top: 20px;">
+                <span class="label">Medication administered:</span>
+                <input type="text" id="input10" name="input10" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
 
-            <div class="row-line" style="margin-top: 20px;"><span class="label">Medication administered:</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            
-            <div class="row-line"><span class="label">Follow up Advise:</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
+            <!-- ✅ Follow up Advise (multiple lines but ONLY ONE input) -->
+            <div class="row-line">
+                <span class="label">Follow up Advise:</span>
+                <input type="text" id="input11" name="input11" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
 
-            <div class="row-line"><span class="label">Medication details:</span><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            <div class="row-line"><div class="line"></div></div>
-            
+            <!-- ✅ Medication details (multiple lines but ONLY ONE input) -->
+            <div class="row-line">
+                <span class="label">Medication details:</span>
+                <input type="text" id="input12" name="input12" class="line-input" value="">
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+            <div class="row-line">
+                <div class="line"></div>
+            </div>
+
             <div class="" style="height: 100px;">
-            <div style="display: flex;">
-                <div class="row-line" style="flex: 1;"><span class="label">When to obtain urgent care:</div>
-            </div>
+                <div style="display: flex;">
+                    <div class="row-line" style="flex: 1;">
+                        <span class="label">When to obtain urgent care:</span>
+                        <!-- ✅ One input inside same line (no extra pixels changed) -->
+                        <input type="text" id="input13" name="input13" class="line-input" value="">
+                    </div>
+                </div>
             </div>
 
             <div class="" style="height: 70px;">
-            <div class="row-line"><span class="label">How to obtain urgent care: call on</span><div class="line"></div></div>
+                <div class="row-line">
+                    <span class="label">How to obtain urgent care: call on</span>
+                    <input type="text" id="input14" name="input14" class="line-input" value="">
+                </div>
             </div>
 
             <div class="" style="height: 70px;">
-            <div class="row-line"><span class="label">Name of Consulting Doctor:</span><div class="line"></div></div>
+                <div class="row-line">
+                    <span class="label">Name of Consulting Doctor:</span>
+                    <input type="text" id="doctor_name" name="doctor_name" class="line-input" value="">
+                </div>
             </div>
-            
-            
+
             <div class="" style="height: 150px;">
-            <div class="row-line"><span class="label">Signature:</span></div>
-            </div>
+                <div class="row-line"><span class="label">Signature:</span></div>
+                <!-- (No line existed here originally, so I’m NOT adding anything to avoid pixel change) -->
             </div>
 
-            
         </div>
     </div>
 
 </body>
+
 </html>

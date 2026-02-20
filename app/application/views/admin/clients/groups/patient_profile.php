@@ -1458,6 +1458,7 @@ if (!empty($check_prescription_exists)) { ?>
       <div class="modal-body" style="height:80vh;">
         <iframe id="nabhPdfFrame" src="about:blank" style="width:100%; height:100%; border:0;"></iframe>
       </div>
+      
     </div>
   </div>
 </div>
@@ -1548,31 +1549,14 @@ function getClientIdFromUrl() {
 
 
 <script>
-(function waitForJqAndBootstrap(){
-  if (!window.jQuery || !window.jQuery.fn || !window.jQuery.fn.modal) {
-    return setTimeout(waitForJqAndBootstrap, 80);
-  }
 
-  var $ = window.jQuery;
 
-  // run only once
-  if (window.__nabh_inited__) return;
-  window.__nabh_inited__ = true;
 
-  // ✅ store clicked appointment meta here
-  window.__NABH_META__ = {
-    appointment_id: 0,
-    patient_id: 0,
-    doctor_id: 0,
-    patient_name: '',
-    doctor_name: '',
-    appointment_type_id: 0
-  };
 
-  // ✅ called from button onclick
   window.openNabhFormsModal = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
 
-    window.__NABH_META__ = {
+
+ window.__NABH_META__ = {
       appointment_id: parseInt(appointmentId || "0", 10),
       patient_id: parseInt(patientId || "0", 10),
       doctor_id: parseInt(doctorId || "0", 10),
@@ -1583,59 +1567,42 @@ function getClientIdFromUrl() {
 
     $('#appointment_type_id').val(window.__NABH_META__.appointment_type_id);
 
-    $('#nabhListModal').modal('show');
-    loadNabhList();
-  };
 
-  // language change reload
+
+  $('#nabhListModal').modal('show');
+  loadNabhList();
+
+
   $(document).on('change', '#nabhLang', function () {
     loadNabhList();
   });
 
-  function loadNabhList() 
-  {
 
+};
+
+
+function loadNabhList() {
+
+  var appointmentTypeId = window.__NABH_META__.appointment_type_id;
     var lang = $('#nabhLang').val();
-    var appointmentTypeId = parseInt($('#appointment_type_id').val() || "0", 10);
 
-    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
-    var csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+  $.post(admin_url + 'nabh/list_json',
+    { appointment_type_id: appointmentTypeId },
+    function(res){
 
-    if (!appointmentTypeId) {
-      $('#nabhTbody').html('<tr><td colspan="4">Appointment type not found</td></tr>');
-      return;
-    }
+      if(!res.status){ return; }
 
-    $('#nabhTbody').html('<tr><td colspan="4">Loading...</td></tr>');
+      var html='';
+     
 
-    var postData = {};
-    postData['appointment_type_id'] = appointmentTypeId;
-    postData[csrfName] = csrfHash;
+      res.data.forEach(function(r,i){
 
-    $.ajax({
-      // ✅ use your controller method name exactly
-      url: admin_url + 'nabh/list_json',
-      type: 'POST',
-      dataType: 'json',
-      data: postData,
-      success: function(res) {
 
-        var rows = (res && res.status) ? (res.data || []) : [];
+         var hasEn = !!r.has_en;
+        var hasGu = !!r.has_gu;
 
-        if (!rows.length) {
-          $('#nabhTbody').html('<tr><td colspan="4">No forms assigned for this appointment type</td></tr>');
-          return;
-        }
 
-        var html = '';
-
-        for (var i = 0; i < rows.length; i++) {
-          var r = rows[i];
-
-          var hasEn = !!r.has_en;
-          var hasGu = !!r.has_gu;
-
-          var title = '-';
+        var title = '-';
           if (lang === 'gu') title = hasGu ? (r.title_gu || r.title_en) : (r.title_en || r.title_gu);
           else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);
 
@@ -1647,64 +1614,73 @@ function getClientIdFromUrl() {
 
           var disabled = (!hasEn && !hasGu) ? 'disabled' : '';
 
-          // ✅ build view url (iframe html) + pass meta
-          //var viewUrl = admin_url + 'nabh/view_html/' + r.id + '?lang=' + encodeURIComponent(lang);
-
-          var viewUrl = admin_url + 'nabh/view_html/' + r.id
-          + '?lang=' + encodeURIComponent(lang)
-          + '&nabh_pdf_id=' + encodeURIComponent(r.id)
-          + '&appointment_id=' + encodeURIComponent(window.__NABH_META__.appointment_id)
-          + '&appointment_type_id=' + encodeURIComponent(parseInt($('#appointment_type_id').val()||"0",10))
-          + '&patient_id=' + encodeURIComponent(window.__NABH_META__.patient_id)
-          + '&doctor_id=' + encodeURIComponent(window.__NABH_META__.doctor_id)
-          + '&patient_name=' + encodeURIComponent(window.__NABH_META__.patient_name)
-          + '&doctor_name=' + encodeURIComponent(window.__NABH_META__.doctor_name)
-          + '&admin_base=' + encodeURIComponent(admin_url)
-          + '&csrf_name=' + encodeURIComponent(csrfName)
-          + '&csrf_hash=' + encodeURIComponent(csrfHash);
+          var viewUrl = admin_url + 'nabh/form/' + r.id
+              + '?lang=' + encodeURIComponent(lang)
+              + '&nabh_pdf_id=' + encodeURIComponent(r.id)
+              + '&appointment_id=' + encodeURIComponent(window.__NABH_META__.appointment_id)
+              + '&appointment_type_id=' + encodeURIComponent(parseInt($('#appointment_type_id').val()||"0",10))
+              + '&patient_id=' + encodeURIComponent(window.__NABH_META__.patient_id)
+              + '&doctor_id=' + encodeURIComponent(window.__NABH_META__.doctor_id)
+              + '&patient_name=' + encodeURIComponent(window.__NABH_META__.patient_name)
+              + '&doctor_name=' + encodeURIComponent(window.__NABH_META__.doctor_name)
 
 
+        html+='<tr>'
+          +'<td>'+(i+1)+'</td>'
+          +'<td>'+r.title_en+'</td>'
+          +   '<td>' + escapeHtml(avail) + '</td>'
 
-          html += ''
-            + '<tr>'
-            +   '<td>' + (i+1) + '</td>'
-            +   '<td>' + escapeHtml(title) + '</td>'
-            +   '<td>' + escapeHtml(avail) + '</td>'
-            +   '<td>'
-            +     '<button class="btn btn-sm btn-primary" ' + disabled
-            +       ' onclick="openNabhViewer(\'' + viewUrl + '\', \'' + escapeHtml(title) + '\')">View</button>'
-            +   '</td>'
-            + '</tr>';
-        }
+          +'<td>'
+          +'<button class="btn btn-sm btn-primary" onclick="openNabhViewer(\''+viewUrl+'\')">View</button>'
+        // /*  +'<button class="btn btn-sm btn-success" onclick="printNabhForm(\''+ viewUrl +'\')"><i class="fa fa-print"></i> Print</button>'*/
++ '<button class="btn btn-sm btn-success" onclick="printNabhPdf('+ r.id +')">'
++ '<i class="fa-regular fa-file-pdf"></i> Print PDF</button>'
+          +'</td></tr>';
+      });
 
-        $('#nabhTbody').html(html);
-      },
-      error: function(xhr) {
-        $('#nabhTbody').html('<tr><td colspan="4">Error loading forms</td></tr>');
-        // console.log(xhr.responseText);
-      }
-    });
-  }
+      $('#nabhTbody').html(html);
+    },
+  'json');
+}
 
-  window.openNabhViewer = function(url, title) {
-    $('#nabhPdfTitle').text(title || 'View');
-    $('#nabhPdfFrame').attr('src', url);
-    $('#nabhPdfModal').modal('show');
+function printNabhPdf(nabhPdfId){
+  var lang = $('#nabhLang').val(); // en/gu
+  var meta = window.__NABH_META__ || {};
+
+  var url = admin_url + 'nabh/print_pdf'
+    + '?nabh_pdf_id=' + encodeURIComponent(nabhPdfId)
+    + '&lang=' + encodeURIComponent(lang)
+    + '&appointment_id=' + encodeURIComponent(meta.appointment_id || 0)
+    + '&appointment_type_id=' + encodeURIComponent(meta.appointment_type_id || 0)
+    + '&patient_id=' + encodeURIComponent(meta.patient_id || 0)
+    + '&doctor_id=' + encodeURIComponent(meta.doctor_id || 0)
+    + '&patient_name=' + encodeURIComponent(meta.patient_name || '')
+    + '&doctor_name=' + encodeURIComponent(meta.doctor_name || '');
+
+  window.open(url, '_blank');
+}
+// to print nabh form
+/*function printNabhForm(url){
+  // open the modal and load the form
+  openNabhViewer(url);
+
+  // wait iframe to load fully then print
+  var iframe = document.getElementById('nabhPdfFrame');
+
+  iframe.onload = function(){
+    try {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } catch(e){
+      console.error(e);
+      alert('Print blocked. Please allow popups/print permissions.');
+    }
   };
+}*/
 
-  $(document).on('hidden.bs.modal', '#nabhPdfModal', function(){
-    $('#nabhPdfFrame').attr('src', 'about:blank');
-  });
+function openNabhViewer(url){
+  $('#nabhPdfFrame').attr('src',url);
+  $('#nabhPdfModal').modal('show');
+}
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;')
-      .replace(/'/g,'&#039;');
-  }
-
-})();
 </script>
