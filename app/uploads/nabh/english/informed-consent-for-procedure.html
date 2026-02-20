@@ -22,15 +22,11 @@
         /* ===== SCREEN VIEW (centered) ===== */
         .container {
             width: 210mm;
-            /* A4 width */
             max-width: 100%;
             margin: 0 auto;
             border: 1px solid #ccc;
-            /* only for screen */
             padding: 12mm;
-            /* safe padding inside */
             overflow: hidden;
-            /* prevent accidental overflow */
             page-break-after: always;
         }
 
@@ -63,11 +59,27 @@
             font-size: 13px;
         }
 
-        .underline {
+        /* STICKY DESIGN: Input styles to mimic underlines exactly */
+        input[type="text"], input[type="time"] {
+            border: none;
             border-bottom: 1px solid #000;
-            display: inline-block;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Input inside table cells */
+        td input {
+            width: 100%;
+            height: 100%;
+            border-bottom: none !important;
+        }
+
+        .underline {
             width: 50mm;
-            /* fixed underline size to avoid overflow */
             height: 14px;
             vertical-align: bottom;
         }
@@ -76,7 +88,6 @@
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            /* important for print */
             margin-bottom: 10px;
         }
 
@@ -128,7 +139,6 @@
         }
 
         .sig-underline {
-            border-bottom: 1px solid #000;
             flex: 1;
             height: 14px;
         }
@@ -155,13 +165,6 @@
             font-style: italic;
         }
 
-        /* ===== PRINT FIX (NO CUTTING) ===== */
-        @page {
-            size: A4;
-            margin: 10mm;
-            /* printer margin */
-        }
-
         @media print {
             body {
                 padding: 0;
@@ -170,18 +173,21 @@
 
             .container {
                 width: 190mm;
-                /* A4 (210) - margins (10+10) = 190 */
                 max-width: 190mm;
                 margin: 0;
                 border: none;
                 padding: 0;
-                /* avoid extra width from padding */
             }
 
-            /* put padding inside print using an inner wrapper */
             .print-pad {
                 padding: 8mm;
-                /* safe inner padding */
+            }
+            
+            input {
+                border-bottom: 1px solid #000 !important;
+            }
+            td input {
+                border-bottom: none !important;
             }
         }
     </style>
@@ -191,15 +197,13 @@
     <div class="container">
         <div class="print-pad">
 
-            <div class="header-logo">
-                <!-- <img src="images/logo.png" alt="Clinic Logo"> -->
-            </div>
+            <div class="header-logo"></div>
 
             <div class="title-box">Informed Consent for Procedure Cost</div>
 
             <div class="info-row">
-                <div>Date: <span class="underline"></span></div>
-                <div>Time: <span class="underline"></span></div>
+                <div>Date: <input type="text" id="input1" name="input1" class="underline"></div>
+                <div>Time: <input type="text" id="input2" name="input2" class="underline"></div>
             </div>
 
             <table>
@@ -211,36 +215,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="col-sr">1</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">2</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">3</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">4</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">5</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">6</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    <tr><td class="col-sr">1</td><td><input type="text" id="input3" name="input3"></td><td><input type="text" id="input4" name="input4"></td></tr>
+                    <tr><td class="col-sr">2</td><td><input type="text" id="input5" name="input5"></td><td><input type="text" id="input6" name="input6"></td></tr>
+                    <tr><td class="col-sr">3</td><td><input type="text" id="input7" name="input7"></td><td><input type="text" id="input8" name="input8"></td></tr>
+                    <tr><td class="col-sr">4</td><td><input type="text" id="input9" name="input9"></td><td><input type="text" id="input10" name="input10"></td></tr>
+                    <tr><td class="col-sr">5</td><td><input type="text" id="input11" name="input11"></td><td><input type="text" id="input12" name="input12"></td></tr>
+                    <tr><td class="col-sr">6</td><td><input type="text" id="input13" name="input13"></td><td><input type="text" id="input14" name="input14"></td></tr>
                 </tbody>
             </table>
 
@@ -250,21 +230,17 @@
             </div>
 
             <div class="signature-section">
-                <div class="sig-line">Name of Consultant doctor: <div class="sig-underline"></div>
-                </div>
-                <div class="sig-line">Sign: <div class="sig-underline"></div>
-                </div>
-                <div class="sig-line">Name of Patient / Relative: <div class="sig-underline"></div>
-                </div>
-                <div class="sig-line">Sign: <div class="sig-underline"></div>
-                </div>
+                <div class="sig-line">Name of Consultant doctor: <input type="text" id="input15" name="input15" class="sig-underline"></div>
+                <div class="sig-line">Sign: <input type="text" id="input16" name="input16" class="sig-underline"></div>
+                <div class="sig-line">Name of Patient / Relative: <input type="text" id="patient_name" name="patient_name" class="sig-underline"></div>
+                <div class="sig-line">Sign: <input type="text" id="input17" name="input17" class="sig-underline"></div>
             </div>
 
             <div class="divider"></div>
 
             <div class="info-row">
-                <div>Date: <span class="underline"></span></div>
-                <div>Time: <span class="underline"></span></div>
+                <div>Date: <input type="text" id="input18" name="input18" class="underline"></div>
+                <div>Time: <input type="text" id="input19" name="input19" class="underline"></div>
             </div>
 
             <div class="change-title">
@@ -282,42 +258,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="col-sr">1</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">2</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">3</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">4</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">5</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sr">6</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    <tr><td class="col-sr">1</td><td><input type="text" id="input20" name="input20"></td><td><input type="text" id="input21" name="input21"></td><td><input type="text" id="input22" name="input22"></td></tr>
+                    <tr><td class="col-sr">2</td><td><input type="text" id="input23" name="input23"></td><td><input type="text" id="input24" name="input24"></td><td><input type="text" id="input25" name="input25"></td></tr>
+                    <tr><td class="col-sr">3</td><td><input type="text" id="input26" name="input26"></td><td><input type="text" id="input27" name="input27"></td><td><input type="text" id="input28" name="input28"></td></tr>
+                    <tr><td class="col-sr">4</td><td><input type="text" id="input29" name="input29"></td><td><input type="text" id="input30" name="input30"></td><td><input type="text" id="input31" name="input31"></td></tr>
+                    <tr><td class="col-sr">5</td><td><input type="text" id="input32" name="input32"></td><td><input type="text" id="input33" name="input33"></td><td><input type="text" id="input34" name="input34"></td></tr>
+                    <tr><td class="col-sr">6</td><td><input type="text" id="input35" name="input35"></td><td><input type="text" id="input36" name="input36"></td><td><input type="text" id="input37" name="input37"></td></tr>
                 </tbody>
             </table>
 
@@ -327,31 +273,22 @@
             </div>
 
             <div class="signature-section">
-                <div class="sig-line">Name of Consultant doctor: <div class="sig-underline"></div>
-                </div>
-                <div class="sig-line">Sign: <div class="sig-underline"></div>
-                </div>
-                <div class="sig-line">Name of Patient / Relative: <div class="sig-underline"></div>
-                </div>
-                <div class="sig-line">Sign: <div class="sig-underline"></div>
-                </div>
+                <div class="sig-line">Name of Consultant doctor: <input type="text" id="input38" name="input38" class="sig-underline"></div>
+                <div class="sig-line">Sign: <input type="text" id="input39" name="input39" class="sig-underline"></div>
+                <div class="sig-line">Name of Patient / Relative: <input type="text" id="patient_name" name="patient_name" class="sig-underline"></div>
+                <div class="sig-line">Sign: <input type="text" id="input40" name="input40" class="sig-underline"></div>
             </div>
 
         </div>
     </div>
+
     <div class="container">
-
-        <div class="header-logo">
-            <!-- <img src="images/logo.png" alt="ક્લિનિક લોગો"> -->
-        </div>
-
-        <div class="title-box">
-            પ્રક્રિયા ખર્ચ માટે માહિતગાર સંમતિ
-        </div>
+        <div class="header-logo"></div>
+        <div class="title-box">પ્રક્રિયા ખર્ચ માટે માહિતગાર સંમતિ</div>
 
         <div class="info-row">
-            <div>તારીખ: <span class="underline"></span></div>
-            <div>સમય: <span class="underline"></span></div>
+            <div>તારીખ: <input type="text" id="input41" name="input41" class="underline"></div>
+            <div>સમય: <input type="text" id="input42" name="input42" class="underline"></div>
         </div>
 
         <table>
@@ -363,36 +300,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="col-sr">1</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">2</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">3</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">4</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">5</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">6</td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                <tr><td class="col-sr">1</td><td><input type="text" id="input43" name="input43"></td><td><input type="text" id="input44" name="input44"></td></tr>
+                <tr><td class="col-sr">2</td><td><input type="text" id="input45" name="input45"></td><td><input type="text" id="input46" name="input46"></td></tr>
+                <tr><td class="col-sr">3</td><td><input type="text" id="input47" name="input47"></td><td><input type="text" id="input48" name="input48"></td></tr>
+                <tr><td class="col-sr">4</td><td><input type="text" id="input49" name="input49"></td><td><input type="text" id="input50" name="input50"></td></tr>
+                <tr><td class="col-sr">5</td><td><input type="text" id="input51" name="input51"></td><td><input type="text" id="input52" name="input52"></td></tr>
+                <tr><td class="col-sr">6</td><td><input type="text" id="input53" name="input53"></td><td><input type="text" id="input54" name="input54"></td></tr>
             </tbody>
         </table>
 
@@ -402,21 +315,17 @@
         </div>
 
         <div class="signature-section">
-            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <div class="sig-underline"></div>
-            </div>
-            <div class="sig-line">સહી: <div class="sig-underline"></div>
-            </div>
-            <div class="sig-line">દર્દી / સગાનું નામ: <div class="sig-underline"></div>
-            </div>
-            <div class="sig-line">સહી: <div class="sig-underline"></div>
-            </div>
+            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <input type="text" id="input55" name="input55" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input56" name="input56" class="sig-underline"></div>
+            <div class="sig-line">દર્દી / સગાનું નામ: <input type="text" id="patient_name" name="patient_name" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input57" name="input57" class="sig-underline"></div>
         </div>
 
         <div class="divider"></div>
 
         <div class="info-row">
-            <div>તારીખ: <span class="underline"></span></div>
-            <div>સમય: <span class="underline"></span></div>
+            <div>તારીખ: <input type="text" id="input58" name="input58" class="underline"></div>
+            <div>સમય: <input type="text" id="input59" name="input59" class="underline"></div>
         </div>
 
         <div class="change-title">
@@ -434,42 +343,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="col-sr">1</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">2</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">3</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">4</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">5</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="col-sr">6</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                <tr><td class="col-sr">1</td><td><input type="text" id="input60" name="input60"></td><td><input type="text" id="input61" name="input61"></td><td><input type="text" id="input62" name="input62"></td></tr>
+                <tr><td class="col-sr">2</td><td><input type="text" id="input63" name="input63"></td><td><input type="text" id="input64" name="input64"></td><td><input type="text" id="input65" name="input65"></td></tr>
+                <tr><td class="col-sr">3</td><td><input type="text" id="input66" name="input66"></td><td><input type="text" id="input67" name="input67"></td><td><input type="text" id="input68" name="input68"></td></tr>
+                <tr><td class="col-sr">4</td><td><input type="text" id="input69" name="input69"></td><td><input type="text" id="input70" name="input70"></td><td><input type="text" id="input71" name="input71"></td></tr>
+                <tr><td class="col-sr">5</td><td><input type="text" id="input72" name="input72"></td><td><input type="text" id="input73" name="input73"></td><td><input type="text" id="input74" name="input74"></td></tr>
+                <tr><td class="col-sr">6</td><td><input type="text" id="input75" name="input75"></td><td><input type="text" id="input76" name="input76"></td><td><input type="text" id="input77" name="input77"></td></tr>
             </tbody>
         </table>
 
@@ -479,18 +358,12 @@
         </div>
 
         <div class="signature-section">
-            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <div class="sig-underline"></div>
-            </div>
-            <div class="sig-line">સહી: <div class="sig-underline"></div>
-            </div>
-            <div class="sig-line">દર્દી / સગાનું નામ: <div class="sig-underline"></div>
-            </div>
-            <div class="sig-line">સહી: <div class="sig-underline"></div>
-            </div>
+            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <input type="text" id="input78" name="input78" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input79" name="input79" class="sig-underline"></div>
+            <div class="sig-line">દર્દી / સગાનું નામ: <input type="text" id="patient_name" name="patient_name" class="sig-underline"></div>
+            <div class="sig-line">સહી: <input type="text" id="input80" name="input80" class="sig-underline"></div>
         </div>
-
     </div>
 
 </body>
-
 </html>

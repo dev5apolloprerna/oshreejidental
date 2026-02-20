@@ -1,0 +1,356 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Satisfaction Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        /* Container to mimic A4 Page */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10px auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        h2,
+        h3 {
+            text-align: center;
+            margin-bottom: 5px;
+            text-decoration: underline;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .input-box {
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9f9f9;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        .question-section {
+            margin-top: 10px;
+        }
+
+        .question {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .footer-line {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        /* FORM INPUT STYLES - ZERO PIXEL SHIFT */
+        input[type="text"] {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .td-check {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .line-input {
+            border-bottom: 1px solid transparent;
+            /* Keeps height consistent */
+        }
+
+
+        /* ✅ FORCE: 1 .page = 1 printed page (NO splitting) */
+        @media print {
+
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* each .page must stay together */
+            .page {
+                width: 210mm !important;
+                height: 297mm !important;
+                /* IMPORTANT: fixed A4 height */
+                min-height: 297mm !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid-page !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                overflow: hidden !important;
+                /* prevents table from pushing to next page */
+            }
+
+            .page:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+
+            /* prevent table from breaking */
+            table,
+            thead,
+            tbody,
+            tr,
+            th,
+            td {
+                page-break-inside: avoid !important;
+                break-inside: avoid-page !important;
+            }
+
+            /* If still splits on some machines, enable this tiny print-only shrink */
+            /* html { zoom: 0.97; } */
+        }
+    </style>
+</head>
+
+<body>
+  <!-- ====================== PAGE 2 (GUJARATI) ====================== -->
+        <div class="page">
+            <!-- <div class="hospital-name-box">હોસ્પિટલનું નામ</div> -->
+            <h2>દર્દી સંતોષ ફોર્મ</h2>
+            <h3 style="text-decoration: none;">ઓપીડી દર્દીનો પ્રતિસાદ</h3>
+
+            <div class="header-section">
+                <div class="input-box" style="width: 60%;">
+                    દર્દીનું નામ:
+                    <input type="text" id="patient_name" name="patient_name" style="width: 60%;">
+                </div>
+                <div class="input-box" style="width: 25%;">
+                    ઓપીડી નં.:
+                    <input type="text" id="opd_no" name="opd_no" style="width: 50%;">
+                </div>
+            </div>
+
+            <div class="intro-text">
+                તમે તમારા મૂલ્યવાન સમયને તમારા સાથી / મિત્રના ઉપચારના સંબંધમાં હોસ્પિટલમાં વિતાવ્યા છે. તમને વિનંતી
+                કરવામાં
+                આવે છે કે તમે જે દર્દીઓની મુલાકાત લીધી છે, તેઓની ગુણવત્તા વિશે તમારા અભિપ્રાય જણાવો. તમારા દ્વારા પ્રદાન
+                કરવામાં આવેલી માહિતી ગોપનીય રાખવામાં આવશે અને સેવાઓનો ઉપયોગ ફક્ત તેના ઉપયોગ કરવામાં આવશે.
+                <br>
+                <strong>મહેરબાની કરીને યોગ્ય બોક્સ પર ટીક કરો અને સૂચન બોક્સમાં પ્રશ્નાવલિ છોડો.</strong>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">ક્રમાંક નં.</th>
+                        <th style="width: 45%;">માપદંડ</th>
+                        <th class="center-text">ખરાબ<br>1</th>
+                        <th class="center-text">ઠીક<br>2</th>
+                        <th class="center-text">સારી<br>3</th>
+                        <th class="center-text">ખૂબ સારી<br>4</th>
+                        <th class="center-text">ઉત્તમ<br>5</th>
+                        <th class="center-text">કોઈ ટીપ્પણીઓ નહિ</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td class="center-text">1</td>
+                        <td>હોસ્પિટલમાં પૂરતી માહિતી ઉપલબ્ધ (દિશાસૂચક અને સ્થાન સંકેતો, નોંધણી કાઉન્ટર, દવા, વગેરે)</td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input31" id="input31_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input32" id="input32" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">2</td>
+                        <td>નોંધણી કાઉન્ટર પર રાહ જોવી</td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_1" value="1">૩૦ મિનિટથી
+                            વધારે</td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_2" value="2">૧૦ થી ૩૦ મિનિટ
+                        </td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_3" value="3">૫ થી ૧૦ મિનિટ
+                        </td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_4" value="4">૫ મિનિટની અંદર
+                        </td>
+                        <td class="td-check"><input type="radio" name="input33" id="input33_5" value="5">તરત જ</td>
+                        <td class="td-check"><input type="text" name="input34" id="input34" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">3</td>
+                        <td>વર્તણૂક અને હોસ્પિટલ સ્ટાફનો વલણ</td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input35" id="input35_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input36" id="input36" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">4</td>
+                        <td>રાહ જોવાના વિસ્તારમાં સુવિધાઓ (ખુરશીઓ, પંખો, પીવાનું પાણી અને શૌચાલયની સ્વચ્છતા)</td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input37" id="input37_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input38" id="input38" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">5</td>
+                        <td>ડોક્ટર્સનું વલણ અને સંચાર</td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input39" id="input39_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input40" id="input40" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">6</td>
+                        <td>સલાહ, પરીક્ષા અને પરામર્શ પર સમય પસાર કર્યો</td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input41" id="input41_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input42" id="input42" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">7</td>
+                        <td>મેડિસિન વિતરણ કાઉન્ટર પર શીઘ્રતા</td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input43" id="input43_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input44" id="input44" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">8</td>
+                        <td>હોસ્પિટલ દવાખાનામાં સૂચિત દવાઓની ઉપલબ્ધતા</td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input45" id="input45_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input46" id="input46" value=""></td>
+                    </tr>
+
+                    <tr>
+                        <td class="center-text">9</td>
+                        <td>હોસ્પિટલની મુલાકાત દરમિયાન તમારો સંપૂર્ણ સંતોષ</td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input47" id="input47_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input48" id="input48" value=""></td>
+                    </tr>
+                    <tr>
+                        <td class="center-text">10</td>
+                        <td>આ હોસ્પિટલમાં તમે ફરીથી સારવાર માટે આવવા ઇચ્છો છો કે નહીં</td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_1" value="1"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_2" value="2"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_3" value="3"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_4" value="4"></td>
+                        <td class="td-check"><input type="radio" name="input49" id="input49_5" value="5"></td>
+                        <td class="td-check"><input type="text" name="input50" id="input50" value=""></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="question-section">
+                <div class="question">1. તમે હોસ્પિટલમાં શું સુધારણા જોવા માંગો છો ?
+                    <input type="text" id="input51" name="input51" style="width: 50%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">2. તમે સારવાર માટે આ હોસ્પિટલમાં કેમ આવ્યા છો ?
+                    <input type="text" id="input52" name="input52" style="width: 50%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">3. શું તમે સારવાર માટે આગલી વખતે આ હોસ્પિટલમાં પાછા આવવા માંગો છો ?
+                    <input type="text" id="input53" name="input53" style="width: 30%; border-bottom: 1px solid #ccc;">
+                </div>
+                <div class="question">4. તમારા મૂલ્યવાન સૂચનો
+                    <input type="text" id="input54" name="input54" style="width: 70%; border-bottom: 1px solid #ccc;">
+                </div>
+            </div>
+
+            <div class="footer-line">
+                <span>તારીખ: <input type="text" id="today_date" name="today_date"
+                        style="width: 80px; border-bottom: 1px solid black;"></span>
+                <span>દવાખાનું <input type="text" id="input56" name="input56"
+                        style="width: 80px; border-bottom: 1px solid black;"></span>
+                <span>ઉંમર: <input type="text" id="input57" name="input57"
+                        style="width: 50px; border-bottom: 1px solid black;"></span>
+                <span>જાતિ: <input type="text" id="input58" name="input58"
+                        style="width: 50px; border-bottom: 1px solid black;"></span>
+            </div>
+        </div>
+          <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+</body>
+
+</html>

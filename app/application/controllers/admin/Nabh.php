@@ -7,295 +7,301 @@ class Nabh extends AdminController
         parent::__construct();
     }
 
-    /**
-     * AJAX
-     * POST: appointment_type_id
-     * Returns only assigned NABH forms for appointment type
-     */
+    /* =========================================================
+       1) LIST FORMS FOR APPOINTMENT TYPE
+    ==========================================================*/
     public function list_json()
     {
-        if (!is_staff_logged_in()) {
-            ajax_access_denied();
-        }
-
-        if (!$this->input->is_ajax_request()) {
-            show_404();
-        }
-
         $appointment_type_id = (int)$this->input->post('appointment_type_id');
-        if ($appointment_type_id <= 0) {
-            echo json_encode(['status' => false, 'data' => [], 'message' => 'appointment_type_id required']);
-            exit;
+
+        if (!$appointment_type_id) {
+            echo json_encode(['status'=>false,'data'=>[]]); exit;
         }
 
-        $mapTable  = db_prefix() . 'appointment_type_pdf_master';
-        $nabhTable = db_prefix() . 'nabh_master';
+        $this->db->where('appointment_type_id', $appointment_type_id);
+        $rows = $this->db->get(db_prefix().'appointment_type_pdf_master')->result_array();
 
-        // ✅ only assigned forms
-        $this->db->select("n.pdf_id, n.pdf_name, n.english_file_name, n.gujarati_file_name", false);
-        $this->db->from($mapTable . ' m');
-        $this->db->join($nabhTable . ' n', 'n.pdf_id = m.appointment_pdf_id', 'inner');
-        $this->db->where('m.appointment_type_id', $appointment_type_id);
-        $this->db->order_by('n.pdf_id', 'ASC');
-        $rows = $this->db->get()->result_array();
+        $data = [];
 
-        // ✅ same folder logic as your old code
-        $enDir = FCPATH . 'uploads/nabh/english/';
-        $guDir = FCPATH . 'uploads/nabh/gujarati/';
-
-        $out = [];
         foreach ($rows as $r) {
-            $enFile = trim((string)($r['english_file_name'] ?? ''));
-            $guFile = trim((string)($r['gujarati_file_name'] ?? ''));
 
-            $hasEn = ($enFile !== '' && file_exists($enDir . basename($enFile)));
-            $hasGu = ($guFile !== '' && file_exists($guDir . basename($guFile)));
+            $pdf = $this->db->where('pdf_id',$r['appointment_pdf_id'])
+                            ->get('tblnabh_master')
+                            ->row_array();
 
-            // you have pdf_name only (same for both languages)
-            $title = (string)($r['pdf_name'] ?? 'NABH Form');
+            if (!$pdf) continue;
 
-            $out[] = [
-                // ✅ keep JS compatible: r.id
-                'id'       => (int)$r['pdf_id'],
-
-                // ✅ keep JS compatible: r.title_en / r.title_gu
-                'title_en' => $title,
-                'title_gu' => $title,
-
-                'has_en'   => $hasEn ? 1 : 0,
-                'has_gu'   => $hasGu ? 1 : 0,
+            $data[] = [
+                'id'        => $pdf['pdf_id'],
+                'title_en'  => $pdf['pdf_name'],
+                'title_gu'  => $pdf['pdf_name'],
+                'has_en'    => !empty($pdf['english_file_name']),
+                'has_gu'    => !empty($pdf['gujarati_file_name']),
             ];
         }
 
-        echo json_encode(['status' => true, 'data' => $out]);
+        echo json_encode(['status'=>true,'data'=>$data]);
         exit;
     }
 
-    /**
-     * ✅ Serve HTML in iframe (modal)
-     * URL: admin/nabh/view_html/{pdf_id}?lang=en|gu
-     */
-    public function view_html($pdf_id)
+
+    /* =========================================================
+       2) LOAD FORM (HTML + DB DATA + INJECT JS)
+    ==========================================================*/
+    public function form($pdf_id)
     {
-        if (!is_staff_logged_in()) {
-            access_denied();
-        }
 
         $pdf_id = (int)$pdf_id;
-        if ($pdf_id <= 0) show_404();
 
-        $lang = $this->input->get('lang'); // en / gu
-        $lang = in_array($lang, ['en', 'gu'], true) ? $lang : 'gu';
+        $appointment_id      = (int)$this->input->get('appointment_id');
+        $appointment_type_id = (int)$this->input->get('appointment_type_id');
+        $patient_id          = (int)$this->input->get('patient_id');
+        $doctor_id           = (int)$this->input->get('doctor_id');
+        $lang                = $this->input->get('lang');
 
-        $nabhTable = db_prefix() . 'nabh_master';
+        // 1️⃣ Get template
+        $pdf = $this->db->where('pdf_id',$pdf_id)
+                        ->get('tblnabh_master')
+                        ->row_array();
 
-        // ✅ pdf_id is primary key in your table
-        $this->db->where('pdf_id', $pdf_id);
-        $row = $this->db->get($nabhTable)->row_array();
+        if (!$pdf) show_error('Invalid PDF');
 
-        if (!$row) {
-            show_404();
+        $fileName = ($lang == 'en') 
+            ? $pdf['english_file_name'] 
+            : $pdf['gujarati_file_name'];
+
+        if (!$fileName) show_error('Template file missing');
+
+        $lang = ($lang === 'en') ? 'en' : 'gu';
+
+        $fileName = ($lang === 'en')
+            ? trim((string)($pdf['english_file_name'] ?? ''))
+            : trim((string)($pdf['gujarati_file_name'] ?? ''));
+
+        if ($fileName === '') {
+            // fallback: if selected language missing, try the other
+            $fileName = trim((string)($pdf['english_file_name'] ?? '')) ?: trim((string)($pdf['gujarati_file_name'] ?? ''));
         }
 
-        $enDir = FCPATH . 'uploads/nabh/english/';
-        $guDir = FCPATH . 'uploads/nabh/gujarati/';
+        $langFolder = ($lang === 'en') ? 'english' : 'gujarati';
 
-        $enFile = trim((string)($row['english_file_name'] ?? ''));
-        $guFile = trim((string)($row['gujarati_file_name'] ?? ''));
-
-        $enPath = ($enFile !== '') ? ($enDir . basename($enFile)) : '';
-        $guPath = ($guFile !== '') ? ($guDir . basename($guFile)) : '';
-
-        // ✅ preferred language, else fallback (same as old code)
-        $path = '';
-        if ($lang === 'gu') {
-            if ($guPath && file_exists($guPath)) $path = $guPath;
-            elseif ($enPath && file_exists($enPath)) $path = $enPath;
-        } else {
-            if ($enPath && file_exists($enPath)) $path = $enPath;
-            elseif ($guPath && file_exists($guPath)) $path = $guPath;
-        }
-
-        if ($path === '' || !file_exists($path)) {
-            show_error('HTML file not found in uploads/nabh folder.', 404);
-        }
-
-        // ✅ HTML only
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        if (!in_array($ext, ['html', 'htm'], true)) {
-            show_error('This form file is not an HTML file.', 404);
-        }
-
-        header('Content-Type: text/html; charset=utf-8');
-        header('X-Content-Type-Options: nosniff');
-        readfile($path);
-        exit;
-    }
-    public function save_submission()
-    {
-        if (!is_staff_logged_in()) {
-            return $this->_json(false, 'Not logged in', null, true);
-        }
-
-        // ✅ 1) Payload from FormData (payload field)
-        $payloadStr = $this->input->post('payload');
-
-        // ✅ 2) If not present, fallback to raw JSON request body
-        if (!$payloadStr) {
-            $payloadStr = $this->input->raw_input_stream;
-        }
-
-        if (!$payloadStr || trim($payloadStr) === '') {
-            return $this->_json(false, 'Missing payload', null, true);
-        }
-
-        $payload = json_decode($payloadStr, true);
-
-        // ✅ Debug if invalid JSON (will show what server received)
-        if (!is_array($payload)) {
-            return $this->_json(false, 'Invalid JSON body', [
-                'received' => substr($payloadStr, 0, 200)
-            ], true);
-        }
-
-        // ✅ Required fields
-        $nabh_pdf_id         = (int)($payload['nabh_pdf_id'] ?? 0);
-        $appointment_id      = (int)($payload['appointment_id'] ?? 0);
-        $appointment_type_id = (int)($payload['appointment_type_id'] ?? 0);
-        $patient_id          = (int)($payload['patient_id'] ?? 0);
-        $doctor_id           = (int)($payload['doctor_id'] ?? 0);
-        $lang                = in_array(($payload['lang'] ?? ''), ['en','gu'], true) ? $payload['lang'] : 'gu';
-
-        if ($nabh_pdf_id <= 0 || $patient_id <= 0) {
-            return $this->_json(false, 'Missing required fields (nabh_pdf_id/patient_id)', null, true);
-        }
-
-        // ✅ Form data JSON
-        $formData = $payload['form_data'] ?? [];
-        if (!is_array($formData)) $formData = [];
-
-        // Optional: keep patient/doctor name inside JSON too
-        $patient_name = (string)($payload['patient_name'] ?? ($formData['patient_name'] ?? ''));
-        $doctor_name  = (string)($payload['doctor_name']  ?? ($formData['doctor_name']  ?? ''));
-
-        if ($patient_name !== '' && !isset($formData['patient_name'])) $formData['patient_name'] = $patient_name;
-        if ($doctor_name  !== '' && !isset($formData['doctor_name']))  $formData['doctor_name']  = $doctor_name;
-
-        $table = db_prefix().'nabh_form_submissions';
-
-        /**
-         * ✅ UPSERT RULE (update if already exists):
-         * same nabh_pdf_id + patient_id + appointment_id + lang
-         * (appointment_id can be 0 in some cases; then it matches 0)
-         */
-        $this->db->from($table);
-        $this->db->where('nabh_pdf_id', $nabh_pdf_id);
-        $this->db->where('patient_id', $patient_id);
-        $this->db->where('appointment_id', $appointment_id);
-        $this->db->where('lang', $lang);
-
-        $existing = $this->db->order_by('id', 'DESC')->get()->row_array();
-
-        $now = date('Y-m-d H:i:s');
-        $staff_id = get_staff_user_id();
-
-        $data = [
-            'nabh_pdf_id'         => $nabh_pdf_id,
-            'appointment_id'      => $appointment_id,
-            'appointment_type_id' => $appointment_type_id,
-            'patient_id'          => $patient_id,
-            'doctor_id'           => $doctor_id,
-            'lang'                => $lang,
-            'patient_name'        => $patient_name,
-            'doctor_name'         => $doctor_name,
-            'form_data_json'      => json_encode($formData, JSON_UNESCAPED_UNICODE),
-            'updated_by'          => $staff_id,
-            'updated_at'          => $now,
-        ];
-
-        if ($existing) {
-            $this->db->where('id', (int)$existing['id']);
-            $this->db->update($table, $data);
-
-            return $this->_json(true, 'Updated successfully', [
-                'id' => (int)$existing['id']
-            ], true);
-        }
-
-        // Insert new
-        $data['created_by'] = $staff_id;
-        $data['created_at'] = $now;
-
-        // remove updated_* if your table doesn't have them
-        // (safe even if it exists; but if not exists, uncomment next 2 lines)
-        // unset($data['updated_by'], $data['updated_at']);
-
-        $this->db->insert($table, $data);
-        $id = (int)$this->db->insert_id();
-
-        return $this->_json(true, 'Saved successfully', ['id' => $id], true);
-    }
-
-
-       private function _json($status, $message, $data = null, $include_csrf = false)
-    {
-        $out = [
-            'status'  => (bool)$status,
-            'message' => (string)$message,
-            'data'    => $data
-        ];
-
-        if ($include_csrf) {
-            $out['csrf_name'] = $this->security->get_csrf_token_name();
-            $out['csrf_hash'] = $this->security->get_csrf_hash();
-        }
-
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($out);
-        exit;
-    }
-
-
-
-     public function get_submission()
-    {
-        if (!is_staff_logged_in()) {
-            $this->output->set_content_type('application/json')
-                ->set_output(json_encode(['status' => false, 'message' => 'Not logged in']));
+        $path = FCPATH . 'uploads/nabh/' . $langFolder . '/' . basename($fileName);
+        if (!file_exists($path)) {
+            show_error('Template file not found: ' . $path);
             return;
         }
 
-        $nabh_pdf_id    = (int)$this->input->get('nabh_pdf_id');
-        $appointment_id = (int)$this->input->get('appointment_id');
-        $patient_id     = (int)$this->input->get('patient_id');
-        $lang           = $this->input->get('lang', true);
-        $lang           = in_array($lang, ['en','gu'], true) ? $lang : 'gu';
+        $html = file_get_contents($path);
+
+
+
+        // 2️⃣ Get saved submission
+        $this->db->where('nabh_pdf_id',$pdf_id);
+        $this->db->where('patient_id',$patient_id);
+        $this->db->where('appointment_id',$appointment_id);
+        $this->db->where('lang',$lang);
+
+        $row = $this->db->order_by('id','DESC')
+                        ->get(db_prefix().'nabh_form_submissions')
+                        ->row_array();
+
+        $saved = [];
+        if ($row && !empty($row['form_data_json'])) {
+            $saved = json_decode($row['form_data_json'], true);
+        }
+        $patient_name = $this->input->get('patient_name', true);
+        $doctor_name  = $this->input->get('doctor_name', true);
+
+        // if encoded, CI usually decodes, but safe:
+        $patient_name = urldecode((string)$patient_name);
+        $doctor_name  = urldecode((string)$doctor_name);
+
+
+        $ctx = [
+          'pdf_id'              => $pdf_id,
+          'appointment_id'      => $appointment_id,
+          'appointment_type_id' => $appointment_type_id,
+          'patient_id'          => $patient_id,
+          'doctor_id'           => $doctor_id,
+          'lang'                => $lang,
+          'patient_name'        => $patient_name,
+          'doctor_name'         => $doctor_name,
+        ];
+
+    // ✅ 6️⃣ THIS IS WHERE YOU PUT IT
+    $html = $this->inject_global($html, $ctx, $saved);
+
+    // ✅ 7️⃣ Output
+    echo $html;
+    exit;
+}
+
+
+    /* =========================================================
+       3) SAVE SUBMISSION (UPSERT)
+    ==========================================================*/
+    public function save_submission()
+    {
+        $payloadStr = $this->input->post('payload');
+
+        if (!$payloadStr) {
+            echo json_encode(['status'=>false,'message'=>'Missing payload']); exit;
+        }
+
+        $payload = json_decode($payloadStr,true);
+
+        if (!is_array($payload)) {
+            echo json_encode(['status'=>false,'message'=>'Invalid JSON']); exit;
+        }
+
+
+        $patient_name = trim($payload['patient_name'] ?? '');
+        $doctor_name  = trim($payload['doctor_name'] ?? '');
+
+        // fallback: if top-level not provided, attempt from form_data
+        if ($patient_name === '' && isset($payload['form_data']['patient_name'])) {
+            $patient_name = trim((string)$payload['form_data']['patient_name']);
+        }
+        if ($doctor_name === '' && isset($payload['form_data']['doctor_name'])) {
+            $doctor_name = trim((string)$payload['form_data']['doctor_name']);
+        }
+
+
+        $pdf_id        = (int)$payload['nabh_pdf_id'];
+        $appointment_id= (int)$payload['appointment_id'];
+        $appointment_type_id = (int)($payload['appointment_type_id'] ?? 0);
+        $patient_id    = (int)$payload['patient_id'];
+        $doctor_id     = (int)$payload['doctor_id'];
+        $lang          = $payload['lang'];
+
+        $formData      = $payload['form_data'] ?? [];
 
         $table = db_prefix().'nabh_form_submissions';
 
-        $this->db->from($table);
-        $this->db->where('nabh_pdf_id', $nabh_pdf_id);
-        $this->db->where('lang', $lang);
-        if ($appointment_id > 0) $this->db->where('appointment_id', $appointment_id);
-        if ($patient_id > 0)     $this->db->where('patient_id', $patient_id);
+        $this->db->where('nabh_pdf_id',$pdf_id);
+        $this->db->where('patient_id',$patient_id);
+        $this->db->where('appointment_id',$appointment_id);
+        $this->db->where('lang',$lang);
 
-        $row = $this->db->order_by('id', 'DESC')->get()->row_array();
+        $existing = $this->db->get($table)->row_array();
 
-        $formData = [];
-        if ($row && !empty($row['form_data_json'])) {
-            $tmp = json_decode($row['form_data_json'], true);
-            if (is_array($tmp)) $formData = $tmp;
+        $data = [
+            'nabh_pdf_id'=>$pdf_id,
+            'appointment_id'=>$appointment_id,
+            'appointment_type_id' => $appointment_type_id,
+            'patient_id'=>$patient_id,
+            'doctor_id'=>$doctor_id,
+            'lang'=>$lang,
+            'patient_name'   => $patient_name,
+            'doctor_name'    => $doctor_name,
+              'form_data_json' => json_encode($payload['form_data'] ?? [], JSON_UNESCAPED_UNICODE),
+            'updated_at'=>date('Y-m-d H:i:s'),
+        ];
+
+        if ($existing) {
+            $this->db->where('id',$existing['id'])->update($table,$data);
+            echo json_encode(['status'=>true,'message'=>'Updated']);
+        } else {
+            $data['created_at']=date('Y-m-d H:i:s');
+            $this->db->insert($table,$data);
+            echo json_encode(['status'=>true,'message'=>'Saved']);
         }
 
-        $this->output->set_content_type('application/json')
-            ->set_output(json_encode([
-                'status' => true,
-                'found'  => $row ? true : false,
-                'data'   => $row ? $formData : null,
-            ]));
+        exit;
     }
 
 
+    /* =========================================================
+       4) COMMON SCRIPT INJECTION
+    ==========================================================*/
+    private function _inject_common_script($ctx,$saved)
+    {
+        $ctx['admin_base']=rtrim(admin_url(),'/').'/';
+        $ctx['csrf_name']=$this->security->get_csrf_token_name();
+        $ctx['csrf_hash']=$this->security->get_csrf_hash();
 
+        $ctxJson=json_encode($ctx,JSON_UNESCAPED_UNICODE);
+        $savedJson=json_encode($saved,JSON_UNESCAPED_UNICODE);
+
+        return <<<HTML
+<script>
+window.__NABH_CTX={$ctxJson};
+window.__NABH_SAVED={$savedJson};
+
+(function(){
+
+  function setValue(el,val){
+    if(!el) return;
+    if(el.type==='checkbox') el.checked=(val==1);
+    else el.value=val??'';
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    var data=window.__NABH_SAVED||{};
+    Object.keys(data).forEach(function(k){
+      document.querySelectorAll('[name="'+k+'"]').forEach(function(el){
+        setValue(el,data[k]);
+      });
+    });
+  });
+
+  document.addEventListener('click',async function(e){
+    if(e.target.id!=='submitBtn') return;
+
+    var CTX=window.__NABH_CTX;
+
+    var formData={};
+    document.querySelectorAll('input[name],textarea[name],select[name]').forEach(function(el){
+      formData[el.name]=el.type==='checkbox'? (el.checked?1:0):el.value;
+    });
+
+    var payload={
+      nabh_pdf_id:CTX.pdf_id,
+      appointment_id:CTX.appointment_id,
+      appointment_type_id:CTX.appointment_type_id,
+      patient_id:CTX.patient_id,
+      doctor_id:CTX.doctor_id,
+      lang:CTX.lang,
+      form_data:formData
+    };
+
+    var fd=new FormData();
+    fd.append(CTX.csrf_name,CTX.csrf_hash);
+    fd.append('payload',JSON.stringify(payload));
+
+    var res=await fetch(CTX.admin_base+'nabh/save_submission',{method:'POST',body:fd});
+    var json=await res.json();
+    alert(json.message||'Saved');
+  });
+
+})();
+</script>
+HTML;
+    }
+
+private function inject_global($html, $ctx, $saved)
+{
+    $ctx['admin_base'] = rtrim(admin_url(), '/') . '/';
+    $ctx['csrf_name']  = $this->security->get_csrf_token_name();
+    $ctx['csrf_hash']  = $this->security->get_csrf_hash();
+
+    $ctxJson   = json_encode($ctx, JSON_UNESCAPED_UNICODE);
+    $savedJson = json_encode($saved, JSON_UNESCAPED_UNICODE);
+
+    $script = "
+<script>
+window.__NABH_CTX = {$ctxJson};
+window.__NABH_SAVED = {$savedJson};
+</script>
+<script src=\"" . site_url('assets/js/nabh-global.js') . "\"></script>
+";
+
+
+    if (stripos($html, '</body>') !== false) {
+        return str_ireplace('</body>', $script . '</body>', $html);
+    }
+
+    return $html . $script;
+}
 
 }

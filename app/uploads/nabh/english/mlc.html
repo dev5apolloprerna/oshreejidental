@@ -19,8 +19,8 @@
 
         .page {
             width: 210mm;
-            height: 296mm;
-            /* Slightly less than A4 to ensure no spillover */
+            height: 297mm;
+            /* ✅ FIX: Exact A4 height */
             padding: 10mm;
             margin: 10mm auto;
             background: white;
@@ -29,6 +29,7 @@
             /* page-break-after: always; */
         }
 
+        /* ✅ KEEP ONLY ONE inner-border (removed duplicate) */
         .inner-border {
             border: 1px solid black;
             height: 100%;
@@ -56,8 +57,35 @@
             vertical-align: bottom;
         }
 
-        .line {
+        /* ✅ Input that visually matches your underline line EXACTLY */
+        .line-input {
+            width: 100%;
+            border: 0;
             border-bottom: 1px solid black;
+            background: transparent;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            line-height: 1;
+            height: 16px;
+            /* keep it thin so it doesn't push layout */
+        }
+
+        /* ✅ For inline small underline inputs (like Age) */
+        .inline-input {
+            border: 0;
+            border-bottom: 1px solid black;
+            background: transparent;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            line-height: 1;
+            height: 14px;
+            vertical-align: baseline;
         }
 
         .thumb-container {
@@ -79,12 +107,17 @@
             font-weight: bold;
         }
 
-        .footer-note {
+        /* ✅ Bottom section fixed inside border */
+        .bottom-block {
             margin-top: auto;
-            /* Pushes note to bottom if there is space */
+            /* pushes bottom block inside border */
+        }
+
+        .footer-note {
+            margin-top: 0;
             font-size: 12px;
             line-height: 1.4;
-            padding-bottom: 10px;
+            padding-bottom: 6px;
         }
 
         .copy-info {
@@ -99,6 +132,9 @@
             }
 
             .page {
+                width: 210mm;
+                height: 297mm;
+                /* ✅ force exact A4 in print */
                 margin: 0;
                 border: 2px solid black;
                 box-shadow: none;
@@ -121,46 +157,70 @@
             <table>
                 <tr>
                     <td style="width: 12%;">Serial No.:</td>
-                    <td class="line" style="width: 30%;"></td>
+                    <td style="width: 30%;">
+                        <input class="line-input" type="text" id="input1" name="input1" />
+                    </td>
                     <td style="width: 28%; text-align: right; padding-right: 5px;">Date & Time of Examination :</td>
-                    <td class="line" style="width: 30%;"></td>
+                    <td style="width: 30%;">
+                        <input class="line-input" type="text" id="input2" name="input2" />
+                    </td>
                 </tr>
+
                 <tr>
                     <td style="width: 18%;">Name of Patient:</td>
-                    <td class="line" colspan="2"></td>
+                    <td colspan="2">
+                        <!-- ✅ id=name=patient_name -->
+                        <input class="line-input" type="text" id="patient_name" name="patient_name" />
+                    </td>
                     <td style="padding-left: 10px;">
-                        Age : <span style="display:inline-block; width: 40px; border-bottom: 1px solid black;"></span>
+                        Age :
+                        <input class="inline-input" style="width: 40px;" type="text" id="input3" name="input3" />
                         Sex : M/F
                     </td>
                 </tr>
+
                 <tr>
                     <td style="vertical-align: top; padding-top: 10px;">Residential Address :</td>
-                    <td class="line" colspan="3" style="height: 25px;"></td>
-                </tr>
-                <tr>
-                    <td class="line" colspan="4" style="height: 25px;"></td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        Contact No.: (M). <span
-                            style="display:inline-block; width: 180px; border-bottom: 1px solid black;"></span>
-                        (R) <span style="display:inline-block; width: 140px; border-bottom: 1px solid black;"></span>
-                        (O) <span style="display:inline-block; width: 100px; border-bottom: 1px solid black;"></span>
+                    <td colspan="3" style="height: 15px;">
+                        <input class="line-input" style="height: 15px;" type="text" id="input4" name="input4" />
                     </td>
                 </tr>
+
                 <tr>
-                    <td colspan="4">
-                        OA: <span style="display:inline-block; width: 330px; border-bottom: 1px solid black;"></span>
-                        Time of Admission : <span
-                            style="display:inline-block; width: 100px; border-bottom: 1px solid black;"></span> am/pm
+                    <td colspan="4" style="height: 15px;">
+                        <input class="line-input" style="height: 15px;" type="text" id="input5" name="input5" />
                     </td>
                 </tr>
+
+                <tr>
+                    <td colspan="4">
+                        Contact No.: (M).
+                        <input class="inline-input" style="width: 180px;" type="text" id="input6" name="input6" />
+                        (R)
+                        <input class="inline-input" style="width: 140px;" type="text" id="input7" name="input7" />
+                        (O)
+                        <input class="inline-input" style="width: 100px;" type="text" id="input8" name="input8" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        OA:
+                        <input class="inline-input" style="width: 330px;" type="text" id="input9" name="input9" />
+                        Time of Admission :
+                        <input class="inline-input" style="width: 100px;" type="text" id="input10" name="input10" />
+                        am/pm
+                    </td>
+                </tr>
+
                 <tr>
                     <td colspan="3" style="vertical-align: top;">
                         Identification Marks :<br><br>
-                        (1) <span
-                            style="display:inline-block; width: 90%; border-bottom: 1px solid black;"></span><br><br>
-                        (2) <span style="display:inline-block; width: 90%; border-bottom: 1px solid black;"></span>
+                        (1)
+                        <input class="inline-input" style="width: 90%;" type="text" id="input11" name="input11" />
+                        <br><br>
+                        (2)
+                        <input class="inline-input" style="width: 90%;" type="text" id="input12" name="input12" />
                     </td>
                     <td>
                         <div class="thumb-container">
@@ -169,92 +229,118 @@
                         </div>
                     </td>
                 </tr>
+
                 <tr>
                     <td style="width: 20%;">Place of Incidence:</td>
-                    <td class="line" colspan="3"></td>
-                </tr>
-                <tr>
-                    <td>Date & Time of Incidence :</td>
-                    <td class="line" colspan="3"></td>
-                </tr>
-                <tr>
-                    <td colspan="4" style="padding-top: 10px;">Brief History of Incidence :</td>
-                </tr>
-                <tr>
-                    <td class="line" colspan="4" style="height: 22px;"></td>
-                </tr>
-                <tr>
-                    <td class="line" colspan="4" style="height: 22px;"></td>
-                </tr>
-                <tr>
-                    <td class="line" colspan="4" style="height: 22px;"></td>
+                    <td colspan="3">
+                        <input class="line-input" type="text" id="input13" name="input13" />
+                    </td>
                 </tr>
 
                 <tr>
-                    <td colspan="2" style="padding-top: 25px;">
-                        Name of M.O./ICU Registrar : <span
-                            style="display:inline-block; width: 150px; border-bottom: 1px solid black;"></span>
+                    <td>Date & Time of Incidence :</td>
+                    <td colspan="3">
+                        <input class="line-input" type="text" id="input14" name="input14" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="padding-top: 10px;">Brief History of Incidence :</td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="height: 15px;">
+                        <input class="line-input" style="height: 15px;" type="text" id="input15" name="input15" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="height: 15px;">
+                        <input class="line-input" style="height: 15px;" type="text" id="input16" name="input16" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="height: 15px;">
+                        <input class="line-input" style="height: 15px;" type="text" id="input17" name="input17" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="padding-top: 15px;">
+                        Name of M.O./ICU Registrar :
+                        <input class="inline-input" style="width: 150px;" type="text" id="input18" name="input18" />
                     </td>
                     <td colspan="2" style="padding-top: 25px; text-align: right;">
-                        Sign. of Mo. : <span
-                            style="display:inline-block; width: 150px; border-bottom: 1px solid black;"></span>
+                        Sign. of Mo. :
+                        <input class="inline-input" style="width: 150px;" type="text" id="input19" name="input19" />
                     </td>
                 </tr>
 
                 <tr>
                     <td colspan="4" style="padding-top: 15px;">
-                        Date & Time of Written intimation given : <span
-                            style="display:inline-block; width: 450px; border-bottom: 1px solid black;"></span>
+                        Date & Time of Written intimation given :
+                        <input class="inline-input" style="width: 450px;" type="text" id="input20" name="input20" />
                     </td>
                 </tr>
+
                 <tr>
                     <td colspan="4">
-                        Name of Police Station : <span
-                            style="display:inline-block; width: 550px; border-bottom: 1px solid black;"></span>
+                        Name of Police Station :
+                        <input class="inline-input" style="width: 550px;" type="text" id="input21" name="input21" />
                     </td>
                 </tr>
+
                 <tr>
                     <td colspan="4">
-                        "MLC intimation" form given by : <span
-                            style="display:inline-block; width: 520px; border-bottom: 1px solid black;"></span>
+                        "MLC intimation" form given by :
+                        <input class="inline-input" style="width: 520px;" type="text" id="input22" name="input22" />
                     </td>
                 </tr>
+
                 <tr>
                     <td colspan="4">
-                        "MLC intimation" given to, Name of constable : <span
-                            style="display:inline-block; width: 420px; border-bottom: 1px solid black;"></span>
+                        "MLC intimation" given to, Name of constable :
+                        <input class="inline-input" style="width: 420px;" type="text" id="input23" name="input23" />
                     </td>
                 </tr>
+
                 <tr>
                     <td colspan="4">
-                        Buckle No.: <span
-                            style="display:inline-block; width: 330px; border-bottom: 1px solid black;"></span>
-                        Sign.: <span style="display:inline-block; width: 220px; border-bottom: 1px solid black;"></span>
+                        Buckle No.:
+                        <input class="inline-input" style="width: 330px;" type="text" id="input24" name="input24" />
+                        Sign.:
+                        <input class="inline-input" style="width: 220px;" type="text" id="input25" name="input25" />
                     </td>
                 </tr>
+
                 <tr>
                     <td colspan="4" style="padding-top: 15px;">
                         Mode of Intimation : Personnel / E-mail / Post / Any other Mode
                     </td>
                 </tr>
+
                 <tr>
                     <td colspan="4">
-                        Date & Time of verbal Intimation given to police authority: <span
-                            style="display:inline-block; width: 350px; border-bottom: 1px solid black;"></span>
+                        Date & Time of verbal Intimation given to police authority:
+                        <input class="inline-input" style="width: 350px;" type="text" id="input26" name="input26" />
                     </td>
                 </tr>
             </table>
 
-            <div class="footer-note">
-                <strong>Note:</strong> This is just written intimation order. Details of Incidence, Medical Condition
-                and Detailed line of treatment is mentioned in patient file.
+            <!-- ✅ Bottom section wrapper -->
+            <div class="bottom-block">
+                <div class="footer-note">
+                    <strong>Note:</strong> This is just written intimation order. Details of Incidence, Medical
+                    Condition
+                    and Detailed line of treatment is mentioned in patient file.
+                </div>
+
+                <div class="copy-info">
+                    White Copy for Police Station<br>
+                    Pink Copy for Pt. IPD File<br>
+                    Yellow Copy for Book (For MRD)
+                </div>
             </div>
 
-            <div class="copy-info">
-                White Copy for Police Station<br>
-                Pink Copy for Pt. IPD File<br>
-                Yellow Copy for Book (For MRD)
-            </div>
         </div>
     </div>
 

@@ -35,6 +35,7 @@
             border-bottom: 1px solid black;
             display: inline-block;
             min-width: 150px;
+            vertical-align: bottom;
         }
 
         ol {
@@ -53,15 +54,48 @@
             align-items: center;
         }
 
-        .box {
+        /* Updated Checkbox with Tick */
+        .box-input {
             width: 20px;
             height: 20px;
             border: 2px solid black;
             display: inline-block;
             margin-right: 10px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            background: transparent;
+            padding: 0;
+            margin-bottom: 0;
+            position: relative; /* Required for the tick positioning */
+            vertical-align: middle;
+        }
+        
+        .box-input:checked:after {
+            content: '\2713'; /* Unicode checkmark character */
+            font-size: 18px;
+            color: #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%); /* Fine-tuned for perfect center */
+            font-weight: bold;
         }
 
-        /* Table Layout for the Signature Section */
+        /* Transparent inputs that don't shift pixels */
+        .line-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
+            margin: 0;
+            display: block;
+            height: 1.6em;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -79,10 +113,6 @@
             padding-right: 10px;
         }
 
-        .input-line {
-            border-bottom: 1px solid black;
-        }
-
         .colon {
             width: 1%;
             padding-right: 5px;
@@ -90,7 +120,6 @@
 
         .line {
             border-bottom: 1.5px solid black;
-            /* Solid line looks cleaner for printing, change to 'dotted' if preferred */
             min-width: 150px;
         }
 
@@ -107,6 +136,10 @@
                 width: 100%;
                 border: none;
             }
+            
+            input {
+                border: none !important;
+            }
         }
     </style>
 </head>
@@ -117,9 +150,9 @@
         <h1>Consent for Anesthesia</h1>
 
         <div class="consent-line">
-            I <span class="dotted-line" style="min-width: 350px;"></span> give my consent to Dr.
-            <span class="dotted-line" style="min-width: 250px;"></span> for my relative Mr./Mrs.
-            <span class="dotted-line" style="min-width: 250px;"></span> for local anaesthesia.
+            I <span class="dotted-line" style="min-width: 350px;"><input type="text" id="input1" name="input1" class="line-input"></span> give my consent to Dr.
+            <span class="dotted-line" style="min-width: 250px;"><input type="text" id="doctor_name" name="doctor_name" class="line-input"></span> for my relative Mr./Mrs.
+            <span class="dotted-line" style="min-width: 250px;"><input type="text" id="patient_name" name="patient_name" class="line-input"></span> for local anaesthesia.
         </div>
 
         <ol>
@@ -131,13 +164,13 @@
             </li>
             <li>I have been informed that during anaesthesia there may be a possibility of any complication. eg.:
                 cardiac arrest, severe haemorrhage, infection, hypertension, pulmonary embolism etc. I trust fully if it
-                happens anaesthetist Dr. <span class="dotted-line" style="min-width: 350px;"></span> or any other doctor
+                happens anaesthetist Dr. <span class="dotted-line" style="min-width: 350px;"><input type="text" id="doctor_name" name="doctor_name" class="line-input"></span> or any other doctor
                 appointed through them me accordingly. I agree with their decisions. I have read this form/ this form
                 has been read out to me.</li>
-            <li>Alternatives: <span class="dotted-line" style="width: 80%;"></span><br>
+            <li>Alternatives: <span class="dotted-line" style="width: 80%;"><input type="text" id="input2" name="input2" class="line-input"></span><br>
                 <span class="dotted-line" style="width: 100%; margin-top: 10px;"></span>
             </li>
-            <li>Benefits: <span class="dotted-line" style="width: 85%;"></span><br>
+            <li>Benefits: <span class="dotted-line" style="width: 85%;"><input type="text" id="input3" name="input3" class="line-input"></span><br>
                 <span class="dotted-line" style="width: 100%; margin-top: 10px;"></span>
             </li>
             <li>I understand the above written instructions and I give the permission in fully conscious status; without
@@ -145,7 +178,7 @@
         </ol>
 
         <div class="checkbox-section">
-            <div class="box"></div>
+            <input type="checkbox" id="input4" name="input4" class="box-input">
             We will do patch test for precaution of the allergic complication.
         </div>
 
@@ -153,52 +186,52 @@
             <tr>
                 <td class="label">Date</td>
                 <td class="colon">:</td>
-                <td class="line" style="width: 25%;"></td>
+                <td class="line" style="width: 25%;"><input type="text" id="input5" name="input5" class="line-input"></td>
                 <td class="spacer"></td>
                 <td class="label">Name of the Patient</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="patient_name" name="patient_name" class="line-input"></td>
             </tr>
             <tr>
                 <td class="label">Time</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input6" name="input6" class="line-input"></td>
                 <td class="spacer"></td>
                 <td class="label">Sign. Of the Patient</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input7" name="input7" class="line-input"></td>
             </tr>
             <tr>
                 <td class="label">Name of the Unit Nurse</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input8" name="input8" class="line-input"></td>
                 <td class="spacer"></td>
                 <td class="label">Name of the Relative</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input9" name="input9" class="line-input"></td>
             </tr>
             <tr>
                 <td class="label">Name of the Medical Officer</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input10" name="input10" class="line-input"></td>
                 <td class="spacer"></td>
                 <td class="label">Relation with Patient</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input11" name="input11" class="line-input"></td>
             </tr>
             <tr>
                 <td class="label">Name of the Anaesthetist</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="doctor_name" name="doctor_name" class="line-input"></td>
                 <td class="spacer"></td>
                 <td class="label">Sign. Of the Relative</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input12" name="input12" class="line-input"></td>
             </tr>
             <tr>
                 <td class="label">Sign. Of Anaesthetist</td>
                 <td class="colon">:</td>
-                <td class="line"></td>
+                <td class="line"><input type="text" id="input13" name="input13" class="line-input"></td>
                 <td colspan="4"></td>
             </tr>
         </table>

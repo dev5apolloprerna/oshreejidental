@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consent Form - Oral Surgery</title>
+    <style>
+        /* Print optimization */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: none;
+            }
+
+            .page-container {
+                border: none !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 40px !important;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.2;
+            color: #000;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-container {
+            background: white;
+            width: 800px;
+            margin: 0 auto;
+            padding: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-height: 1050px;
+        }
+
+        /* Pixel-perfect input styling */
+        .line-input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            font: inherit;
+            line-height: inherit;
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            display: block;
+        }
+
+        /* Checkbox styling to match your 20px box */
+        .checkbox-cell-input {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #777;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0;
+            padding: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .checkbox-cell-input:checked:after {
+            content: '\2713';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            font-size: 16px;
+            color: #000;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .chk-row td:first-child {
+            width: 26px !important;
+            padding: 0 !important;
+        }
+
+        .chk-row td:last-child {
+            padding-left: 8px !important;
+        }
+
+        .endorse-table {
+            width: 100%;
+            border: 1px solid #000;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .endorse-table thead th {
+            border: 1px solid #000;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .endorse-table tbody td {
+            border: 1px solid #000;
+            padding: 6px 10px;
+            vertical-align: middle;
+        }
+
+        .endorse-table td.sr-num {
+            width: 80px;
+            font-weight: bold;
+        }
+
+        .endorse-table tbody td input {
+            width: 100%;
+            box-sizing: border-box;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            font: inherit;
+            line-height: 1.2;
+            height: 18px;
+            padding: 0;
+            margin: 0;
+            display: block;
+            /* border-bottom: 1px solid #000; */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+        <div style="page-break-before:always; break-before:page;"></div>
+        <h2 style="font-size: 22px; margin-bottom: 15px; margin-top: 20px;">મૌખિક સર્જરી / અક્કલદાંત કાઢવા માટે સંમતિ
+            ફોર્મ</h2>
+
+        <table style="width: 100%; margin-bottom: 10px;">
+            <tr>
+                <td style="width:5%;">દર્દી</td>
+                <td style="width:5%;">નામ:</td>
+                <td style="width:60%; border-bottom:1px solid black;">
+                    <input type="text" id="patient_name" name="patient_name" class="line-input">
+                </td>
+                <td style="width:5%; padding-left:20px;">ક્લિનિક</td>
+                <td style="width:5%;">સ્થળ:</td>
+                <td style="width:15%; border-bottom:1px solid black;">
+                    <input type="text" id="input56" name="input56" class="line-input">
+                </td>
+            </tr>
+        </table>
+
+        <table style="width:100%; margin-bottom:15px;">
+            <tr>
+                <td>મને નીચે દર્શાવેલી સારવાર કરવાની સલાહ આપવામાં આવી છે:</td>
+            </tr>
+            <tr>
+                <td style="border-bottom:1px solid black; height:30px;">
+                    <input type="text" id="input57" name="input57" class="line-input">
+                </td>
+            </tr>
+        </table>
+
+        <p>મને સમજાવવામાં આવ્યું છે કે આ સારવાર કેમ જરૂરી છે. મને સર્જરીની સંપૂર્ણ માહિતી આપવામાં આવી છે અને મેં ડોક્ટર
+            સાથે ચર્ચા કરી છે. એનેસ્થેસિયા માટે નીચેના વિકલ્પોમાંથી મેં પસંદગી કરી છે:</p>
+
+        <table style="width:100%; margin-bottom:10px; border-spacing:0 15px;">
+            <tr class="chk-row">
+                <td><input type="checkbox" id="input58" name="input58" class="checkbox-cell-input"></td>
+                <td>ફક્ત લોકલ એનેસ્થેસિયા</td>
+            </tr>
+            <tr class="chk-row">
+                <td><input type="checkbox" id="input59" name="input59" class="checkbox-cell-input"></td>
+                <td>નાઇટ્રસ ઓક્સાઇડ સેડેશન</td>
+            </tr>
+            <tr class="chk-row">
+                <td><input type="checkbox" id="input60" name="input60" class="checkbox-cell-input"></td>
+                <td>ઇન્ટ્રાવેનસ સેડેશન</td>
+            </tr>
+        </table>
+
+        <p>
+            મને સમજાવવામાં આવ્યું છે કે હું જનરલ એનેસ્થેસિયા માટે હોસ્પિટલમાં રેફર થઈ શકું છું. ડૉ. <span
+                style="border-bottom:1px solid black; min-width:100px; display:inline-block;">
+                <input type="text" id="doctor_name" name="doctor_name" class="line-input">
+            </span> વિશેષજ્ઞ મૌખિક સર્જન નથી પરંતુ સામાન્ય દંતચિકિત્સક છે. કોઈપણ સર્જરીમાં જોખમ રહેલું હોય છે.
+        </p>
+
+        <p style="font-weight:bold;">સંભવિત જોખમો:</p>
+
+        <ul>
+            <li><strong>સોજો અને જડબાની કઠોરતા</strong> – સામાન્ય રીતે એક અઠવાડિયા સુધી રહે છે.</li>
+            <li><strong>રક્તસ્ત્રાવ</strong> – સામાન્ય રીતે નિયંત્રિત થઈ જાય છે.</li>
+            <li><strong>દર્દ અને અસ્વસ્થતા</strong> – ડોક્ટર આપેલી દવાથી નિયંત્રિત થઈ જાય છે.</li>
+            <li><strong>સંક્રમણ</strong> – દુર્લભ, જો મૌખિક સ્વચ્છતા જાળવવામાં આવે.</li>
+            <li><strong>ડ્રાય સોકેટ</strong> – સતત દર્દ રહે શકે છે અને વધારાની સારવારની જરૂર પડે.</li>
+            <li><strong>પાસના દાંતને નુકસાન</strong> – બહુ દુર્લભ પરિસ્થિતિ.</li>
+            <li><strong>સુંવાળાપણું અથવા સંવેદનામાં ફેરફાર</strong> – હોઠ, જીભ, દાઢ અને ચીન વિસ્તારમાં થઈ શકે છે.</li>
+            <li><strong>સાઇનસ સંબંધિત સમસ્યા</strong> – ઉપરના દાંત કાઢતી વખતે થઈ શકે છે.</li>
+            <li><strong>દવાઓની એલર્જી</strong> – એનેસ્થેસિયા અથવા સેડેશન દવાથી.</li>
+            <li>મને સારવારના લાભ અને જોખમ બંને સમજાવવામાં આવ્યા છે.</li>
+        </ul>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:15px; line-height:1.9;">
+            <tr>
+                <td style="width:130px; padding:6px 0;">દર્દીનું નામ:</td>
+                <td style="padding:6px 0;">
+                    <div style="border-bottom:1px solid #000; height:18px; width:90%;">
+                        <input type="text" id="patient_name" name="patient_name" class="line-input">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:6px 0;">દર્દીના સગા/વાલીનું નામ:</td>
+                <td style="padding:6px 0;">
+                    <div style="border-bottom:1px solid #000; height:18px; width:90%;">
+                        <input type="text" id="input61" name="input61" class="line-input">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding:6px 0;">દર્દીના સગા/વાલીની સહી:</td>
+                <td style="padding:6px 0;">
+                    <div style="border-bottom:1px solid #000; height:18px; width:70%;">
+                        <input type="text" id="input62" name="input62" class="line-input" value="">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding:6px 0;">તબીબનું નામ:</td>
+                <td style="padding:6px 0;">
+                    <div style="border-bottom:1px solid #000; height:18px; width:70%;">
+                        <input type="text" id="doctor_name" name="doctor_name" class="line-input">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding:6px 0;">તબીબની સહી:</td>
+                <td style="padding:6px 0;">
+                    <div style="border-bottom:1px solid #000; height:18px; width:70%;">
+                        <input type="text" id="input63" name="input63" class="line-input" value="">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding:6px 0;">તારીખ:</td>
+                <td style="padding:6px 0;">
+                    <div style="border-bottom:1px solid #000; height:18px; width:180px;">
+                        <input type="text" id="today_date" name="today_date" class="line-input">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding:6px 0;">સમય:</td>
+                <td style="padding:6px 0;">
+                    <div style="border-bottom:1px solid #000; height:18px; width:180px;">
+                        <input type="text" id="input65" name="input65" class="line-input" value="">
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+        <h3 style="text-align:center; margin-top:40px;">દરેક મુલાકાત માટે સંમતિ નોંધ</h3>
+
+        <table class="endorse-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">ક્રમ નં.</th>
+                    <th style="width: 20%;">તારીખ અને સમય</th>
+                    <th style="width: 40%;">દર્દી/સગાની સહી</th>
+                    <th style="width: 30%;">ડોક્ટરની સહી</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="sr-num">1.</td>
+                    <td><input type="text" id="input66" name="input66"></td>
+                    <td><input type="text" id="input67" name="input67"></td>
+                    <td><input type="text" id="input68" name="input68"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">2.</td>
+                    <td><input type="text" id="input69" name="input69"></td>
+                    <td><input type="text" id="input70" name="input70"></td>
+                    <td><input type="text" id="input71" name="input71"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">3.</td>
+                    <td><input type="text" id="input72" name="input72"></td>
+                    <td><input type="text" id="input73" name="input73"></td>
+                    <td><input type="text" id="input74" name="input74"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">4.</td>
+                    <td><input type="text" id="input75" name="input75"></td>
+                    <td><input type="text" id="input76" name="input76"></td>
+                    <td><input type="text" id="input77" name="input77"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">5.</td>
+                    <td><input type="text" id="input78" name="input78"></td>
+                    <td><input type="text" id="input79" name="input79"></td>
+                    <td><input type="text" id="input80" name="input80"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">6.</td>
+                    <td><input type="text" id="input81" name="input81"></td>
+                    <td><input type="text" id="input82" name="input82"></td>
+                    <td><input type="text" id="input83" name="input83"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">7.</td>
+                    <td><input type="text" id="input84" name="input84"></td>
+                    <td><input type="text" id="input85" name="input85"></td>
+                    <td><input type="text" id="input86" name="input86"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">8.</td>
+                    <td><input type="text" id="input87" name="input87"></td>
+                    <td><input type="text" id="input88" name="input88"></td>
+                    <td><input type="text" id="input89" name="input89"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">9.</td>
+                    <td><input type="text" id="input90" name="input90"></td>
+                    <td><input type="text" id="input91" name="input91"></td>
+                    <td><input type="text" id="input92" name="input92"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">10.</td>
+                    <td><input type="text" id="input93" name="input93"></td>
+                    <td><input type="text" id="input94" name="input94"></td>
+                    <td><input type="text" id="input95" name="input95"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">11.</td>
+                    <td><input type="text" id="input96" name="input96"></td>
+                    <td><input type="text" id="input97" name="input97"></td>
+                    <td><input type="text" id="input98" name="input98"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">12.</td>
+                    <td><input type="text" id="input99" name="input99"></td>
+                    <td><input type="text" id="input100" name="input100"></td>
+                    <td><input type="text" id="input101" name="input101"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">13.</td>
+                    <td><input type="text" id="input102" name="input102"></td>
+                    <td><input type="text" id="input103" name="input103"></td>
+                    <td><input type="text" id="input104" name="input104"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">14.</td>
+                    <td><input type="text" id="input105" name="input105"></td>
+                    <td><input type="text" id="input106" name="input106"></td>
+                    <td><input type="text" id="input107" name="input107"></td>
+                </tr>
+                <tr>
+                    <td class="sr-num">15.</td>
+                    <td><input type="text" id="input108" name="input108"></td>
+                    <td><input type="text" id="input109" name="input109"></td>
+                    <td><input type="text" id="input110" name="input110"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+    </div>
+
+
+</body>
+
+</html>

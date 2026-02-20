@@ -33,7 +33,6 @@
             margin: 0 auto;
             padding: 0;
             page-break-after: always;
-            /* break-after: page; */
         }
 
         /* Prevent weird breaks inside tables while printing */
@@ -57,20 +56,30 @@
             font-size: 14px;
         }
 
+        /* ===================== INPUT STYLING (PIXEL PERFECT) ===================== */
+        /* This ensures the input behaves exactly like your original span line */
+        .input-line {
+            border: none;
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            vertical-align: baseline;
+            height: 18px;
+            min-width: 250px;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            color: inherit;
+        }
+
         /* ===================== ENGLISH PAGE 1 STYLES ===================== */
         .header {
             font-size: 22px;
             font-weight: bold;
             text-align: left;
             padding-bottom: 10px;
-        }
-
-        .input-line {
-            border-bottom: 1px solid #000;
-            display: inline-block;
-            vertical-align: baseline;
-            height: 18px;
-            min-width: 250px;
         }
 
         .bullet-list {
@@ -91,15 +100,6 @@
         .signature-section td {
             padding: 6px 0;
             font-size: 15px;
-        }
-
-        /* ===================== ENDORSEMENT TABLE (EN) ===================== */
-        .endorsement-title {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            padding: 8px 0;
-            margin-top: 10px;
         }
 
         .endorsement-table {
@@ -259,7 +259,6 @@
 
 <body>
 
-    <!-- ===================== PAGE 1 (ENGLISH) ===================== -->
     <div class="container">
         <table>
             <tr>
@@ -302,7 +301,8 @@
                             <td style="width: 25px;">1.</td>
                             <td>
                                 I hereby authorize and direct Dr.
-                                <span class="input-line" style="min-width: 200px;"></span>
+                                <input type="text" class="input-line" id="input1" name="input1"
+                                    style="min-width: 200px;">
                                 assisted by other dentists and/or dental auxiliaries of his/her choice, to perform the
                                 following dental
                                 treatment or oral surgery procedures, including the use of any necessary or advisable
@@ -360,7 +360,8 @@
             </tr>
             <tr>
                 <td>
-                    I further authorize Dr.<span class="input-line"></span> to perform treatment to preserve the dental
+                    I further authorize Dr.<input type="text" class="input-line" id="input2" name="input2"
+                        style="min-width: 250px;"> to perform treatment to preserve the dental
                     health of
                     my child.
                 </td>
@@ -393,26 +394,27 @@
         <table class="signature-section">
             <tr>
                 <td style="width: 50px;">Date:</td>
-                <td><span class="input-line" style="width: 300px;"></span></td>
+                <td><input type="text" class="input-line" id="input3" name="input3" style="width: 300px;"></td>
             </tr>
             <tr>
                 <td>Time:</td>
-                <td><span class="input-line" style="width: 350px;"></span> AM / PM</td>
+                <td><input type="text" class="input-line" id="input4" name="input4" style="width: 350px;"> AM / PM</td>
             </tr>
             <tr>
                 <td style="white-space: nowrap;">Patient's Name:</td>
-                <td><span class="input-line" style="width: 400px;"></span></td>
+                <td><input type="text" class="input-line" id="input5" name="input5" style="width: 400px;"></td>
             </tr>
             <tr>
                 <td style="white-space: nowrap;">Signature of Parent/Guardian:</td>
-                <td><span class="input-line" style="width: 350px;"></span></td>
+                <td><input type="text" class="input-line" id="input6" name="input6" style="width: 350px;"></td>
             </tr>
             <tr>
                 <td style="white-space: nowrap;">Relationship to Patient:</td>
-                <td><span class="input-line" style="width: 200px;"></span></td>
+                <td><input type="text" class="input-line" id="input7" name="input7" style="width: 200px;"></td>
             </tr>
         </table>
     </div>
+
 
     <!-- ===================== PAGE 2 (ENGLISH) ===================== -->
     <div class="container">
@@ -467,9 +469,13 @@
         <table style="width:100%; border-collapse:collapse; margin-top:12px;">
             <tr>
                 <td style="width: 15%;">Name of Doctor:</td>
-                <td style="width: 35%;"><span class="input-line" style="width: 90%;"></span></td>
+                <td style="width: 35%;">
+                    <input type="text" class="input-line" id="input8" name="input8" style="width: 90%;">
+                </td>
                 <td style="width: 10%; text-align: right; padding-right: 10px;">Sign:</td>
-                <td style="width: 40%;"><span class="input-line" style="width: 100%;"></span></td>
+                <td style="width: 40%;">
+                    <input type="text" class="input-line" id="input9" name="input9" style="width: 100%;">
+                </td>
             </tr>
         </table>
     </div>
@@ -478,7 +484,53 @@
     <div class="container">
         <div class="endorsement-title">CONSENT ENDORSEMENT FOR EACH CYCLE</div>
 
-        <!-- header inside TBODY so it won't repeat -->
+        <style>
+            /* This ensures the input fills the cell perfectly WITHOUT touching the table borders */
+            .endorsement-title {
+                font-size: 18px;
+                font-weight: bold;
+                text-align: center;
+                padding: 8px 0;
+                margin-top: 10px;
+            }
+
+            .table-input {
+                width: 100%;
+                height: 100%;
+                border: none !important;
+                background: transparent !important;
+                font-family: "Times New Roman", Times, serif;
+                font-size: 15px;
+                padding: 10px;
+                margin: 0;
+                outline: none;
+                display: block;
+            }
+
+            /* RESTORING YOUR EXACT TABLE STYLES */
+            .endorsement-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+
+            .endorsement-table td {
+                border: 1px solid #000;
+                /* Your border is back */
+                padding: 8px;
+                text-align: center;
+                font-size: 15px;
+            }
+
+            .endorsement-table .hdr td {
+                font-weight: bold;
+            }
+
+            .row-height {
+                height: 42px;
+            }
+        </style>
+
         <table class="endorsement-table" style="margin-top: 8px;">
             <tbody>
                 <tr class="hdr">
@@ -488,96 +540,95 @@
                     <td style="width: 30%;"><strong>Signature of doctor</strong></td>
                 </tr>
 
-                <!-- rows -->
                 <tr class="row-height">
                     <td><strong>1.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input10" name="input10"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input11" name="input11"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input12" name="input12"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>2.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input13" name="input13"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input14" name="input14"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input15" name="input15"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>3.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input16" name="input16"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input17" name="input17"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input18" name="input18"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>4.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input19" name="input19"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input20" name="input20"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input21" name="input21"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>5.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input22" name="input22"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input23" name="input23"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input24" name="input24"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>6.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input25" name="input25"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input26" name="input26"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input27" name="input27"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>7.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input28" name="input28"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input29" name="input29"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input30" name="input30"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>8.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input31" name="input31"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input32" name="input32"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input33" name="input33"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>9.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input34" name="input34"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input35" name="input35"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input36" name="input36"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>10.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input37" name="input37"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input38" name="input38"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input39" name="input39"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>11.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input40" name="input40"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input41" name="input41"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input42" name="input42"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>12.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input43" name="input43"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input44" name="input44"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input45" name="input45"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>13.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input46" name="input46"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input47" name="input47"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input48" name="input48"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>14.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input49" name="input49"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input50" name="input50"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input51" name="input51"></td>
                 </tr>
                 <tr class="row-height">
                     <td><strong>15.</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input52" name="input52"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input53" name="input53"></td>
+                    <td style="padding:0;"><input type="text" class="table-input" id="input54" name="input54"></td>
                 </tr>
             </tbody>
         </table>
@@ -619,7 +670,7 @@
                 <td class="ncol">1.</td>
                 <td>
                     હું અહીં અન્ય દંત ચિકિત્સક અને/અથવા ડેન્ટલ સહાયક દ્વારા મદદ કરવામાં આવેલ ડો.
-                    <span class="line" style="min-width:260px;"></span>
+                    <span class="" style="min-width:260px;"><input type="text" class="input-line" id="input55" name="input55"></span>
                     ને અધિકૃત અને નિર્દેશિત કરું છું, નીચેની દંત ચિકિત્સા અથવા મૌખિક શસ્ત્રક્રિયા પ્રક્રિયાઓ કરવા માટે,
                     જેમાં કોઈપણ જરૂરી અથવા સલાહભર્યું સ્થાનીક એનેસ્થેશિયા, રેડિયોગ્રાફ્સ (એક્સ-રે) અથવા ડાયગ્નોસ્ટિક
                     એઇડ્સનો
@@ -671,8 +722,8 @@
         </p>
 
         <p class="p">
-            મારા બાળકના દાંતના સ્વાસ્થ્યને જાળવવા માટે સારવાર કરવા માટે હું ડો. <span class="line"
-                style="min-width:240px;"></span> ને અધિકૃત કરું છું.
+            મારા બાળકના દાંતના સ્વાસ્થ્યને જાળવવા માટે સારવાર કરવા માટે હું ડો. <span class=""
+                style="min-width:240px;"><input type="text" class="input-line" id="input56" name="input56"></span> ને અધિકૃત કરું છું.
         </p>
 
         <p class="p">
@@ -697,11 +748,11 @@
         <table class="signTbl">
             <tr>
                 <td style="width:70px;">તારીખ:</td>
-                <td><span class="line" style="min-width:220px;"></span></td>
+                <td><span class="" style="min-width:220px;"><input type="text" class="input-line" id="input57" name="input57"></span></td>
             </tr>
             <tr>
                 <td>સમય:</td>
-                <td><span class="line" style="min-width:260px;"></span> &nbsp; AM/PM</td>
+                <td><span class="" style="min-width:260px;"><input type="text" class="input-line" id="input58" name="input58"></span> &nbsp; AM/PM</td>
             </tr>
         </table>
 
@@ -710,20 +761,20 @@
     <!-- ===================== PAGE 5 (GUJARATI) ===================== -->
     <div class="container">
 
-        <table style="width:100%; border-collapse:collapse; font-size:18px;">
+        <table class="signTbl" style="width:100%; border-collapse:collapse; font-size:18px;">
             <tr>
                 <td style="padding: 2px 0;">
-                    દર્દીનું નામ: <span class="line" style="min-width:520px;"></span>
+                    દર્દીનું નામ: <span class="" style="min-width:520px;"><input type="text" class="input-line" id="input59" name="input59"></span>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 2px 0;">
-                    માતા-પિતા/વાલીની સહી: <span class="line" style="min-width:280px;"></span>
+                    માતા-પિતા/વાલીની સહી: <span class="" style="min-width:280px;"><input type="text" class="input-line" id="input60" name="input60"></span>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 2px 0;">
-                    દર્દી સાથેનો સંબંધ: <span class="line" style="min-width:220px;"></span>
+                    દર્દી સાથેનો સંબંધ: <span class="" style="min-width:220px;"><input type="text" class="input-line" id="input61" name="input61"></span>
                 </td>
             </tr>
         </table>
@@ -784,121 +835,120 @@
 
         <table style="width:100%; border-collapse:collapse; font-size:18px; margin-top: 14px;">
             <tr>
-                <td style="padding: 6px 0;">તબીબનું નામ: <span class="line" style="min-width:520px;"></span></td>
-            </tr>
-            <tr>
-                <td style="padding: 6px 0;">તબીબની સહી: <span class="line" style="min-width:360px;"></span></td>
-            </tr>
-        </table>
+                <td style="padding: 6px 0;">તબીબનું નામ: <span class="" style="min-width:520px;"><input type="text" class="input-line" id="input62" name="input62"></span></td>
 
-        <div class="endorseTitle">દરેક ચક્ર પર સંમતિ સમર્થન</div>
-
-        <table class="endorseTbl">
-            <tr>
-                <th style="width:10%;">ક્રમાંક</th>
-                <th style="width:15%;">તારીખ</th>
-                <th style="width:37%;">દર્દી/દર્દીના સગાની સહી</th>
-                <th style="width:38%;">સ્વાસ્થ્ય વ્યવસાયિકની સહી</th>
+                <td style="padding: 6px 0;">તબીબની સહી: <span class="" style="min-width:360px;"><input type="text" class="input-line" id="input63" name="input63"></span></td>
             </tr>
-            <tr>
-                <td>૧</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>૨</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            
         </table>
 
     </div>
 
     <!-- ===================== PAGE 6 (GUJARATI CONTINUATION TABLE) ===================== -->
     <div class="container">
-        <table class="cycleTbl">
-            <tr>
-                <td class="c1">૩</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૪</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૫</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૬</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૭</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૮</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૯</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૧૦</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૧૧</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૧૨</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૧૩</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૧૪</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-            <tr>
-                <td class="c1">૧૫</td>
-                <td class="c2"></td>
-                <td class="c3"></td>
-                <td class="c4"></td>
-            </tr>
-        </table>
-    </div>
+    <div class="endorseTitle">દરેક ચક્ર પર સંમતિ સમર્થન</div>
+
+    
+
+    <table class="endorseTbl">
+        <tr>
+            <th style="width:10%;">ક્રમાંક</th>
+            <th style="width:15%;">તારીખ</th>
+            <th style="width:37%;">દર્દી/દર્દીના સગાની સહી</th>
+            <th style="width:38%;">સ્વાસ્થ્ય વ્યવસાયિકની સહી</th>
+        </tr>
+        <tr>
+            <td>૧</td>
+            <td style="padding:0;"><input type="text" class="table-input" id="input64" name="input64"></td>
+            <td style="padding:0;"><input type="text" class="table-input" id="input65" name="input65"></td>
+            <td style="padding:0;"><input type="text" class="table-input" id="input66" name="input66"></td>
+        </tr>
+        <tr>
+            <td>૨</td>
+            <td style="padding:0;"><input type="text" class="table-input" id="input67" name="input67"></td>
+            <td style="padding:0;"><input type="text" class="table-input" id="input68" name="input68"></td>
+            <td style="padding:0;"><input type="text" class="table-input" id="input69" name="input69"></td>
+        </tr>
+        <tr>
+            <td class="c1">૩</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input70" name="input70"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input71" name="input71"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input72" name="input72"></td>
+        </tr>
+        <tr>
+            <td class="c1">૪</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input73" name="input73"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input74" name="input74"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input75" name="input75"></td>
+        </tr>
+        <tr>
+            <td class="c1">૫</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input76" name="input76"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input77" name="input77"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input78" name="input78"></td>
+        </tr>
+        <tr>
+            <td class="c1">૬</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input79" name="input79"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input80" name="input80"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input81" name="input81"></td>
+        </tr>
+        <tr>
+            <td class="c1">૭</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input82" name="input82"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input83" name="input83"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input84" name="input84"></td>
+        </tr>
+        <tr>
+            <td class="c1">૮</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input85" name="input85"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input86" name="input86"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input87" name="input87"></td>
+        </tr>
+        <tr>
+            <td class="c1">૯</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input88" name="input88"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input89" name="input89"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input90" name="input90"></td>
+        </tr>
+        <tr>
+            <td class="c1">૧૦</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input91" name="input91"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input92" name="input92"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input93" name="input93"></td>
+        </tr>
+        <tr>
+            <td class="c1">૧૧</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input94" name="input94"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input95" name="input95"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input96" name="input96"></td>
+        </tr>
+        <tr>
+            <td class="c1">૧૨</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input97" name="input97"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input98" name="input98"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input99" name="input99"></td>
+        </tr>
+        <tr>
+            <td class="c1">૧૩</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input100" name="input100"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input101" name="input101"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input102" name="input102"></td>
+        </tr>
+        <tr>
+            <td class="c1">૧૪</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input103" name="input103"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input104" name="input104"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input105" name="input105"></td>
+        </tr>
+        <tr>
+            <td class="c1">૧૫</td>
+            <td class="c2" style="padding:0;"><input type="text" class="table-input" id="input106" name="input106"></td>
+            <td class="c3" style="padding:0;"><input type="text" class="table-input" id="input107" name="input107"></td>
+            <td class="c4" style="padding:0;"><input type="text" class="table-input" id="input108" name="input108"></td>
+        </tr>
+    </table>
+</div>
 
 </body>
 

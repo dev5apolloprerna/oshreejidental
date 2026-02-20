@@ -78,6 +78,18 @@
             vertical-align: bottom;
         }
 
+        /* Added purely to make the inputs invisible and sit on your lines */
+        .input-overlay {
+            border: none;
+            background: transparent;
+            width: 100%;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            padding: 0;
+            margin: 0;
+        }
+
         @media print {
             body {
                 padding: 0;
@@ -108,8 +120,8 @@
                 </div>
 
                 <div class="content-body">
-                    <p><strong>Indication for HIV Testing :</strong> <span class="line-input"
-                            style="width: 70%;"></span><br>
+                    <p><strong>Indication for HIV Testing :</strong> <span class="line-input" style="width: 70%;"><input
+                                type="text" name="input1" id="input1" class="input-overlay"></span><br>
                         My doctor informed me that the Human Immunodeficiency Virus (HIV) antigen test will be done on a
                         sample of my blood. I understand that this test shows the presence or absence of the HIV (AIDS)
                         virus. I understand that a negative test does not necessarily mean that I have not been infected
@@ -131,8 +143,10 @@
                         management of an accidental exposure of a health care worker to my blood or body fluids.</p>
 
                     <div style="padding-left: 40px;">
-                        <input type="checkbox"> I do consent to the test for the HIV antibody / antigen.<br>
-                        <input type="checkbox"> I do not consent to the test for the HIV antibody / antigen
+                        <input type="checkbox" name="input2" id="input2"> I do consent to the test for the HIV antibody
+                        / antigen.<br>
+                        <input type="checkbox" name="input3" id="input3"> I do not consent to the test for the HIV
+                        antibody / antigen
                     </div>
 
                     <p><strong>Patient is unable to sign the consent as certified by the Doctor.</strong><br>
@@ -141,20 +155,27 @@
 
                     <table class="form-table">
                         <tr>
-                            <td colspan="2">Date : <span class="line-input" style="width: 350px;"></span></td>
+                            <td colspan="2">Date : <span class="line-input" style="width: 350px;"><input type="text"
+                                        class="input-overlay" name="input4" id="input4"></span></td>
                         </tr>
                         <tr>
                             <td style="width: 60%;">Name of the Patient: <span class="line-input"
-                                    style="width: 60%;"></span></td>
-                            <td>Sign. of the Patient : <span class="line-input" style="width: 50%;"></span></td>
+                                    style="width: 60%;"><input type="text" class="input-overlay" name="input5"
+                                        id="input5"></span></td>
+                            <td>Sign. of the Patient : <span class="line-input" style="width: 50%;"><input type="text"
+                                        class="input-overlay" name="input6" id="input6"></span></td>
                         </tr>
                         <tr>
-                            <td>Name of the Relative: <span class="line-input" style="width: 60%;"></span></td>
-                            <td>Sign. of the Relative : <span class="line-input" style="width: 50%;"></span></td>
+                            <td>Name of the Relative: <span class="line-input" style="width: 60%;"><input type="text"
+                                        class="input-overlay" name="input7" id="input7"></span></td>
+                            <td>Sign. of the Relative : <span class="line-input" style="width: 50%;"><input type="text"
+                                        class="input-overlay" name="input8" id="input8"></span></td>
                         </tr>
                         <tr>
-                            <td>Relation with Patient: <span class="line-input" style="width: 60%;"></span></td>
-                            <td>Date: <span class="line-input" style="width: 70%;"></span></td>
+                            <td>Relation with Patient: <span class="line-input" style="width: 60%;"><input type="text"
+                                        class="input-overlay" name="input9" id="input9"></span></td>
+                            <td>Date: <span class="line-input" style="width: 70%;"><input type="text"
+                                        class="input-overlay" name="input10" id="input10"></span></td>
                         </tr>
                     </table>
 
@@ -167,74 +188,87 @@
                         indications for this test and my plan for counselling in the patient's medical record.</p>
 
                     <div style="margin-top: 15px;">
-    <div style="display: flex; gap: 20px; margin-bottom: 10px;">
-        <div style="flex: 2; display: flex;">
-            <span style="white-space: nowrap;">Attending Consultant's Name:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-        <div style="flex: 1.5; display: flex;">
-            <span style="white-space: nowrap;">Attending Consultant's Signature:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-    </div>
+                        <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+                            <div style="flex: 2; display: flex;">
+                                <span style="white-space: nowrap;">Attending Consultant's Name:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input11" id="input11"></div>
+                            </div>
+                            <div style="flex: 1.5; display: flex;">
+                                <span style="white-space: nowrap;">Attending Consultant's Signature:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input12" id="input12"></div>
+                            </div>
+                        </div>
 
-    <div style="display: flex; margin-bottom: 15px;">
-        <div style="flex: 1; display: flex;">
-            <span>Date:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-    </div>
+                        <div style="display: flex; margin-bottom: 15px;">
+                            <div style="flex: 1; display: flex;">
+                                <span>Date:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input13" id="input13"></div>
+                            </div>
+                        </div>
 
-    <div style="border-top: 1px dotted black; margin: 15px 0;"></div>
+                        <div style="border-top: 1px dotted black; margin: 15px 0;"></div>
 
-    <div style="display: flex; gap: 15px; margin-bottom: 10px;">
-        <div style="flex: 2; display: flex;">
-            <span>Name:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-        <div style="flex: 0.6; display: flex;">
-            <span>Sex:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-        <div style="flex: 0.6; display: flex;">
-            <span>Age:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-    </div>
+                        <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                            <div style="flex: 2; display: flex;">
+                                <span>Name:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input14" id="input14"></div>
+                            </div>
+                            <div style="flex: 0.6; display: flex;">
+                                <span>Sex:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input15" id="input15"></div>
+                            </div>
+                            <div style="flex: 0.6; display: flex;">
+                                <span>Age:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input16" id="input16"></div>
+                            </div>
+                        </div>
 
-    <div style="display: flex; gap: 15px; margin-bottom: 10px;">
-        <div style="flex: 1; display: flex;">
-            <span style="white-space: nowrap;">UHID No.:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-        <div style="flex: 1.2; display: flex;">
-            <span style="white-space: nowrap;">OPD / INDOOR No.:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-        <div style="flex: 0.8; display: flex;">
-            <span>Ward:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-        <div style="flex: 0.6; display: flex;">
-            <span>Bed:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-    </div>
+                        <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                            <div style="flex: 1; display: flex;">
+                                <span style="white-space: nowrap;">UHID No.:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input17" id="input17"></div>
+                            </div>
+                            <div style="flex: 1.2; display: flex;">
+                                <span style="white-space: nowrap;">OPD / INDOOR No.:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input18" id="input18"></div>
+                            </div>
+                            <div style="flex: 0.8; display: flex;">
+                                <span>Ward:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input19" id="input19"></div>
+                            </div>
+                            <div style="flex: 0.6; display: flex;">
+                                <span>Bed:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input20" id="input20"></div>
+                            </div>
+                        </div>
 
-    <div style="display: flex; margin-bottom: 10px;">
-        <div style="flex: 1; display: flex;">
-            <span style="white-space: nowrap;">Referred by DR.:</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-    </div>
+                        <div style="display: flex; margin-bottom: 10px;">
+                            <div style="flex: 1; display: flex;">
+                                <span style="white-space: nowrap;">Referred by DR.:</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input21" id="input21"></div>
+                            </div>
+                        </div>
 
-    <div style="display: flex;">
-        <div style="flex: 1; display: flex;">
-            <span style="white-space: nowrap;">Signature & Name (Consultant/Registrar/MO/PCC):</span>
-            <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"></div>
-        </div>
-    </div>
-</div>
+                        <div style="display: flex;">
+                            <div style="flex: 1; display: flex;">
+                                <span style="white-space: nowrap;">Signature & Name
+                                    (Consultant/Registrar/MO/PCC):</span>
+                                <div style="flex-grow: 1; border-bottom: 1px solid black; margin-left: 5px;"><input
+                                        type="text" class="input-overlay" name="input22" id="input22"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </td>

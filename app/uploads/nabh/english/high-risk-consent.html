@@ -16,6 +16,7 @@
         .container {
             max-width: 800px;
             margin: auto;
+            page-break-after: always;
         }
 
         h2 {
@@ -30,15 +31,25 @@
             text-align: justify;
         }
 
-        .line-input {
+        /* STICKY DESIGN: Maintain pixel-perfect underlines with inputs */
+        input[type="text"] {
+            border: none;
             border-bottom: 1px solid black;
-            display: inline-block;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
+            margin: 0;
+            height: 1.4em; /* Match line-height */
+            vertical-align: bottom;
+        }
+
+        .line-input {
             min-width: 200px;
         }
 
         .full-line {
-            width: 100%;
-            border-bottom: 1px solid black;
             display: inline-block;
             margin-top: 5px;
         }
@@ -51,7 +62,7 @@
 
         td {
             padding: 8px 0;
-            vertical-align: top;
+            vertical-align: bottom; /* Ensure input sits on the baseline */
         }
 
         .risk-table td {
@@ -67,6 +78,10 @@
             .container {
                 width: 100%;
             }
+
+            input {
+                border-bottom: 1px solid black !important;
+            }
         }
     </style>
 </head>
@@ -77,7 +92,8 @@
         <h2>High Risk Consent Form</h2>
 
         <div class="section">
-            <strong>Name of the Procedure:</strong> <span class="full-line" style="width: 60%;"></span>
+            <strong>Name of the Procedure:</strong> 
+            <input type="text" id="input1" name="input1" class="full-line" style="width: 60%;">
         </div>
 
         <div class="section">
@@ -94,84 +110,88 @@
         </div>
 
         <div class="section">
-            <strong>Relative's Name:</strong> <span class="full-line" style="width: 80%;"></span>
+            <strong>Relative's Name:</strong> 
+            <input type="text" id="input2" name="input2" class="full-line" style="width: 80%;">
         </div>
         <div class="section">
-            <strong>Relation with Patient:</strong> <span class="full-line" style="width: 70%;"></span>
+            <strong>Relation with Patient:</strong> 
+            <input type="text" id="input3" name="input3" class="full-line" style="width: 70%;">
         </div>
         <div class="section">
-            <strong>Relative's Signature:</strong> <span class="full-line" style="width: 75%;"></span>
+            <strong>Relative's Signature:</strong> 
+            <input type="text" id="input4" name="input4" class="full-line" style="width: 75%;">
         </div>
 
         <p><strong>High Risk Factors</strong></p>
 
         <table class="risk-table">
             <tr>
-                <td>1) <span class="line-input" style="width: 80%;"></span></td>
-                <td>6) <span class="line-input" style="width: 80%;"></span></td>
+                <td>1) <input type="text" id="input5" name="input5" class="line-input" style="width: 80%;"></td>
+                <td>6) <input type="text" id="input6" name="input6" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
-                <td>2) <span class="line-input" style="width: 80%;"></span></td>
-                <td>7) <span class="line-input" style="width: 80%;"></span></td>
+                <td>2) <input type="text" id="input7" name="input7" class="line-input" style="width: 80%;"></td>
+                <td>7) <input type="text" id="input8" name="input8" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
-                <td>3) <span class="line-input" style="width: 80%;"></span></td>
-                <td>8) <span class="line-input" style="width: 80%;"></span></td>
+                <td>3) <input type="text" id="input9" name="input9" class="line-input" style="width: 80%;"></td>
+                <td>8) <input type="text" id="input10" name="input10" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
-                <td>4) <span class="line-input" style="width: 80%;"></span></td>
-                <td>9) <span class="line-input" style="width: 80%;"></span></td>
+                <td>4) <input type="text" id="input11" name="input11" class="line-input" style="width: 80%;"></td>
+                <td>9) <input type="text" id="input12" name="input12" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
-                <td>5) <span class="line-input" style="width: 80%;"></span></td>
-                <td>10) <span class="line-input" style="width: 80%;"></span></td>
+                <td>5) <input type="text" id="input13" name="input13" class="line-input" style="width: 80%;"></td>
+                <td>10) <input type="text" id="input14" name="input14" class="line-input" style="width: 80%;"></td>
             </tr>
         </table>
 
         <table style="margin-top: 30px;">
             <tr>
                 <td style="width: 250px;"><strong>Date</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 150px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="input15" name="input15" class="line-input" style="width: 150px;"></td>
             </tr>
             <tr>
                 <td><strong>Time</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 150px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="input16" name="input16" class="line-input" style="width: 150px;"></td>
             </tr>
             <tr>
                 <td><strong>Name of the Patient</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 250px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="patient_name" name="patient_name" class="line-input" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td><strong>Sign. Of the Patient</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 250px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="input17" name="input17" class="line-input" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td><strong>Name of the Relative</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 250px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="input18" name="input18" class="line-input" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td><strong>Relation with Patient</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 250px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="input19" name="input19" class="line-input" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td><strong>Sign. Of the Relative</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 250px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="input20" name="input20" class="line-input" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td><strong>Name of the Consultant doctor</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 250px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="doctor_name" name="doctor_name" class="line-input" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td><strong>Sign of doctor</strong></td>
-                <td><strong>:</strong> <span class="line-input" style="width: 250px;"></span></td>
+                <td><strong>:</strong> <input type="text" id="input21" name="input21" class="line-input" style="width: 250px;"></td>
             </tr>
         </table>
     </div>
+
     <div class="container">
         <h2>ઉચ્ચ જોખમ સંમતિ ફોર્મ</h2>
 
         <div class="section">
-            પ્રક્રિયાનું નામ: <span class="line-input" style="width: 75%;"></span>
+            પ્રક્રિયાનું નામ: <input type="text" id="input22" name="input22" class="line-input" style="width: 75%;">
         </div>
 
         <div class="section" style="text-indent: 50px;">
@@ -189,15 +209,15 @@
         <table style="margin-top: 20px;">
             <tr>
                 <td style="width: 120px;">સંબંધીનું નામ:</td>
-                <td><span class="line-input" style="width: 85%;"></span></td>
+                <td><input type="text" id="input23" name="input23" class="line-input" style="width: 85%;"></td>
             </tr>
             <tr>
                 <td>દર્દી સાથેનો સંબંધ:</td>
-                <td><span class="line-input" style="width: 85%;"></span></td>
+                <td><input type="text" id="input24" name="input24" class="line-input" style="width: 85%;"></td>
             </tr>
             <tr>
                 <td>સંબંધીની સહી:</td>
-                <td><span class="line-input" style="width: 85%;"></span></td>
+                <td><input type="text" id="input25" name="input25" class="line-input" style="width: 85%;"></td>
             </tr>
         </table>
 
@@ -205,63 +225,63 @@
 
         <table class="risk-table">
             <tr>
-                <td>૧) <span class="line-input" style="width: 70%;"></span></td>
-                <td>૬) <span class="line-input" style="width: 70%;"></span></td>
+                <td>૧) <input type="text" id="input26" name="input26" class="line-input" style="width: 70%;"></td>
+                <td>૬) <input type="text" id="input27" name="input27" class="line-input" style="width: 70%;"></td>
             </tr>
             <tr>
-                <td>૨) <span class="line-input" style="width: 70%;"></span></td>
-                <td>૭) <span class="line-input" style="width: 70%;"></span></td>
+                <td>૨) <input type="text" id="input28" name="input28" class="line-input" style="width: 70%;"></td>
+                <td>૭) <input type="text" id="input29" name="input29" class="line-input" style="width: 70%;"></td>
             </tr>
             <tr>
-                <td>૩) <span class="line-input" style="width: 70%;"></span></td>
-                <td>૮) <span class="line-input" style="width: 70%;"></span></td>
+                <td>૩) <input type="text" id="input30" name="input30" class="line-input" style="width: 70%;"></td>
+                <td>૮) <input type="text" id="input31" name="input31" class="line-input" style="width: 70%;"></td>
             </tr>
             <tr>
-                <td>૪) <span class="line-input" style="width: 70%;"></span></td>
-                <td>૯) <span class="line-input" style="width: 70%;"></span></td>
+                <td>૪) <input type="text" id="input32" name="input32" class="line-input" style="width: 70%;"></td>
+                <td>૯) <input type="text" id="input33" name="input33" class="line-input" style="width: 70%;"></td>
             </tr>
             <tr>
-                <td>૫) <span class="line-input" style="width: 70%;"></span></td>
-                <td>૧૦) <span class="line-input" style="width: 70%;"></span></td>
+                <td>૫) <input type="text" id="input34" name="input34" class="line-input" style="width: 70%;"></td>
+                <td>૧૦) <input type="text" id="input35" name="input35" class="line-input" style="width: 70%;"></td>
             </tr>
         </table>
 
         <table style="margin-top: 20px;">
             <tr>
                 <td style="width: 80px;">તારીખ:</td>
-                <td><span class="line-input" style="width: 200px;"></span></td>
+                <td><input type="text" id="input36" name="input36" class="line-input" style="width: 200px;"></td>
             </tr>
             <tr>
                 <td>સમય:</td>
-                <td><span class="line-input" style="width: 200px;"></span></td>
+                <td><input type="text" id="input37" name="input37" class="line-input" style="width: 200px;"></td>
             </tr>
             <tr>
                 <td style="width: 120px;">દર્દીનું નામ:</td>
-                <td><span class="line-input" style="width: 80%;"></span></td>
+                <td><input type="text" id="patient_name" name="patient_name" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
                 <td>દર્દીની સહી:</td>
-                <td><span class="line-input" style="width: 80%;"></span></td>
+                <td><input type="text" id="input38" name="input38" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
                 <td>સંબંધીનું નામ:</td>
-                <td><span class="line-input" style="width: 80%;"></span></td>
+                <td><input type="text" id="input39" name="input39" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
                 <td>દર્દી સાથેનો સંબંધ:</td>
-                <td><span class="line-input" style="width: 80%;"></span></td>
+                <td><input type="text" id="input40" name="input40" class="line-input" style="width: 80%;"></td>
             </tr>
             <tr>
                 <td>સંબંધીની સહી:</td>
-                <td><span class="line-input" style="width: 60%;"></span></td>
+                <td><input type="text" id="input41" name="input41" class="line-input" style="width: 60%;"></td>
             </tr>
             <tr>
                 <td style="width: 200px;">કન્સલ્ટન્ટ ડૉક્ટરનું નામ:</td>
-                <td><span class="line-input" style="width: 70%;"></span></td>
+                <td><input type="text" id="doctor_name" name="doctor_name" class="line-input" style="width: 70%;"></td>
             </tr>
             <tr>
                 <td>ડૉક્ટરની સહી:</td>
-                <td><span class="line-input" style="width: 65%;"></span></td>
+                <td><input type="text" id="input42" name="input42" class="line-input" style="width: 65%;"></td>
             </tr>
         </table>
     </div>

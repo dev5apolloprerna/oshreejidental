@@ -18,9 +18,20 @@
             width: 800px;
             margin: 0 auto 18px auto;
             background: #fff;
-            /* padding: 10px; */
             border: 1px solid #ccc;
             box-sizing: border-box;
+        }
+
+        /* Sticky Input Styles */
+        input[type="text"] {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
         }
 
         /* PRINT */
@@ -64,10 +75,6 @@
 </head>
 
 <body>
-
-    <!-- ===========================
-        ENGLISH VERSION (TOP)
-  ============================ -->
 
     <div class="page-container">
         <table role="presentation" width="800" cellspacing="0" cellpadding="0" border="0" align="center"
@@ -181,7 +188,6 @@
             style="background-color:#fff; padding:50px 70px; margin-bottom:20px;  text-align:justify;">
             <tr>
                 <td>
-
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                         <tr>
                             <td valign="top" style="padding-left:20px; padding-bottom:20px; width:25px;">•</td>
@@ -267,7 +273,6 @@
                         Patients should wear a mouth guard for any sports where it is possible to sustain injury to the
                         mouth or teeth.
                     </p>
-
                 </td>
             </tr>
         </table>
@@ -302,22 +307,22 @@
                         in scientific papers or demonstration to the profession.
                     </p>
 
-                    <table width="50%" cellspacing="0" cellpadding="2" border="0">
+                    <table width="65%" cellspacing="0" cellpadding="2" border="0">
                         <tr>
-                            <td style="width:170px; font-weight:bold;">Patient's Name: Mr./Ms./Mrs.</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                            <td style="width:240px; font-weight:bold;">Patient's Name: Mr./Ms./Mrs.</td>
+                            <td style="border-bottom:1px solid #000;"><input type="text" id="patient_name" name="patient_name"></td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold;">UHID NO.</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                            <td style="border-bottom:1px solid #000;"><input type="text" id="input1" name="input1"></td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold;">Date:</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                            <td style="border-bottom:1px solid #000;"><input type="text" id="input2" name="input2"></td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold;">Signature of Patient/Guardian</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                            <td style="border-bottom:1px solid #000;"><input type="text" id="input3" name="input3"></td>
                         </tr>
                     </table>
                 </td>
@@ -346,96 +351,95 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- 15 static rows (better for print; no JS) -->
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">1.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input4" name="input4"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input5" name="input5"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input6" name="input6"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">2.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input7" name="input7"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input8" name="input8"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input9" name="input9"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">3.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input10" name="input10"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input11" name="input11"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input12" name="input12"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">4.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input13" name="input13"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input14" name="input14"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input15" name="input15"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">5.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input16" name="input16"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input17" name="input17"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input18" name="input18"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">6.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input19" name="input19"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input20" name="input20"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input21" name="input21"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">7.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input22" name="input22"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input23" name="input23"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input24" name="input24"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">8.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input25" name="input25"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input26" name="input26"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input27" name="input27"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">9.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input28" name="input28"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input29" name="input29"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input30" name="input30"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">10.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input31" name="input31"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input32" name="input32"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input33" name="input33"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">11.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input34" name="input34"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input35" name="input35"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input36" name="input36"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">12.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input37" name="input37"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input38" name="input38"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input39" name="input39"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">13.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input40" name="input40"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input41" name="input41"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input42" name="input42"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">14.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input43" name="input43"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input44" name="input44"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input45" name="input45"></td>
                             </tr>
                             <tr style="height:40px;">
                                 <td style="border:1px solid #000; font-weight:bold;">15.</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input46" name="input46"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input47" name="input47"></td>
+                                <td style="border:1px solid #000;"><input type="text" id="input48" name="input48"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -443,6 +447,7 @@
             </tr>
         </table>
     </div>
+
 
 
     <!-- ===========================
@@ -637,166 +642,172 @@
     </div>
 
     <div class="page-container gu">
-        <table role="presentation" width="800" cellspacing="0" cellpadding="0" border="0" align="center"
-            style="background-color:#fff; padding:40px 60px;  margin-bottom:10px;  text-align:justify;">
-            <tr>
-                <td>
-                    <p style="margin-bottom:10px;"><span style="font-weight:bold;">એલર્જી:</span>
-                        કેટલાક દર્દીઓને ઓર્થોડોન્ટિક ઉપકરણોમાં વપરાતા કેટલાક ધાતુઓથી સંવેદનશીલતા (એલર્જી) થઈ શકે છે.
-                        જો દર્દીને કોઈ જાણીતી ધાતુ એલર્જી હોય તો ઉપકરણ બનાવતાં પહેલાં અથવા મૂકતાં પહેલાં અવશ્ય જાણ કરો.
-                        કોઈ સમસ્યા દેખાય તો દંતચિકિત્સકની સલાહ લો.
-                    </p>
+    <table role="presentation" width="800" cellspacing="0" cellpadding="0" border="0" align="center"
+        style="background-color:#fff; padding:20px 60px;  margin-bottom:10px;  text-align:justify;">
+        <tr>
+            <td>
+                <p style="margin-bottom:10px;"><span style="font-weight:bold;">એલર્જી:</span>
+                    કેટલાક દર્દીઓને ઓર્થોડોન્ટિક ઉપકરણોમાં વપરાતા કેટલાક ધાતુઓથી સંવેદનશીલતા (એલર્જી) થઈ શકે છે.
+                    જો દર્દીને કોઈ જાણીતી ધાતુ એલર્જી હોય તો ઉપકરણ બનાવતાં પહેલાં અથવા મૂકતાં પહેલાં અવશ્ય જાણ કરો.
+                    કોઈ સમસ્યા દેખાય તો દંતચિકિત્સકની સલાહ લો.
+                </p>
 
-                    <p style="margin-bottom:25px;"><span style="font-weight:bold;">ઓર્થોડોન્ટિક ઉપકરણોથી ઈજા:</span>
-                        ઉપકરણને નુકસાન કરે, ઢીલું કરે અથવા ખસી જાય તેવી પ્રવૃત્તિઓ અથવા ખોરાક ટાળવા જોઈએ.
-                        ઢીલું/તૂટેલું ઉપકરણ શ્વાસમાં જઈ શકે, ગળી શકાય અથવા અન્ય રીતે નુકસાન પહોંચાડી શકે છે.
-                    </p>
+                <p style="margin-bottom:25px;"><span style="font-weight:bold;">ઓર્થોડોન્ટિક ઉપકરણોથી ઈજા:</span>
+                    ઉપકરણને નુકસાન કરે, ઢીલું કરે અથવા ખસી જાય તેવી પ્રવૃત્તિઓ અથવા ખોરાક ટાળવા જોઈએ.
+                    ઢીલું/તૂટેલું ઉપકરણ શ્વાસમાં જઈ શકે, ગળી શકાય અથવા અન્ય રીતે નુકસાન પહોંચાડી શકે છે.
+                </p>
 
-                    <p style="font-style:italic; font-weight:bold; margin-bottom:30px;">
-                        હું સારવાર દરમિયાન અને બાદમાં ફોટોગ્રાફ, એક્સ-રે અને સ્ટડી મોડેલ્સ લેવાં માટે સંમતિ આપું છું,
-                        જેથી સારવારનું આયોજન અને પ્રગતિમાં મદદ મળે. જો કેસ વિશેષ વૈજ્ઞાનિક મહત્વનો સાબિત થાય,
-                        તો ડૉક્ટરને વ્યાવસાયિક વર્ગમાં વૈજ્ઞાનિક પેપર્સ અથવા ડેમોન્સ્ટ્રેશનમાં રેકોર્ડ્સ રજૂ કરવાનો
-                        અધિકાર રહેશે.
-                    </p>
+                <p style="font-style:italic; font-weight:bold; margin-bottom:30px;">
+                    હું સારવાર દરમિયાન અને બાદમાં ફોટોગ્રાફ, એક્સ-રે અને સ્ટડી મોડેલ્સ લેવાં માટે સંમતિ આપું છું,
+                    જેથી સારવારનું આયોજન અને પ્રગતિમાં મદદ મળે. જો કેસ વિશેષ વૈજ્ઞાનિક મહત્વનો સાબિત થાય,
+                    તો ડૉક્ટરને વ્યાવસાયિક વર્ગમાં વૈજ્ઞાનિક પેપર્સ અથવા ડેમોન્સ્ટ્રેશનમાં રેકોર્ડ્સ રજૂ કરવાનો
+                    અધિકાર રહેશે.
+                </p>
 
-                    <table width="55%" cellspacing="0" cellpadding="2" border="0">
-                        <tr>
-                            <td style="width:180px; font-weight:bold;">દર્દીનું નામ: શ્રી/કુમારી/શ્રીમતી</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                <table width="55%" cellspacing="0" cellpadding="2" border="0">
+                    <tr>
+                        <td style="width:180px; font-weight:bold;">દર્દીનું નામ: શ્રી/કુમારી/શ્રીમતી</td>
+                        <td style="border-bottom:1px solid #000;">
+                            <input type="text" id="patient_name" name="patient_name" style="border:none; background:transparent; width:100%; outline:none; font-family:inherit; font-size:inherit;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">UHID નં.</td>
+                        <td style="border-bottom:1px solid #000;">
+                            <input type="text" id="input49" name="input49" style="border:none; background:transparent; width:100%; outline:none; font-family:inherit; font-size:inherit;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">તારીખ:</td>
+                        <td style="border-bottom:1px solid #000;">
+                            <input type="text" id="input50" name="input50" style="border:none; background:transparent; width:100%; outline:none; font-family:inherit; font-size:inherit;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">દર્દી/વાલીની સહી</td>
+                        <td style="border-bottom:1px solid #000;">
+                            <input type="text" id="input51" name="input51" style="border:none; background:transparent; width:100%; outline:none; font-family:inherit; font-size:inherit;">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table role="presentation" width="800" cellspacing="0" cellpadding="0" border="0" align="center"
+        style="background-color:#fff; padding:5px 5px;  ">
+        <tr>
+            <td>
+                <h3 style="text-align:center; font-size:18px; margin-bottom:30px;">
+                    દરેક ચક્ર માટે સંમતિ સમર્થન
+                </h3>
+
+                <table width="100%" border="1" cellspacing="0" cellpadding="10"
+                    style="border-collapse:collapse; text-align:center; border:1px solid #000;">
+                    <thead>
+                        <tr style="background-color:#f9f9f9;">
+                            <th style="width:10%; border:1px solid #000;">ક્રમ નં.</th>
+                            <th style="width:30%; border:1px solid #000;">તારીખ અને સમય</th>
+                            <th style="width:30%; border:1px solid #000;">દર્દી/સગાની સહી</th>
+                            <th style="width:30%; border:1px solid #000;">ડૉક્ટરની સહી</th>
                         </tr>
-                        <tr>
-                            <td style="font-weight:bold;">UHID નં.</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                    </thead>
+                    <tbody>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૧</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input52" name="input52" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input53" name="input53" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input54" name="input54" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
                         </tr>
-                        <tr>
-                            <td style="font-weight:bold;">તારીખ:</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૨</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input55" name="input55" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input56" name="input56" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input57" name="input57" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
                         </tr>
-                        <tr>
-                            <td style="font-weight:bold;">દર્દી/વાલીની સહી</td>
-                            <td style="border-bottom:1px solid #000;">&nbsp;</td>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૩</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input58" name="input58" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input59" name="input59" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input60" name="input60" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
                         </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        <table role="presentation" width="800" cellspacing="0" cellpadding="0" border="0" align="center"
-            style="background-color:#fff; padding:5px 5px;  ">
-            <tr>
-                <td>
-                    <h3 style="text-align:center; font-size:18px; margin-bottom:30px;">
-                        દરેક ચક્ર માટે સંમતિ સમર્થન
-                    </h3>
-
-                    <table width="100%" border="1" cellspacing="0" cellpadding="10"
-                        style="border-collapse:collapse; text-align:center; border:1px solid #000;">
-                        <thead>
-                            <tr style="background-color:#f9f9f9;">
-                                <th style="width:10%; border:1px solid #000;">ક્રમ નં.</th>
-                                <th style="width:30%; border:1px solid #000;">તારીખ અને સમય</th>
-                                <th style="width:30%; border:1px solid #000;">દર્દી/સગાની સહી</th>
-                                <th style="width:30%; border:1px solid #000;">ડૉક્ટરની સહી</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૧</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૨</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૩</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૪</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૫</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૬</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૭</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૮</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૯</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૧૦</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૧૧</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૧૨</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૧૩</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૧૪</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                            <tr style="height:40px;">
-                                <td style="border:1px solid #000; font-weight:bold;">૧૫</td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                                <td style="border:1px solid #000;"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૪</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input61" name="input61" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input62" name="input62" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input63" name="input63" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૫</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input64" name="input64" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input65" name="input65" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input66" name="input66" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૬</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input67" name="input67" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input68" name="input68" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input69" name="input69" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૭</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input70" name="input70" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input71" name="input71" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input72" name="input72" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૮</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input73" name="input73" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input74" name="input74" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input75" name="input75" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૯</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input76" name="input76" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input77" name="input77" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input78" name="input78" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૧૦</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input79" name="input79" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input80" name="input80" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input81" name="input81" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૧૧</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input82" name="input82" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input83" name="input83" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input84" name="input84" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૧૨</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input85" name="input85" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input86" name="input86" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input87" name="input87" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૧૩</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input88" name="input88" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input89" name="input89" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input90" name="input90" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૧૪</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input91" name="input91" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input92" name="input92" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input93" name="input93" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                        <tr style="height:40px;">
+                            <td style="border:1px solid #000; font-weight:bold;">૧૫</td>
+                            <td style="border:1px solid #000;"><input type="text" id="input94" name="input94" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input95" name="input95" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                            <td style="border:1px solid #000;"><input type="text" id="input96" name="input96" style="border:none; background:transparent; width:100%; height:100%; outline:none; text-align:center;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
 
 </body>
 

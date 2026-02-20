@@ -49,13 +49,30 @@
             padding-bottom: 12px;
         }
 
-        /* Input Lines */
+        /* Input Lines (your original underline) */
         .input-line {
             border-bottom: 1px solid #000;
             display: inline-block;
             min-width: 250px;
             height: 18px;
             vertical-align: bottom;
+        }
+
+        /* ✅ Input that matches .input-line EXACTLY (no pixel shift) */
+        .input-line-input {
+            border: 0;
+            border-bottom: 1px solid #000;
+            background: transparent;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            height: 18px;
+            line-height: 18px;
+            display: inline-block;
+            vertical-align: bottom;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
+            min-width: 250px;
         }
 
         /* The Endorsement Table Styling */
@@ -108,6 +125,7 @@
 
 <body>
 
+    <!-- ======================= ENGLISH PAGE ======================= -->
     <div class="wrapper">
         <table class="content-table">
             <tr>
@@ -165,11 +183,25 @@
                     extraction. Although root canal therapy has a very high degree of success, it cannot be guaranteed.
                 </td>
             </tr>
+
             <tr>
                 <td style="padding-top: 30px;">
-                    <div style="margin-bottom: 15px;">Signature: <span class="input-line"></span></div>
-                    <div style="margin-bottom: 15px;">Date: <span class="input-line"></span></div>
-                    <div>Place: <span class="input-line" style="min-width: 150px;"></span></div>
+                    <div style="margin-bottom: 15px;">
+                        Signature:
+                        <!-- ✅ first special fields -->
+                        <input class="input-line-input" type="text" id="patient_name" name="patient_name" />
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        Date:
+                        <input class="input-line-input" type="text" id="input1" name="input1" />
+                    </div>
+
+                    <div>
+                        Place:
+                        <input class="input-line-input" style="min-width: 150px;" type="text" id="input2"
+                            name="input2" />
+                    </div>
                 </td>
             </tr>
         </table>
@@ -186,99 +218,147 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- Rows 1-15 with inputs (keeps same cell size) -->
                 <tr class="row-height">
                     <td>1.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input" style="min-width: 100%; width: 100%;border: none;" type="text" id="input3"
+                            name="input3"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input4"
+                            name="input4"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text"
+                            id="doctor_name" name="doctor_name"></td>
                 </tr>
                 <tr class="row-height">
                     <td>2.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input5"
+                            name="input5"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input6"
+                            name="input6"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input7"
+                            name="input7"></td>
                 </tr>
                 <tr class="row-height">
                     <td>3.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input8"
+                            name="input8"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input9"
+                            name="input9"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input10"
+                            name="input10"></td>
                 </tr>
                 <tr class="row-height">
                     <td>4.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input11"
+                            name="input11"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input12"
+                            name="input12"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input13"
+                            name="input13"></td>
                 </tr>
                 <tr class="row-height">
                     <td>5.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input14"
+                            name="input14"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input15"
+                            name="input15"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input16"
+                            name="input16"></td>
                 </tr>
                 <tr class="row-height">
                     <td>6.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input17"
+                            name="input17"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input18"
+                            name="input18"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input19"
+                            name="input19"></td>
                 </tr>
                 <tr class="row-height">
                     <td>7.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input20"
+                            name="input20"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input21"
+                            name="input21"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input22"
+                            name="input22"></td>
                 </tr>
                 <tr class="row-height">
                     <td>8.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input23"
+                            name="input23"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input24"
+                            name="input24"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input25"
+                            name="input25"></td>
                 </tr>
                 <tr class="row-height">
                     <td>9.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input26"
+                            name="input26"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input27"
+                            name="input27"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input28"
+                            name="input28"></td>
                 </tr>
                 <tr class="row-height">
                     <td>10.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input29"
+                            name="input29"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input30"
+                            name="input30"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input31"
+                            name="input31"></td>
                 </tr>
                 <tr class="row-height">
                     <td>11.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input32"
+                            name="input32"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input33"
+                            name="input33"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input34"
+                            name="input34"></td>
                 </tr>
                 <tr class="row-height">
                     <td>12.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input35"
+                            name="input35"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input36"
+                            name="input36"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input37"
+                            name="input37"></td>
                 </tr>
                 <tr class="row-height">
                     <td>13.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input38"
+                            name="input38"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input39"
+                            name="input39"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input40"
+                            name="input40"></td>
                 </tr>
                 <tr class="row-height">
                     <td>14.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input41"
+                            name="input41"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input42"
+                            name="input42"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input43"
+                            name="input43"></td>
                 </tr>
                 <tr class="row-height">
                     <td>15.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input44"
+                            name="input44"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input45"
+                            name="input45"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input46"
+                            name="input46"></td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <!-- ======================= GUJARATI PAGE ======================= -->
     <div class="wrapper">
         <table class="content-table">
             <tr>
@@ -292,6 +372,7 @@
                     થઈ શકતા સંભવિત જોખમો વિશે જણાવે છે.
                 </td>
             </tr>
+
             <tr>
                 <td class="section-header">એન્ડોડોન્ટિક ઉપચાર માટેના વિશિષ્ટ જોખમો</td>
             </tr>
@@ -336,11 +417,22 @@
                     ઊંચો છે, પરંતુ તેની ખાતરી (ગેરંટી) આપી શકાતી નથી.
                 </td>
             </tr>
+
             <tr>
                 <td style="padding-top: 30px;">
-                    <div style="margin-bottom: 15px;">સહી: <span class="input-line"></span></div>
-                    <div style="margin-bottom: 15px;">તારીખ: <span class="input-line"></span></div>
-                    <div>સ્થળ: <span class="input-line" style="min-width: 150px;"></span></div>
+                    <div style="margin-bottom: 15px;">
+                        સહી:
+                        <input class="input-line-input" type="text" id="input47" name="input47" />
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        તારીખ:
+                        <input class="input-line-input" type="text" id="input48" name="input48" />
+                    </div>
+                    <div>
+                        સ્થળ:
+                        <input class="input-line-input" style="min-width: 150px;" type="text" id="input49"
+                            name="input49" />
+                    </div>
                 </td>
             </tr>
         </table>
@@ -359,93 +451,138 @@
             <tbody>
                 <tr class="row-height">
                     <td>1.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input50"
+                            name="input50"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input51"
+                            name="input51"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input52"
+                            name="input52"></td>
                 </tr>
                 <tr class="row-height">
                     <td>2.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input53"
+                            name="input53"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input54"
+                            name="input54"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input55"
+                            name="input55"></td>
                 </tr>
                 <tr class="row-height">
                     <td>3.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input56"
+                            name="input56"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input57"
+                            name="input57"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input58"
+                            name="input58"></td>
                 </tr>
                 <tr class="row-height">
                     <td>4.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input59"
+                            name="input59"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input60"
+                            name="input60"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input61"
+                            name="input61"></td>
                 </tr>
                 <tr class="row-height">
                     <td>5.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input62"
+                            name="input62"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input63"
+                            name="input63"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input64"
+                            name="input64"></td>
                 </tr>
                 <tr class="row-height">
                     <td>6.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input65"
+                            name="input65"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input66"
+                            name="input66"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input67"
+                            name="input67"></td>
                 </tr>
                 <tr class="row-height">
                     <td>7.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input68"
+                            name="input68"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input69"
+                            name="input69"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input70"
+                            name="input70"></td>
                 </tr>
                 <tr class="row-height">
                     <td>8.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input71"
+                            name="input71"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input72"
+                            name="input72"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input73"
+                            name="input73"></td>
                 </tr>
                 <tr class="row-height">
                     <td>9.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input74"
+                            name="input74"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input75"
+                            name="input75"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input76"
+                            name="input76"></td>
                 </tr>
                 <tr class="row-height">
                     <td>10.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input77"
+                            name="input77"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input78"
+                            name="input78"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input79"
+                            name="input79"></td>
                 </tr>
                 <tr class="row-height">
                     <td>11.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input80"
+                            name="input80"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input81"
+                            name="input81"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input82"
+                            name="input82"></td>
                 </tr>
                 <tr class="row-height">
                     <td>12.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input83"
+                            name="input83"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input84"
+                            name="input84"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input85"
+                            name="input85"></td>
                 </tr>
                 <tr class="row-height">
                     <td>13.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input86"
+                            name="input86"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input87"
+                            name="input87"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input88"
+                            name="input88"></td>
                 </tr>
                 <tr class="row-height">
                     <td>14.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input89"
+                            name="input89"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input90"
+                            name="input90"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input91"
+                            name="input91"></td>
                 </tr>
                 <tr class="row-height">
                     <td>15.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input92"
+                            name="input92"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input93"
+                            name="input93"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input94"
+                            name="input94"></td>
                 </tr>
             </tbody>
         </table>

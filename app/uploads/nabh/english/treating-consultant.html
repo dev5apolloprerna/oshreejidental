@@ -81,12 +81,31 @@
         td {
             border: 1px solid #666;
             height: 28px; /* Matches the line spacing in the image */
+            position: relative; /* Essential for absolute input overlay */
+            padding: 0;
+            margin: 0;
         }
 
         /* Column Widths */
         .col-date { width: 15%; }
         .col-time { width: 12%; }
         .col-notes { width: 73%; }
+
+        /* Pixel-Perfect Input Overlay */
+        .input-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 5px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
 
         /* Print Settings */
         @media print {
@@ -99,6 +118,10 @@
             @page {
                 size: A4;
                 margin: 0;
+            }
+            .input-overlay {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
         }
     </style>
@@ -118,15 +141,155 @@
                 <tr>
                     <th class="col-date">DATE</th>
                     <th class="col-time">TIME</th>
-                    <th class="col-notes"></th>
+                    <th class="col-notes">DESCRIPTION</th>
                 </tr>
             </thead>
             <tbody>
-                <script>
-                    for (let i = 0; i < 28; i++) {
-                        document.write('<tr><td></td><td></td><td></td></tr>');
-                    }
-                </script>
+                <tr>
+                    <td><input type="text" id="input1" name="input1" class="input-overlay"></td>
+                    <td><input type="text" id="input2" name="input2" class="input-overlay"></td>
+                    <td><input type="text" id="input3" name="input3" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input4" name="input4" class="input-overlay"></td>
+                    <td><input type="text" id="input5" name="input5" class="input-overlay"></td>
+                    <td><input type="text" id="input6" name="input6" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input7" name="input7" class="input-overlay"></td>
+                    <td><input type="text" id="input8" name="input8" class="input-overlay"></td>
+                    <td><input type="text" id="input9" name="input9" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input10" name="input10" class="input-overlay"></td>
+                    <td><input type="text" id="input11" name="input11" class="input-overlay"></td>
+                    <td><input type="text" id="input12" name="input12" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input13" name="input13" class="input-overlay"></td>
+                    <td><input type="text" id="input14" name="input14" class="input-overlay"></td>
+                    <td><input type="text" id="input15" name="input15" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input16" name="input16" class="input-overlay"></td>
+                    <td><input type="text" id="input17" name="input17" class="input-overlay"></td>
+                    <td><input type="text" id="input18" name="input18" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input19" name="input19" class="input-overlay"></td>
+                    <td><input type="text" id="input20" name="input20" class="input-overlay"></td>
+                    <td><input type="text" id="input21" name="input21" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input22" name="input22" class="input-overlay"></td>
+                    <td><input type="text" id="input23" name="input23" class="input-overlay"></td>
+                    <td><input type="text" id="input24" name="input24" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input25" name="input25" class="input-overlay"></td>
+                    <td><input type="text" id="input26" name="input26" class="input-overlay"></td>
+                    <td><input type="text" id="input27" name="input27" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input28" name="input28" class="input-overlay"></td>
+                    <td><input type="text" id="input29" name="input29" class="input-overlay"></td>
+                    <td><input type="text" id="input30" name="input30" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input31" name="input31" class="input-overlay"></td>
+                    <td><input type="text" id="input32" name="input32" class="input-overlay"></td>
+                    <td><input type="text" id="input33" name="input33" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input34" name="input34" class="input-overlay"></td>
+                    <td><input type="text" id="input35" name="input35" class="input-overlay"></td>
+                    <td><input type="text" id="input36" name="input36" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input37" name="input37" class="input-overlay"></td>
+                    <td><input type="text" id="input38" name="input38" class="input-overlay"></td>
+                    <td><input type="text" id="input39" name="input39" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input40" name="input40" class="input-overlay"></td>
+                    <td><input type="text" id="input41" name="input41" class="input-overlay"></td>
+                    <td><input type="text" id="input42" name="input42" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input43" name="input43" class="input-overlay"></td>
+                    <td><input type="text" id="input44" name="input44" class="input-overlay"></td>
+                    <td><input type="text" id="input45" name="input45" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input46" name="input46" class="input-overlay"></td>
+                    <td><input type="text" id="input47" name="input47" class="input-overlay"></td>
+                    <td><input type="text" id="input48" name="input48" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input49" name="input49" class="input-overlay"></td>
+                    <td><input type="text" id="input50" name="input50" class="input-overlay"></td>
+                    <td><input type="text" id="input51" name="input51" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input52" name="input52" class="input-overlay"></td>
+                    <td><input type="text" id="input53" name="input53" class="input-overlay"></td>
+                    <td><input type="text" id="input54" name="input54" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input55" name="input55" class="input-overlay"></td>
+                    <td><input type="text" id="input56" name="input56" class="input-overlay"></td>
+                    <td><input type="text" id="input57" name="input57" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input58" name="input58" class="input-overlay"></td>
+                    <td><input type="text" id="input59" name="input59" class="input-overlay"></td>
+                    <td><input type="text" id="input60" name="input60" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input61" name="input61" class="input-overlay"></td>
+                    <td><input type="text" id="input62" name="input62" class="input-overlay"></td>
+                    <td><input type="text" id="input63" name="input63" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input64" name="input64" class="input-overlay"></td>
+                    <td><input type="text" id="input65" name="input65" class="input-overlay"></td>
+                    <td><input type="text" id="input66" name="input66" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input67" name="input67" class="input-overlay"></td>
+                    <td><input type="text" id="input68" name="input68" class="input-overlay"></td>
+                    <td><input type="text" id="input69" name="input69" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input70" name="input70" class="input-overlay"></td>
+                    <td><input type="text" id="input71" name="input71" class="input-overlay"></td>
+                    <td><input type="text" id="input72" name="input72" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input73" name="input73" class="input-overlay"></td>
+                    <td><input type="text" id="input74" name="input74" class="input-overlay"></td>
+                    <td><input type="text" id="input75" name="input75" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input76" name="input76" class="input-overlay"></td>
+                    <td><input type="text" id="input77" name="input77" class="input-overlay"></td>
+                    <td><input type="text" id="input78" name="input78" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input79" name="input79" class="input-overlay"></td>
+                    <td><input type="text" id="input80" name="input80" class="input-overlay"></td>
+                    <td><input type="text" id="input81" name="input81" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input82" name="input82" class="input-overlay"></td>
+                    <td><input type="text" id="input83" name="input83" class="input-overlay"></td>
+                    <td><input type="text" id="input84" name="input84" class="input-overlay"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="input85" name="input85" class="input-overlay"></td>
+                    <td><input type="text" id="input86" name="input86" class="input-overlay"></td>
+                    <td><input type="text" id="input87" name="input87" class="input-overlay"></td>
+                </tr>
             </tbody>
         </table>
 

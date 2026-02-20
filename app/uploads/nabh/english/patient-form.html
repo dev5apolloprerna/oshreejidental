@@ -6,26 +6,17 @@
     <title>Patient Form Print</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* @media print {
-            body { margin: 0; padding: 0; background: none; }
-            .outer-border { border: 2px solid #000 !important; margin: 0; width: 100%; }
-        } */
-
         body {
             font-family: 'arial', sans-serif;
             font-size: 13px;
-            /* background-color: #f0f0f0; */
             padding: 20px;
             line-height: 1.4;
             padding: 16px;
-            /* display: flex;
-            justify-content: center; */
         }
 
         .outer-border {
             background-color: white;
             width: 210mm;
-            /* A4 Width */
             min-height: 297mm;
             border: 2px solid #000;
             padding: 20px;
@@ -60,7 +51,6 @@
             width: 280px;
             float: right;
             padding: 10px;
-            /* margin-bottom: 20px; */
         }
 
         .section-title {
@@ -81,34 +71,32 @@
             padding-right: 5px;
         }
 
-        .line {
+        /* STICKY DESIGN: Input style to stay on top of the line */
+        .line, .dotted-line {
             flex-grow: 1;
-            border-bottom: 1px solid #000;
-            height: 1px;
-            margin-bottom: 4px;
+            height: 1.2em; /* Keeps the line height consistent */
+            display: flex;
+            align-items: flex-end;
         }
 
-        .dotted-line {
-            flex-grow: 1;
-            border-bottom: 1px dotted #000;
-            height: 1px;
-            margin-bottom: 4px;
+        .line { border-bottom: 1px solid #000; }
+        .dotted-line { border-bottom: 1px dotted #000; }
+
+        input[type="text"] {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: 'arial', sans-serif;
+            font-size: 13px;
+            padding: 0;
+            margin-bottom: -2px; /* Pulls text slightly closer to the line */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-        }
-
-        .checkbox-group {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 5px;
         }
     </style>
 </head>
@@ -126,11 +114,11 @@
         <div class="time-box">
             <div class="flex-cell">
                 <span class="label">Time Admission :</span>
-                <div class="line"></div>
+                <div class="line"><input type="text" id="input1" name="input1"></div>
             </div>
             <div class="flex-cell">
                 <span class="label">Date :</span>
-                <div class="line"></div>
+                <div class="line"><input type="text" id="input2" name="input2"></div>
             </div>
         </div>
 
@@ -141,49 +129,48 @@
             <tr>
                 <td style="width: 70%;">
                     <div class="flex-cell"><span class="label">Name of Patient :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input3" name="input3"></div>
                     </div>
                 </td>
                 <td>
                     <div class="flex-cell"><span class="label">Age :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input4" name="input4"></div>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="flex-cell"><span class="label">Name of the Relative :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input5" name="input5"></div>
                     </div>
                 </td>
                 <td>
                     <div class="flex-cell"><span class="label">Date of Birth :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input6" name="input6"></div>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="flex-cell"><span class="label">Name of Ref. Dr. :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input7" name="input7"></div>
                     </div>
                 </td>
                 <td>
-                    <div class="flex-cell"><span class="label">Marital Status :</span><span
-                            style="font-size: 11px;">Married / Unmarried</span></div>
+                    <div class="flex-cell"><span class="label">Marital Status :</span><span style="font-size: 11px;">Married / Unmarried</span></div>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="flex-cell"><span class="label">Name of Attending Dr. :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input8" name="input8"></div>
                     </div>
                 </td>
                 <td>
                     <div class="flex-cell">
                         <span class="label">Gender :</span>
-                        <input type="checkbox"> Male
-                        <input type="checkbox" style="margin-left: 10px;"> Female
+                        <input type="checkbox" id="input9" name="input9"> Male
+                        <input type="checkbox" id="input10" name="input10" style="margin-left: 10px;"> Female
                     </div>
                 </td>
             </tr>
@@ -192,31 +179,31 @@
         <div class="section-title">(B) Permanent Address</div>
         <div class="flex-cell">
             <span class="label">Address :</span>
-            <div class="line"></div>
+            <div class="line"><input type="text" id="input11" name="input11"></div>
         </div>
         <div class="flex-cell">
-            <div class="line" style="margin-top: 15px;"></div>
+            <div class="line" style="margin-top: 15px;"><input type="text" id="input12" name="input12"></div>
         </div>
         <table style="margin-top: 5px;">
             <tr>
                 <td style="width: 35%;">
                     <div class="flex-cell"><span class="label">City :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input13" name="input13"></div>
                     </div>
                 </td>
                 <td style="width: 20%; padding: 0 5px;">
                     <div class="flex-cell"><span class="label">Pin code :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input14" name="input14"></div>
                     </div>
                 </td>
                 <td style="width: 20%; padding: 0 5px;">
                     <div class="flex-cell"><span class="label">Dist :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input15" name="input15"></div>
                     </div>
                 </td>
                 <td>
                     <div class="flex-cell"><span class="label">State :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input16" name="input16"></div>
                     </div>
                 </td>
             </tr>
@@ -227,24 +214,24 @@
             <tr>
                 <td style="width: 33%;">
                     <div class="flex-cell"><span class="label">STD Code :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input17" name="input17"></div>
                     </div>
                 </td>
                 <td style="width: 33%; padding: 0 5px;">
                     <div class="flex-cell"><span class="label">(R)</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input18" name="input18"></div>
                     </div>
                 </td>
                 <td style="width: 34%;">
                     <div class="flex-cell"><span class="label">(O)</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input19" name="input19"></div>
                     </div>
                 </td>
             </tr>
         </table>
         <div class="flex-cell">
             <span class="label">E-mail</span>
-            <div class="line"></div>
+            <div class="line"><input type="text" id="input20" name="input20"></div>
         </div>
 
         <div class="section-title">Contact No. of Relative</div>
@@ -252,34 +239,34 @@
             <tr>
                 <td style="width: 45%;padding: 0;">
                     <div class="flex-cell"><span class="label">(1) Name :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input21" name="input21"></div>
                     </div>
                 </td>
                 <td style="width: 25%; padding: 0 5px;">
                     <div class="flex-cell"><span class="label">Contact No.</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input22" name="input22"></div>
                     </div>
                 </td>
                 <td>
                     <div class="flex-cell"><span class="label">Relation with patient</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input23" name="input23"></div>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 0">
                     <div class="flex-cell"><span class="label">(2) Name :</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input24" name="input24"></div>
                     </div>
                 </td>
                 <td style="padding: 0 5px;">
                     <div class="flex-cell"><span class="label">Contact No.</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input25" name="input25"></div>
                     </div>
                 </td>
                 <td>
                     <div class="flex-cell"><span class="label">Relation with patient</span>
-                        <div class="line"></div>
+                        <div class="line"><input type="text" id="input26" name="input26"></div>
                     </div>
                 </td>
             </tr>
@@ -287,97 +274,47 @@
 
         <div class="section-title">(E.) Consent</div>
         <div style="line-height: 2.2; text-align: justify;">
-            I <div style="display: inline-block; border-bottom: 1px solid #000; width: 300px; height: 1px;"></div> have
-            been informed that there are inherent risk involved in the treatment/procedure. I have signed this consent
-            voluntarily out of my free will without any pressure and in my full senses.
+            I <div style="display: inline-block; border-bottom: 1px solid #000; width: 300px;">
+                <input type="text" id="input27" name="input27" style="margin-bottom: -5px;">
+            </div> have been informed that there are inherent risk involved in the treatment/procedure. I have signed this consent voluntarily out of my free will without any pressure and in my full senses.
         </div>
 
         <div style="display: flex; align-items: center; margin-top: 25px; font-family: 'Poppins', sans-serif;">
             <div style="white-space: nowrap; font-weight: 600; padding-right: 15px; font-size: 13px;">
                 Pain score given by Patient :
             </div>
-
             <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center;">
-                <!-- <div
-                    style="font-size: 9px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; color: #333;">
-                    Wong-Baker FACES™ Pain Rating Scale</div> -->
-
                 <div style="display: flex; justify-content: space-between; width: 100%; max-width: 550px;">
-
                     <div style="text-align:center; width: 60px;">
-                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-                            <line x1="9" y1="9" x2="9.01" y2="9" />
-                            <line x1="15" y1="9" x2="15.01" y2="9" />
-                        </svg>
+                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
                         <div style="font-weight: bold; margin-top: 2px; ">0</div>
                         <div style="font-size: 8px; line-height: 1.1;">No<br>Hurt</div>
                     </div>
-
                     <div style="text-align:center; width: 60px;">
-                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M8 15s1.5 1 4 1 4-1 4-1" />
-                            <line x1="9" y1="9" x2="9.01" y2="9" />
-                            <line x1="15" y1="9" x2="15.01" y2="9" />
-                        </svg>
+                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 15s1.5 1 4 1 4-1 4-1" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
                         <div style="font-weight: bold; margin-top: 2px; ">2</div>
                         <div style="font-size: 8px; line-height: 1.1;">Hurts<br>Little Bit</div>
                     </div>
-
                     <div style="text-align:center; width: 60px;">
-                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="8" y1="15" x2="16" y2="15" />
-                            <line x1="9" y1="9" x2="9.01" y2="9" />
-                            <line x1="15" y1="9" x2="15.01" y2="9" />
-                        </svg>
+                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><line x1="8" y1="15" x2="16" y2="15" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
                         <div style="font-weight: bold; margin-top: 2px;">4</div>
                         <div style="font-size: 8px; line-height: 1.1;">Hurts<br>Little More</div>
                     </div>
-
                     <div style="text-align:center; width: 60px;">
-                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M16 16s-1.5-2-4-2-4 2-4 2" />
-                            <line x1="9" y1="9" x2="9.01" y2="9" />
-                            <line x1="15" y1="9" x2="15.01" y2="9" />
-                        </svg>
+                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M16 16s-1.5-2-4-2-4 2-4 2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
                         <div style="font-weight: bold; margin-top: 2px; ">6</div>
                         <div style="font-size: 8px; line-height: 1.1;">Hurts<br>Even More</div>
                     </div>
-
                     <div style="text-align:center; width: 60px;">
-                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M16 17s-1.5-3-4-3-4 3-4 3" />
-                            <line x1="9" y1="9" x2="9.01" y2="9" />
-                            <line x1="15" y1="9" x2="15.01" y2="9" />
-                        </svg>
+                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M16 17s-1.5-3-4-3-4 3-4 3" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
                         <div style="font-weight: bold; margin-top: 2px; ">8</div>
                         <div style="font-size: 8px; line-height: 1.1;">Hurts<br>Whole Lot</div>
                     </div>
-
                     <div style="text-align:center; width: 60px;">
-                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M16 18s-1.5-4-4-4-4 4-4 4" />
-                            <path d="M9 9l.01 0" />
-                            <path d="M15 9l.01 0" />
-                            <path d="M9 11s.5-1 1-1" />
-                            <path d="M14 10s.5 1 1 1" />
-                        </svg>
+                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M16 18s-1.5-4-4-4-4 4-4 4" /><path d="M9 9l.01 0" /><path d="M15 9l.01 0" /><path d="M9 11s.5-1 1-1" /><path d="M14 10s.5 1 1 1" /></svg>
                         <div style="font-weight: bold; margin-top: 2px; ">10</div>
                         <div style="font-size: 8px; line-height: 1.1;">Hurts<br>Worst</div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -387,9 +324,9 @@
                 <td>
                     <div class="flex-cell">
                         <span class="label">Is patient diabetic?</span>
-                        <input type="checkbox" style="margin-left: 10px;"> Yes
-                        <input type="checkbox" style="margin-left: 10px;"> No
-                        <input type="checkbox" style="margin-left: 10px;"> Don't know
+                        <input type="checkbox" id="input28" name="input28" style="margin-left: 10px;"> Yes
+                        <input type="checkbox" id="input29" name="input29" style="margin-left: 10px;"> No
+                        <input type="checkbox" id="input30" name="input30" style="margin-left: 10px;"> Don't know
                     </div>
                 </td>
             </tr>
@@ -398,23 +335,23 @@
         <div style="margin-top: 30px;">
             <div class="flex-cell">
                 <span class="label">Patient's Name :</span>
-                <div class="dotted-line"></div>
+                <div class="dotted-line"><input type="text" id="input31" name="input31"></div>
             </div>
             <table style="margin-top: 0px;">
                 <tr>
                     <td style="width: 40%;">
                         <div class="flex-cell"><span class="label">Relative's Name :</span>
-                            <div class="dotted-line"></div>
+                            <div class="dotted-line"><input type="text" id="input32" name="input32"></div>
                         </div>
                     </td>
                     <td style="width: 35%; padding: 0 10px;">
                         <div class="flex-cell"><span class="label">Relation with Patient :</span>
-                            <div class="dotted-line"></div>
+                            <div class="dotted-line"><input type="text" id="input33" name="input33"></div>
                         </div>
                     </td>
                     <td>
                         <div class="flex-cell"><span class="label">Sign. :</span>
-                            <div class="dotted-line"></div>
+                            <div class="dotted-line"><input type="text" id="input34" name="input34"></div>
                         </div>
                     </td>
                 </tr>

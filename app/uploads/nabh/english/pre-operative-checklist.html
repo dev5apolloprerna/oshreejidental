@@ -10,12 +10,12 @@
         * {
             box-sizing: border-box;
             -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         body {
             font-family: Arial, sans-serif;
             font-size: 11.5px;
-            /* Slightly smaller to fit everything */
             margin: 0;
             padding: 0;
             background-color: #f0f0f0;
@@ -33,6 +33,7 @@
             background: white;
             padding: 15px;
             border: 2px solid #000;
+            position: relative;
         }
 
         table {
@@ -49,6 +50,7 @@
         td {
             padding: 3px 2px;
             vertical-align: middle;
+            position: relative; /* Added for absolute positioning of inputs */
         }
 
         .header-box {
@@ -81,6 +83,7 @@
             border-bottom: 1px solid black;
             display: inline-block;
             min-height: 14px;
+            position: relative; /* Added */
         }
 
         .checkbox-cell {
@@ -98,22 +101,38 @@
             border-right: 1px solid black;
         }
 
-        /* Print Specific Overrides */
-        @media print {
-            body {
-                background: none;
-            }
+        /* Zero-shift Input Styling */
+        .input-overlay {
+            position: absolute;
+            bottom: 1px;
+            left: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            padding: 0;
+            margin: 0;
+        }
 
+        /* Checkbox styling to match original '□' look */
+        .check-box {
+            width: 13px;
+            height: 13px;
+            margin: 0;
+            padding: 0;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        @media print {
+            body { background: none; }
             .page-container {
                 margin: 0;
                 border: 2px solid black;
                 width: 100%;
                 height: 98vh;
-                /* Force it to stay within viewport height */
-            }
-
-            .no-print {
-                display: none;
             }
         }
     </style>
@@ -131,42 +150,38 @@
 
         <table>
             <tr>
-                <td style="width: 40%;">Date of Surgery : <span class="input-line" style="width:130px"></span></td>
-                <td style="width: 35%;">Time of Surgery : <span class="input-line" style="width:100px"></span></td>
-                <td style="width: 25%;">Bed No. : <span class="input-line" style="width:70px"></span></td>
+                <td style="width: 40%;">Date of Surgery : <span class="input-line" style="width:130px"><input type="text" id="input1" name="input1" class="input-overlay"></span></td>
+                <td style="width: 35%;">Time of Surgery : <span class="input-line" style="width:100px"><input type="text" id="input2" name="input2" class="input-overlay"></span></td>
+                <td style="width: 25%;">Bed No. : <span class="input-line" style="width:70px"><input type="text" id="input3" name="input3" class="input-overlay"></span></td>
             </tr>
         </table>
         <table style="margin-top:-5px">
             <tr>
-                <td>Name of Surgeon : <span class="input-line" style="width:80%"></span></td>
+                <td colspan="3">Name of Surgeon : <span class="input-line" style="width:80%"><input type="text" id="input4" name="input4" class="input-overlay"></span></td>
             </tr>
             <tr>
-                <td>Name of Anesthetist : <span class="input-line" style="width:50%"></span></td>
-                <td style="text-align:right">Height : <span class="input-line" style="width:60px"></span> cm</td>
+                <td>Name of Anesthetist : <span class="input-line" style="width:50%"><input type="text" id="input5" name="input5" class="input-overlay"></span></td>
+                <td style="text-align:right">Height : <span class="input-line" style="width:60px"><input type="text" id="input6" name="input6" class="input-overlay"></span> cm</td>
             </tr>
             <tr>
-                <td>Name of Surgery / Procedure : <span class="input-line" style="width:50%"></span></td>
-                <td style="text-align:right">Weight : <span class="input-line" style="width:60px"></span> kg</td>
+                <td>Name of Surgery / Procedure : <span class="input-line" style="width:50%"><input type="text" id="input7" name="input7" class="input-overlay"></span></td>
+                <td style="text-align:right">Weight : <span class="input-line" style="width:60px"><input type="text" id="input8" name="input8" class="input-overlay"></span> kg</td>
             </tr>
         </table>
 
         <table class="main-border">
             <tr>
-                <td class="border-right" style="width:25%">High Risk : &nbsp; □ Yes <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
-                <td class="border-right" style="width:25%">HIV +ve : &nbsp;&nbsp; □ Yes <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
-                <td class="border-right" style="width:25%">HbsAg +ve : □ Yes <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
-                <td style="width:25%">Anti HCV +ve : □ Yes <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; □ No</td>
+                <td class="border-right" style="width:25%">High Risk : &nbsp; <input type="checkbox" id="input9" name="input9" class="check-box"> Yes <input type="checkbox" id="input10" name="input10" class="check-box"> No</td>
+                <td class="border-right" style="width:25%">HIV +ve : &nbsp;&nbsp; <input type="checkbox" id="input11" name="input11" class="check-box"> Yes <input type="checkbox" id="input12" name="input12" class="check-box"> No</td>
+                <td class="border-right" style="width:25%">HbsAg +ve : <input type="checkbox" id="input13" name="input13" class="check-box"> Yes <input type="checkbox" id="input14" name="input14" class="check-box"> No</td>
+                <td style="width:25%">Anti HCV +ve : <input type="checkbox" id="input15" name="input15" class="check-box"> Yes <input type="checkbox" id="input16" name="input16" class="check-box"> No</td>
             </tr>
         </table>
 
         <table style="margin: 2px 0;">
             <tr>
-                <td>Allergy : <span class="input-line" style="width:250px"></span></td>
-                <td>Diagnosis : <span class="input-line" style="width:250px"></span></td>
+                <td>Allergy : <span class="input-line" style="width:250px"><input type="text" id="input17" name="input17" class="input-overlay"></span></td>
+                <td>Diagnosis : <span class="input-line" style="width:250px"><input type="text" id="input18" name="input18" class="input-overlay"></span></td>
             </tr>
         </table>
 
@@ -182,45 +197,45 @@
                         </tr>
                         <tr>
                             <td>Biopsy Report</td>
-                            <td style="text-align:center">□</td>
-                            <td style="text-align:center">□</td>
-                            <td><span class="input-line" style="width:90%"></span></td>
+                            <td style="text-align:center"><input type="checkbox" id="input19" name="input19" class="check-box"></td>
+                            <td style="text-align:center"><input type="checkbox" id="input20" name="input20" class="check-box"></td>
+                            <td><span class="input-line" style="width:90%"><input type="text" id="input21" name="input21" class="input-overlay"></span></td>
                         </tr>
                         <tr>
                             <td>Lab Reports</td>
-                            <td style="text-align:center">□</td>
-                            <td style="text-align:center">□</td>
-                            <td><span class="input-line" style="width:90%"></span></td>
+                            <td style="text-align:center"><input type="checkbox" id="input22" name="input22" class="check-box"></td>
+                            <td style="text-align:center"><input type="checkbox" id="input23" name="input23" class="check-box"></td>
+                            <td><span class="input-line" style="width:90%"><input type="text" id="input24" name="input24" class="input-overlay"></span></td>
                         </tr>
                         <tr>
                             <td>X-Ray</td>
-                            <td style="text-align:center">□</td>
-                            <td style="text-align:center">□</td>
-                            <td><span class="input-line" style="width:90%"></span></td>
+                            <td style="text-align:center"><input type="checkbox" id="input25" name="input25" class="check-box"></td>
+                            <td style="text-align:center"><input type="checkbox" id="input26" name="input26" class="check-box"></td>
+                            <td><span class="input-line" style="width:90%"><input type="text" id="input27" name="input27" class="input-overlay"></span></td>
                         </tr>
                         <tr>
                             <td>USG</td>
-                            <td style="text-align:center">□</td>
-                            <td style="text-align:center">□</td>
-                            <td><span class="input-line" style="width:90%"></span></td>
+                            <td style="text-align:center"><input type="checkbox" id="input28" name="input28" class="check-box"></td>
+                            <td style="text-align:center"><input type="checkbox" id="input29" name="input29" class="check-box"></td>
+                            <td><span class="input-line" style="width:90%"><input type="text" id="input30" name="input30" class="input-overlay"></span></td>
                         </tr>
                         <tr>
                             <td>CT Scan</td>
-                            <td style="text-align:center">□</td>
-                            <td style="text-align:center">□</td>
-                            <td><span class="input-line" style="width:90%"></span></td>
+                            <td style="text-align:center"><input type="checkbox" id="input31" name="input31" class="check-box"></td>
+                            <td style="text-align:center"><input type="checkbox" id="input32" name="input32" class="check-box"></td>
+                            <td><span class="input-line" style="width:90%"><input type="text" id="input33" name="input33" class="input-overlay"></span></td>
                         </tr>
                         <tr>
                             <td>MRI</td>
-                            <td style="text-align:center">□</td>
-                            <td style="text-align:center">□</td>
-                            <td><span class="input-line" style="width:90%"></span></td>
+                            <td style="text-align:center"><input type="checkbox" id="input34" name="input34" class="check-box"></td>
+                            <td style="text-align:center"><input type="checkbox" id="input35" name="input35" class="check-box"></td>
+                            <td><span class="input-line" style="width:90%"><input type="text" id="input36" name="input36" class="input-overlay"></span></td>
                         </tr>
                         <tr>
                             <td>Doppler</td>
-                            <td style="text-align:center">□</td>
-                            <td style="text-align:center">□</td>
-                            <td><span class="input-line" style="width:90%"></span></td>
+                            <td style="text-align:center"><input type="checkbox" id="input37" name="input37" class="check-box"></td>
+                            <td style="text-align:center"><input type="checkbox" id="input38" name="input38" class="check-box"></td>
+                            <td><span class="input-line" style="width:90%"><input type="text" id="input39" name="input39" class="input-overlay"></span></td>
                         </tr>
                     </table>
                 </td>
@@ -228,36 +243,36 @@
                     <table style="margin:0">
                         <tr class="border-bottom">
                             <td style="font-weight: bold;">LATEST VITALS</td>
-                            <td colspan="2">Time : <span class="input-line" style="width:80px"></span></td>
+                            <td colspan="2">Time : <span class="input-line" style="width:80px"><input type="text" id="input40" name="input40" class="input-overlay"></span></td>
                         </tr>
                         <tr>
                             <td>Temperature:</td>
-                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td><span class="input-line" style="width:80px"><input type="text" id="input41" name="input41" class="input-overlay"></span></td>
                             <td>°F</td>
                         </tr>
                         <tr>
                             <td>Pulse :</td>
-                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td><span class="input-line" style="width:80px"><input type="text" id="input42" name="input42" class="input-overlay"></span></td>
                             <td>/ Min</td>
                         </tr>
                         <tr>
                             <td>Respiration :</td>
-                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td><span class="input-line" style="width:80px"><input type="text" id="input43" name="input43" class="input-overlay"></span></td>
                             <td>/ Min</td>
                         </tr>
                         <tr>
                             <td>B. P. :</td>
-                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td><span class="input-line" style="width:80px"><input type="text" id="input44" name="input44" class="input-overlay"></span></td>
                             <td>mm of Hg</td>
                         </tr>
                         <tr>
                             <td>SpO2 :</td>
-                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td><span class="input-line" style="width:80px"><input type="text" id="input45" name="input45" class="input-overlay"></span></td>
                             <td>%</td>
                         </tr>
                         <tr>
                             <td>RBS (If ordered) :</td>
-                            <td><span class="input-line" style="width:80px"></span></td>
+                            <td><span class="input-line" style="width:80px"><input type="text" id="input46" name="input46" class="input-overlay"></span></td>
                             <td>mg / dl</td>
                         </tr>
                     </table>
@@ -273,8 +288,8 @@
             </tr>
             <tr class="border-bottom">
                 <td>1) Patient have ID Band with IP No</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input47" name="input47" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input48" name="input48" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>2) Consent for Operation / Procedure taken<br>
@@ -283,23 +298,23 @@
                         3) Special Consent for Amputation | 4) Consent for Blood Product Transfusion
                     </div>
                 </td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input49" name="input49" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input50" name="input50" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>3) OT Clearance done</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input51" name="input51" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input52" name="input52" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>4) Physician reference done</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input53" name="input53" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input54" name="input54" class="check-box"></td>
             </tr>
             <tr>
                 <td>5) Preoperative anaesthetic check up done</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input55" name="input55" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input56" name="input56" class="check-box"></td>
             </tr>
         </table>
 
@@ -312,85 +327,83 @@
             <tr class="border-bottom">
                 <td>1) Any specific medication ordered by Surgeon / Physician / Anesthetist <br><span
                         style="font-size:10px">(if yes, Name it: <span class="input-line"
-                            style="width:300px"></span>)</span></td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                            style="width:300px"><input type="text" id="input57" name="input57" class="input-overlay"></span>)</span></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input58" name="input58" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input59" name="input59" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>2) Any specific medication omitted by Surgeon / Physician / Anesthetist <br><span
                         style="font-size:10px">(if yes, Name it: <span class="input-line"
-                            style="width:300px"></span>)</span></td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                            style="width:300px"><input type="text" id="input60" name="input60" class="input-overlay"></span>)</span></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input61" name="input61" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input62" name="input62" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
-                <td>3) NBM from : <span class="input-line" style="width:100px"></span> am / pm. Date : <span
-                        class="input-line" style="width:100px"></span></td>
+                <td>3) NBM from : <span class="input-line" style="width:100px"><input type="text" id="input63" name="input63" class="input-overlay"></span> am / pm. Date : <span
+                        class="input-line" style="width:100px"><input type="text" id="input64" name="input64" class="input-overlay"></span></td>
                 <td colspan="2"></td>
             </tr>
             <tr class="border-bottom">
                 <td>4) Preparation of operating part by Betadine / Savlon done.</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input65" name="input65" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input66" name="input66" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>5) Shaving of operating part done.</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input67" name="input67" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input68" name="input68" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>6) Operative site is marked / mentioned right or left.</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input69" name="input69" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input70" name="input70" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>7) Prosthesis / Denture / Ornaments / Contact lens / Nail Polish / Lip stick Removed.</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input71" name="input71" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input72" name="input72" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>8) OT dress (Undergarments Removed)</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input73" name="input73" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input74" name="input74" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
-                <td>9) Urine Voided / Bag Emptied with <span class="input-line" style="width:50px"></span> ml urine (if
+                <td>9) Urine Voided / Bag Emptied with <span class="input-line" style="width:50px"><input type="text" id="input75" name="input75" class="input-overlay"></span> ml urine (if
                     catheterized)</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input76" name="input76" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input77" name="input77" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>10) Bowel Preparation done / Enema / Bowel wash / Laxative</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input78" name="input78" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input79" name="input79" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>11) Mouth care - gargles prescribed.</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input80" name="input80" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input81" name="input81" class="check-box"></td>
             </tr>
             <tr class="border-bottom">
                 <td>12) PCV required</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input82" name="input82" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input83" name="input83" class="check-box"></td>
             </tr>
             <tr>
                 <td>13) PCV ready in Blood bank / in Hospital.</td>
-                <td class="checkbox-cell">□</td>
-                <td class="checkbox-cell">□</td>
+                <td class="checkbox-cell"><input type="checkbox" id="input84" name="input84" class="check-box"></td>
+                <td class="checkbox-cell"><input type="checkbox" id="input85" name="input85" class="check-box"></td>
             </tr>
         </table>
 
         <table style="margin-top: 5px;">
             <tr>
-                <td style="width:40%">Dentist / assistant : <span class="input-line" style="width:150px"></span></td>
-                <td style="width:40%">Sign with E.ID: <span class="input-line" style="width:150px"></span></td>
-                <td style="width:20%">Time : <span class="input-line" style="width:70px"></span></td>
+                <td style="width:40%">Dentist / assistant : <span class="input-line" style="width:150px"><input type="text" id="input86" name="input86" class="input-overlay"></span></td>
+                <td style="width:40%">Sign with E.ID: <span class="input-line" style="width:150px"><input type="text" id="input87" name="input87" class="input-overlay"></span></td>
+                <td style="width:20%">Time : <span class="input-line" style="width:70px"><input type="text" id="input88" name="input88" class="input-overlay"></span></td>
             </tr>
         </table>
     </div>
-
-  
 
 </body>
 

@@ -41,7 +41,7 @@
             margin: auto;
             padding: 15mm;
             box-sizing: border-box;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
             page-break-after: always;
             break-after: page;
         }
@@ -151,7 +151,7 @@
 
         .endorsement-table td {
             font-size: 18px;
-            height: 48px;
+            height: 40px;
         }
 
         .col-sr {
@@ -177,6 +177,33 @@
         .gu-font {
             font-family: "Noto Sans Gujarati", "Shruti", "Nirmala UI", sans-serif;
         }
+
+        .blank-line input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            font: inherit;
+            line-height: inherit;
+            padding: 0;
+            margin: 0;
+            height: 1.2em;
+            /* keeps baseline consistent */
+        }
+
+        /* Endorsement table inputs (no layout change) */
+        .endorsement-table td input {
+            width: 80%;
+            height: 80%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            font: inherit;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            display: block;
+        }
     </style>
 </head>
 
@@ -191,7 +218,9 @@
                     <h2 class="h2-title">Diagnosis</h2>
                     <p class="p">
                         On careful oral examination and study of my dental condition,
-                        Dr.<span class="blank-line">&nbsp;</span>
+                        Dr.<span class="blank-line"><input type="text" id="doctor_name" name="doctor_name"
+                                value=""></span>
+
                         has advised me that I have periodontal (gum) disease. I understand that periodontal disease
                         weakens support of my teeth by separating the gum from the teeth and can also be destructive for
                         the bone that supports the teeth. This separation of the gums (pockets) allows for greater
@@ -362,9 +391,13 @@
                     </p>
 
                     <div class="sign-block">
-                        <div class="sign-row">Date:<span class="sign-line"></span></div>
-                        <div class="sign-row">Patient:<span class="sign-line"></span></div>
-                        <div class="sign-row">Signature:<span class="sign-line"></span></div>
+                        <div class="sign-row">Date:<span class="sign-line"><input type="text" id="input1" name="input1"
+                                    value="" style="border: none;"></span></div>
+                        <div class="sign-row">Patient:<span class="sign-line"><input type="text" id="patient_name"
+                                    name="patient_name" value="" style="border: none;"></span></div>
+                        <div class="sign-row">Signature:<span class="sign-line"><input type="text" id="input2"
+                                    name="input2" value="" style="border: none;"></span></div>
+
                     </div>
                 </td>
             </tr>
@@ -386,95 +419,96 @@
             <tbody>
                 <tr>
                     <td class="sr-num">1.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input3" name="input3" value=""></td>
+                    <td><input type="text" id="input4" name="input4" value=""></td>
+                    <td><input type="text" id="input5" name="input5" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">2.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input6" name="input6" value=""></td>
+                    <td><input type="text" id="input7" name="input7" value=""></td>
+                    <td><input type="text" id="input8" name="input8" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">3.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input9" name="input9" value=""></td>
+                    <td><input type="text" id="input10" name="input10" value=""></td>
+                    <td><input type="text" id="input11" name="input11" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">4.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input12" name="input12" value=""></td>
+                    <td><input type="text" id="input13" name="input13" value=""></td>
+                    <td><input type="text" id="input14" name="input14" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">5.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input15" name="input15" value=""></td>
+                    <td><input type="text" id="input16" name="input16" value=""></td>
+                    <td><input type="text" id="input17" name="input17" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">6.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input18" name="input18" value=""></td>
+                    <td><input type="text" id="input19" name="input19" value=""></td>
+                    <td><input type="text" id="input20" name="input20" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">7.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input21" name="input21" value=""></td>
+                    <td><input type="text" id="input22" name="input22" value=""></td>
+                    <td><input type="text" id="input23" name="input23" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">8.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input24" name="input24" value=""></td>
+                    <td><input type="text" id="input25" name="input25" value=""></td>
+                    <td><input type="text" id="input26" name="input26" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">9.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input27" name="input27" value=""></td>
+                    <td><input type="text" id="input28" name="input28" value=""></td>
+                    <td><input type="text" id="input29" name="input29" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">10.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input30" name="input30" value=""></td>
+                    <td><input type="text" id="input31" name="input31" value=""></td>
+                    <td><input type="text" id="input32" name="input32" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">11.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input33" name="input33" value=""></td>
+                    <td><input type="text" id="input34" name="input34" value=""></td>
+                    <td><input type="text" id="input35" name="input35" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">12.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input36" name="input36" value=""></td>
+                    <td><input type="text" id="input37" name="input37" value=""></td>
+                    <td><input type="text" id="input38" name="input38" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">13.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input39" name="input39" value=""></td>
+                    <td><input type="text" id="input40" name="input40" value=""></td>
+                    <td><input type="text" id="input41" name="input41" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">14.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input42" name="input42" value=""></td>
+                    <td><input type="text" id="input43" name="input43" value=""></td>
+                    <td><input type="text" id="input44" name="input44" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">15.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input45" name="input45" value=""></td>
+                    <td><input type="text" id="input46" name="input46" value=""></td>
+                    <td><input type="text" id="input47" name="input47" value=""></td>
                 </tr>
             </tbody>
+
         </table>
     </div>
 
@@ -485,7 +519,8 @@
 
         <p class="p">
             મારા દાંતની સ્થિતિનું કાળજીપૂર્વક મૌખિક પરીક્ષણ અને અભ્યાસ કર્યા પછી,
-            ડૉ. <span class="blank-line">&nbsp;</span>
+            ડૉ. Dr.<span class="blank-line"><input type="text" id="doctor_name" name="doctor_name" value=""></span>
+
             એ મને સલાહ આપી છે કે મને પેરીઓડોન્ટલ (મસૂડા) રોગ છે.
             હું સમજું છું કે પેરીઓડોન્ટલ રોગ મસૂડાને દાંતથી અલગ કરી દાંતના આધારને નબળો બનાવે છે
             અને દાંતને આધાર આપતી હાડકીને પણ નુકસાન પહોંચાડી શકે છે.
@@ -701,15 +736,18 @@
         <div class="sign-block">
 
             <div class="sign-row">
-                તારીખ:<span class="sign-line"></span>
+                તારીખ:<span class="sign-line"><input type="text" id="input48" name="input48" value=""
+                        style="border: none;"></span>
             </div>
 
             <div class="sign-row">
-                દર્દીનું નામ:<span class="sign-line"></span>
+                દર્દીનું નામ:<span class="sign-line"><input type="text" id="input49" name="input49" value=""
+                        style="border: none;"></span>
             </div>
 
             <div class="sign-row">
-                સહી:<span class="sign-line"></span>
+                સહી:<span class="sign-line"><input type="text" id="input50" name="input50" value=""
+                        style="border: none;"></span>
             </div>
 
         </div>
@@ -730,95 +768,96 @@
             <tbody>
                 <tr>
                     <td class="sr-num">1.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input51" name="input51" value=""></td>
+                    <td><input type="text" id="input52" name="input52" value=""></td>
+                    <td><input type="text" id="input53" name="input53" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">2.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input54" name="input54" value=""></td>
+                    <td><input type="text" id="input55" name="input55" value=""></td>
+                    <td><input type="text" id="input56" name="input56" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">3.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input57" name="input57" value=""></td>
+                    <td><input type="text" id="input58" name="input58" value=""></td>
+                    <td><input type="text" id="input59" name="input59" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">4.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input60" name="input60" value=""></td>
+                    <td><input type="text" id="input61" name="input61" value=""></td>
+                    <td><input type="text" id="input62" name="input62" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">5.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input63" name="input63" value=""></td>
+                    <td><input type="text" id="input64" name="input64" value=""></td>
+                    <td><input type="text" id="input65" name="input65" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">6.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input66" name="input66" value=""></td>
+                    <td><input type="text" id="input67" name="input67" value=""></td>
+                    <td><input type="text" id="input68" name="input68" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">7.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input69" name="input69" value=""></td>
+                    <td><input type="text" id="input70" name="input70" value=""></td>
+                    <td><input type="text" id="input71" name="input71" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">8.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input72" name="input72" value=""></td>
+                    <td><input type="text" id="input73" name="input73" value=""></td>
+                    <td><input type="text" id="input74" name="input74" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">9.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input75" name="input75" value=""></td>
+                    <td><input type="text" id="input76" name="input76" value=""></td>
+                    <td><input type="text" id="input77" name="input77" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">10.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input78" name="input78" value=""></td>
+                    <td><input type="text" id="input79" name="input79" value=""></td>
+                    <td><input type="text" id="input80" name="input80" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">11.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input81" name="input81" value=""></td>
+                    <td><input type="text" id="input82" name="input82" value=""></td>
+                    <td><input type="text" id="input83" name="input83" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">12.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input84" name="input84" value=""></td>
+                    <td><input type="text" id="input85" name="input85" value=""></td>
+                    <td><input type="text" id="input86" name="input86" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">13.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input87" name="input87" value=""></td>
+                    <td><input type="text" id="input88" name="input88" value=""></td>
+                    <td><input type="text" id="input89" name="input89" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">14.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input90" name="input90" value=""></td>
+                    <td><input type="text" id="input91" name="input91" value=""></td>
+                    <td><input type="text" id="input92" name="input92" value=""></td>
                 </tr>
                 <tr>
                     <td class="sr-num">15.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" id="input93" name="input93" value=""></td>
+                    <td><input type="text" id="input94" name="input94" value=""></td>
+                    <td><input type="text" id="input95" name="input95" value=""></td>
                 </tr>
             </tbody>
+
         </table>
     </div>
 
