@@ -1458,6 +1458,7 @@ if (!empty($check_prescription_exists)) { ?>
       <div class="modal-body" style="height:80vh;">
         <iframe id="nabhPdfFrame" src="about:blank" style="width:100%; height:100%; border:0;"></iframe>
       </div>
+      
     </div>
   </div>
 </div>
@@ -1623,7 +1624,7 @@ function loadNabhList() {
               + '&patient_name=' + encodeURIComponent(window.__NABH_META__.patient_name)
               + '&doctor_name=' + encodeURIComponent(window.__NABH_META__.doctor_name)
 
-// console.log(viewUrl);
+
         html+='<tr>'
           +'<td>'+(i+1)+'</td>'
           +'<td>'+r.title_en+'</td>'
@@ -1631,6 +1632,9 @@ function loadNabhList() {
 
           +'<td>'
           +'<button class="btn btn-sm btn-primary" onclick="openNabhViewer(\''+viewUrl+'\')">View</button>'
+        // /*  +'<button class="btn btn-sm btn-success" onclick="printNabhForm(\''+ viewUrl +'\')"><i class="fa fa-print"></i> Print</button>'*/
++ '<button class="btn btn-sm btn-success" onclick="printNabhPdf('+ r.id +')">'
++ '<i class="fa-regular fa-file-pdf"></i> Print PDF</button>'
           +'</td></tr>';
       });
 
@@ -1638,6 +1642,41 @@ function loadNabhList() {
     },
   'json');
 }
+
+function printNabhPdf(nabhPdfId){
+  var lang = $('#nabhLang').val(); // en/gu
+  var meta = window.__NABH_META__ || {};
+
+  var url = admin_url + 'nabh/print_pdf'
+    + '?nabh_pdf_id=' + encodeURIComponent(nabhPdfId)
+    + '&lang=' + encodeURIComponent(lang)
+    + '&appointment_id=' + encodeURIComponent(meta.appointment_id || 0)
+    + '&appointment_type_id=' + encodeURIComponent(meta.appointment_type_id || 0)
+    + '&patient_id=' + encodeURIComponent(meta.patient_id || 0)
+    + '&doctor_id=' + encodeURIComponent(meta.doctor_id || 0)
+    + '&patient_name=' + encodeURIComponent(meta.patient_name || '')
+    + '&doctor_name=' + encodeURIComponent(meta.doctor_name || '');
+
+  window.open(url, '_blank');
+}
+// to print nabh form
+/*function printNabhForm(url){
+  // open the modal and load the form
+  openNabhViewer(url);
+
+  // wait iframe to load fully then print
+  var iframe = document.getElementById('nabhPdfFrame');
+
+  iframe.onload = function(){
+    try {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } catch(e){
+      console.error(e);
+      alert('Print blocked. Please allow popups/print permissions.');
+    }
+  };
+}*/
 
 function openNabhViewer(url){
   $('#nabhPdfFrame').attr('src',url);

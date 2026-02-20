@@ -304,4 +304,172 @@ window.__NABH_SAVED = {$savedJson};
     return $html . $script;
 }
 
+
+   public function print_pdf()
+{
+    $raw = file_get_contents('php://input');
+    $req = json_decode($raw, true);
+
+    if (!$req) {
+        $req = [
+            'nabh_pdf_id'         => (int)$this->input->get('nabh_pdf_id'),
+            'appointment_id'      => (int)$this->input->get('appointment_id'),
+            'appointment_type_id' => (int)$this->input->get('appointment_type_id'),
+            'patient_id'          => (int)$this->input->get('patient_id'),
+            'doctor_id'           => (int)$this->input->get('doctor_id'),
+            'lang'                => $this->input->get('lang') ?: 'en',
+            'patient_name'        => $this->input->get('patient_name') ?: '',
+            'doctor_name'         => $this->input->get('doctor_name') ?: '',
+            'form_data_json'      => [],
+        ];
+    }
+
+    $nabh_pdf_id    = (int)($req['nabh_pdf_id'] ?? 0);
+    $appointment_id = (int)($req['appointment_id'] ?? 0);
+    $lang           = (($req['lang'] ?? 'en') === 'gu') ? 'gu' : 'en';
+
+    if ($nabh_pdf_id <= 0 || $appointment_id <= 0) {
+        return $this->output
+            ->set_status_header(422)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status'=>false,'message'=>'Missing nabh_pdf_id / appointment_id']));
+    }
+
+    // master
+    $this->db->where('pdf_id', $nabh_pdf_id);
+    $master = $this->db->get(db_prefix().'nabh_master')->row();
+    if (!$master) return $this->output->set_status_header(404)->set_output('NABH master record not found');
+
+    $file = ($lang === 'gu') ? ($master->gujarati_file_name ?? '') : ($master->english_file_name ?? '');
+    if (empty($file)) return $this->output->set_status_header(404)->set_output('Template file not uploaded for selected language');
+
+    $baseUploads = FCPATH . 'uploads/nabh/';
+    $path = $baseUploads . ($lang === 'gu' ? 'gujarati/' : 'english/') . $file;
+    if (!file_exists($path)) return $this->output->set_status_header(404)->set_output('HTML template file missing: ' . $path);
+
+    $html = file_get_contents($path);
+
+    // saved json
+    $saved = $req['form_data_json'] ?? [];
+    if (!is_array($saved)) $saved = [];
+
+    if (empty($saved)) {
+        $this->db->where('nabh_pdf_id', $nabh_pdf_id);
+        $this->db->where('appointment_id', $appointment_id);
+        $this->db->where('lang', $lang);
+        $this->db->order_by('id', 'DESC');
+        $row = $this->db->get(db_prefix().'nabh_form_submissions')->row();
+
+        if ($row && !empty($row->form_data_json)) {
+            $decoded = json_decode($row->form_data_json, true);
+            if (is_array($decoded)) $saved = $decoded;
+        }
+
+        if (empty($req['patient_name']) && $row && !empty($row->patient_name)) $req['patient_name'] = $row->patient_name;
+        if (empty($req['doctor_name'])  && $row && !empty($row->doctor_name))  $req['doctor_name']  = $row->doctor_name;
+    }
+
+    $ctx = [
+        'patient_name' => $req['patient_name'] ?? '',
+        'doctor_name'  => $req['doctor_name'] ?? '',
+        'today_date'   => date('d/m/Y'),
+    ];
+
+    // inject global placeholders (if you use it)
+    if (method_exists($this, 'inject_global')) {
+        $html = $this->inject_global($html, $ctx, $saved);
+    }
+
+    // ✅ THE IMPORTANT LINE (server-side fill, because dompdf won't run JS)
+    $html = $this->apply_saved_to_html($html, $saved);
+
+    // render
+    $this->load->library('pdf');
+    $binary = $this->pdf->html_to_pdf_binary($html);
+
+    $title = ($lang === 'gu')
+        ? (!empty($master->pdf_name_gu) ? $master->pdf_name_gu : ($master->pdf_name ?? 'NABH'))
+        : ($master->pdf_name ?? 'NABH');
+
+    $filename = preg_replace('/[^A-Za-z0-9\-_]/', '_', $title) . '_' . date('Ymd_His') . '.pdf';
+
+    return $this->output
+        ->set_content_type('application/pdf')
+        ->set_header('Content-Disposition: inline; filename="'.$filename.'"')
+        ->set_output($binary);
+} 
+   private function apply_saved_to_html($html, array $saved)
+{
+    if (empty($saved)) return $html;
+
+    libxml_use_internal_errors(true);
+
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $xpath = new DOMXPath($dom);
+
+    foreach ($saved as $key => $val) {
+        $key = (string)$key;
+
+        // by name
+        foreach ($xpath->query("//input[@name='$key']") as $input) {
+            $type = strtolower($input->getAttribute('type'));
+            if ($type === 'checkbox') {
+                $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
+                $checked ? $input->setAttribute('checked','checked') : $input->removeAttribute('checked');
+            } elseif ($type === 'radio') {
+                ((string)$input->getAttribute('value') === (string)$val)
+                    ? $input->setAttribute('checked','checked')
+                    : $input->removeAttribute('checked');
+            } else {
+                $input->setAttribute('value', (string)$val);
+            }
+        }
+
+        foreach ($xpath->query("//textarea[@name='$key']") as $ta) {
+            while ($ta->firstChild) $ta->removeChild($ta->firstChild);
+            $ta->appendChild($dom->createTextNode((string)$val));
+        }
+
+        foreach ($xpath->query("//select[@name='$key']") as $sel) {
+            foreach ($xpath->query(".//option", $sel) as $opt) {
+                ((string)$opt->getAttribute('value') === (string)$val)
+                    ? $opt->setAttribute('selected','selected')
+                    : $opt->removeAttribute('selected');
+            }
+        }
+
+        // fallback by id (if your json keys are ids)
+        foreach ($xpath->query("//input[@id='$key']") as $input) {
+            $type = strtolower($input->getAttribute('type'));
+            if ($type === 'checkbox') {
+                $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
+                $checked ? $input->setAttribute('checked','checked') : $input->removeAttribute('checked');
+            } elseif ($type === 'radio') {
+                ((string)$input->getAttribute('value') === (string)$val)
+                    ? $input->setAttribute('checked','checked')
+                    : $input->removeAttribute('checked');
+            } else {
+                $input->setAttribute('value', (string)$val);
+            }
+        }
+
+        foreach ($xpath->query("//textarea[@id='$key']") as $ta) {
+            while ($ta->firstChild) $ta->removeChild($ta->firstChild);
+            $ta->appendChild($dom->createTextNode((string)$val));
+        }
+
+        foreach ($xpath->query("//select[@id='$key']") as $sel) {
+            foreach ($xpath->query(".//option", $sel) as $opt) {
+                ((string)$opt->getAttribute('value') === (string)$val)
+                    ? $opt->setAttribute('selected','selected')
+                    : $opt->removeAttribute('selected');
+            }
+        }
+    }
+
+    $out = $dom->saveHTML();
+    libxml_clear_errors();
+    return $out;
+}
 }
