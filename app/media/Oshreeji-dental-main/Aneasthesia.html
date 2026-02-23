@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anesthesia Note - Full Record</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 14px;
+            /* Optimized for A4 density */
+            margin: 0;
+            padding: 20px;
+            color: #000;
+            background: #fff;
+        }
+
+        /* Container ensures A4 width visually on screen */
+        .page-container {
+            max-width: 850px;
+            /* Slightly wider to fit the monitoring table */
+            margin: 0 auto;
+            background: white;
+        }
+
+        /* --- Layout & Utilities --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .layout-table td {
+            padding: 5px 2px;
+            vertical-align: bottom;
+            border: none;
+        }
+
+        /* Fillable lines */
+        .line {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            height: 16px;
+        }
+
+        .line-full {
+            width: 100%;
+        }
+
+        /* Addressograph Box */
+        .addressograph {
+            border: 2px solid #000;
+            border-radius: 15px;
+            width: 250px;
+            height: 80px;
+            text-align: center;
+            vertical-align: middle;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            float: right;
+            margin-bottom: 10px;
+            background: #fff;
+        }
+
+        /* Headings */
+        h2 {
+            text-align: center;
+            margin: 0;
+            padding-bottom: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        h3 {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* --- GRID TABLES (The ones with visible borders) --- */
+        .grid-table {
+            border: 1px solid #000;
+            margin-bottom: 15px;
+            font-size: 12px;
+            /* Smaller font for dense data tables */
+        }
+
+        .grid-table td,
+        .grid-table th {
+            border: 1px solid #000;
+            padding: 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .grid-table th {
+            font-weight: bold;
+        }
+
+        /* Specifics for the Monitoring Table columns */
+        .monitoring-table td {
+            height: 18px;
+        }
+
+        /* Specifics for Recovery Criteria Table */
+        .criteria-table td.text-left {
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .criteria-table td.bold {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .criteria-table tr.highlight {
+            background-color: #f0f0f0;
+        }
+
+        /* Optional for section headers */
+
+        /* --- PRINT CONTROLS --- */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .page-container {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .page-break {
+                page-break-before: always;
+                height: 0;
+                display: block;
+            }
+
+            /* Hide browser headers/footers */
+            @page {
+                margin: 1cm;
+                size: A4;
+            }
+        }
+
+        .lower-design-container {
+            font-family: "Times New Roman", Times, serif;
+            padding: 20px 0;
+            line-height: 2.5;
+            /* Creates vertical space between rows */
+        }
+
+        .form-row {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .label {
+            white-space: nowrap;
+            padding-right: 5px;
+            font-size: 16px;
+        }
+
+        .line {
+            border-bottom: 1px solid #000;
+            height: 1px;
+            display: inline-block;
+        }
+
+        /* Width Helpers */
+        .full-width {
+            flex-grow: 1;
+        }
+
+        .medium-width {
+            width: 180px;
+        }
+
+        .long-width {
+            width: 350px;
+        }
+
+        .signature-row {
+            margin-top: 30px;
+            /* Extra space for the signature area */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <table class="layout-table" style="margin-bottom: 10px;">
+            <tr>
+                <td style="vertical-align: bottom; width: 60%;"></td>
+                <td rowspan="2" style="vertical-align: top; text-align: right;">
+                    <div class="addressograph">Addressograph</div>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center; padding-right: 100px;">
+                    <h2>Aneasthesia Note</h2>
+                </td>
+            </tr>
+        </table>
+
+        <table class="layout-table">
+            <tr>
+                <td width="10%">Location:</td>
+                <td width="40%"><span class="line line-full"></span></td>
+                <td width="10%" style="padding-left: 20px;">Date:</td>
+                <td width="40%"><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td>Area:</td>
+                <td><span class="line line-full"></span></td>
+                <td colspan="2" style="text-align: center;">Routine / Emergency</td>
+            </tr>
+        </table>
+
+        <table class="layout-table">
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Name of Doctor:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Name of Procedure:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 10px; margin-bottom: 5px; font-weight: bold;">Pre Aneasthesia Assessment:</div>
+
+        <table class="layout-table">
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Medical Illness:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Primary Diagnosis:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+        </table>
+
+        <table class="layout-table">
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Airway Assessment: MP Gr</td>
+                <td width="40%"><span class="line line-full"></span></td>
+                <td style="text-align: right;">Denture: &nbsp;&nbsp;&nbsp;&nbsp; Yes / No</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td style="text-align: right;">Difficult Airway: &nbsp;&nbsp;&nbsp;&nbsp; Yes / No</td>
+            </tr>
+        </table>
+
+        <table class="layout-table">
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Substance Abuse:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Blood Investigation:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Other Investigation:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">ASA Risk Grade: 1/2/3/4/5</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">NBM Hrs:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Physical Examination:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+        </table>
+
+        <hr style="border: 1px solid #000; margin: 10px 0;">
+
+        <div style="margin-bottom: 5px; font-weight: bold;">Type of Aneasthesia:</div>
+        <table class="layout-table" style="margin-bottom: 10px;">
+            <tr>
+                <td width="33%">(1) ORAL / IV / IM</td>
+                <td width="33%" style="text-align: center;">(2) Minimum / Moderate / Deep</td>
+                <td width="33%" style="text-align: right;">(3) Local Anesthesia: Y/N</td>
+            </tr>
+        </table>
+
+        <table class="layout-table">
+            <tr>
+                <td width="50%" style="vertical-align: top; padding-right: 20px;">
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 1%; white-space: nowrap;">Drugs: (1)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">(2)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">(3)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">(4)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="50%" style="vertical-align: top; padding-left: 20px;">
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 1%; text-align: right;">(5)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">(6)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">(7)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">(8)</td>
+                            <td><span class="line line-full"></span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <table class="layout-table">
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Airway Assistance Required: Y/N</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Oxygen:</td>
+                <td width="30%"><span class="line line-full"></span></td>
+                <td style="white-space: nowrap; width: 1%; padding-left: 10px;">Type:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">I/V Fluid:</td>
+                <td colspan="3"><span class="line" style="width: 50%;"></span></td>
+            </tr>
+        </table>
+
+        <div class="page-break"></div>
+
+        <table class="grid-table monitoring-table">
+            <thead>
+                <tr>
+                    <th colspan="16" style="text-align: center;">MONITORING</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th colspan="8">DURING Aneasthesia</th>
+                    <th colspan="7">IN RECOVERY AREA (To be done by Nurse / MO)</th>
+                </tr>
+                <tr>
+                    <th width="80">Time</th>
+                    <th>Before</th>
+                    <th>0<br>min</th>
+                    <th>10<br>min</th>
+                    <th>20<br>min</th>
+                    <th>30<br>min</th>
+                    <th>40<br>min</th>
+                    <th>50<br>min</th>
+                    <th>60<br>min</th>
+                    <th>0<br>min</th>
+                    <th>15<br>min</th>
+                    <th>30<br>min</th>
+                    <th>45<br>min</th>
+                    <th>1<br>hr.</th>
+                    <th>2<br>hr.</th>
+                    <th>On<br>Discharge</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: left;">P:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">B.P. Sys:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">B.P. Dys:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">SPO<sub>2</sub>:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">RR:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Level of<br>Aneasthesia:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin: 20px 0;">
+            Patient discharge from recovery area / unit where procedure performed to ward with recovery score of
+            <span class="line" style="width: 150px;"></span>
+        </div>
+
+        <table class="layout-table" style="margin-top: 20px;">
+            <tr>
+                <td style="vertical-align: bottom;">
+                    <h3>Aneasthesia Note</h3>
+                </td>
+                <td style="text-align: right;">
+                    <div class="addressograph">Addressograph</div>
+                </td>
+            </tr>
+        </table>
+
+        <h3 style="text-transform: uppercase;">Recovery Criteria</h3>
+
+        <table class="layout-table" style="margin-bottom: 10px;">
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Recovery Start Time:</td>
+                <td><span class="line" style="width: 250px;"></span></td>
+                <td style="white-space: nowrap; width: 1%;">Recovery End Time:</td>
+                <td><span class="line" style="width: 250px;"></span></td>
+            </tr>
+        </table>
+
+        <table class="grid-table criteria-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Sr.<br>No.</th>
+                    <th>Criteria</th>
+                    <th style="width: 60px;">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bold">1</td>
+                    <td class="text-left bold">Oxygenation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">SPO2 > 92% on room air</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">SPO2 > 90% Oxygen</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">SPO2 < 90% Oxygen</td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td class="bold">2</td>
+                    <td class="text-left bold">Respiration</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Breathes deeply and Coughs freely</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Dyspnoeic, shallow or limited breathing</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Apnoea</td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td class="bold">3</td>
+                    <td class="text-left bold">Pulse</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">62-90/min (adult) / 10 % of baseline (paediatric)</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">&lt;60 & >100 /min (Adult) / 15 % of baseline (paediatric)</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Control arrythmia with haemodynamic stable, with or without ST-T changes, with
+                        ECG changes</td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td class="bold">4</td>
+                    <td class="text-left bold">Circulation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">BP +/- 20 mm Hg of Normal (Adult) / +/- 10 mm Hg of baseline (Paed.)</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">BP +/- 20-50 mm Hg of Normal (Adult) / +/- 10 mm Hg of baseline (Paed.)</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">BP more than +/- 50 mm Hg of Normal (Adult) / > 20 mm Hg of baseline (Paed.)
+                    </td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td class="bold">5</td>
+                    <td class="text-left bold">Consciousness</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Fully awake</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Arousable on calling</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">No response</td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td class="bold">6</td>
+                    <td class="text-left bold">Activity</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Moves all extremities</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Moves two extremities</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">No movement</td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td class="bold">7</td>
+                    <td class="text-left bold">Pain Severity as per VAS</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">1 to 5</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">6 to 8</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">9 to 10</td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td class="bold">8</td>
+                    <td class="text-left bold">Associated Complains</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Mild</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Moderate</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-left">Severe</td>
+                    <td>0</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" class="text-left bold" style="text-align: right; padding-right: 15px;">Total Score
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-left">The Patient should be shifted to ward when the total score is 16,
+                        but minimum 13 is required.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="layout-table" style="margin-top: 20px;">
+            <tr>
+                <td style="white-space: nowrap; width: 1%;">Recommendations:</td>
+                <td><span class="line line-full"></span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span class="line line-full"></span></td>
+            </tr>
+        </table>
+
+        <table class="layout-table" style="margin-top: 10px;">
+            <tr>
+                <td style="width: 1%; white-space: nowrap;">Date:</td>
+                <td style="width: 25%;"><span class="line line-full"></span></td>
+                <td style="width: 1%; white-space: nowrap; padding-left: 20px;">Time:</td>
+                <td style="width: 25%;"><span class="line line-full"></span></td>
+                <td width="48%"></td>
+            </tr>
+        </table>
+
+        <table class="layout-table" style="margin-top: 15px;">
+            <tr>
+                <td style="width: 1%; white-space: nowrap;">Name of Doctor:</td>
+                <td style="width: 40%;"><span class="line line-full"></span></td>
+                <td style="width: 1%; white-space: nowrap; padding-left: 20px;">Signature:</td>
+                <td style="width: 30%;"><span class="line line-full"></span></td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surgical Safety Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        /* Print optimization */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .page-container {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+
+        .page-container {
+            width: 210mm;
+            /* A4 Width */
+            min-height: 297mm;
+            margin: auto;
+            background: white;
+            padding: 15mm;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .title-block {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .addressograph {
+            border: 1px solid black;
+            width: 150px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .main-columns {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .column {
+            flex: 1;
+            border: 1px solid #333;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-header {
+            background-color: #f2f2f2;
+            padding: 8px;
+            border-bottom: 1px solid #333;
+            font-weight: bold;
+        }
+
+        .section-content {
+            padding: 10px;
+            height: 100%;
+        }
+
+        .item-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+
+        .checkbox {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #000;
+            margin-right: 8px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .nested {
+            margin-left: 20px;
+        }
+
+        .divider {
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+
+        .signature-area {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .sig-box {
+            border-top: 1px solid #000;
+            width: 120px;
+            padding-top: 5px;
+        }
+
+        h2 {
+            margin: 5px 0;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <div class="header-section">
+            <div style="width: 150px;"></div>
+            <div class="title-block">
+                <h2>SURGICAL / PROCEDURE SAFETY CHECK LIST</h2>
+            </div>
+            <div class="addressograph">ADDRESSOGRAPH</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold;">
+            <span>Name of surgery: _________________________</span>
+            <span>Date: ___________</span>
+        </div>
+
+        <div class="main-columns">
+
+            <div class="column">
+                <div class="col-header">
+                    Before induction of anaesthesia<br>
+                    Sign in (Time:____________)
+                </div>
+                <div class="section-content">
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Patient has confirmed:<br>
+                            <span class="nested">Identity</span><br>
+                            <span class="nested">Site</span><br>
+                            <span class="nested">Procedure</span><br>
+                            <span class="nested">Consent</span>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Site marked / Not applicable</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Anaesthesia safety check completed</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Pulse oximeter on patient & functioning</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Perfusion safety check completed</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <p>Does patient have a known allergy?<br>
+                    <div class="item-row">
+                        <div class="checkbox"></div>No <div class="checkbox" style="margin-left:10px"></div>Yes
+                    </div>
+                    </p>
+
+                    <p>Difficult airway / aspiration risk?<br>
+                    <div class="item-row">
+                        <div class="checkbox"></div>No <div class="checkbox" style="margin-left:10px"></div>Yes, and
+                        equipment / assistance available.
+                    </div>
+                    </p>
+
+                    <p>Risk of > 500 ml blood loss<br>(7 ml / kg in children)?<br>
+                    <div class="item-row">
+                        <div class="checkbox"></div>No <div class="checkbox" style="margin-left:10px"></div>Yes, and
+                        adequate intravenous access and fluids planned
+                    </div>
+                    </p>
+
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>I, as a transplant surgeon done double check for organ transplant, cross match of donor -
+                            recipient & ABO compatibility.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="col-header">
+                    Before skin incision / Onset of procedure<br>
+                    (Time:____________)
+                </div>
+                <div class="section-content">
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Confirm all team members have introduced themselves by name and role</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Surgeon, anesthesiologist, dentist/assistant verbally confirm:<br>
+                            <span class="nested">Patient</span><br>
+                            <span class="nested">Site</span><br>
+                            <span class="nested">Procedure</span>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+                    <p><b>Anticipated critical events</b></p>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Surgeon reviews: what are the critical or unexpected steps, operative duration, anticipated
+                            blood loss?</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Anaesthesia team reviews: Are there any patient-specific concerns?</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Perfusion team reviews: Are there any patient-specific concerns?</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Nursing team reviews: has sterility (Including indicator results) been confirmed? are there
+                            equipment issues or any concerns?</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div><b>Ready for all above</b></div>
+                    </div>
+
+                    <div class="divider"></div>
+                    <p>Has antibiotic prophylaxis been given within the last 60 minutes?<br>
+                    <div class="item-row">
+                        <div class="checkbox"></div>Yes <div class="checkbox" style="margin-left:10px"></div>Not
+                        applicable
+                    </div>
+                    </p>
+
+                    <p>Is essential imaging displayed?<br>
+                    <div class="item-row">
+                        <div class="checkbox"></div>Yes <div class="checkbox" style="margin-left:10px"></div>Not
+                        applicable
+                    </div>
+                    </p>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="col-header">
+                    Before patient leaves the dental chair<br>
+                    Sign Out (Time:____________)
+                </div>
+                <div class="section-content">
+                    <p>dentist/assistant verbally confirms with the team:</p>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>The name of the procedure recorded</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>The instrument, sponge, gauze and needle counts are correct (or not applicable)</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>How the specimen is labeled (Including patient name, specimen type, test and container)
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Whether there any equipment problems to be addressed</div>
+                    </div>
+
+                    <div class="divider"></div>
+                    <div class="item-row">
+                        <div class="checkbox"></div>
+                        <div>Surgeon, anaesthesiologist and assistant review the key concerns for recovery and
+                            management of this patient</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="signature-area">
+            <div class="sig-box">Consultant</div>
+            <div class="sig-box">Anaesthetist</div>
+            <div class="sig-box">Dental assistant</div>
+            <div class="sig-box">Dentist</div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
