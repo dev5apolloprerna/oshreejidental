@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Informed Consent Form</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+            background: #fff;
+        }
+
+        /* ===== SCREEN VIEW (centered) ===== */
+        .container {
+            width: 210mm;
+            /* A4 width */
+            max-width: 100%;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            /* only for screen */
+            padding: 12mm;
+            /* safe padding inside */
+            overflow: hidden;
+            /* prevent accidental overflow */
+            page-break-after: always;
+        }
+
+        .header-logo {
+            text-align: left;
+            margin-bottom: 6mm;
+        }
+
+        .header-logo img {
+            max-width: 55mm;
+            height: auto;
+            display: block;
+        }
+
+        .title-box {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10mm;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .underline {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            width: 50mm;
+            /* fixed underline size to avoid overflow */
+            height: 14px;
+            vertical-align: bottom;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            /* important for print */
+            margin-bottom: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+            font-size: 12px;
+            height: 22px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .col-sr {
+            width: 12mm;
+            text-align: center;
+        }
+
+        .col-cost {
+            width: 40mm;
+        }
+
+        .col-reason {
+            width: 45mm;
+        }
+
+        .consent-text {
+            font-size: 12px;
+            line-height: 1.35;
+            margin: 6px 0 10px;
+        }
+
+        .signature-section {
+            width: 100%;
+            font-size: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 12mm;
+            row-gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .sig-line {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .sig-underline {
+            border-bottom: 1px solid #000;
+            flex: 1;
+            height: 14px;
+        }
+
+        .divider {
+            border-top: 2px solid #000;
+            margin: 10px 0;
+        }
+
+        .change-title {
+            text-align: center;
+            margin: 6px 0 10px;
+        }
+
+        .change-title h3 {
+            margin: 0;
+            text-decoration: underline;
+            font-size: 13px;
+        }
+
+        .change-title p {
+            margin: 3px 0 0;
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        /* ===== PRINT FIX (NO CUTTING) ===== */
+        @page {
+            size: A4;
+            margin: 10mm;
+            /* printer margin */
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            .container {
+                width: 190mm;
+                /* A4 (210) - margins (10+10) = 190 */
+                max-width: 190mm;
+                margin: 0;
+                border: none;
+                padding: 0;
+                /* avoid extra width from padding */
+            }
+
+            /* put padding inside print using an inner wrapper */
+            .print-pad {
+                padding: 8mm;
+                /* safe inner padding */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="print-pad">
+
+            <div class="header-logo">
+                <!-- <img src="images/logo.png" alt="Clinic Logo"> -->
+            </div>
+
+            <div class="title-box">Informed Consent for Procedure Cost</div>
+
+            <div class="info-row">
+                <div>Date: <span class="underline"></span></div>
+                <div>Time: <span class="underline"></span></div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-sr">Sr.<br>No.</th>
+                        <th>Name of the procedure</th>
+                        <th class="col-cost">Approximate Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-sr">1</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">2</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">3</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">4</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">5</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">6</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="consent-text">
+                I have been informed about the price of Procedures by doctor in a language I understand.
+                Here by I agree to the above mentioned treatment / course of treatment.
+            </div>
+
+            <div class="signature-section">
+                <div class="sig-line">Name of Consultant doctor: <div class="sig-underline"></div>
+                </div>
+                <div class="sig-line">Sign: <div class="sig-underline"></div>
+                </div>
+                <div class="sig-line">Name of Patient / Relative: <div class="sig-underline"></div>
+                </div>
+                <div class="sig-line">Sign: <div class="sig-underline"></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-row">
+                <div>Date: <span class="underline"></span></div>
+                <div>Time: <span class="underline"></span></div>
+            </div>
+
+            <div class="change-title">
+                <h3>IF Change is cost of procedures</h3>
+                <p>(Filled when given estimate for the procedures is change)</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-sr">Sr.<br>No.</th>
+                        <th>Name of the procedure</th>
+                        <th class="col-cost">Approximate Cost</th>
+                        <th class="col-reason">Reason for the change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-sr">1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">3</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">4</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">5</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">6</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="consent-text">
+                I have been informed about the cost changed of Procedures by doctor in a language I understand.
+                Here by I agree to the above mentioned treatment / course of treatment.
+            </div>
+
+            <div class="signature-section">
+                <div class="sig-line">Name of Consultant doctor: <div class="sig-underline"></div>
+                </div>
+                <div class="sig-line">Sign: <div class="sig-underline"></div>
+                </div>
+                <div class="sig-line">Name of Patient / Relative: <div class="sig-underline"></div>
+                </div>
+                <div class="sig-line">Sign: <div class="sig-underline"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+
+        <div class="header-logo">
+            <!-- <img src="images/logo.png" alt="ક્લિનિક લોગો"> -->
+        </div>
+
+        <div class="title-box">
+            પ્રક્રિયા ખર્ચ માટે માહિતગાર સંમતિ
+        </div>
+
+        <div class="info-row">
+            <div>તારીખ: <span class="underline"></span></div>
+            <div>સમય: <span class="underline"></span></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-sr">ક્રમાંક</th>
+                    <th>પ્રક્રિયાનું નામ</th>
+                    <th class="col-cost">અંદાજિત ખર્ચ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="col-sr">1</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">2</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">3</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">4</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">5</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">6</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="consent-text">
+            મને ડૉક્ટર દ્વારા પ્રક્રિયાના ખર્ચ વિશે મારી સમજાય તેવી ભાષામાં માહિતી આપવામાં આવી છે.
+            હું ઉપરોક્ત સારવાર / સારવારના કોર્સ માટે સંમત છું.
+        </div>
+
+        <div class="signature-section">
+            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <div class="sig-underline"></div>
+            </div>
+            <div class="sig-line">સહી: <div class="sig-underline"></div>
+            </div>
+            <div class="sig-line">દર્દી / સગાનું નામ: <div class="sig-underline"></div>
+            </div>
+            <div class="sig-line">સહી: <div class="sig-underline"></div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="info-row">
+            <div>તારીખ: <span class="underline"></span></div>
+            <div>સમય: <span class="underline"></span></div>
+        </div>
+
+        <div class="change-title">
+            <h3>પ્રક્રિયાના ખર્ચમાં ફેરફાર થાય તો</h3>
+            <p>(જો આપેલ અંદાજમાં ફેરફાર થાય તો ભરવું)</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-sr">ક્રમાંક</th>
+                    <th>પ્રક્રિયાનું નામ</th>
+                    <th class="col-cost">અંદાજિત ખર્ચ</th>
+                    <th class="col-reason">ફેરફારનું કારણ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="col-sr">1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">4</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">5</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="col-sr">6</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="consent-text">
+            પ્રક્રિયાના ખર્ચમાં થયેલા ફેરફાર અંગે મને ડૉક્ટર દ્વારા માહિતી આપવામાં આવી છે.
+            હું ઉપરોક્ત સારવાર / સારવારના કોર્સ માટે સંમત છું.
+        </div>
+
+        <div class="signature-section">
+            <div class="sig-line">કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <div class="sig-underline"></div>
+            </div>
+            <div class="sig-line">સહી: <div class="sig-underline"></div>
+            </div>
+            <div class="sig-line">દર્દી / સગાનું નામ: <div class="sig-underline"></div>
+            </div>
+            <div class="sig-line">સહી: <div class="sig-underline"></div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

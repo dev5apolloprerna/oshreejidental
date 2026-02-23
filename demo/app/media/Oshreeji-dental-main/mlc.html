@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MLC Intimation Form - Single Page</title>
+    <style>
+        /* Reset and Print setup */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            /* background-color: #525659; */
+        }
+
+        .page {
+            width: 210mm;
+            height: 296mm;
+            /* Slightly less than A4 to ensure no spillover */
+            padding: 10mm;
+            margin: 10mm auto;
+            background: white;
+            border: 2px solid black;
+            position: relative;
+            /* page-break-after: always; */
+        }
+
+        .inner-border {
+            border: 1px solid black;
+            height: 100%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0 30px 0;
+            text-transform: uppercase;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        td {
+            padding: 6px 0;
+            font-size: 13px;
+            vertical-align: bottom;
+        }
+
+        .line {
+            border-bottom: 1px solid black;
+        }
+
+        .thumb-container {
+            width: 110px;
+            text-align: center;
+            float: right;
+        }
+
+        .thumb-box {
+            border: 1px solid black;
+            border-radius: 50%;
+            width: 100px;
+            height: 110px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .footer-note {
+            margin-top: auto;
+            /* Pushes note to bottom if there is space */
+            font-size: 12px;
+            line-height: 1.4;
+            padding-bottom: 10px;
+        }
+
+        .copy-info {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* Print adjustments */
+        @media print {
+            body {
+                background: none;
+            }
+
+            .page {
+                margin: 0;
+                border: 2px solid black;
+                box-shadow: none;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+        <div class="inner-border">
+            <h2>MEDICO LEGAL CASE (MLC) INTIMATION</h2>
+
+            <table>
+                <tr>
+                    <td style="width: 12%;">Serial No.:</td>
+                    <td class="line" style="width: 30%;"></td>
+                    <td style="width: 28%; text-align: right; padding-right: 5px;">Date & Time of Examination :</td>
+                    <td class="line" style="width: 30%;"></td>
+                </tr>
+                <tr>
+                    <td style="width: 18%;">Name of Patient:</td>
+                    <td class="line" colspan="2"></td>
+                    <td style="padding-left: 10px;">
+                        Age : <span style="display:inline-block; width: 40px; border-bottom: 1px solid black;"></span>
+                        Sex : M/F
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-top: 10px;">Residential Address :</td>
+                    <td class="line" colspan="3" style="height: 25px;"></td>
+                </tr>
+                <tr>
+                    <td class="line" colspan="4" style="height: 25px;"></td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        Contact No.: (M). <span
+                            style="display:inline-block; width: 180px; border-bottom: 1px solid black;"></span>
+                        (R) <span style="display:inline-block; width: 140px; border-bottom: 1px solid black;"></span>
+                        (O) <span style="display:inline-block; width: 100px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        OA: <span style="display:inline-block; width: 330px; border-bottom: 1px solid black;"></span>
+                        Time of Admission : <span
+                            style="display:inline-block; width: 100px; border-bottom: 1px solid black;"></span> am/pm
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="vertical-align: top;">
+                        Identification Marks :<br><br>
+                        (1) <span
+                            style="display:inline-block; width: 90%; border-bottom: 1px solid black;"></span><br><br>
+                        (2) <span style="display:inline-block; width: 90%; border-bottom: 1px solid black;"></span>
+                    </td>
+                    <td>
+                        <div class="thumb-container">
+                            <div class="thumb-box">Thumb Impression<br>of Patient</div>
+                            <div style="font-size: 11px; margin-top: 5px;">Rt. / Lt.</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;">Place of Incidence:</td>
+                    <td class="line" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td>Date & Time of Incidence :</td>
+                    <td class="line" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding-top: 10px;">Brief History of Incidence :</td>
+                </tr>
+                <tr>
+                    <td class="line" colspan="4" style="height: 22px;"></td>
+                </tr>
+                <tr>
+                    <td class="line" colspan="4" style="height: 22px;"></td>
+                </tr>
+                <tr>
+                    <td class="line" colspan="4" style="height: 22px;"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="padding-top: 25px;">
+                        Name of M.O./ICU Registrar : <span
+                            style="display:inline-block; width: 150px; border-bottom: 1px solid black;"></span>
+                    </td>
+                    <td colspan="2" style="padding-top: 25px; text-align: right;">
+                        Sign. of Mo. : <span
+                            style="display:inline-block; width: 150px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="padding-top: 15px;">
+                        Date & Time of Written intimation given : <span
+                            style="display:inline-block; width: 450px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        Name of Police Station : <span
+                            style="display:inline-block; width: 550px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        "MLC intimation" form given by : <span
+                            style="display:inline-block; width: 520px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        "MLC intimation" given to, Name of constable : <span
+                            style="display:inline-block; width: 420px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        Buckle No.: <span
+                            style="display:inline-block; width: 330px; border-bottom: 1px solid black;"></span>
+                        Sign.: <span style="display:inline-block; width: 220px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding-top: 15px;">
+                        Mode of Intimation : Personnel / E-mail / Post / Any other Mode
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        Date & Time of verbal Intimation given to police authority: <span
+                            style="display:inline-block; width: 350px; border-bottom: 1px solid black;"></span>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="footer-note">
+                <strong>Note:</strong> This is just written intimation order. Details of Incidence, Medical Condition
+                and Detailed line of treatment is mentioned in patient file.
+            </div>
+
+            <div class="copy-info">
+                White Copy for Police Station<br>
+                Pink Copy for Pt. IPD File<br>
+                Yellow Copy for Book (For MRD)
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
