@@ -466,6 +466,15 @@ window.__NABH_SAVED = {$savedJson};
                     : $opt->removeAttribute('selected');
             }
         }
+
+        $submitBars = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' submit-bar ')]");
+
+        if ($submitBars && $submitBars->length > 0) {
+            foreach ($submitBars as $bar) {
+                $existingStyle = $bar->getAttribute('style');
+                $bar->setAttribute('style', $existingStyle . '; display:none !important;');
+            }
+        }
     }
 
     $out = $dom->saveHTML();
