@@ -95,14 +95,20 @@ class ComposerStaticInit88c20a6407aa24693a85a66ad363d505
         'fe43ca06499ac37bc2dedd823af71eb5' => __DIR__ . '/..' . '/thecodingmachine/safe/generated/zip.php',
         '356736db98a6834f0a886b8d509b0ecd' => __DIR__ . '/..' . '/thecodingmachine/safe/generated/zlib.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '667cc95664d6c215f7ab16c740dc2fba' => __DIR__ . '/..' . '/bainternet/php-hooks/php-hooks.php',
         '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
+        'db356362850385d08a5381de2638b5fd' => __DIR__ . '/..' . '/mpdf/mpdf/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
         'Z' => 
         array (
             'ZBateson\\StreamDecorators\\' => 26,
@@ -150,6 +156,9 @@ class ComposerStaticInit88c20a6407aa24693a85a66ad363d505
         ),
         'M' => 
         array (
+            'Mpdf\\PsrLogAwareTrait\\' => 22,
+            'Mpdf\\PsrHttpMessageShim\\' => 24,
+            'Mpdf\\' => 5,
             'Money\\' => 6,
             'Masterminds\\' => 12,
         ),
@@ -191,6 +200,7 @@ class ComposerStaticInit88c20a6407aa24693a85a66ad363d505
         'D' => 
         array (
             'Dompdf\\' => 7,
+            'DeepCopy\\' => 9,
             'Ddeboer\\Imap\\' => 13,
         ),
         'C' => 
@@ -207,6 +217,10 @@ class ComposerStaticInit88c20a6407aa24693a85a66ad363d505
     );
 
     public static $prefixDirsPsr4 = array (
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
         'ZBateson\\StreamDecorators\\' => 
         array (
             0 => __DIR__ . '/..' . '/zbateson/stream-decorators/src',
@@ -328,6 +342,18 @@ class ComposerStaticInit88c20a6407aa24693a85a66ad363d505
         array (
             0 => __DIR__ . '/..' . '/omnipay/braintree/src',
         ),
+        'Mpdf\\PsrLogAwareTrait\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
+        ),
+        'Mpdf\\PsrHttpMessageShim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
+        ),
+        'Mpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+        ),
         'Money\\' => 
         array (
             0 => __DIR__ . '/..' . '/moneyphp/money/src',
@@ -410,6 +436,10 @@ class ComposerStaticInit88c20a6407aa24693a85a66ad363d505
         'Dompdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
+        ),
+        'DeepCopy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
         'Ddeboer\\Imap\\' => 
         array (

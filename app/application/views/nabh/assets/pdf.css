@@ -1,0 +1,22 @@
+/* Keep PDF CSS simple and print-friendly */
+body {
+  font-family: dejavusans;
+  font-size: 12pt;
+  color: #000;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table td, .table th {
+  border: 1px solid #000;
+  padding: 6px;
+  vertical-align: top;
+}
+
+/* Gujarati-specific font */
+.gu {
+  font-family: notosansgujarati;
+}

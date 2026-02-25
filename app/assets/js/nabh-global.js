@@ -123,7 +123,8 @@
   }
 
   document.addEventListener("DOMContentLoaded", applySavedAndDefaults);
-  document.addEventListener("click", function (e) {
+  document.addEventListener("click", function (e) 
+  {
     if (e.target && e.target.id === "submitBtn") saveNow();
   });
 })();
