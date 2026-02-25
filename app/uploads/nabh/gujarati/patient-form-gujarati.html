@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>દર્દી ફોર્મ</title>
     <style>
+        @font-face{
+              font-family: "NotoSansGujarati";
+              src: url("assets/fonts/gujarati/NotoSansGujarati-Regular.ttf") format("truetype");
+            }
         /* PRINT: A4 exact */
         @page {
             size: A4;
             margin: 10mm;
         }
+
         @media print {
             body {
                 background: #fff !important;
@@ -62,6 +67,7 @@
         }
         /* Input styling to match original lines */
         input[type="text"], input[type="date"], input[type="time"], input[type="email"] {
+            
             border: none;
             border-bottom: 1px solid #000;
             background: transparent;
