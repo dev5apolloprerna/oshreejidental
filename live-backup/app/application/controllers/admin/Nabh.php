@@ -1,0 +1,168 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+class Nabh extends AdminController
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * AJAX
+     * POST: appointment_type_id
+     * Returns only assigned NABH forms for appointment type
+     */
+    public function list_json()
+    {
+        if (!is_staff_logged_in()) {
+            ajax_access_denied();
+        }
+
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $appointment_type_id = (int)$this->input->post('appointment_type_id');
+        if ($appointment_type_id <= 0) {
+            echo json_encode(['status' => false, 'data' => [], 'message' => 'appointment_type_id required']);
+            exit;
+        }
+
+        $mapTable  = db_prefix() . 'appointment_type_pdf_master';
+        $nabhTable = db_prefix() . 'nabh_master';
+
+        // ✅ only assigned forms
+        $this->db->select("n.pdf_id, n.pdf_name, n.english_file_name, n.gujarati_file_name", false);
+        $this->db->from($mapTable . ' m');
+        $this->db->join($nabhTable . ' n', 'n.pdf_id = m.appointment_pdf_id', 'inner');
+        $this->db->where('m.appointment_type_id', $appointment_type_id);
+        $this->db->order_by('n.pdf_id', 'ASC');
+        $rows = $this->db->get()->result_array();
+
+        // ✅ same folder logic as your old code
+        $enDir = FCPATH . 'uploads/nabh/english/';
+        $guDir = FCPATH . 'uploads/nabh/gujarati/';
+
+        $out = [];
+        foreach ($rows as $r) {
+            $enFile = trim((string)($r['english_file_name'] ?? ''));
+            $guFile = trim((string)($r['gujarati_file_name'] ?? ''));
+
+            $hasEn = ($enFile !== '' && file_exists($enDir . basename($enFile)));
+            $hasGu = ($guFile !== '' && file_exists($guDir . basename($guFile)));
+
+            // you have pdf_name only (same for both languages)
+            $title = (string)($r['pdf_name'] ?? 'NABH Form');
+
+            $out[] = [
+                // ✅ keep JS compatible: r.id
+                'id'       => (int)$r['pdf_id'],
+
+                // ✅ keep JS compatible: r.title_en / r.title_gu
+                'title_en' => $title,
+                'title_gu' => $title,
+
+                'has_en'   => $hasEn ? 1 : 0,
+                'has_gu'   => $hasGu ? 1 : 0,
+            ];
+        }
+
+        echo json_encode(['status' => true, 'data' => $out]);
+        exit;
+    }
+
+    /**
+     * ✅ Serve HTML in iframe (modal)
+     * URL: admin/nabh/view_html/{pdf_id}?lang=en|gu
+     */
+    public function view_html($pdf_id)
+    {
+        if (!is_staff_logged_in()) {
+            access_denied();
+        }
+
+        $pdf_id = (int)$pdf_id;
+        if ($pdf_id <= 0) show_404();
+
+        $lang = $this->input->get('lang'); // en / gu
+        $lang = in_array($lang, ['en', 'gu'], true) ? $lang : 'gu';
+
+        $nabhTable = db_prefix() . 'nabh_master';
+
+        // ✅ pdf_id is primary key in your table
+        $this->db->where('pdf_id', $pdf_id);
+        $row = $this->db->get($nabhTable)->row_array();
+
+        if (!$row) {
+            show_404();
+        }
+
+        $enDir = FCPATH . 'uploads/nabh/english/';
+        $guDir = FCPATH . 'uploads/nabh/gujarati/';
+
+        $enFile = trim((string)($row['english_file_name'] ?? ''));
+        $guFile = trim((string)($row['gujarati_file_name'] ?? ''));
+
+        $enPath = ($enFile !== '') ? ($enDir . basename($enFile)) : '';
+        $guPath = ($guFile !== '') ? ($guDir . basename($guFile)) : '';
+
+        // ✅ preferred language, else fallback (same as old code)
+        $path = '';
+        if ($lang === 'gu') {
+            if ($guPath && file_exists($guPath)) $path = $guPath;
+            elseif ($enPath && file_exists($enPath)) $path = $enPath;
+        } else {
+            if ($enPath && file_exists($enPath)) $path = $enPath;
+            elseif ($guPath && file_exists($guPath)) $path = $guPath;
+        }
+
+        if ($path === '' || !file_exists($path)) {
+            show_error('HTML file not found in uploads/nabh folder.', 404);
+        }
+
+        // ✅ HTML only
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($ext, ['html', 'htm'], true)) {
+            show_error('This form file is not an HTML file.', 404);
+        }
+
+        header('Content-Type: text/html; charset=utf-8');
+        header('X-Content-Type-Options: nosniff');
+        readfile($path);
+        exit;
+    }
+public function save_form_json()
+{
+    if (!is_staff_logged_in()) {
+        ajax_access_denied();
+    }
+
+    $json = $this->input->post('json_data', false); // keep raw
+    $arr  = json_decode($json, true);
+
+    if (!$arr || !isset($arr['meta'])) {
+        echo json_encode(['status' => false, 'message' => 'Invalid JSON']);
+        exit;
+    }
+
+    $meta = $arr['meta'];
+
+    $insert = [
+        'appointment_id' => isset($meta['appointment_id']) ? (int)$meta['appointment_id'] : 0,
+        'patient_id'     => isset($meta['patient_id']) ? (int)$meta['patient_id'] : 0,
+        'doctor_id'      => isset($meta['doctor_id']) ? (int)$meta['doctor_id'] : 0,
+        'nabh_pdf_id'    => isset($meta['nabh_pdf_id']) ? (int)$meta['nabh_pdf_id'] : 0,
+        'json_data'      => $json,
+        'created_at'     => date('Y-m-d H:i:s'),
+        'created_by'     => get_staff_user_id(),
+    ];
+
+    // ✅ create table suggested: tblnabh_form_submissions
+    $this->db->insert(db_prefix() . 'nabh_form_submissions', $insert);
+
+    echo json_encode(['status' => true, 'id' => $this->db->insert_id()]);
+    exit;
+}
+
+
+}
