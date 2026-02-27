@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treatment Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            /* background-color: #f0f0f0; */
+        }
+
+        /* Container for A4 feel */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10mm auto;
+            /* background: white; */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 40px;
+            text-transform: capitalize;
+        }
+
+        /* Header Information Styles */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .info-group {
+            display: flex;
+            align-items: flex-end;
+            flex: 1;
+        }
+
+        .label {
+            font-weight: normal;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        .line {
+            border-bottom: 1px solid #000;
+            flex-grow: 1;
+            min-height: 20px;
+        }
+
+        .section-label {
+            margin: 25px 0 10px 0;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 12px;
+            text-align: left;
+            height: 30px;
+        }
+
+        th {
+            background-color: #fff;
+        }
+
+        .col-sr {
+            width: 10%;
+        }
+
+        .col-date {
+            width: 25%;
+        }
+
+        .col-plan {
+            width: 65%;
+        }
+
+        /* Footer Styles */
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+
+        /* Print Settings */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+        <h1>Treatment plan</h1>
+
+        <div class="info-row">
+            <div class="info-group" style="margin-right: 40px;">
+                <span class="label">UHID No.</span>
+                <div class="line"></div>
+            </div>
+            <div class="info-group">
+                <span class="label">Name of the patient:</span>
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-group" style="margin-right: 40px;">
+                <span class="label">Age/Sex:</span>
+                <div class="line"></div>
+            </div>
+            <div class="info-group">
+                <span class="label">Consultant name:</span>
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-group" style="max-width: 40%;">
+                <span class="label">Date:</span>
+                <div class="line"></div>
+            </div>
+            <div class="info-group"></div>
+        </div>
+
+        <div class="section-label">
+            <span class="label">Chief complain:</span>
+            <div class="line"></div>
+        </div>
+
+        <div class="section-label">
+            <span class="label">Diagnosis:</span>
+            <div class="line"></div>
+        </div>
+
+        <p style="margin-top: 25px; margin-bottom: 5px;">Treatment plan</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-sr">Sr. No.</th>
+                    <th class="col-date">Date</th>
+                    <th class="col-plan">Plan of care</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-label">
+            <span class="label">Expected result:</span>
+            <div class="line"></div>
+        </div>
+
+        <div class="section-label">
+            <span class="label">Remarks if any:</span>
+            <div class="line"></div>
+        </div>
+
+        <div class="footer-row">
+            <div class="info-group">
+                <span class="label">Name of the consultant doctor:</span>
+                <div class="line"></div>
+            </div>
+            <div class="info-group" style="margin-left: 50px;">
+                <span class="label">Signature of doctor:</span>
+                <div class="line"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

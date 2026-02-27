@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pediatric Dentistry Consent Form</title>
+
+    <style>
+        /* ===================== PRINT SETUP ===================== */
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.4;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Each container = one page */
+        .container {
+            width: 186mm;
+            margin: 0 auto;
+            padding: 0;
+            page-break-after: always;
+            /* break-after: page; */
+        }
+
+        /* Prevent weird breaks inside tables while printing */
+        table,
+        tr,
+        td,
+        th {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* ===================== BASE TABLE STYLES ===================== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 5px 0;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        /* ===================== ENGLISH PAGE 1 STYLES ===================== */
+        .header {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: left;
+            padding-bottom: 10px;
+        }
+
+        .input-line {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            vertical-align: baseline;
+            height: 18px;
+            min-width: 250px;
+        }
+
+        .bullet-list {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .bullet-list li {
+            margin-bottom: 8px;
+        }
+
+        .sub-list {
+            list-style-type: circle;
+            padding-left: 22px;
+            margin: 6px 0 0 0;
+        }
+
+        .signature-section td {
+            padding: 6px 0;
+            font-size: 15px;
+        }
+
+        /* ===================== ENDORSEMENT TABLE (EN) ===================== */
+        .endorsement-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            padding: 8px 0;
+            margin-top: 10px;
+        }
+
+        .endorsement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .endorsement-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .endorsement-table .hdr td {
+            font-weight: bold;
+        }
+
+        .row-height {
+            height: 42px;
+        }
+
+        /* ===================== GUJARATI COMMON STYLES ===================== */
+        .title {
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0 0 5px 0;
+        }
+
+        .p {
+            font-size: 18px;
+            margin: 2px 0;
+            text-align: justify;
+        }
+
+        .bullets {
+            padding-left: 24px;
+            margin: 2px 0;
+            font-size: 18px;
+        }
+
+        .bullets li {
+            margin-bottom: 2px;
+            text-align: justify;
+        }
+
+        /* same as input line but for Gujarati sections */
+        .line {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            vertical-align: baseline;
+            height: 15px;
+            min-width: 200px;
+        }
+
+        /* Gujarati numbered table */
+        .numtbl {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2px;
+            font-size: 18px;
+        }
+
+        .numtbl td {
+            padding: 2px 0;
+            font-size: 18px;
+            vertical-align: top;
+        }
+
+        .numtbl .ncol {
+            width: 28px;
+            padding-right: 5px;
+            font-weight: bold;
+        }
+
+        .signTbl td {
+            padding: 3px 0;
+            font-size: 18px;
+        }
+
+        .endorseTitle {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 16px;
+            margin-bottom: 2px;
+            text-transform: none;
+        }
+
+        .endorseTbl {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2px;
+            font-size: 18px;
+        }
+
+        .endorseTbl th,
+        .endorseTbl td {
+            border: 1px solid #000;
+            padding: 10px 6px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 18px;
+        }
+
+        .endorseTbl th {
+            font-weight: bold;
+        }
+
+        /* ===================== PAGE 3 CONTINUATION TABLE ===================== */
+        .cycleTbl {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+
+        .cycleTbl td {
+            border: 1px solid #000;
+            height: 20px;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        /* column widths for cycle table */
+        .c1 {
+            width: 10%;
+            font-weight: bold;
+        }
+
+        .c2 {
+            width: 15%;
+        }
+
+        .c3 {
+            width: 37%;
+        }
+
+        .c4 {
+            width: 38%;
+        }
+
+        /* ===================== PRINT FIXES ===================== */
+        @media print {
+            body {
+                margin: 0 !important;
+            }
+
+            .container {
+                margin: 0 auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===================== PAGE 1 (ENGLISH) ===================== -->
+    <div class="container">
+        <table>
+            <tr>
+                <td class="header">Pediatric Dentistry Consent for Dental Procedures</td>
+            </tr>
+            <tr>
+                <td>
+                    It is the policy of this dental practice to inform parents of all procedures contemplated for your
+                    child.
+                    At each examination appointment, we will identify any dental treatment needed and describe this to
+                    you and
+                    your child.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="bullet-list">
+                        <li>Each regular examination visit consists of oral hygiene instructions, cleaning of the teeth,
+                            topical
+                            application of fluoride, radiographs (X-rays) if needed and examination of the teeth, hard
+                            and soft
+                            tissues of the mouth and the bite.</li>
+                        <li>Any other treatment needed such as fillings, caps, extractions, etc. will be performed at a
+                            separate
+                            appointment after obtaining your permission.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Indian Law requires that we obtain your written informed consent for any treatment given to your
+                    child as a
+                    legal minor.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="margin-top: 10px;">
+                        <tr>
+                            <td style="width: 25px;">1.</td>
+                            <td>
+                                I hereby authorize and direct Dr.
+                                <span class="input-line" style="min-width: 200px;"></span>
+                                assisted by other dentists and/or dental auxiliaries of his/her choice, to perform the
+                                following dental
+                                treatment or oral surgery procedures, including the use of any necessary or advisable
+                                local anesthesia,
+                                radiographs (X-rays) or diagnostic aids.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td>
+                                In general terms the dental procedures or operation will include:
+                                <ul class="sub-list">
+                                    <li>Cleaning of the teeth and the application of topical fluoride.</li>
+                                    <li>Application of plastic "sealants" to the grooves of the teeth.</li>
+                                    <li>Treatment of the diseased or injured teeth with dental restoration (filling or
+                                        caps).</li>
+                                    <li>Replacement of missing teeth with dental prosthesis.</li>
+                                    <li>Treatment of malposed (crooked) teeth and/or oral developmental or growth
+                                        abnormalities.</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td>
+                                Use of local anesthesia, by injection, to numb the teeth worked on. Numbness usually
+                                lasts from 1 ½ to
+                                3 hours. Allergic reactions are rare. Your child will be cautioned not to bite the numb
+                                lip and check.
+                                Please do not tell your child that they are going to get a "shot" as we have our special
+                                way of
+                                informing them about this.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4.</td>
+                            <td>
+                                Nitrous Oxide (laughing gas) is used to relax children so that they feel less pain of
+                                the injection.
+                                This gas is placed over the child's nose. Again, this gas is very safe. The nose piece,
+                                as with all
+                                treatment, will not be forced on the child.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-top: 15px;">
+                    I fully understand there is a possibility of surgical and/or medical complications developing during
+                    or after
+                    the procedure.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    I further authorize Dr.<span class="input-line"></span> to perform treatment to preserve the dental
+                    health of
+                    my child.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    I further understand that parents must remain in the reception area for the duration of their
+                    child's visit.
+                    However, for the initial visit, that parent will accompany the child to the consultation area. Upon
+                    completion of consultation, the parent will be requested to return to the reception area.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    I hereby state that I have read and understand this consent form and that all questions about the
+                    procedures
+                    have been answered in a satisfactory manner. I understand that I have a right to be provided with
+                    answers to
+                    questions which may arise during the course of my child's treatment.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    I further understand that this consent will remain in effect until such time that I choose to
+                    terminate it.
+                </td>
+            </tr>
+        </table>
+
+        <table class="signature-section">
+            <tr>
+                <td style="width: 50px;">Date:</td>
+                <td><span class="input-line" style="width: 300px;"></span></td>
+            </tr>
+            <tr>
+                <td>Time:</td>
+                <td><span class="input-line" style="width: 350px;"></span> AM / PM</td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Patient's Name:</td>
+                <td><span class="input-line" style="width: 400px;"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Signature of Parent/Guardian:</td>
+                <td><span class="input-line" style="width: 350px;"></span></td>
+            </tr>
+            <tr>
+                <td style="white-space: nowrap;">Relationship to Patient:</td>
+                <td><span class="input-line" style="width: 200px;"></span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ===================== PAGE 2 (ENGLISH) ===================== -->
+    <div class="container">
+        <h2 style="margin:0 0 10px 0; font-size:22px;">Behaviour Management Techniques</h2>
+
+        <div style="font-size:16px; text-align:justify; margin:8px 0;">
+            Among the behaviours that can interfere with the proper provision of quality dental care are: Hyperactivity,
+            resistive movements, refusing to open the mouth or keep it open long enough to perform the necessary dental
+            treatment and even aggressive or physical resistance to treatment, such as kicking, screaming and grabbing
+            the dentist's hands or the sharp dental instruments.
+        </div>
+
+        <div style="font-size:16px; text-align:justify; margin:8px 0;">
+            All efforts will be made to obtain the cooperation of the child dental patients by the use of warmth,
+            friendliness, persuasion, humour, charm, gentleness, kindness and understanding. There are several behaviour
+            management techniques that are used by paediatric dentists to gain the cooperation of child - patients to
+            eliminate disruptive behaviour or prevent them from causing injury to themselves due to uncontrollable
+            movements. The more frequently used paediatric dentistry behaviour management techniques are as follows:
+        </div>
+
+        <div style="font-size:16px; text-align:justify; margin:8px 0;">
+            Tell-show-do: The dentist or assistant explains to the child what is to be done using simple terminology and
+            repetition and then shows the child what is to be done by demonstrating with instruments on a model or the
+            child's or dentist's finger. Then the procedure is performed in the child's mouth as described. Praise is
+            used to reinforce cooperative behaviour.
+        </div>
+
+        <ul style="font-size:16px; padding-left:22px;">
+            <li><strong>Positive reinforcement:</strong> This technique rewards the child who displays any behaviour
+                which is
+                desirable. Rewards include compliments.</li>
+            <li><strong>Voice control:</strong> The attention of a disruptive child is gained by changing the tone or
+                increasing the volume of the dentist's voice. Content of the conversation is less important than the
+                abrupt or
+                sudden nature of a command.</li>
+            <li><strong>Mouth props:</strong> A rubber or plastic device is placed in the child's mouth to prevent
+                closing
+                when a child refuses or has difficulty maintaining an open mouth.</li>
+            <li><strong>Sedations:</strong> Sometimes drugs are used to relax a child who does not respond to other
+                behaviour
+                management techniques or who is unable to comprehend or cooperate for the dental procedures. These drugs
+                may be
+                administered orally, by injection or as a gas (nitrous oxide and oxygen). Your child will not be sedated
+                without you being informed and obtaining your specific consent for such procedure.</li>
+            <li><strong>General anaesthesia:</strong> The dentist performs the dental treatment with the child
+                anesthetized
+                in the hospital operating room. Your child will not be given general anaesthesia without you being
+                informed and
+                obtaining your specific consent for such procedure.</li>
+        </ul>
+
+        <table style="width:100%; border-collapse:collapse; margin-top:12px;">
+            <tr>
+                <td style="width: 15%;">Name of Doctor:</td>
+                <td style="width: 35%;"><span class="input-line" style="width: 90%;"></span></td>
+                <td style="width: 10%; text-align: right; padding-right: 10px;">Sign:</td>
+                <td style="width: 40%;"><span class="input-line" style="width: 100%;"></span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ===================== PAGE 3 (ENGLISH ENDORSEMENT) ===================== -->
+    <div class="container">
+        <div class="endorsement-title">CONSENT ENDORSEMENT FOR EACH CYCLE</div>
+
+        <!-- header inside TBODY so it won't repeat -->
+        <table class="endorsement-table" style="margin-top: 8px;">
+            <tbody>
+                <tr class="hdr">
+                    <td style="width: 8%;"><strong>Sr.<br>No.</strong></td>
+                    <td style="width: 25%;"><strong>Date and time</strong></td>
+                    <td style="width: 37%;"><strong>Signature of patient/patients relative</strong></td>
+                    <td style="width: 30%;"><strong>Signature of doctor</strong></td>
+                </tr>
+
+                <!-- rows -->
+                <tr class="row-height">
+                    <td><strong>1.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>2.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>3.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>4.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>5.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>6.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>7.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>8.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>9.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>10.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>11.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>12.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>13.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>14.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="row-height">
+                    <td><strong>15.</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===================== PAGE 4 (GUJARATI) ===================== -->
+    <div class="container">
+
+        <div class="title">બાળરોગ દંત ચિકિત્સા પ્રક્રિયાઓ માટેની સંમતિ</div>
+
+        <p class="p">
+            આ દંત ચિકિત્સા પ્રક્રિયાની નીતિ છે કે તમારા બાળક માટે વિચારવામાં આવતી તમામ પ્રક્રિયાઓ વિષે માતાપિતાને જાણ
+            કરવી.
+            દરેક તપાસની એપોઈન્ટમેન્ટ વખતે, અમે દંત ચિકિત્સા માટે જરૂરી હોય તે ઓળખીશું અને તમને અને તમારા બાળકને તેનું
+            વર્ણન
+            કરીશું.
+        </p>
+
+        <ul class="bullets">
+            <li>
+                દરેક નિયમિત પરીક્ષાની મુલાકાતમાં મૌખિક સ્વચ્છતા સૂચનાઓ, દાંતની સફાઈ, ફ્લોરાઇડનો સ્થાનીક ઉપયોગ, જો જરૂરી
+                હોય તો
+                રેડિયોગ્રાફ્સ (એક્સ-રે) અને દાંતની તપાસ, મોઢાના સખત અને નરમ તંતુઓ અને બાવળીની પ્રક્રિયાનો સમાવેશ થાય છે.
+            </li>
+            <li>
+                અન્ય કોઈપણ સારવાર જેવી કે ફિલિંગ, કેપ્સ, એક્સ્ટ્રેકશન વગેરે તમારી પરવાનગી મળ્યા પછી અલગ એપોઈન્ટમેન્ટમાં
+                કરવામાં
+                આવશે.
+            </li>
+        </ul>
+
+        <p class="p">
+            ભારતીય કાયદા માટે જરૂરી છે કે અમે તમારા બાળકને કાયદેસર સગીર તરીકે આપવામાં આવતી કોઈપણ સારવાર માટે તમારી લખિત
+            જાણકાર સંમતિ મેળવીયે.
+        </p>
+
+        <table class="numtbl">
+            <tr>
+                <td class="ncol">1.</td>
+                <td>
+                    હું અહીં અન્ય દંત ચિકિત્સક અને/અથવા ડેન્ટલ સહાયક દ્વારા મદદ કરવામાં આવેલ ડો.
+                    <span class="line" style="min-width:260px;"></span>
+                    ને અધિકૃત અને નિર્દેશિત કરું છું, નીચેની દંત ચિકિત્સા અથવા મૌખિક શસ્ત્રક્રિયા પ્રક્રિયાઓ કરવા માટે,
+                    જેમાં કોઈપણ જરૂરી અથવા સલાહભર્યું સ્થાનીક એનેસ્થેશિયા, રેડિયોગ્રાફ્સ (એક્સ-રે) અથવા ડાયગ્નોસ્ટિક
+                    એઇડ્સનો
+                    સમાવેશ થાય.
+                </td>
+            </tr>
+
+            <tr>
+                <td class="ncol">2.</td>
+                <td>
+                    સામાન્ય રીતે દંત ચિકિત્સા પ્રક્રિયાઓ અથવા ઓપરેશનમાં નીચેનાનો સમાવેશ થશે:
+                    <ul class="bullets" style="list-style-type: disc; margin: 6px 0 0 0;">
+                        <li>દાંતની સફાઈ અને સ્થાનીક ફ્લોરાઇડનો ઉપયોગ.</li>
+                        <li>દાંતના ખાંચા પર પ્લાસ્ટિક “સીલન્ટ” નો ઉપયોગ.</li>
+                        <li>રોગગ્રસ્ત અથવા ઇજાગ્રસ્ત દાંતની સારવાર ડેન્ટલ રેસ્ટોરેશન (ફિલિંગ અથવા કેપ્સ) સાથે.</li>
+                        <li>ખોવાયેલા દાંતને ડેન્ટલ પ્રોથેસિસ સાથે બદલવા.</li>
+                        <li>પરાવળ (કરોળા) દાંત અને/અથવા મૌખિક વિકાસ અથવા વૃદ્ધિ અસામાન્યતાઓની સારવાર.</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="ncol">3.</td>
+                <td>
+                    સ્થાનીક એનેસ્થેશિયાનો ઉપયોગ, ઇન્જેક્શન દ્વારા, દાંતને સુન કરવા માટે. નિષ્ક્રિયતા સામાન્ય રીતે 1 ½ થી
+                    3 કલાક સુધી
+                    ચાલે છે. એલર્જીક પ્રતિક્રિયાઓ દુર્લભ છે. તમારા બાળકને નિષ્ક્રિય લિપ અને ગાલને કરડવા નહીં ચેતવણી
+                    અપાશે.
+                    કૃપા કરીને તમારા બાળકને “શોટ” લેવા જઈ રહ્યો છે કારણ કે અમારી પાસે તેમને આ વિષે જાણ કરવાની અમારી
+                    વિશેષ રીત છે.
+                </td>
+            </tr>
+
+            <tr>
+                <td class="ncol">4.</td>
+                <td>
+                    નાઇટ્રસ ઓક્સાઇડ (લાફિંગ ગેસ) નો ઉપયોગ બાળકને આરામ કરવા માટે કરવામાં આવે છે જેથી તેઓ ઇન્જેક્શનનો ઓછો
+                    દુખાવો
+                    અનુભવે. આ ગેસ બાળકના નાક પર મુકવામાં આવે છે. ફરીથી, આ ગેસ ખૂબ સલામત છે. નાકનો ટુકડો, બધી સારવારની
+                    જેમ,
+                    બાળક પર દબાણ કરીને મુકવામાં આવશે નહીં.
+                </td>
+            </tr>
+        </table>
+
+        <p class="p" style="margin-top: 5px;">
+            હું સંપૂર્ણપણે સમજી છું કે પ્રક્રિયા દરમિયાન અથવા પછી સર્જિકલ અને/અથવા તબીબી જટિલતાઓ વિકસિત થવાની સંભાવના
+            છે.
+        </p>
+
+        <p class="p">
+            મારા બાળકના દાંતના સ્વાસ્થ્યને જાળવવા માટે સારવાર કરવા માટે હું ડો. <span class="line"
+                style="min-width:240px;"></span> ને અધિકૃત કરું છું.
+        </p>
+
+        <p class="p">
+            વળી હું સમજું છું કે માતા-પિતા(ઓ) તેમના બાળકની મુલાકાતના સમયગાળા માટે રિસેપ્શન એરિયામાં જ રહેશે. જોકે,
+            પ્રારંભિક
+            મુલાકાત માટે, તે માતા-પિતા બાળકની સાથે પરામર્શ વિસ્તારમાં જશે. પરામર્શ પૂર્ણ થયા પછી, માતાપિતાને રિસેપ્શન
+            એરિયામાં
+            પાછા આવવા વિનંતી કરવામાં આવશે.
+        </p>
+
+        <p class="p">
+            હું અહીં જાહેર કરું છું કે મેં આ સંમતિ ફોર્મ વાંચ્યું અને સમજ્યું છે અને પ્રક્રિયાઓ વિષેના તમામ પ્રશ્નોના
+            સંતોષકારક
+            રીતે જવાબ આપવામાં આવ્યા છે. હું સમજું છું કે મારા બાળકની સારવાર દરમ્યાન ઊભવતા પ્રશ્નોના જવાબ આપવાની મને
+            અધિકાર છે.
+        </p>
+
+        <p class="p">
+            વળી હું સમજું છું જ્યાં સુધી હું તેને સમાપ્ત કરવાનું પસંદ ન કરું ત્યાં સુધી આ સંમતિ અમલમાં રહેશે.
+        </p>
+
+        <table class="signTbl">
+            <tr>
+                <td style="width:70px;">તારીખ:</td>
+                <td><span class="line" style="min-width:220px;"></span></td>
+            </tr>
+            <tr>
+                <td>સમય:</td>
+                <td><span class="line" style="min-width:260px;"></span> &nbsp; AM/PM</td>
+            </tr>
+        </table>
+
+    </div>
+
+    <!-- ===================== PAGE 5 (GUJARATI) ===================== -->
+    <div class="container">
+
+        <table style="width:100%; border-collapse:collapse; font-size:18px;">
+            <tr>
+                <td style="padding: 2px 0;">
+                    દર્દીનું નામ: <span class="line" style="min-width:520px;"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 2px 0;">
+                    માતા-પિતા/વાલીની સહી: <span class="line" style="min-width:280px;"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 2px 0;">
+                    દર્દી સાથેનો સંબંધ: <span class="line" style="min-width:220px;"></span>
+                </td>
+            </tr>
+        </table>
+
+        <div class="title" style="font-size:32px; margin-top: 12px;">વર્તણૂક વ્યવસ્થાપન તકનીકો</div>
+
+        <p class="p">
+            ગુણવત્તાયુક્ત દાંતની સંભાળની યોગ્ય જોગવાઈમાં ખલેલ કરી શકે તેવી વર્તણૂકોમાં નીચેના સમાવીશ થાય છે:
+            અતિસક્રિયતા,
+            પ્રતિરોધક હલનચલન, મોં ખોલવાની ઇનકાર કરવી અથવા દાંતની જરૂરી સારવાર કરવા માટે તેને લાંબા સમય સુધી ખુલ્લું ન
+            આપવું
+            અને સારવાર માટે આક્રમક અથવા શારીરિક પ્રતિરોધ, જેમ કે લાત મારવી, ચીસો પાડવી અને દંત ચિકિત્સકના હાથ અથવા તીખા
+            દંત
+            સાધનોને પકડક.
+        </p>
+
+        <p class="p">
+            બાળક દર્દીઓ પાસેથી સહકાર મેળવવા માટે ઉષ્ણતા, મિત્રતા, સમજાવટ, હાસ્ય, સૌમ્યતા, દયાળુપણું અને સમજણનો ઉપયોગ
+            કરવામાં
+            આવશે. બાળક-દર્દીઓ પાસેથી સહકાર મેળવવા માટે અને અનિયંત્રિત હલચાલને કારણે તેઓને ઈજા ન થાય તે માટે કેટલાક
+            વર્તણૂક
+            વ્યવસ્થાપન ઉપાયો વપરાય છે. વધુ વાર વપરાતી બાળરોગ દંત ચિકિત્સા વર્તણૂક વ્યવસ્થાપન તકનીકો નીચે મુજબ છે:
+        </p>
+
+        <p class="p">
+            કહો-બતાવો-કરો: દંત ચિકિત્સક અથવા સહાયક બાળકને સરળ પરિભાષા અને પુનરાવર્તન દ્વારા શું કરવાનું છે તે સમજાવે છે
+            અને પછી
+            બાળકને મોડેલ અથવા બાળકની/દંત ચિકિત્સકની આંગળી પર સાધનો બતાવીને શું કરવાનું છે તે દર્શાવે છે. પછી પ્રક્રિયા
+            બાળકના
+            મોંમાં કરવામાં આવે છે. બાળકના સહકારાત્મક વર્તણૂક માટે પ્રશંસા કરી શકાય છે.
+        </p>
+
+        <ul class="bullets">
+            <li><b>સકારાત્મક મજબૂતીકરણ:</b> આ તકનીક બાળકને પ્રોત્સાહન આપે છે જે ઇચ્છનીય વર્તન દર્શાવે છે. પ્રોત્સાહનમાં
+                પ્રશંસાનો
+                સમાવેશ થાય છે.</li>
+
+            <li><b>અવાજ નિયંત્રણ:</b> સ્વર બદલવાથી અથવા દંત ચિકિત્સકના અવાજની માત્રા વધારવાથી વિક્ષિપ્ત બાળકનું ધ્યાન
+                ખેંચાય છે.
+                વાતચીતની સામગ્રી કરતાં આદેશની અચાનકતા વધુ મહત્વની છે.</li>
+
+            <li><b>માઉથ પ્રોપ્સ:</b> જ્યારે બાળક મોં ખોલવા ઇનકાર કરે અથવા લાંબા સમય સુધી ખુલ્લું ન રાખી શકે ત્યારે, મોં
+                બંધ ન થાય
+                તે માટે બાળકના મોંમાં રબર અથવા પ્લાસ્ટિક ઉપકરણ મૂકવામાં આવે છે.</li>
+
+            <li><b>સિડેશન દવાઓ:</b> ક્યારેક દવાઓનો ઉપયોગ એવા બાળકને આરામ કરવા માટે થાય છે જે અન્ય તકનીકોને પ્રતિસાદ
+                આપતું નથી
+                અથવા દંત પ્રક્રિયાઓને સમજી/સહકાર આપી શકતું નથી. આ દવાઓ મૌખિક રીતે, ઇન્જેક્શન દ્વારા અથવા ગેસ (નાઇટ્રસ
+                ઓક્સાઇડ અને
+                ઑક્સિજન) તરીકે આપી શકાય છે. તમને જાણ કર્યા વિના અને આવું કરવામાં તમારી ચોક્કસ સંમતિ લીધા વિના તમારા
+                બાળકને સીડેટ નહીં
+                કરવામાં આવે.</li>
+
+            <li><b>જનરલ એનેસ્થેશિયા:</b> દંત ચિકિત્સક હોસ્પિટલના ઓપરેટિંગ રૂમમાં એનેસ્થેટાઇઝ કરેલા બાળક સાથે સારવાર કરે
+                છે. તમને
+                જાણ કર્યા વિના અને તમારી ચોક્કસ સંમતિ લીધા વિના જનરલ એનેસ્થેશિયા આપવામાં આવશે નહીં.</li>
+        </ul>
+
+        <table style="width:100%; border-collapse:collapse; font-size:18px; margin-top: 14px;">
+            <tr>
+                <td style="padding: 6px 0;">તબીબનું નામ: <span class="line" style="min-width:520px;"></span></td>
+            </tr>
+            <tr>
+                <td style="padding: 6px 0;">તબીબની સહી: <span class="line" style="min-width:360px;"></span></td>
+            </tr>
+        </table>
+
+        <div class="endorseTitle">દરેક ચક્ર પર સંમતિ સમર્થન</div>
+
+        <table class="endorseTbl">
+            <tr>
+                <th style="width:10%;">ક્રમાંક</th>
+                <th style="width:15%;">તારીખ</th>
+                <th style="width:37%;">દર્દી/દર્દીના સગાની સહી</th>
+                <th style="width:38%;">સ્વાસ્થ્ય વ્યવસાયિકની સહી</th>
+            </tr>
+            <tr>
+                <td>૧</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>૨</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+    </div>
+
+    <!-- ===================== PAGE 6 (GUJARATI CONTINUATION TABLE) ===================== -->
+    <div class="container">
+        <table class="cycleTbl">
+            <tr>
+                <td class="c1">૩</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૪</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૫</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૬</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૭</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૮</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૯</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૧૦</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૧૧</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૧૨</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૧૩</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૧૪</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+            <tr>
+                <td class="c1">૧૫</td>
+                <td class="c2"></td>
+                <td class="c3"></td>
+                <td class="c4"></td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>

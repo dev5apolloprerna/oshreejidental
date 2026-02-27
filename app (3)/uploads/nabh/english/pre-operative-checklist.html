@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Preoperative Checklist</title>
+  <style>
+    /* DOMPDF SAFE RESET */
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11.5px;
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+
+    @page { size: A4; margin: 10mm; }
+
+    /* Main A4 box */
+    .page-container{
+      width: 190mm;            /* A4 210mm - margins (10mm left + 10mm right) = 190mm */
+      border: 2px solid #000;
+      padding: 5mm;
+      margin: 0 auto;
+    }
+
+    table{ width: 100%; border-collapse: collapse; }
+    td, th { padding: 2px 2px; vertical-align: middle; }
+
+    .main-border{ border: 1px solid #000; }
+    .border-bottom{ border-bottom: 1px solid #000; }
+    .border-right{ border-right: 1px solid #000; }
+
+    /* Header section (DOMPDF stable) */
+    .header-top td{ vertical-align: top; }
+    .addressograph{
+      border: 1px solid #000;
+      width: 45mm;
+      height: 15mm;
+      text-align: center;
+      font-weight: bold;
+      line-height: 15mm; /* stable vertical align */
+    }
+
+    .title-section{ text-align: center; }
+    .title-section h3{
+      margin: 0;
+      text-decoration: underline;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+    .title-banner{
+      border: 1.5px solid #000;
+      display: inline-block;
+      padding: 3px 12px;
+      font-weight: bold;
+      margin: 4px 0 0 0;
+      font-size: 11px;
+    }
+
+    /* Underline input (DOMPDF safe) */
+    .line{
+      display: inline-block;
+      border-bottom: 1px solid #000;
+      height: 14px;
+      line-height: 14px;
+      vertical-align: bottom;
+    }
+    .w-130{ width: 35mm; }
+    .w-100{ width: 28mm; }
+    .w-70 { width: 20mm; }
+    .w-80p{ width: 140mm; }   /* used for long line */
+    .w-250{ width: 70mm; }
+    .w-60 { width: 18mm; }
+    .w-90p{ width: 95%; }
+    .w-300{ width: 85mm; }
+    .w-50 { width: 14mm; }
+    .w-150{ width: 42mm; }
+    .w-80 { width: 22mm; }
+
+    .line input{
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      height: 14px;
+      line-height: 14px;
+      font-size: 11px;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Checkbox cells */
+    .checkbox-cell{
+      text-align: center;
+      border: 1px solid #000;
+      width: 10mm;
+    }
+
+    /* Submit bar (hide in pdf) */
+    .submit-bar{ display: none; }
+    
+  </style>
+</head>
+
+<body>
+  <div class="page-container">
+
+    <!-- Header (table based) -->
+    <table class="header-top">
+      <tr>
+        <td style="width: 75%;">
+          <div class="title-section">
+            <h3>Preoperative Checklist</h3>
+            <div class="title-banner">TO BE FILLED BY UNIT NURSE &amp; OT NURSE</div>
+          </div>
+        </td>
+        <td style="width: 25%; text-align: right;">
+          <div class="addressograph">ADDRESSOGRAPH</div>
+        </td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <td style="width: 40%;">Date of Surgery :
+          <span class="line w-130"><input type="text" id="input1" name="input1"></span>
+        </td>
+        <td style="width: 35%;">Time of Surgery :
+          <span class="line w-100"><input type="text" id="input2" name="input2"></span>
+        </td>
+        <td style="width: 25%;">Bed No. :
+          <span class="line w-70"><input type="text" id="input3" name="input3"></span>
+        </td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <td>Name of Surgeon :
+          <span class="line w-80p"><input type="text" id="input4" name="input4"></span>
+        </td>
+      </tr>
+      <tr>
+        <td style="width:60%;">Name of Anesthetist :
+          <span class="line" style="width: 70mm;"><input type="text" id="input5" name="input5"></span>
+        </td>
+        <td style="width:40%; text-align:right;">Height :
+          <span class="line w-60"><input type="text" id="input6" name="input6"></span> cm
+        </td>
+      </tr>
+      <tr>
+        <td style="width:60%;">Name of Surgery / Procedure :
+          <span class="line" style="width: 70mm;"><input type="text" id="input7" name="input7"></span>
+        </td>
+        <td style="width:40%; text-align:right;">Weight :
+          <span class="line w-60"><input type="text" id="input8" name="input8"></span> kg
+        </td>
+      </tr>
+    </table>
+
+    <table class="main-border">
+      <tr>
+        <td class="border-right" style="width:25%">
+          High Risk :
+          <input type="checkbox" id="input9" name="input9"> Yes
+          <input type="checkbox" id="input10" name="input10"> No
+        </td>
+        <td class="border-right" style="width:25%">
+          HIV +ve :
+          <input type="checkbox" id="input11" name="input11"> Yes
+          <input type="checkbox" id="input12" name="input12"> No
+        </td>
+        <td class="border-right" style="width:25%">
+          HbsAg +ve :
+          <input type="checkbox" id="input13" name="input13"> Yes
+          <input type="checkbox" id="input14" name="input14"> No
+        </td>
+        <td style="width:25%">
+          Anti HCV +ve :
+          <input type="checkbox" id="input15" name="input15"> Yes
+          <input type="checkbox" id="input16" name="input16"> No
+        </td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <td>Allergy :
+          <span class="line w-250"><input type="text" id="input17" name="input17"></span>
+        </td>
+        <td>Diagnosis :
+          <span class="line w-250"><input type="text" id="input18" name="input18"></span>
+        </td>
+      </tr>
+    </table>
+
+    <table class="main-border">
+      <tr>
+        <td class="border-right" style="width:55%; padding:0;">
+          <table>
+            <tr class="border-bottom">
+              <td style="font-weight:bold; text-decoration: underline;">INVESTIGATIONS</td>
+              <td style="text-align:center; width:10mm;">YES</td>
+              <td style="text-align:center; width:10mm;">NO</td>
+              <td style="width:30mm;">No. of Copies</td>
+            </tr>
+
+            <tr>
+              <td>Biopsy Report</td>
+              <td style="text-align:center;"><input type="checkbox" id="input19" name="input19"></td>
+              <td style="text-align:center;"><input type="checkbox" id="input20" name="input20"></td>
+              <td><span class="line w-90p"><input type="text" id="input21" name="input21"></span></td>
+            </tr>
+            <tr>
+              <td>Lab Reports</td>
+              <td style="text-align:center;"><input type="checkbox" id="input22" name="input22"></td>
+              <td style="text-align:center;"><input type="checkbox" id="input23" name="input23"></td>
+              <td><span class="line w-90p"><input type="text" id="input24" name="input24"></span></td>
+            </tr>
+            <tr>
+              <td>X-Ray</td>
+              <td style="text-align:center;"><input type="checkbox" id="input25" name="input25"></td>
+              <td style="text-align:center;"><input type="checkbox" id="input26" name="input26"></td>
+              <td><span class="line w-90p"><input type="text" id="input27" name="input27"></span></td>
+            </tr>
+            <tr>
+              <td>USG</td>
+              <td style="text-align:center;"><input type="checkbox" id="input28" name="input28"></td>
+              <td style="text-align:center;"><input type="checkbox" id="input29" name="input29"></td>
+              <td><span class="line w-90p"><input type="text" id="input30" name="input30"></span></td>
+            </tr>
+            <tr>
+              <td>CT Scan</td>
+              <td style="text-align:center;"><input type="checkbox" id="input31" name="input31"></td>
+              <td style="text-align:center;"><input type="checkbox" id="input32" name="input32"></td>
+              <td><span class="line w-90p"><input type="text" id="input33" name="input33"></span></td>
+            </tr>
+            <tr>
+              <td>MRI</td>
+              <td style="text-align:center;"><input type="checkbox" id="input34" name="input34"></td>
+              <td style="text-align:center;"><input type="checkbox" id="input35" name="input35"></td>
+              <td><span class="line w-90p"><input type="text" id="input36" name="input36"></span></td>
+            </tr>
+            <tr>
+              <td>Doppler</td>
+              <td style="text-align:center;"><input type="checkbox" id="input37" name="input37"></td>
+              <td style="text-align:center;"><input type="checkbox" id="input38" name="input38"></td>
+              <td><span class="line w-90p"><input type="text" id="input39" name="input39"></span></td>
+            </tr>
+          </table>
+        </td>
+
+        <td style="padding:0;">
+          <table>
+            <tr class="border-bottom">
+              <td style="font-weight:bold;">LATEST VITALS</td>
+              <td colspan="2">Time :
+                <span class="line w-80"><input type="text" id="input40" name="input40"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>Temperature:</td>
+              <td><span class="line w-80"><input type="text" id="input41" name="input41"></span></td>
+              <td>°F</td>
+            </tr>
+            <tr>
+              <td>Pulse :</td>
+              <td><span class="line w-80"><input type="text" id="input42" name="input42"></span></td>
+              <td>/ Min</td>
+            </tr>
+            <tr>
+              <td>Respiration :</td>
+              <td><span class="line w-80"><input type="text" id="input43" name="input43"></span></td>
+              <td>/ Min</td>
+            </tr>
+            <tr>
+              <td>B. P. :</td>
+              <td><span class="line w-80"><input type="text" id="input44" name="input44"></span></td>
+              <td>mm of Hg</td>
+            </tr>
+            <tr>
+              <td>SpO2 :</td>
+              <td><span class="line w-80"><input type="text" id="input45" name="input45"></span></td>
+              <td>%</td>
+            </tr>
+            <tr>
+              <td>RBS (If ordered) :</td>
+              <td><span class="line w-80"><input type="text" id="input46" name="input46"></span></td>
+              <td>mg / dl</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Remaining YES/NO tables (your content kept, just DOMPDF stable) -->
+    <table class="main-border">
+      <tr class="border-bottom" style="font-weight:bold;">
+        <td></td><td style="width:10mm; text-align:center;">YES</td><td style="width:10mm; text-align:center;">NO</td>
+      </tr>
+      <tr class="border-bottom">
+        <td>1) Patient have ID Band with IP No</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input47" name="input47"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input48" name="input48"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>2) Consent for Operation / Procedure taken<br>
+          <span style="font-size:10.5px; display:block; margin-left: 5mm;">
+            1) Informed Consent for surgery and Anesthesia | 2) High Risk (if applicable)<br>
+            3) Special Consent for Amputation | 4) Consent for Blood Product Transfusion
+          </span>
+        </td>
+        <td class="checkbox-cell"><input type="checkbox" id="input49" name="input49"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input50" name="input50"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>3) OT Clearance done</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input51" name="input51"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input52" name="input52"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>4) Physician reference done</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input53" name="input53"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input54" name="input54"></td>
+      </tr>
+      <tr>
+        <td>5) Preoperative anaesthetic check up done</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input55" name="input55"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input56" name="input56"></td>
+      </tr>
+    </table>
+
+    <table class="main-border">
+      <tr class="border-bottom" style="font-weight:bold;">
+        <td></td><td style="width:10mm; text-align:center;">YES</td><td style="width:10mm; text-align:center;">NO</td>
+      </tr>
+      <tr class="border-bottom">
+        <td>
+          1) Any specific medication ordered by Surgeon / Physician / Anesthetist<br>
+          <span style="font-size:10px;">
+            (if yes, Name it:
+            <span class="line w-300"><input type="text" id="input57" name="input57"></span>)
+          </span>
+        </td>
+        <td class="checkbox-cell"><input type="checkbox" id="input58" name="input58"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input59" name="input59"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>
+          2) Any specific medication omitted by Surgeon / Physician / Anesthetist<br>
+          <span style="font-size:10px;">
+            (if yes, Name it:
+            <span class="line w-300"><input type="text" id="input60" name="input60"></span>)
+          </span>
+        </td>
+        <td class="checkbox-cell"><input type="checkbox" id="input61" name="input61"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input62" name="input62"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>
+          3) NBM from :
+          <span class="line w-100"><input type="text" id="input63" name="input63"></span>
+          am / pm. Date :
+          <span class="line w-100"><input type="text" id="input64" name="input64"></span>
+        </td>
+        <td colspan="2"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>4) Preparation of operating part by Betadine / Savlon done.</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input65" name="input65"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input66" name="input66"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>5) Shaving of operating part done.</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input67" name="input67"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input68" name="input68"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>6) Operative site is marked / mentioned right or left.</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input69" name="input69"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input70" name="input70"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>7) Prosthesis / Denture / Ornaments / Contact lens / Nail Polish / Lip stick Removed.</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input71" name="input71"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input72" name="input72"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>8) OT dress (Undergarments Removed)</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input73" name="input73"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input74" name="input74"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>
+          9) Urine Voided / Bag Emptied with
+          <span class="line w-50"><input type="text" id="input75" name="input75"></span>
+          ml urine (if catheterized)
+        </td>
+        <td class="checkbox-cell"><input type="checkbox" id="input76" name="input76"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input77" name="input77"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>10) Bowel Preparation done / Enema / Bowel wash / Laxative</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input78" name="input78"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input79" name="input79"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>11) Mouth care - gargles prescribed.</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input80" name="input80"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input81" name="input81"></td>
+      </tr>
+      <tr class="border-bottom">
+        <td>12) PCV required</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input82" name="input82"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input83" name="input83"></td>
+      </tr>
+      <tr>
+        <td>13) PCV ready in Blood bank / in Hospital.</td>
+        <td class="checkbox-cell"><input type="checkbox" id="input84" name="input84"></td>
+        <td class="checkbox-cell"><input type="checkbox" id="input85" name="input85"></td>
+      </tr>
+    </table>
+
+    <table style="margin-top: 3mm;">
+      <tr>
+        <td style="width:40%">Dentist / assistant :
+          <span class="line w-150"><input type="text" id="input86" name="input86"></span>
+        </td>
+        <td style="width:40%">Sign with E.ID:
+          <span class="line w-150"><input type="text" id="input87" name="input87"></span>
+        </td>
+        <td style="width:20%">Time :
+          <span class="line w-70"><input type="text" id="input88" name="input88"></span>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <!-- HIDE IN PDF -->
+  <div class="submit-bar">
+    <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+    <button id="submitBtn" type="button">Submit</button>
+  </div>
+</body>
+</html>
