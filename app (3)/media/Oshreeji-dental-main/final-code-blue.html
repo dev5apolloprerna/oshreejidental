@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Code Blue and CPR Record Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* A4 Page Setup */
+        .page {
+            width: 210mm;
+            /* min-height: 297mm; */
+            padding: 10mm 15mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                page-break-after: always;
+            }
+
+           
+        }
+
+        /* Patient Info Box */
+        .patient-box {
+            border: 1.5px solid #003366;
+            width: 280px;
+            padding: 10px;
+            float: right;
+            font-size: 11pt;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            clear: both;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 16pt;
+            text-decoration: underline;
+            margin-bottom: 5px;
+        }
+
+        .sub-h1 {
+            text-align: center;
+            font-size: 10pt;
+            margin-top: 0;
+            font-weight: bold;
+        }
+
+        .section-line {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .section-line::before,
+        .section-line::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid black;
+        }
+
+        .section-line:not(:empty)::before {
+            margin-right: 10px;
+        }
+
+        .section-line:not(:empty)::after {
+            margin-left: 10px;
+        }
+
+        .form-row {
+            margin: 8px 0;
+            display: flex;
+            align-items: baseline;
+            font-size: 10.5pt;
+        }
+
+        .underline {
+            border-bottom: 1px solid black;
+            flex-grow: 1;
+            margin: 0 5px;
+            min-height: 14px;
+        }
+
+        .box {
+            width: 22px;
+            height: 18px;
+            border: 1px solid black;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 10pt;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 6px;
+            text-align: left;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .factors {
+            font-size: 7pt;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="patient-box">
+            Patient ID sticker or <br>
+            Patient Name:............................................<br>
+            UHID NO:....................................................<br>
+            Consultant:............................
+        </div>
+
+        <h1 style="font-size: 15px;">CODEBLUE AND CPR RECORD SHEET</h1>
+        <p style="font-size :13px; text-align: center;">(Part A- Code blue record, Part B – CPR Record.)</p>
+        <div style="margin-top: 40px;">
+            <div class="form-row" style="width: 200px;"><b>Date:</b><span class="underline"></span></div>
+            <div class="form-row" style="width: 200px;"><b>Sheet No:</b><span class="underline"></span></div>
+        </div>
+
+
+        <div class="section-line">Part A -Code blue Record</div>
+
+        <div class="form-row">Diagnosis till Date:<span class="underline"></span></div>
+
+        <div class="form-row">
+            <b>Reason of Code activation</b>
+            <div class="check-item" style="margin-left:15px;">
+                <div class="box"></div> Not Required, Reason:
+            </div>
+            <span class="underline"></span>
+        </div>
+
+        <div class="form-row" style="justify-content: space-around; margin-left: 30px;">
+            <div class="check-item">
+                <div class="box"></div> Unresponsiveness
+            </div>
+            <div class="check-item">
+                <div class="box"></div> Arrhythmia
+            </div>
+            <div class="check-item">
+                <div class="box"></div> Gasping
+            </div>
+            <div class="check-item">
+                <div class="box"></div> Seizure
+            </div>
+            <div class="check-item">
+                <div class="box"></div> <span class="underline" style="width:100px;"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            Responder: 1<sup>st</sup><span class="underline"></span>
+            2<sup>nd</sup><span class="underline"></span>
+            Code activated by:<span class="underline"></span>
+        </div>
+
+        <div class="form-row">
+            Time of event:<span class="underline"></span>
+            Code Activated at:<span class="underline"></span>
+            Team arrived at:<span class="underline"></span>
+        </div>
+
+        <div class="form-row">
+            Location:
+            <div class="check-item" style="margin-left:10px;">
+                <div class="box"></div> ER
+            </div>
+            <div class="check-item">
+                <div class="box"></div> OPD
+            </div>
+            <div class="check-item">
+                <div class="box"></div> General OT
+            </div>
+            <div class="check-item">
+                <div class="box"></div> Labor OT
+            </div>
+            <div class="check-item">Others (Specify): <span class="underline" style="width:120px;"></span></div>
+        </div>
+
+        <div class="form-row">
+            First Monitored Rhythm:
+            <div class="check-item" style="margin-left:10px;">
+                <div class="box"></div> VF
+            </div>
+            <div class="check-item">
+                <div class="box"></div> VT
+            </div>
+            <div class="check-item">Others: <span class="underline"></span></div>
+            Diagnosed By: <span class="underline"></span>
+        </div>
+
+        <div class="form-row">
+            Cardiac arrest confirmed by checking Carotid Pulse –
+            <div class="check-item" style="margin-left:10px;">
+                <div class="box"></div> Yes
+            </div>
+        </div>
+
+        <div class="factors">
+            <b>Contributory factor - 1.6H - Hyperkalemia /H+Ions/ Hyperthermia /Hypovolemia /Hypoxia
+                /Hypoglycemia</b><br>
+            <span style="margin-left: 95px;"><b>2.6T</b> Toxins / Cardiac Tamponade /Tension pneumothorax /Thrombosis
+                (coronary& pulmonary)/Trauma</span>
+        </div>
+
+        <p style="font-weight:bold; margin-bottom:5px;">Relevant Lab test done during code.</p>
+        <table>
+            <tr>
+                <th width="15%">Test</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Time</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <p style="font-weight:bold; margin: 15px 0 5px 0;">CPR and Outcome Summary</p>
+        <table>
+            <tr class="center" style="font-weight:bold;">
+                <td width="25%">STRTED AT</td>
+                <td width="25%">STOPED AT</td>
+                <td width="25%">OUTCOME</td>
+                <td width="25%">DURATION</td>
+            </tr>
+            <tr>
+                <td height="25px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="25px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="center" style="font-weight:bold;">Final outcome</td>
+                <td>
+                    <div class="check-item" style="justify-content:center;">
+                        <div class="box"></div> ROSC at
+                    </div>
+                </td>
+                <td colspan="2">
+                    <div class="check-item" style="justify-content:center;">
+                        <div class="box"></div> Death declared at
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-line">Part B -CPR Record</div>
+
+        <table>
+            <tr class="center" style="font-weight:bold;">
+                <td rowspan="2">Time</td>
+                <td rowspan="2">Rhythm</td>
+                <td colspan="3">Treatment</td>
+                <td rowspan="2">Given by (Name of code members)</td>
+            </tr>
+            <tr class="center" style="font-weight:bold;">
+                <td>.CPR- Rate & Ratio</td>
+                <td>DC – Joules</td>
+                <td>STAT -Drugs</td>
+            </tr>
+            <tr>
+                <td height="35px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="35px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="page">
+        <div class="patient-box">
+            Patient ID sticker or <br>
+            Patient Name:............................................<br>
+            UHID NO:....................................................
+        </div>
+
+        <div style="clear:both; padding-top: 20px;">
+            <p style="text-align: center; font-weight: bold;">(*Begin from the 1<sup>st</sup> page )</p>
+        </div>
+
+        <table>
+            <tr class="center" style="font-weight:bold;">
+                <td rowspan="2" width="8%">Time</td>
+                <td rowspan="2" width="12%">Rhythm</td>
+                <td colspan="3">Treatment</td>
+                <td rowspan="2" width="15%">Given by (Name of code members)</td>
+            </tr>
+            <tr class="center" style="font-weight:bold;">
+                <td width="20%">.CPR- Rate & Ratio</td>
+                <td width="15%">DC – Joules</td>
+                <td width="30%">STAT -Drugs</td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td height="55px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <table style="margin-top: 15px;">
+            <tr>
+                <td width="33%">Team Leader</td>
+                <td width="33%"></td>
+                <td width="33%"></td>
+            </tr>
+            <tr>
+                <td>Code Blue Nurse</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>BLS Providers</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Nursing Supervisor/Incharge</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <p style="font-size: 10pt; margin-top: 5px; margin-bottom: 0;">&bull; Part B must be filled during the event of CPR.</p>
+    </div>
+
+</body>
+
+</html>

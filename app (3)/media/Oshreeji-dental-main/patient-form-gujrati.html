@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="gu">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>દર્દી ફોર્મ</title>
+
+    <!-- (Optional) If Gujarati font not showing properly, uncomment next line -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet"> -->
+
+    <style>
+        /* PRINT: A4 exact */
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        @media print {
+            body {
+                background: #fff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .sheet {
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+        }
+
+        body {
+            background: #f2f2f2;
+            margin: 0;
+            padding: 16px;
+            font-family: "Noto Sans Gujarati", "Shruti", "Nirmala UI", "Gujarati Sangam MN", Arial, sans-serif;
+            color: #000;
+        }
+
+        /* A4 canvas */
+        .sheet {
+            width: 210mm;
+            margin: 0 auto;
+            background: #fff;
+            box-sizing: border-box;
+            padding: 14mm;
+            border: 2px solid #000;
+            /* outer thick border like image */
+            box-shadow: 0 0 10px rgba(0, 0, 0, .10);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        td {
+            vertical-align: top;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: 700;
+        }
+
+        .semibold {
+            font-weight: 600;
+        }
+
+        /* line fields */
+        .line {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            height: 12px;
+            vertical-align: bottom;
+        }
+
+        .line.full {
+            width: 100%;
+        }
+
+        .line.w60 {
+            width: 60mm;
+        }
+
+        .line.w55 {
+            width: 55mm;
+        }
+
+        .line.w50 {
+            width: 50mm;
+        }
+
+        .line.w45 {
+            width: 45mm;
+        }
+
+        .line.w40 {
+            width: 40mm;
+        }
+
+        .line.w35 {
+            width: 30mm;
+        }
+
+        .line.w30 {
+            width: 30mm;
+        }
+
+        .line.w25 {
+            width: 25mm;
+        }
+
+        .line.w20 {
+            width: 20mm;
+        }
+
+        .mt6 {
+            margin-top: 6px;
+        }
+
+        .mt10 {
+            margin-top: 10px;
+        }
+
+        .mt14 {
+            margin-top: 14px;
+        }
+
+        .mt18 {
+            margin-top: 18px;
+        }
+
+        .sectionTitle {
+            text-align: center;
+            font-weight: 700;
+            margin: 12px 0 6px;
+        }
+
+        /* checkbox look like form */
+        .cb {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #000;
+            margin: 0 6px 0 10px;
+            vertical-align: middle;
+        }
+
+        .small {
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sheet">
+        <table role="presentation">
+            <!-- Header -->
+            <tr>
+                <td class="center" style="padding-top:6mm;">
+                    <div class="bold" style="font-size:18px;">દર્દી ફોર્મ</div>
+                    <div class="semibold mt6">જ્યાં લાગુ પડતું હોય ત્યાં ( ✓ ) ટિક કરવું.</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-top:2mm;">
+                    <table role="presentation">
+                        <tr>
+                            <td style="width:100%; padding-right:10mm;">
+                                <div style="text-align: center;">
+                                    આ ફોર્મ દર્દી/દર્દીના સગા એ પોતાના અક્ષરોમાં ભરવું જરૂરી છે. આપેલ માહિતીમાં
+                                    પાછળથી કોઈ ફેરફાર થઈ શકશે નહીં.
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="width:35%;">
+                                <div style="text-align:right;">
+                                    <div>એડમિશન તારીખ: <span class="line w35"></span></div>
+                                    <div class="mt10">એડમિશન સમય: <span class="line w35"></span></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- (એ) દર્દીની માહિતી -->
+            <tr>
+                <td style="padding-top:10px;">
+                    <div class="sectionTitle">(એ) દર્દીની માહિતી</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table role="presentation">
+                        <tr>
+                            <td style="width:65%;">
+                                દર્દીનું નામ: <span class="line" style="width:120mm;"></span>
+                            </td>
+                            <td style="width:15%; text-align:left;">
+                                ઉંમર: <span class="line w20"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-top:3mm;">
+                                દર્દી સાથે આવેલ સંબંધિનું નામ: <span class="line" style="width:110mm;"></span>
+                            </td>
+                            <td style="padding-top:3mm;">
+                                જન્મ તારીખ: <span class="line w30"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-top:3mm;">
+                                રેફ. ડોક્ટરનું નામ: <span class="line" style="width:115mm;"></span>
+                            </td>
+                            <td style="padding-top:3mm;">
+                                વૈવાહિક સ્થિતિ: પરણીત/અપરિણીત
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-top:3mm;">
+                                કન્સલ્ટન્ટ ડોક્ટરનું નામ: <span class="line" style="width:105mm;"></span>
+                            </td>
+                            <td style="padding-top:3mm;">
+                                જાતિ:
+                                <span class="cb"></span> પુરુષ
+                                <span class="cb"></span> સ્ત્રી
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- (બી) કાયમી પત્રવ્યવહાર માટે સરનામું -->
+            <tr>
+                <td style="padding-top:6mm;">
+                    <div class="sectionTitle">(બી) કાયમી પત્રવ્યવહાર માટે સરનામું</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    સરનામું: <span class="line full"></span>
+                    <div class="mt10"><span class="line full"></span></div>
+
+                    <table role="presentation" style="margin-top:4mm;">
+                        <tr>
+                            <td style="width:25%;">શહેર: <span class="line w30"></span></td>
+                            <td style="width:25%;">પીન કોડ: <span class="line w25"></span></td>
+                            <td style="width:25%;">જિલ્લો: <span class="line w25"></span></td>
+                            <td style="width:25%;">રાજ્ય: <span class="line w25"></span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- (સી) દર્દીના સંપર્ક નંબર -->
+            <tr>
+                <td style="padding-top:6mm;">
+                    <div class="sectionTitle">(સી) દર્દીના સંપર્ક નંબર</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table role="presentation">
+                        <tr>
+                            <td style="width:25%;">એચ.ટી.ડી. કોડ: <span class="line w30"></span></td>
+                            <td style="width:25%;">રેહડા: <span class="line w30"></span></td>
+                            <td style="width:25%;">ઓફિસ: <span class="line w30"></span></td>
+                            <td style="width:25%;">મો.: <span class="line w30"></span></td>
+                        </tr>
+                    </table>
+
+                    <div class="mt10">ઇ-મેલ: <span class="line" style="width:160mm;"></span></div>
+                </td>
+            </tr>
+
+            <!-- (ડી) સાથે જે લાવેલી હોય તેની સંપર્ક નંબર -->
+            <tr>
+                <td style="padding-top:6mm;">
+                    <div class="sectionTitle">(ડી) સાથે જે લાવેલી હોય તેની સંપર્ક નંબર</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table role="presentation">
+                        <tr>
+                            <td style="width:45%;">
+                                ૧. નામ: <span class="line" style="width:70mm;"></span>
+                            </td>
+                            <td style="width:25%;">
+                                સંપર્ક નંબર: <span class="line w35"></span>
+                            </td>
+                            <td style="width:25%;">
+                                દર્દી સાથેનો સંબંધ: <span class="line w35"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-top:3mm;">
+                                ૨. નામ: <span class="line" style="width:70mm;"></span>
+                            </td>
+                            <td style="padding-top:3mm;">
+                                સંપર્ક નંબર: <span class="line w35"></span>
+                            </td>
+                            <td style="padding-top:3mm;">
+                                દર્દી સાથેનો સંબંધ: <span class="line w35"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- (ઈ) સંમતિ -->
+            <tr>
+                <td style="padding-top:6mm;">
+                    <div class="sectionTitle">(ઈ) સંમતિ</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="small" style="padding-top:1mm;">
+                    હું <span class="line" style="width:60mm;"></span> ને જાણ કરવામાં આવી છે કે સારવાર/પ્રક્રિયામાં
+                    સ્વાભાવિક જોખમ છે. મેં કોઈપણ દબાણ વિના અને મારા સંપૂર્ણ અર્થમાં મારી સ્વતંત્ર ઇચ્છાથી આ સંમતિ
+                    સ્વૈચ્છિક રીતે આપેલ છે.
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-top:10mm;">
+                    <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
+                        <div>દર્દીનો કાયદાકીય પતિ? </div>
+                        <div><span class="cb"></span> હા</div>
+                        <div><span class="cb"></span> ના</div>
+                        <div><span class="cb"></span> ખબર નથી</div>
+                    </div>
+
+                    <div class="mt14">દર્દીનું નામ: <span class="line" style="width:160mm;"></span></div>
+
+                    <table role="presentation" style="margin-top:4mm;">
+                        <tr>
+                            <td style="width:45%;">
+                                દર્દીના સગાનું નામ: <span class="line" style="width:75mm;"></span>
+                            </td>
+                            <td style="width:25%;">
+                                દર્દી સાથેનો સંબંધ: <span class="line w35"></span>
+                            </td>
+                            <td style="width:15%;">
+                                સહી: <span class="line w25"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
