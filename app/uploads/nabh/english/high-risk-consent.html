@@ -9,14 +9,13 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 1.4;
-            margin: 40px;
+            margin: 20px;
             color: #000;
         }
 
         .container {
             max-width: 800px;
             margin: auto;
-            page-break-after: always;
         }
 
         h2 {
@@ -27,11 +26,11 @@
         }
 
         .section {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             text-align: justify;
         }
 
-        /* STICKY DESIGN: Maintain pixel-perfect underlines with inputs */
+        /* DOMPDF compatible inputs */
         input[type="text"] {
             border: none;
             border-bottom: 1px solid black;
@@ -39,49 +38,81 @@
             outline: none;
             font-family: inherit;
             font-size: inherit;
-            padding: 0;
+            padding: 0 0 0 5px;
             margin: 0;
-            height: 1.4em; /* Match line-height */
-            vertical-align: bottom;
+            height: 20px;
+            vertical-align: middle;
+            box-sizing: border-box;
         }
 
-        .line-input {
-            min-width: 200px;
+        /* Force table layout for all sections */
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
         }
 
-        .full-line {
-            display: inline-block;
-            margin-top: 5px;
+        .form-table td {
+            padding: 5px 0;
+            vertical-align: middle;
         }
 
-        table {
+        .form-table td.label {
+            width: 150px;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        .form-table td.separator {
+            width: 20px;
+            text-align: center;
+        }
+
+        .form-table td.field {
+            width: auto;
+        }
+
+        .risk-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
 
-        td {
-            padding: 8px 0;
-            vertical-align: bottom; /* Ensure input sits on the baseline */
+        .risk-table td {
+            padding: 5px 0;
+            width: 50%;
         }
 
-        .risk-table td {
-            width: 50%;
+        .risk-table input {
+            width: 85%;
+            margin-left: 5px;
+        }
+
+        /* Full width inputs for specific fields */
+        .full-width-input {
+            width: 100% !important;
         }
 
         /* Print optimization */
         @media print {
             body {
-                margin: 20px;
+                margin: 15px;
             }
-
-            .container {
-                width: 100%;
-            }
-
+            
             input {
                 border-bottom: 1px solid black !important;
             }
+            
+            .submit-bar {
+                display: none !important;
+            }
+            
+            
+        }
+
+        /* DOMPDF specific - ensures proper rendering */
+        table {
+            page-break-inside: avoid;
         }
     </style>
 </head>
@@ -91,10 +122,14 @@
     <div class="container">
         <h2>High Risk Consent Form</h2>
 
-        <div class="section">
-            <strong>Name of the Procedure:</strong> 
-            <input type="text" id="input1" name="input1" class="full-line" style="width: 60%;">
-        </div>
+        <!-- Name of the Procedure -->
+        <table class="form-table">
+            <tr>
+                <td class="label">Name of the Procedure:</td>
+                <td class="separator"></td>
+                <td class="field"><input type="text" id="input1" name="input1" style="width: 100%;"></td>
+            </tr>
+        </table>
 
         <div class="section">
             We permit the doctor to do the required procedure. We also permit to give anaesthesia if necessary.
@@ -109,96 +144,111 @@
             condition.
         </div>
 
-        <div class="section">
-            <strong>Relative's Name:</strong> 
-            <input type="text" id="input2" name="input2" class="full-line" style="width: 80%;">
-        </div>
-        <div class="section">
-            <strong>Relation with Patient:</strong> 
-            <input type="text" id="input3" name="input3" class="full-line" style="width: 70%;">
-        </div>
-        <div class="section">
-            <strong>Relative's Signature:</strong> 
-            <input type="text" id="input4" name="input4" class="full-line" style="width: 75%;">
-        </div>
+        <!-- Relative Details -->
+        <table class="form-table">
+            <tr>
+                <td class="label">Relative's Name:</td>
+                <td class="separator"></td>
+                <td class="field"><input type="text" id="input2" name="input2" style="width: 100%;"></td>
+            </tr>
+            <tr>
+                <td class="label">Relation with Patient:</td>
+                <td class="separator"></td>
+                <td class="field"><input type="text" id="input3" name="input3" style="width: 100%;"></td>
+            </tr>
+            <tr>
+                <td class="label">Relative's Signature:</td>
+                <td class="separator"></td>
+                <td class="field"><input type="text" id="input4" name="input4" style="width: 100%;"></td>
+            </tr>
+        </table>
 
         <p><strong>High Risk Factors</strong></p>
 
         <table class="risk-table">
             <tr>
-                <td>1) <input type="text" id="input5" name="input5" class="line-input" style="width: 80%;"></td>
-                <td>6) <input type="text" id="input6" name="input6" class="line-input" style="width: 80%;"></td>
+                <td>1) <input type="text" id="input5" name="input5"></td>
+                <td>6) <input type="text" id="input6" name="input6"></td>
             </tr>
             <tr>
-                <td>2) <input type="text" id="input7" name="input7" class="line-input" style="width: 80%;"></td>
-                <td>7) <input type="text" id="input8" name="input8" class="line-input" style="width: 80%;"></td>
+                <td>2) <input type="text" id="input7" name="input7"></td>
+                <td>7) <input type="text" id="input8" name="input8"></td>
             </tr>
             <tr>
-                <td>3) <input type="text" id="input9" name="input9" class="line-input" style="width: 80%;"></td>
-                <td>8) <input type="text" id="input10" name="input10" class="line-input" style="width: 80%;"></td>
+                <td>3) <input type="text" id="input9" name="input9"></td>
+                <td>8) <input type="text" id="input10" name="input10"></td>
             </tr>
             <tr>
-                <td>4) <input type="text" id="input11" name="input11" class="line-input" style="width: 80%;"></td>
-                <td>9) <input type="text" id="input12" name="input12" class="line-input" style="width: 80%;"></td>
+                <td>4) <input type="text" id="input11" name="input11"></td>
+                <td>9) <input type="text" id="input12" name="input12"></td>
             </tr>
             <tr>
-                <td>5) <input type="text" id="input13" name="input13" class="line-input" style="width: 80%;"></td>
-                <td>10) <input type="text" id="input14" name="input14" class="line-input" style="width: 80%;"></td>
+                <td>5) <input type="text" id="input13" name="input13"></td>
+                <td>10) <input type="text" id="input14" name="input14"></td>
             </tr>
         </table>
 
-        <table style="margin-top: 30px;">
+        <!-- Final Details Table -->
+        <table class="form-table" style="margin-top: 30px;">
             <tr>
-                <td style="width: 250px;"><strong>Date</strong></td>
-                <td><strong>:</strong> <input type="text" id="today_date" name="today_date" class="line-input" style="width: 150px;"></td>
+                <td class="label">Date</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="today_date" name="today_date" style="width: 250px;"></td>
             </tr>
             <tr>
-                <td><strong>Time</strong></td>
-                <td><strong>:</strong> <input type="text" id="input16" name="input16" class="line-input" style="width: 150px;"></td>
+                <td class="label">Time</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="input16" name="input16" style="width: 250px;"></td>
             </tr>
             <tr>
-                <td><strong>Name of the Patient</strong></td>
-                <td><strong>:</strong> <input type="text" id="patient_name" name="patient_name" class="line-input" style="width: 250px;"></td>
+                <td class="label">Name of the Patient</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="patient_name" name="patient_name" style="width: 100%;"></td>
             </tr>
             <tr>
-                <td><strong>Sign. Of the Patient</strong></td>
-                <td><strong>:</strong> <input type="text" id="input17" name="input17" class="line-input" style="width: 250px;"></td>
+                <td class="label">Sign. Of the Patient</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="input17" name="input17" style="width: 100%;"></td>
             </tr>
             <tr>
-                <td><strong>Name of the Relative</strong></td>
-                <td><strong>:</strong> <input type="text" id="input18" name="input18" class="line-input" style="width: 250px;"></td>
+                <td class="label">Name of the Relative</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="input18" name="input18" style="width: 100%;"></td>
             </tr>
             <tr>
-                <td><strong>Relation with Patient</strong></td>
-                <td><strong>:</strong> <input type="text" id="input19" name="input19" class="line-input" style="width: 250px;"></td>
+                <td class="label">Relation with Patient</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="input19" name="input19" style="width: 100%;"></td>
             </tr>
             <tr>
-                <td><strong>Sign. Of the Relative</strong></td>
-                <td><strong>:</strong> <input type="text" id="input20" name="input20" class="line-input" style="width: 250px;"></td>
+                <td class="label">Sign. Of the Relative</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="input20" name="input20" style="width: 100%;"></td>
             </tr>
             <tr>
-                <td><strong>Name of the Consultant doctor</strong></td>
-                <td><strong>:</strong> <input type="text" id="doctor_name" name="doctor_name" class="line-input" style="width: 250px;"></td>
+                <td class="label">Name of the Consultant doctor</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="doctor_name" name="doctor_name" style="width: 100%;"></td>
             </tr>
             <tr>
-                <td><strong>Sign of doctor</strong></td>
-                <td><strong>:</strong> <input type="text" id="input21" name="input21" class="line-input" style="width: 250px;"></td>
+                <td class="label">Sign of doctor</td>
+                <td class="separator">:</td>
+                <td class="field"><input type="text" id="input21" name="input21" style="width: 100%;"></td>
             </tr>
         </table>
     </div>
 
-   
-        <!-- ====================== SUBMIT SECTION ====================== -->
-  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-      <div style="font-size:12px; color:#444;">
-        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
-      </div>
-      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
-        Submit
-      </button>
+    <!-- ====================== SUBMIT SECTION ====================== -->
+    <div class="submit-bar no-print" style="margin:20px auto 0; max-width: 800px; background:#fff; padding: 12px 0; border-top: 1px solid #ddd;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: left;"><strong>Status:</strong> <span id="saveStatus">Not saved</span></td>
+                <td style="text-align: right;">
+                    <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">Submit</button>
+                </td>
+            </tr>
+        </table>
     </div>
-  </div>
 </body>
 
 </html>

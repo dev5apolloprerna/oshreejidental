@@ -1,10 +1,16 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>Dental Impression Consent Form</title>
     <style>
+        @font-face{
+                  font-family: "NotoSansGujarati";
+                  src: url("assets/fonts/NotoSansGujarati-Regular.ttf") format("truetype");
+                  font-weight: normal;
+                  font-style: normal;
+                }
         @page {
             size: A4;
             margin: 15mm;
@@ -22,13 +28,15 @@
             }
 
             input {
+              font-family: "NotoSansGujarati", sans-serif; /* IMPORTANT: remove Arial */
                 border: none !important;
                 border-bottom: 1px solid black !important;
             }
         }
 
         body {
-            font-family: Arial, sans-serif;
+              font-family: "NotoSansGujarati", sans-serif;
+           /* font-family: Arial, sans-serif;*/
             line-height: 1.4;
             font-size: 13px;
             color: #000;
@@ -67,7 +75,8 @@
         input {
             border: none;
             border-bottom: 1px solid black;
-            font-family: Arial, sans-serif;
+            font-family: "NotoSansGujarati", sans-serif;
+            /*font-family: Arial, sans-serif;*/
             font-size: 13px;
             width: 100%;
             outline: none;
@@ -82,6 +91,8 @@
             height: 25px;
             text-align: center;
         }
+        
+        
     </style>
 </head>
 
@@ -309,7 +320,7 @@
 <!-- ====================== SUBMIT SECTION ====================== -->
   <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-      <div style="font-size:12px; color:#444;">
+      <div style="font-size:12px; color:#444;" id="status">
         <strong>Status:</strong> <span id="saveStatus">Not saved</span>
       </div>
       <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">

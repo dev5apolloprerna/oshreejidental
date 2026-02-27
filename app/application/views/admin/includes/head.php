@@ -27,7 +27,7 @@
         _table_api;
     </script>
     <?php app_admin_head(); ?>
-    <?php echo isset($login_class) && $login_class != '' ? '<style>body.login_admin {
+    <?php $login_class=''; echo isset($login_class) && $login_class != '' ? '<style>body.login_admin {
     background-image: url(https://oshreejidental.com/app/assets/images/login-bg.jpg) !important;
     background-size: 100% auto !important;
 }</style>' : '';?>

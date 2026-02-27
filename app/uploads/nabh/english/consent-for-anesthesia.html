@@ -5,143 +5,106 @@
     <meta charset="UTF-8">
     <title>Consent for Anesthesia Form</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            margin: 40px;
-            color: #000;
-        }
+    body {
+        font-family: DejaVu Sans, sans-serif;
+        line-height: 1.5;
+        margin: 20px;
+        color: #000;
+        font-size: 13px;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-        }
+    .container {
+        width: 100%;
+        margin: 0 auto;
+    }
 
-        h1 {
-            text-align: center;
-            text-decoration: underline;
-            text-transform: uppercase;
-            font-size: 28px;
-            margin-bottom: 50px;
-        }
+    h1 {
+        text-align: center;
+        text-decoration: underline;
+        text-transform: uppercase;
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
 
-        .consent-line {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
+    .consent-line {
+        margin-bottom: 15px;
+        text-align: justify;
+    }
 
-        .dotted-line {
-            border-bottom: 1px solid black;
-            display: inline-block;
-            min-width: 150px;
-            vertical-align: bottom;
-        }
+    /* Important: Avoid inline-block + min-width combo */
+    .dotted-line {
+        border-bottom: 1px solid #000;
+        display: inline;
+        padding: 0 60px 2px 60px;
+    }
 
-        ol {
-            padding-left: 40px;
-        }
+    ol {
+        padding-left: 20px;
+    }
 
-        ol li {
-            margin-bottom: 10px;
-        }
+    ol li {
+        margin-bottom: 8px;
+    }
 
-        .checkbox-section {
-            font-weight: bold;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
+    /* REMOVE FLEX — DOMPDF DOES NOT SUPPORT */
+    .checkbox-section {
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 
-        /* Updated Checkbox with Tick */
-        .box-input {
-            width: 20px;
-            height: 20px;
-            border: 2px solid black;
-            display: inline-block;
-            margin-right: 10px;
-            appearance: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-            background: transparent;
-            padding: 0;
-            margin-bottom: 0;
-            position: relative; /* Required for the tick positioning */
-            vertical-align: middle;
-        }
-        
-        .box-input:checked:after {
-            content: '\2713'; /* Unicode checkmark character */
-            font-size: 18px;
-            color: #000;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -55%); /* Fine-tuned for perfect center */
-            font-weight: bold;
-        }
+    /* Simple checkbox for PDF */
+    .box-input {
+        width: 12px;
+        height: 12px;
+        border: 1px solid #000;
+        display: inline-block;
+        margin-right: 5px;
+    }
 
-        /* Transparent inputs that don't shift pixels */
-        .line-input {
-            width: 100%;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-family: inherit;
-            font-size: inherit;
-            padding: 0;
-            margin: 0;
-            display: block;
-            height: 1.6em;
-        }
+    /* Hide real HTML inputs in PDF */
+    input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 13px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
 
-        td {
-            padding: 8px 0;
-            vertical-align: bottom;
-        }
+    td {
+        padding: 5px 0;
+        vertical-align: bottom;
+    }
 
-        .label {
-            width: 1%;
-            white-space: nowrap;
-            padding-right: 10px;
-        }
+    .label {
+        white-space: nowrap;
+        padding-right: 5px;
+    }
 
-        .colon {
-            width: 1%;
-            padding-right: 5px;
-        }
+    .colon {
+        width: 5px;
+    }
 
-        .line {
-            border-bottom: 1.5px solid black;
-            min-width: 150px;
-        }
+    .line {
+        border-bottom: 1px solid #000;
+        height: 18px;
+    }
 
-        .spacer {
-            width: 5%;
-        }
+    .spacer {
+        width: 20px;
+    }
 
-        @media print {
-            body {
-                margin: 0;
-            }
+    /* REMOVE SUBMIT BAR FROM PDF */
+    .submit-bar {
+        /*display: none;*/
+    }
+</style>
 
-            .container {
-                width: 100%;
-                border: none;
-            }
-            
-            input {
-                border: none !important;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -239,7 +202,7 @@
     <!-- ====================== SUBMIT SECTION ====================== -->
   <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-      <div style="font-size:12px; color:#444;">
+      <div style="font-size:12px; color:#444;" id="status">
         <strong>Status:</strong> <span id="saveStatus">Not saved</span>
       </div>
       <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">

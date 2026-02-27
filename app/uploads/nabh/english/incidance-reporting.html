@@ -6,23 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Incident Reporting Form</title>
     <style>
+    /* DOMPDF page setup */
+@page {
+    size: A4;
+    margin: 15mm 15mm 15mm 15mm;
+}
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
             margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+            padding: 0;
+            /*background-color: #f0f0f0;*/
         }
 
         .page-container {
-            width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            page-break-after: always;
-        }
+    width: 100%;        /* Instead of 800px */
+    max-width: 190mm;
+    margin: 0 auto;
+    /*padding: 10mm;*/
+    border: 1px solid #000;
+    page-break-after: always;
+}
+
 
         .outer-border {
             border: 1px solid black;
@@ -33,10 +38,12 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 10px;
+            table-layout: fixed;
         }
 
         td {
             vertical-align: middle;
+            padding: 2px;
         }
 
         .header-box {
@@ -55,20 +62,22 @@
             width: 100%;
             outline: none;
             background: transparent;
+            box-sizing: border-box;
         }
 
-        /* NEW: Multi-line background to maintain your design while using 1 input */
+        /* Modified for dompdf compatibility - using border instead of background gradient */
         .multi-line-input {
-            width: 100%;
-            border: none;
+            width: 97% !important;
+            border: 1px solid #ccc;
             outline: none;
-            line-height: 25px;
-            background-image: linear-gradient(transparent, transparent 24px, black 24px);
-            background-size: 100% 25px;
+            line-height: 20px;
             font-family: Arial, sans-serif;
             font-size: 12px;
             resize: none;
             overflow: hidden;
+            padding: 5px;
+            box-sizing: border-box;
+            min-height: 60px;
         }
 
         .checkbox-container {
@@ -94,6 +103,14 @@
             display: block;
         }
 
+        .inline-input {
+            border: none;
+            border-bottom: 1px solid black;
+            outline: none;
+            background: transparent;
+            display: inline-block;
+        }
+
         @media print {
             body {
                 background: none;
@@ -102,6 +119,9 @@
             .page-container {
                 border: none;
                 width: 100%;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
             }
             button {
                 display: none;
@@ -230,8 +250,8 @@
             </table>
 
             <div style="margin-top: 10px;">
-                Incident Description : (Use additional sheet, if required) :
-                <textarea id="input31" name="input31" class="multi-line-input" rows="12"></textarea>
+                Incident Description : (Use additional sheet, if required) :<br>
+                <textarea id="input31" name="input31" class="multi-line-input" rows="6" style="width:100%;"></textarea>
             </div>
 
             <div style="margin-top: 10px;">
@@ -313,8 +333,8 @@
                     <td>
                         <span class="footer-title">7. ADMISSION, DISCHAGE AND TRANSFER OF PATIENT</span>
                         7.1) Wrong I.D. band<br>
-                        7.2) Wring name of patient in file<br>
-                        7.3) Wring information in I.D. band<br>
+                        7.2) Wrong name of patient in file<br>
+                        7.3) Wrong information in I.D. band<br>
                         7.4) Any other
                     </td>
                     <td>
@@ -341,7 +361,7 @@
                         5.2) Wrong information sent to TPA
                     </td>
                     <td>
-                        <span class="footer-title">8. SURGERY OF ANESTHESIA RELATED</span>
+                        <span class="footer-title">8. SURGERY OR ANESTHESIA RELATED</span>
                         8.1) Performed on wrong site/ side<br>
                         8.2) Performed on wrong patient<br>
                         8.3) Wrong surgical procedure performed<br>
@@ -353,18 +373,18 @@
                     </td>
                     <td>
                         <span class="footer-title">11. ANY OTHER (NOT LISTED ABOVE)</span>
-                        <input type="text" id="input33" name="input33" class="input-line"><br>
-                        <input type="text" id="input34" name="input34" class="input-line"><br>
-                        <input type="text" id="input35" name="input35" class="input-line"><br>
-                        <input type="text" id="input36" name="input36" class="input-line"><br>
+                        <input type="text" id="input33" name="input33" class="input-line" style="margin-bottom:2px;"><br>
+                        <input type="text" id="input34" name="input34" class="input-line" style="margin-bottom:2px;"><br>
+                        <input type="text" id="input35" name="input35" class="input-line" style="margin-bottom:2px;"><br>
+                        <input type="text" id="input36" name="input36" class="input-line" style="margin-bottom:2px;"><br>
                         <input type="text" id="input37" name="input37" class="input-line">
                     </td>
                 </tr>
             </table>
 
             <div style="margin-top:10px;">
-                IMMEDIATE INTERVENTION DONE :
-                <textarea id="input38" name="input38" class="multi-line-input" rows="3"></textarea>
+                IMMEDIATE INTERVENTION DONE :<br>
+                <textarea id="input38" name="input38" class="multi-line-input" rows="3" style="width:100%;"></textarea>
             </div>
 
             <table style="margin-top:10px;">
@@ -396,28 +416,28 @@
                 </tr>
             </table>
 
-            <div style="margin-top: 10px;">
-                <strong>Root Cause Analysis:</strong>
-                <textarea id="input52" name="input52" class="multi-line-input" rows="5" style="background-image: linear-gradient(transparent, transparent 19px, #ccc 19px); background-size: 100% 20px; line-height: 20px;"></textarea>
-            </div>
+            <!--<div style="margin-top: 10px;">-->
+            <!--    <strong>Root Cause Analysis:</strong><br>-->
+            <!--    <textarea id="input52" name="input52" class="multi-line-input" rows="5" style="width:100%;"></textarea>-->
+            <!--</div>-->
         </div>
     </div>
 
     <div class="page-container">
         <div class="outer-border">
             <div style="margin-top: 10px;">
-                <strong>Root Cause Analysis:</strong>
-                <textarea id="input53" name="input53" class="multi-line-input" rows="5"></textarea>
+                <strong>Root Cause Analysis:</strong><br>
+                <textarea id="input53" name="input53" class="multi-line-input" rows="5" style="width:100%;"></textarea>
             </div>
 
             <div style="margin-top: 10px;">
-                <strong>Corrective Actions:</strong>
-                <textarea id="input54" name="input54" class="multi-line-input" rows="9"></textarea>
+                <strong>Corrective Actions:</strong><br>
+                <textarea id="input54" name="input54" class="multi-line-input" rows="9" style="width:100%;"></textarea>
             </div>
 
             <div style="margin-top: 10px;">
-                <strong>Preventive Actions:</strong>
-                <textarea id="input55" name="input55" class="multi-line-input" rows="11"></textarea>
+                <strong>Preventive Actions:</strong><br>
+                <textarea id="input55" name="input55" class="multi-line-input" rows="11" style="width:100%;"></textarea>
             </div>
 
             <table class="section-footer" style="margin-top: 10px; width: 100%;">
@@ -426,23 +446,27 @@
                     <td width="22%" style="font-weight: bold;">Date</td>
                     <td width="30%" style="font-weight: bold;">Time</td>
                 </tr>
-                
+                <tr>
+                    <td style="height: 25px;"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 <tr>
                     <td style="font-weight: bold; height: 25px;">Signature of Medical Director</td>
-                    <td><input type="text" id="input56" name="input56" class="input-line"></td>
-                    <td><input type="text" id="input57" name="input57" class="input-line"></td>
+                    <td><input type="text" id="input56" name="input56" class="input-line" style="border-bottom:none"></td>
+                    <td><input type="text" id="input57" name="input57" class="input-line" style="border-bottom:none"></td>
                 </tr>
                 <tr>
                     <td style="font-weight: bold; height: 25px;">Signature of quality coordinator</td>
-                    <td><input type="text" id="input58" name="input58" class="input-line"></td>
-                    <td><input type="text" id="input59" name="input59" class="input-line"></td>
+                    <td><input type="text" id="input58" name="input58" class="input-line" style="border-bottom:none"></td>
+                    <td><input type="text" id="input59" name="input59" class="input-line" style="border-bottom:none"></td>
                 </tr>
             </table>
 
         </div>
-    </div>
-    <!-- ====================== SUBMIT SECTION ====================== -->
-  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+        
+         <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box; text-align:center;">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
       <div style="font-size:12px; color:#444;">
         <strong>Status:</strong> <span id="saveStatus">Not saved</span>
@@ -452,6 +476,8 @@
       </button>
     </div>
   </div>
+    </div>
+   
 </body>
 
 </html>

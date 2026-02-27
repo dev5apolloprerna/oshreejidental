@@ -147,7 +147,7 @@
                         <table role="presentation">
                             <tr>
                                 <td style="width:65%;">
-                                    દર્દીનું નામ: <input type="text" id="input3" name="input3" class="line" style="width:120mm;">
+                                    દર્દીનું નામ: <input type="text" id="patient_name" name="patient_name" class="line" style="width:120mm;">
                                 </td>
                                 <td style="width:15%; text-align:left;">
                                     ઉંમર: <input type="text" id="input4" name="input4" class="line w20">
@@ -272,7 +272,7 @@
                             <div><input type="checkbox" id="input30" name="input30" class="cb"> ના</div>
                             <div><input type="checkbox" id="input31" name="input31" class="cb"> ખબર નથી</div>
                         </div>
-                        <div class="mt14">દર્દીનું નામ: <input type="text" id="input32" name="input32" class="line" style="width:160mm;"></div>
+                        <div class="mt14">દર્દીનું નામ: <input type="text" id="patient_name" name="patient_name" class="line" style="width:160mm;"></div>
                         <table role="presentation" style="margin-top:4mm;">
                             <tr>
                                 <td style="width:45%;">
@@ -291,5 +291,16 @@
             </table>
         </form>
     </div>
+    <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;" id="status">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
 </body>
 </html>
