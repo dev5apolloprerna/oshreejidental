@@ -5,117 +5,91 @@
     <meta charset="UTF-8">
     <title>Patient Assessment Form</title>
     <style>
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
+@page {
+    page:A4;
+    margin: 20px;
+}
 
-            .no-print {
-                display: none;
-            }
-        }
+body {
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0 auto;
+    padding: 0;
+}
 
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
+.page-container {
+    width: 100%;
+    max-width: 190mm;
+    padding: 20px;
+    margin: 0 auto;
+}
 
-        .page-container {
-            width: 800px;
-            /* Standard A4-ish width */
-            background-color: white;
-            padding: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+td, th {
+    border: 1px solid black;
+    padding: 8px;
+    vertical-align: top;
+    font-size: 14px;
+}
 
-        td,
-        th {
-            border: 1px solid black;
-            padding: 8px;
-            vertical-align: top;
-            font-size: 14px;
-        }
+.header-title {
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+}
 
-        .header-title {
-            text-align: center;
-            text-decoration: underline;
-            font-weight: bold;
-            font-size: 18px;
-            padding: 10px;
-        }
+.label {
+    font-weight: bold;
+}
 
-        .label {
-            font-weight: bold;
-        }
+/* IMPORTANT: Use height instead of min-height */
+.input-line {
+    height: 20px;
+}
 
-        .input-line {
-            min-height: 20px;
-        }
+/* FIX triage box (remove inline-block) */
+.triage-box {
+    width: 30px;
+    height: 15px;
+    border: 1px solid black;
+    display: inline-table;
+    vertical-align: middle;
+}
 
-        .triage-box {
-            display: inline-block;
-            width: 30px;
-            height: 15px;
-            border: 1px solid black;
-            vertical-align: middle;
-            margin-left: 5px;
-            margin-right: 10px;
-        }
+/* Remove layout-breaking properties from inputs */
+.cell-input,
+.small-input,
+.triage-input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    width: 100%;
+}
+.cell-input,
+.small-input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
 
-        .med-table td {
-            height: 25px;
-        }
+    display: inline;
+    width: auto;
+}
 
-        /* ✅ Inputs that DO NOT affect layout/pixels */
-        .cell-input {
-            border: 0;
-            outline: 0;
-            background: transparent;
-            font: inherit;
-            color: inherit;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .small-input {
-            border: 0;
-            outline: 0;
-            background: transparent;
-            font: inherit;
-            color: inherit;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            display: inline-block;
-        }
-
-        .triage-input {
-            border: 0;
-            outline: 0;
-            background: transparent;
-            font: inherit;
-            color: inherit;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            text-align: center;
-        }
-    </style>
+/* REMOVE ABSOLUTE POSITIONING SUPPORT */
+.advice-signature {
+    margin-top: 40px;
+}
+</style>
 </head>
 
 <body>
@@ -265,14 +239,14 @@
 
 
             <tr>
-                <td colspan="6" style="height: 30px;">
+                <td colspan="6" style="height: 60px;">
                     <span class="label">Past Hospitalization / Surgery:</span>
                     <input type="text" id="input58" name="input58" class="cell-input" value="">
                 </td>
             </tr>
 
             <tr>
-                <td colspan="6" style="height: 30px;">
+                <td colspan="6" style="height: 60px;">
                     <span class="label">Family History:</span>
                     <input type="text" id="input59" name="input59" class="cell-input" value="">
                 </td>
@@ -344,7 +318,7 @@
         <!-- ====================== SUBMIT SECTION ====================== -->
   <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-      <div style="font-size:12px; color:#444;">
+      <div style="font-size:12px; color:#444;" id="status">
         <strong>Status:</strong> <span id="saveStatus">Not saved</span>
       </div>
       <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">

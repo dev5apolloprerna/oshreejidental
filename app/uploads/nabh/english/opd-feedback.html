@@ -6,18 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Satisfaction Form</title>
     <style>
+    @page { size: A4; margin: 12mm 12mm 14mm 12mm; }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+            /*padding: 20px;*/
+            /*background-color: #f0f0f0;*/
         }
 
         /* Container to mimic A4 Page */
         .page {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 20mm;
+            width: 100%mm;
+            max-width: 190mm;
+            /*min-height: 297mm;*/
+            /*padding: 20mm;*/
             margin: 10px auto;
             background: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -320,13 +322,13 @@
 
             <div class="question-section">
                 <div class="question">1. What improvement would you like to see in the hospital:
-                    <input type="text" id="input23" name="input23" style="width: 50%; border-bottom: 1px solid #ccc;">
+                    <input type="text" id="input23" name="input23" style="width: 45%; border-bottom: 1px solid #ccc;">
                 </div>
                 <div class="question">2. What made you come to this hospital for treatment?
                     <input type="text" id="input24" name="input24" style="width: 50%; border-bottom: 1px solid #ccc;">
                 </div>
                 <div class="question">3. Would you like to return to this hospital next time for treatment:
-                    <input type="text" id="input25" name="input25" style="width: 30%; border-bottom: 1px solid #ccc;">
+                    <input type="text" id="input25" name="input25" style="width: 35%; border-bottom: 1px solid #ccc;">
                 </div>
                 <div class="question">4. Your valuable suggestions:
                     <input type="text" id="input26" name="input26" style="width: 70%; border-bottom: 1px solid #ccc;">
@@ -350,7 +352,7 @@
     <!-- ====================== SUBMIT SECTION ====================== -->
   <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-      <div style="font-size:12px; color:#444;">
+      <div style="font-size:12px; color:#444;" id="status">
         <strong>Status:</strong> <span id="saveStatus">Not saved</span>
       </div>
       <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">

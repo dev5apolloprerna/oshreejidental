@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <title>Endodontic Consent Form</title>
     <style>
+    /* DOMPDF page setup */
+@page {
+    size: A4;
+    margin: 15mm 15mm 15mm 15mm;
+}
         /* Reset and Base Styles */
         body,
         html {
@@ -16,13 +21,15 @@
         }
 
         /* Container for everything */
-        .wrapper {
-            width: 800px;
-            /* Standard width for clear printing */
-            margin: 0 auto;
-            padding: 40px;
-            page-break-after: always;
-        }
+        /* Container for everything - FIXED for A4 paper */
+.wrapper {
+    width: 100%;
+    max-width: 190mm; /* A4 page width is 210mm, leave margins */
+    margin: 0 auto;
+    /*padding: 15mm 20mm; */
+    page-break-after: always;
+    box-sizing: border-box;
+}
 
         /* Main structure using tables for exact alignment */
         .content-table {
@@ -33,7 +40,8 @@
         .title-main {
             font-size: 24pt;
             font-weight: bold;
-            padding-bottom: 25px;
+            padding-bottom: 25px; 
+            padding-top: 25px !important;
         }
 
         .section-header {
@@ -356,11 +364,9 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-    <!-- ====================== SUBMIT SECTION ====================== -->
-  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+        <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-      <div style="font-size:12px; color:#444;">
+      <div style="font-size:12px; color:#444;" id="status">
         <strong>Status:</strong> <span id="saveStatus">Not saved</span>
       </div>
       <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
@@ -368,6 +374,9 @@
       </button>
     </div>
   </div>
+    </div>
+    <!-- ====================== SUBMIT SECTION ====================== -->
+  
 
 
 </body>

@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ડેન્ટલ એલર્જી ફોર્મ</title>
     <style>
+            @font-face{
+                  font-family: "NotoSansGujarati";
+                  src: url("assets/fonts/NotoSansGujarati-Regular.ttf") format("truetype");
+                  font-weight: normal;
+                  font-style: normal;
+                }
+                
         @media print {
             @page {
                 margin: 0;
@@ -18,6 +25,11 @@
 
             .container {
                 padding: 20px;
+            }
+            input {
+              font-family: "NotoSansGujarati", sans-serif; /* IMPORTANT: remove Arial */
+                border: none !important;
+                border-bottom: 1px solid black !important;
             }
         }
 
