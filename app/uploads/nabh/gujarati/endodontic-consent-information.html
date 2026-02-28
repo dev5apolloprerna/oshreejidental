@@ -21,7 +21,7 @@
             /* Standard width for clear printing */
             margin: 0 auto;
             padding: 40px;
-            page-break-after: always;
+            /*page-break-after: always;*/
         }
 
         /* Main structure using tables for exact alignment */
@@ -32,12 +32,13 @@
 
         .title-main {
             font-size: 24pt;
-            font-weight: bold;
+            font-weight: 900;
             padding-bottom: 25px;
+            text-align: center;
         }
 
         .section-header {
-            font-weight: bold;
+            font-weight: 900;
             font-size: 14pt;
             padding: 15px 0 5px 0;
         }
@@ -61,7 +62,7 @@
         /* ✅ Input that matches .input-line EXACTLY (no pixel shift) */
         .input-line-input {
             border: 0;
-            border-bottom: 1px solid #000;
+            border-bottom: 1px solid #000 !important;
             background: transparent;
             outline: none;
             padding: 0;
@@ -78,7 +79,7 @@
         /* The Endorsement Table Styling */
         .endorsement-title {
             text-align: center;
-            font-weight: bold;
+            font-weight: 900;
             font-size: 14pt;
             margin-bottom: 20px;
             /* Forces this section to start on a new page when printing */
@@ -101,7 +102,7 @@
         }
 
         .endorsement-table th {
-            font-weight: bold;
+            font-weight: 900;
         }
 
         /* Vertical spacing for rows */
@@ -189,7 +190,7 @@
                 <td style="padding-top: 30px;">
                     <div style="margin-bottom: 15px;">
                         સહી:
-                        <input class="input-line-input" type="text" id="input47" name="input47" />
+                        <input class="input-line-input" type="text" id="input47" name="input47" sty />
                     </div>
                     <div style="margin-bottom: 15px;">
                         તારીખ:

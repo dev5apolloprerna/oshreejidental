@@ -305,7 +305,7 @@ window.__NABH_SAVED = {$savedJson};
 }
 
 
- public function print_pdf()
+public function print_pdf()
 {
     // Accept JSON POST OR GET (new tab)
     $raw = file_get_contents('php://input');
@@ -437,109 +437,180 @@ window.__NABH_SAVED = {$savedJson};
     return $this->render_pdf_with_dompdf($html, $filename);
 }
 
- 
- private function apply_saved_to_html_for_pdf($html, array $saved)
+
+
+   private function apply_saved_to_html_for_pdf($html, array $saved)
 {
+    if (empty($saved)) return $html;
+
     libxml_use_internal_errors(true);
 
     $dom = new DOMDocument('1.0', 'UTF-8');
     $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     $xpath = new DOMXPath($dom);
 
-    $getSaved = function($node) use ($saved) {
-        $name = (string)$node->getAttribute('name');
-        $id   = (string)$node->getAttribute('id');
-        if ($name !== '' && array_key_exists($name, $saved)) return $saved[$name];
-        if ($id !== '' && array_key_exists($id, $saved)) return $saved[$id];
-        return null;
-    };
+    foreach ($saved as $key => $val) {
+        $key = (string)$key;
 
-    $copyAttrs = function($from, $to) {
-        // copy class/style so template CSS still applies
-        $cls = $from->getAttribute('class');
-        $sty = $from->getAttribute('style');
-        if ($cls !== '') $to->setAttribute('class', $cls);
-        if ($sty !== '') $to->setAttribute('style', $sty);
-
-        // copy common layout attributes if present
-        foreach (['data-*','width','height'] as $a) {
-            // data-* can't be copied with wildcard in DOMDocument, ignore here
-        }
-    };
-
-    // ✅ Replace ALL inputs (not only saved keys)
-    foreach ($xpath->query('//input') as $input) {
-        $type = strtolower((string)$input->getAttribute('type'));
-        if ($type === '') $type = 'text';
-
-        $val = $getSaved($input);
-        if ($val === null) $val = (string)$input->getAttribute('value');
-
-        if ($type === 'checkbox') {
-            // output text marker only (no CSS). If you want a box, use Option A CSS.
-            $span = $dom->createElement('span', ($val == 1 || $val === "1" || $val === true || $val === "on") ? '[x]' : '[ ]');
-            $copyAttrs($input, $span);
-            $input->parentNode->replaceChild($span, $input);
-            continue;
-        }
-
-        if ($type === 'radio') {
-            $radioVal = (string)$input->getAttribute('value');
-            $selected = ((string)$val === $radioVal);
-            $span = $dom->createElement('span', $selected ? '(x)' : '( )');
-            $copyAttrs($input, $span);
-            $input->parentNode->replaceChild($span, $input);
-            continue;
-        }
-
-        // text/date/time -> span with same class/style
-        $span = $dom->createElement('span');
-        $copyAttrs($input, $span);
-        $span->appendChild($dom->createTextNode((string)$val));
-        $input->parentNode->replaceChild($span, $input);
-    }
-
-    foreach ($xpath->query('//textarea') as $ta) {
-        $val = $getSaved($ta);
-        if ($val === null) $val = (string)$ta->textContent;
-
-        $span = $dom->createElement('span');
-        $copyAttrs($ta, $span);
-        $span->appendChild($dom->createTextNode((string)$val));
-        $ta->parentNode->replaceChild($span, $ta);
-    }
-
-    foreach ($xpath->query('//select') as $sel) {
-        $val = $getSaved($sel);
-        if ($val === null) $val = '';
-
-        $selectedText = '';
-        foreach ($xpath->query(".//option", $sel) as $opt) {
-            if ((string)$opt->getAttribute('value') === (string)$val) {
-                $selectedText = trim($opt->textContent);
-                break;
+        // by name
+        foreach ($xpath->query("//input[@name='$key']") as $input) {
+            $type = strtolower($input->getAttribute('type'));
+            if ($type === 'checkbox') {
+                $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
+                $checked ? $input->setAttribute('checked','checked') : $input->removeAttribute('checked');
+            } elseif ($type === 'radio') {
+                ((string)$input->getAttribute('value') === (string)$val)
+                    ? $input->setAttribute('checked','checked')
+                    : $input->removeAttribute('checked');
+            } else {
+                $input->setAttribute('value', (string)$val);
             }
         }
-        if ($selectedText === '') $selectedText = (string)$val;
 
-        $span = $dom->createElement('span');
-        $copyAttrs($sel, $span);
-        $span->appendChild($dom->createTextNode($selectedText));
-        $sel->parentNode->replaceChild($span, $sel);
-    }
+        foreach ($xpath->query("//textarea[@name='$key']") as $ta) {
+            while ($ta->firstChild) $ta->removeChild($ta->firstChild);
+            $ta->appendChild($dom->createTextNode((string)$val));
+        }
 
-    // hide submit bar
-    $submitBars = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' submit-bar ')]");
-    if ($submitBars && $submitBars->length) {
-        foreach ($submitBars as $bar) {
-            $bar->setAttribute('style', trim($bar->getAttribute('style') . ';display:none !important;'));
+        foreach ($xpath->query("//select[@name='$key']") as $sel) {
+            foreach ($xpath->query(".//option", $sel) as $opt) {
+                ((string)$opt->getAttribute('value') === (string)$val)
+                    ? $opt->setAttribute('selected','selected')
+                    : $opt->removeAttribute('selected');
+            }
+        }
+
+        // fallback by id (if your json keys are ids)
+        foreach ($xpath->query("//input[@id='$key']") as $input) {
+            $type = strtolower($input->getAttribute('type'));
+            if ($type === 'checkbox') {
+                $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
+                $checked ? $input->setAttribute('checked','checked') : $input->removeAttribute('checked');
+            } elseif ($type === 'radio') {
+                ((string)$input->getAttribute('value') === (string)$val)
+                    ? $input->setAttribute('checked','checked')
+                    : $input->removeAttribute('checked');
+            } else {
+                $input->setAttribute('value', (string)$val);
+            }
+        }
+
+        foreach ($xpath->query("//textarea[@id='$key']") as $ta) {
+            while ($ta->firstChild) $ta->removeChild($ta->firstChild);
+            $ta->appendChild($dom->createTextNode((string)$val));
+        }
+
+        foreach ($xpath->query("//select[@id='$key']") as $sel) {
+            foreach ($xpath->query(".//option", $sel) as $opt) {
+                ((string)$opt->getAttribute('value') === (string)$val)
+                    ? $opt->setAttribute('selected','selected')
+                    : $opt->removeAttribute('selected');
+            }
+        }
+
+        $submitBars = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' submit-bar ')]");
+
+        if ($submitBars && $submitBars->length > 0) {
+            foreach ($submitBars as $bar) {
+                $existingStyle = $bar->getAttribute('style');
+                $bar->setAttribute('style', $existingStyle . '; display:none !important;');
+            }
         }
     }
 
     $out = $dom->saveHTML();
     libxml_clear_errors();
     return $out;
+
 }
+
+/*private function render_pdf_with_mpdf(string $html, string $filename)
+{
+    @set_time_limit(300);
+    @ini_set('pcre.backtrack_limit', '10000000');
+    @ini_set('pcre.recursion_limit', '10000000');
+
+    $autoload = APPPATH . 'vendor/autoload.php';
+    if (!file_exists($autoload)) show_error('Composer autoload not found: ' . $autoload);
+    require_once $autoload;
+
+    // ✅ temp folder must exist + writable
+    $tmp = FCPATH . 'uploads/mpdf_tmp';
+    if (!is_dir($tmp)) @mkdir($tmp, 0777, true);
+
+    $fontDirPath = FCPATH . 'assets/fonts';
+    $guReg  = $fontDirPath . '/NotoSansGujarati-Regular.ttf';
+    $guBold = $fontDirPath . '/NotoSansGujarati-Bold.ttf';
+
+    if (!file_exists($guReg)) show_error('Gujarati font missing: ' . $guReg);
+
+    $defaultConfig     = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+    $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+
+    $fontDirs = $defaultConfig['fontDir'];
+    $fontData = $defaultFontConfig['fontdata'];
+
+    $fontDirs[] = $fontDirPath;
+
+    $fontData['notosansgujarati'] = [
+        'R' => 'NotoSansGujarati-Regular.ttf',
+        'B' => file_exists($guBold) ? 'NotoSansGujarati-Bold.ttf' : 'NotoSansGujarati-Regular.ttf',
+    ];
+
+    $mpdf = new \Mpdf\Mpdf([
+        'mode' => 'utf-8',
+        'format' => 'A4',
+        'margin_left' => 10,
+        'margin_right' => 10,
+        'margin_top' => 10,
+        'margin_bottom' => 10,
+        'tempDir' => $tmp,
+
+        'fontDir' => $fontDirs,
+        'fontdata' => $fontData,
+        'default_font' => 'notosansgujarati',
+
+        // ✅ speed helpers
+        'simpleTables' => true,
+        'packTableData' => true,
+        'use_kwt' => true,
+        'dpi' => 96,
+        'img_dpi' => 96,
+    ]);
+
+    // ❌ these are slow if you already force Gujarati font
+    $mpdf->autoScriptToLang = false;
+    $mpdf->autoLangToFont   = false;
+
+    // ✅ remove slow web font loads (google fonts etc.)
+    $html = preg_replace('~<link[^>]+fonts\.googleapis[^>]*>~i', '', $html);
+    $html = preg_replace('~@import\s+url\([^)]+googleapis[^)]+\);~i', '', $html);
+
+    // ✅ enforce font (no @font-face needed for mPDF when fontdata is set)
+    $forceCss = '<style>
+        @page { margin: 10mm; }
+        body, table, tr, td, th, p, div, span, h1,h2,h3,h4,h5,h6 { font-family: notosansgujarati !important; }
+    </style>';
+
+    if (stripos($html, '</head>') !== false) $html = str_ireplace('</head>', $forceCss . '</head>', $html);
+    else $html = $forceCss . $html;
+
+    // ✅ IMPORTANT: many templates use "page { ... }" (wrong). Convert to @page
+    $html = preg_replace('~\bpage\s*\{~i', '@page {', $html);
+
+    // Keep this low; high values can slow layout a lot
+    $mpdf->shrink_tables_to_fit = 0;
+        
+    $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::DEFAULT_MODE);
+
+    $pdfBinary = $mpdf->Output($filename, \Mpdf\Output\Destination::STRING_RETURN);
+
+    return $this->output
+        ->set_content_type('application/pdf')
+        ->set_header('Content-Disposition: inline; filename="' . $filename . '"')
+        ->set_output($pdfBinary);
+}*/
+
 private function render_pdf_with_mpdf($html, $filename)
 {
     $autoload = APPPATH . 'vendor/autoload.php';
@@ -566,9 +637,13 @@ private function render_pdf_with_mpdf($html, $filename)
     $fontData['notogujarati'] = [
         'R' => 'NotoSansGujarati-Regular.ttf',
         // Optional if you have bold:
-        // 'B' => 'NotoSansGujarati-Bold.ttf',
+         'B' => 'NotoSansGujarati-Bold.ttf',
     ];
 
+$fontData['liberationsans'] = [
+        'R' => 'LiberationSans-Regular.ttf',
+        'B' => 'LiberationSans-Bold.ttf',
+    ];
     $mpdf = new \Mpdf\Mpdf([
         'mode' => 'utf-8',
         'format' => 'A4',
@@ -590,6 +665,7 @@ private function render_pdf_with_mpdf($html, $filename)
     // Speed/stability
     $mpdf->setAutoTopMargin = 'stretch';
     $mpdf->setAutoBottomMargin = 'stretch';
+    $html = $this->replace_text_inputs_with_underline($html);
 
     $mpdf->WriteHTML($html);
 
@@ -598,6 +674,48 @@ private function render_pdf_with_mpdf($html, $filename)
     exit;
 }
 
+private function replace_text_inputs_with_underline($html)
+{
+    return preg_replace_callback('~<input\b([^>]*?)>~i', function ($m) {
+
+        $attrs = $m[1];
+
+        // detect type (default text if missing)
+        $type = 'text';
+        if (preg_match('~\btype\s*=\s*["\']([^"\']+)["\']~i', $attrs, $tm)) {
+            $type = strtolower(trim($tm[1]));
+        }
+
+        // only convert these to underline
+        if (!in_array($type, ['text', 'date', 'number', 'tel', 'email'], true)) {
+            return $m[0]; // keep as-is (hidden, radio, file, etc.)
+        }
+
+        // get value=""
+        $value = '';
+        if (preg_match('~\bvalue\s*=\s*["\']([^"\']*)["\']~i', $attrs, $vm)) {
+            $value = $vm[1];
+        }
+
+        // width from style="width:xxx"
+        $width = '200px';
+        if (preg_match('~\bstyle\s*=\s*["\']([^"\']*)["\']~i', $attrs, $sm)) {
+            if (preg_match('~width\s*:\s*([^;]+)~i', $sm[1], $wm)) {
+                $width = trim($wm[1]);
+            }
+        }
+
+        // if size="30" then make a reasonable width
+        if ($width === '200px' && preg_match('~\bsize\s*=\s*["\'](\d+)["\']~i', $attrs, $sz)) {
+            $width = ((int)$sz[1] * 6) . 'px';
+        }
+
+        // keep underline even if empty
+        $safeValue = trim($value) === '' ? '&nbsp;' : htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+
+        return '<span class="mpdf-uline" style="width:' . $width . ';">' . $safeValue . '</span>';
+    }, $html);
+}
 private function render_pdf_with_dompdf(string $html, string $filename)
 {
     $autoload = APPPATH . 'vendor/autoload.php';

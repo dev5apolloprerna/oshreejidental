@@ -155,6 +155,73 @@
             /* html { zoom: 0.97; } */
         }
     </style>
+    
+    <style>
+    /* Style for mPDF compatibility */
+    table.header-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+        font-size: 14px;
+    }
+    
+    table.header-table td {
+        padding: 8px 5px;
+        vertical-align: middle;
+    }
+    
+    /* Container for label and input */
+    .field-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .field-container .label-text {
+        white-space: nowrap;
+        margin-right: 5px;
+        font-weight: normal;
+    }
+    
+    /* Bottom border input style */
+    .border-bottom-input {
+        border: none;
+        border-bottom: 1px solid #000;
+        background-color: transparent;
+        outline: none;
+        padding: 3px 0;
+        font-family: sans-serif;
+        font-size: 14px;
+    }
+    
+    /* For mPDF compatibility */
+    .border-bottom-input {
+        border: 0;
+        border-bottom: 0.5px solid #000000;
+    }
+    
+    /* Specific input widths */
+    .patient-name-input {
+        width: 60%;
+    }
+    
+    .opd-no-input {
+        width: 50%;
+    }
+    
+    /* Width specifications */
+    .patient-name-cell {
+        width: 60%;
+    }
+    
+    .opd-no-cell {
+        width: 25%;
+    }
+    
+    .empty-cell {
+        width: 15%;
+    }
+</style>
 </head>
 
 <body>
@@ -164,16 +231,23 @@
             <h2>દર્દી સંતોષ ફોર્મ</h2>
             <h3 style="text-decoration: none;">ઓપીડી દર્દીનો પ્રતિસાદ</h3>
 
-            <div class="header-section">
-                <div class="input-box" style="width: 60%;">
-                    દર્દીનું નામ:
-                    <input type="text" id="patient_name" name="patient_name" style="width: 60%;">
-                </div>
-                <div class="input-box" style="width: 25%;">
-                    ઓપીડી નં.:
-                    <input type="text" id="opd_no" name="opd_no" style="width: 50%;">
-                </div>
+            <table class="header-table">
+    <tr>
+        <td class="patient-name-cell" style="border:none">
+            <div class="field-container">
+                <span class="label-text">દર્દીનું નામ:</span>
+                <input type="text" class="border-bottom-input patient-name-input" id="patient_name" name="patient_name" />
             </div>
+        </td>
+        <td class="opd-no-cell" style="border:none">
+            <div class="field-container">
+                <span class="label-text">ઓપીડી નં.:</span>
+                <input type="text" class="border-bottom-input opd-no-input" id="opd_no" name="opd_no" />
+            </div>
+        </td>
+        
+    </tr>
+</table>
 
             <div class="intro-text">
                 તમે તમારા મૂલ્યવાન સમયને તમારા સાથી / મિત્રના ઉપચારના સંબંધમાં હોસ્પિટલમાં વિતાવ્યા છે. તમને વિનંતી
@@ -329,16 +403,33 @@
                 </div>
             </div>
 
-            <div class="footer-line">
-                <span>તારીખ: <input type="text" id="today_date" name="today_date"
-                        style="width: 80px; border-bottom: 1px solid black;"></span>
-                <span>દવાખાનું <input type="text" id="input56" name="input56"
-                        style="width: 80px; border-bottom: 1px solid black;"></span>
-                <span>ઉંમર: <input type="text" id="input57" name="input57"
-                        style="width: 50px; border-bottom: 1px solid black;"></span>
-                <span>જાતિ: <input type="text" id="input58" name="input58"
-                        style="width: 50px; border-bottom: 1px solid black;"></span>
-            </div>
+            <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+    <tr>
+        <td style="width:25%; white-space:nowrap; border:none">
+            તારીખ:
+            <input type="text" id="today_date" name="today_date"
+                style="width:80px; border:none; border-bottom:1px solid black; outline:none;">
+        </td>
+
+        <td style="width:25%; white-space:nowrap; border:none">
+            દવાખાનું:
+            <input type="text" id="input56" name="input56"
+                style="width:80px; border:none; border-bottom:1px solid black; outline:none;">
+        </td>
+
+        <td style="width:25%; white-space:nowrap; border:none">
+            ઉંમર:
+            <input type="text" id="input57" name="input57"
+                style="width:50px; border:none; border-bottom:1px solid black; outline:none;">
+        </td>
+
+        <td style="width:25%; white-space:nowrap; border:none">
+            જાતિ:
+            <input type="text" id="input58" name="input58"
+                style="width:50px; border:none; border-bottom:1px solid black; outline:none;">
+        </td>
+    </tr>
+</table>
         </div>
           <!-- ====================== SUBMIT SECTION ====================== -->
   <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">

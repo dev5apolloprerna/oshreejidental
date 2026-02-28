@@ -18,7 +18,7 @@
                 box-shadow: none !important;
                 width: 100% !important;
                 margin: 0 !important;
-                padding: 40px !important;
+                /*padding: 40px !important;*/
             }
 
             .no-print {
@@ -30,9 +30,9 @@
             font-family: "Times New Roman", Times, serif;
             line-height: 1.2;
             color: #000;
-            background-color: #f0f0f0;
+            /*background-color: #f0f0f0;*/
             margin: 0;
-            padding: 20px;
+            /*padding: 20px;*/
             display: flex;
             justify-content: center;
         }
@@ -42,7 +42,7 @@
             width: 800px;
             margin: 0 auto;
             padding: 50px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
             min-height: 1050px;
         }
 
@@ -113,7 +113,7 @@
         .endorse-table thead th {
             border: 1px solid #000;
             padding: 10px;
-            font-weight: bold;
+            font-weight: 900;
         }
 
         .endorse-table tbody td {
@@ -141,26 +141,30 @@
             display: block;
             /* border-bottom: 1px solid #000; */
         }
+        
+        .head-bld{
+            font-weight: 900;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="page-container">
-        <div style="page-break-before:always; break-before:page;"></div>
-        <h2 style="font-size: 22px; margin-bottom: 15px; margin-top: 20px;">મૌખિક સર્જરી / અક્કલદાંત કાઢવા માટે સંમતિ
-            ફોર્મ</h2>
-
+        <!--<div style="page-break-before:always; break-before:page;"></div>-->
+        <p style="font-size: 22px;font-weight:900; text-align:center; margin-bottom: 15px; margin-top: 20px;">મૌખિક સર્જરી / અક્કલદાંત કાઢવા માટે સંમતિ
+            ફોર્મ</p>
+            
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
                 <td style="width:5%;">દર્દી</td>
                 <td style="width:5%;">નામ:</td>
-                <td style="width:60%; border-bottom:1px solid black;">
+                <td style="width:55%; border-bottom:1px solid black;">
                     <input type="text" id="patient_name" name="patient_name" class="line-input">
                 </td>
                 <td style="width:5%; padding-left:20px;">ક્લિનિક</td>
                 <td style="width:5%;">સ્થળ:</td>
-                <td style="width:15%; border-bottom:1px solid black;">
+                <td style="width:18%; border-bottom:1px solid black;">
                     <input type="text" id="input56" name="input56" class="line-input">
                 </td>
             </tr>
@@ -168,10 +172,10 @@
 
         <table style="width:100%; margin-bottom:15px;">
             <tr>
-                <td>મને નીચે દર્શાવેલી સારવાર કરવાની સલાહ આપવામાં આવી છે:</td>
+                <td style="width:50%">મને નીચે દર્શાવેલી સારવાર કરવાની સલાહ આપવામાં આવી છે:</td>
             </tr>
             <tr>
-                <td style="border-bottom:1px solid black; height:30px;">
+                <td style="border-bottom:1px solid black; width:30%">
                     <input type="text" id="input57" name="input57" class="line-input">
                 </td>
             </tr>
@@ -202,18 +206,18 @@
             </span> વિશેષજ્ઞ મૌખિક સર્જન નથી પરંતુ સામાન્ય દંતચિકિત્સક છે. કોઈપણ સર્જરીમાં જોખમ રહેલું હોય છે.
         </p>
 
-        <p style="font-weight:bold;">સંભવિત જોખમો:</p>
+        <p style="font-weight:900;">સંભવિત જોખમો:</p>
 
         <ul>
-            <li><strong>સોજો અને જડબાની કઠોરતા</strong> – સામાન્ય રીતે એક અઠવાડિયા સુધી રહે છે.</li>
-            <li><strong>રક્તસ્ત્રાવ</strong> – સામાન્ય રીતે નિયંત્રિત થઈ જાય છે.</li>
-            <li><strong>દર્દ અને અસ્વસ્થતા</strong> – ડોક્ટર આપેલી દવાથી નિયંત્રિત થઈ જાય છે.</li>
-            <li><strong>સંક્રમણ</strong> – દુર્લભ, જો મૌખિક સ્વચ્છતા જાળવવામાં આવે.</li>
-            <li><strong>ડ્રાય સોકેટ</strong> – સતત દર્દ રહે શકે છે અને વધારાની સારવારની જરૂર પડે.</li>
-            <li><strong>પાસના દાંતને નુકસાન</strong> – બહુ દુર્લભ પરિસ્થિતિ.</li>
-            <li><strong>સુંવાળાપણું અથવા સંવેદનામાં ફેરફાર</strong> – હોઠ, જીભ, દાઢ અને ચીન વિસ્તારમાં થઈ શકે છે.</li>
-            <li><strong>સાઇનસ સંબંધિત સમસ્યા</strong> – ઉપરના દાંત કાઢતી વખતે થઈ શકે છે.</li>
-            <li><strong>દવાઓની એલર્જી</strong> – એનેસ્થેસિયા અથવા સેડેશન દવાથી.</li>
+            <li><span class="head-bld"> સોજો અને જડબાની કઠોરતા</span> – સામાન્ય રીતે એક અઠવાડિયા સુધી રહે છે.</li>
+            <li><span class="head-bld">રક્તસ્ત્રાવ</span> – સામાન્ય રીતે નિયંત્રિત થઈ જાય છે.</li>
+            <li><span class="head-bld">દર્દ અને અસ્વસ્થતા</span> – ડોક્ટર આપેલી દવાથી નિયંત્રિત થઈ જાય છે.</li>
+            <li><span class="head-bld">સંક્રમણ</span> – દુર્લભ, જો મૌખિક સ્વચ્છતા જાળવવામાં આવે.</li>
+            <li><span class="head-bld">ડ્રાય સોકેટ</span> – સતત દર્દ રહે શકે છે અને વધારાની સારવારની જરૂર પડે.</li>
+            <li><span class="head-bld">પાસના દાંતને નુકસાન</span> – બહુ દુર્લભ પરિસ્થિતિ.</li>
+            <li><span class="head-bld">સુંવાળાપણું અથવા સંવેદનામાં ફેરફાર</span> – હોઠ, જીભ, દાઢ અને ચીન વિસ્તારમાં થઈ શકે છે.</li>
+            <li><span class="head-bld">સાઇનસ સંબંધિત સમસ્યા</span> – ઉપરના દાંત કાઢતી વખતે થઈ શકે છે.</li>
+            <li><span class="head-bld">દવાઓની એલર્જી</span> – એનેસ્થેસિયા અથવા સેડેશન દવાથી.</li>
             <li>મને સારવારના લાભ અને જોખમ બંને સમજાવવામાં આવ્યા છે.</li>
         </ul>
 
@@ -227,7 +231,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="padding:6px 0;">દર્દીના સગા/વાલીનું નામ:</td>
+                <td style="width:30%;padding:6px 0;">દર્દીના સગા/વાલીનું નામ:</td>
                 <td style="padding:6px 0;">
                     <div style="border-bottom:1px solid #000; height:18px; width:90%;">
                         <input type="text" id="input61" name="input61" class="line-input">
@@ -282,15 +286,16 @@
 
         </table>
 
-        <h3 style="text-align:center; margin-top:40px;">દરેક મુલાકાત માટે સંમતિ નોંધ</h3>
+        
+        <p style="text-align:center; margin-top:40px;font-size:20px">દરેક મુલાકાત માટે સંમતિ નોંધ</p>
 
         <table class="endorse-table">
             <thead>
                 <tr>
-                    <th style="width: 10%;">ક્રમ નં.</th>
-                    <th style="width: 20%;">તારીખ અને સમય</th>
-                    <th style="width: 40%;">દર્દી/સગાની સહી</th>
-                    <th style="width: 30%;">ડોક્ટરની સહી</th>
+                    <th >ક્રમ નં.</th>
+                    <th >તારીખ અને સમય</th>
+                    <th >દર્દી/સગાની સહી</th>
+                    <th >ડોક્ટરની સહી</th>
                 </tr>
             </thead>
             <tbody>

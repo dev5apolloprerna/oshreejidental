@@ -43,6 +43,7 @@ class Clients extends AdminController
 
         $data['countries'] = $this->clients_model->get_clients_distinct_countries();
         $data['table'] = App_table::find('clients');
+       
         $this->load->view('admin/clients/manage', $data);
     }
 
@@ -1194,7 +1195,6 @@ class Clients extends AdminController
 
         echo json_encode($viewData);
     }
-
 }
 
 
