@@ -305,7 +305,7 @@ window.__NABH_SAVED = {$savedJson};
 }
 
 
-public function print_pdf()
+ public function print_pdf()
 {
     // Accept JSON POST OR GET (new tab)
     $raw = file_get_contents('php://input');
@@ -386,6 +386,7 @@ public function print_pdf()
     // 7) Remove submit bar/buttons in PDF
     $html = preg_replace('~<div[^>]*class="submit-bar"[^>]*>.*?</div>~is', '', $html);
     $html = preg_replace('~<button[^>]*id="submitBtn"[^>]*>.*?</button>~is', '', $html);
+    $html = preg_replace('~<div[^>]*id="status"[^>]*>.*?</div>~is', '', $html);
 
     // 8) Force Gujarati font css (for BOTH engines)
     if ($lang === 'gu') {
@@ -436,91 +437,102 @@ public function print_pdf()
     return $this->render_pdf_with_dompdf($html, $filename);
 }
 
-
-
-   private function apply_saved_to_html_for_pdf($html, array $saved)
+ 
+ private function apply_saved_to_html_for_pdf($html, array $saved)
 {
-    if (empty($saved)) return $html;
-
     libxml_use_internal_errors(true);
 
     $dom = new DOMDocument('1.0', 'UTF-8');
     $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     $xpath = new DOMXPath($dom);
 
-    $makeSpan = function($text) use ($dom) {
-        $span = $dom->createElement('span');
-        $span->appendChild($dom->createTextNode((string)$text));
-        // keep underline/blank look if your input had borders
-        $span->setAttribute('style', 'display:inline-block; min-width:30px;');
-        return $span;
+    $getSaved = function($node) use ($saved) {
+        $name = (string)$node->getAttribute('name');
+        $id   = (string)$node->getAttribute('id');
+        if ($name !== '' && array_key_exists($name, $saved)) return $saved[$name];
+        if ($id !== '' && array_key_exists($id, $saved)) return $saved[$id];
+        return null;
     };
 
-    foreach ($saved as $key => $val) {
-        $key = (string)$key;
+    $copyAttrs = function($from, $to) {
+        // copy class/style so template CSS still applies
+        $cls = $from->getAttribute('class');
+        $sty = $from->getAttribute('style');
+        if ($cls !== '') $to->setAttribute('class', $cls);
+        if ($sty !== '') $to->setAttribute('style', $sty);
 
-        // inputs by name
-        foreach ($xpath->query("//input[@name='$key']") as $input) {
-            $type = strtolower($input->getAttribute('type'));
+        // copy common layout attributes if present
+        foreach (['data-*','width','height'] as $a) {
+            // data-* can't be copied with wildcard in DOMDocument, ignore here
+        }
+    };
 
-            if ($type === 'checkbox') {
-                // render checkbox as ✓ or blank
-                $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
-                $rep = $makeSpan($checked ? '✓' : '');
-                $input->parentNode->replaceChild($rep, $input);
-                continue;
-            }
+    // ✅ Replace ALL inputs (not only saved keys)
+    foreach ($xpath->query('//input') as $input) {
+        $type = strtolower((string)$input->getAttribute('type'));
+        if ($type === '') $type = 'text';
 
-            if ($type === 'radio') {
-                // if radio group, mark selected with ●
-                $isSelected = ((string)$input->getAttribute('value') === (string)$val);
-                $rep = $makeSpan($isSelected ? '●' : '○');
-                $input->parentNode->replaceChild($rep, $input);
-                continue;
-            }
+        $val = $getSaved($input);
+        if ($val === null) $val = (string)$input->getAttribute('value');
 
-            // text/date/etc => replace input with value text
-            $rep = $makeSpan($val);
-            $input->parentNode->replaceChild($rep, $input);
+        if ($type === 'checkbox') {
+            // output text marker only (no CSS). If you want a box, use Option A CSS.
+            $span = $dom->createElement('span', ($val == 1 || $val === "1" || $val === true || $val === "on") ? '[x]' : '[ ]');
+            $copyAttrs($input, $span);
+            $input->parentNode->replaceChild($span, $input);
+            continue;
         }
 
-        foreach ($xpath->query("//textarea[@name='$key']") as $ta) {
-            $rep = $makeSpan($val);
-            $ta->parentNode->replaceChild($rep, $ta);
+        if ($type === 'radio') {
+            $radioVal = (string)$input->getAttribute('value');
+            $selected = ((string)$val === $radioVal);
+            $span = $dom->createElement('span', $selected ? '(x)' : '( )');
+            $copyAttrs($input, $span);
+            $input->parentNode->replaceChild($span, $input);
+            continue;
         }
 
-        foreach ($xpath->query("//select[@name='$key']") as $sel) {
-            $selectedText = '';
-            foreach ($xpath->query(".//option", $sel) as $opt) {
-                if ((string)$opt->getAttribute('value') === (string)$val) {
-                    $selectedText = $opt->textContent;
-                    break;
-                }
-            }
-            $rep = $makeSpan($selectedText !== '' ? $selectedText : $val);
-            $sel->parentNode->replaceChild($rep, $sel);
-        }
+        // text/date/time -> span with same class/style
+        $span = $dom->createElement('span');
+        $copyAttrs($input, $span);
+        $span->appendChild($dom->createTextNode((string)$val));
+        $input->parentNode->replaceChild($span, $input);
+    }
 
-        // also support by id
-        foreach ($xpath->query("//*[@id='$key']") as $node) {
-            $tag = strtolower($node->nodeName);
-            if (in_array($tag, ['input','textarea','select'], true)) {
-                // already handled above if it had name; if only id, convert similarly
-                if ($tag === 'input') {
-                    $type = strtolower($node->getAttribute('type'));
-                    if ($type === 'checkbox') {
-                        $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
-                        $rep = $makeSpan($checked ? '✓' : '');
-                        $node->parentNode->replaceChild($rep, $node);
-                    } else {
-                        $rep = $makeSpan($val);
-                        $node->parentNode->replaceChild($rep, $node);
-                    }
-                } else {
-                    $rep = $makeSpan($val);
-                    $node->parentNode->replaceChild($rep, $node);
-                }
+    foreach ($xpath->query('//textarea') as $ta) {
+        $val = $getSaved($ta);
+        if ($val === null) $val = (string)$ta->textContent;
+
+        $span = $dom->createElement('span');
+        $copyAttrs($ta, $span);
+        $span->appendChild($dom->createTextNode((string)$val));
+        $ta->parentNode->replaceChild($span, $ta);
+    }
+
+    foreach ($xpath->query('//select') as $sel) {
+        $val = $getSaved($sel);
+        if ($val === null) $val = '';
+
+        $selectedText = '';
+        foreach ($xpath->query(".//option", $sel) as $opt) {
+            if ((string)$opt->getAttribute('value') === (string)$val) {
+                $selectedText = trim($opt->textContent);
+                break;
             }
+        }
+        if ($selectedText === '') $selectedText = (string)$val;
+
+        $span = $dom->createElement('span');
+        $copyAttrs($sel, $span);
+        $span->appendChild($dom->createTextNode($selectedText));
+        $sel->parentNode->replaceChild($span, $sel);
+    }
+
+    // hide submit bar
+    $submitBars = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' submit-bar ')]");
+    if ($submitBars && $submitBars->length) {
+        foreach ($submitBars as $bar) {
+            $bar->setAttribute('style', trim($bar->getAttribute('style') . ';display:none !important;'));
         }
     }
 
@@ -528,38 +540,33 @@ public function print_pdf()
     libxml_clear_errors();
     return $out;
 }
-
-private function render_pdf_with_mpdf(string $html, string $filename)
+private function render_pdf_with_mpdf($html, $filename)
 {
-    @set_time_limit(300);
-    @ini_set('pcre.backtrack_limit', '10000000');
-    @ini_set('pcre.recursion_limit', '10000000');
-
     $autoload = APPPATH . 'vendor/autoload.php';
     if (!file_exists($autoload)) show_error('Composer autoload not found: ' . $autoload);
     require_once $autoload;
 
-    // ✅ temp folder must exist + writable
-    $tmp = FCPATH . 'uploads/mpdf_tmp';
-    if (!is_dir($tmp)) @mkdir($tmp, 0777, true);
+    // ✅ Font directory (local)
+    $fontDirPath = FCPATH . 'assets/fonts/';
+    $fontFile    = $fontDirPath . 'NotoSansGujarati-Regular.ttf';
 
-    $fontDirPath = FCPATH . 'assets/fonts';
-    $guReg  = $fontDirPath . '/NotoSansGujarati-Regular.ttf';
-    $guBold = $fontDirPath . '/NotoSansGujarati-Bold.ttf';
+    if (!is_dir($fontDirPath)) show_error('Font folder not found: ' . $fontDirPath);
+    if (!file_exists($fontFile)) show_error('Font file not found: ' . $fontFile);
 
-    if (!file_exists($guReg)) show_error('Gujarati font missing: ' . $guReg);
+    // ✅ Merge defaults + custom font
+    $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+    $fontDirs      = $defaultConfig['fontDir'];
 
-    $defaultConfig     = (new \Mpdf\Config\ConfigVariables())->getDefaults();
     $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
-
-    $fontDirs = $defaultConfig['fontDir'];
-    $fontData = $defaultFontConfig['fontdata'];
+    $fontData          = $defaultFontConfig['fontdata'];
 
     $fontDirs[] = $fontDirPath;
 
-    $fontData['notosansgujarati'] = [
+    // key = notogujarati (same name used in CSS)
+    $fontData['notogujarati'] = [
         'R' => 'NotoSansGujarati-Regular.ttf',
-        'B' => file_exists($guBold) ? 'NotoSansGujarati-Bold.ttf' : 'NotoSansGujarati-Regular.ttf',
+        // Optional if you have bold:
+        // 'B' => 'NotoSansGujarati-Bold.ttf',
     ];
 
     $mpdf = new \Mpdf\Mpdf([
@@ -569,51 +576,26 @@ private function render_pdf_with_mpdf(string $html, string $filename)
         'margin_right' => 10,
         'margin_top' => 10,
         'margin_bottom' => 10,
-        'tempDir' => $tmp,
 
-        'fontDir' => $fontDirs,
-        'fontdata' => $fontData,
-        'default_font' => 'notosansgujarati',
-
-        // ✅ speed helpers
-        'simpleTables' => true,
-        'packTableData' => true,
-        'use_kwt' => true,
-        'dpi' => 96,
-        'img_dpi' => 96,
+        'fontDir'   => $fontDirs,
+        'fontdata'  => $fontData,
+        'default_font' => 'notogujarati',
+        'tempDir' => APPPATH . 'cache/mpdf', // ✅ make sure writable
     ]);
 
-    // ❌ these are slow if you already force Gujarati font
-    $mpdf->autoScriptToLang = false;
-    $mpdf->autoLangToFont   = false;
+    // ✅ THIS FIXES BROKEN GUJARATI WORDS / SHAPING
+    $mpdf->autoScriptToLang = true;
+    $mpdf->autoLangToFont   = true;
 
-    // ✅ remove slow web font loads (google fonts etc.)
-    $html = preg_replace('~<link[^>]+fonts\.googleapis[^>]*>~i', '', $html);
-    $html = preg_replace('~@import\s+url\([^)]+googleapis[^)]+\);~i', '', $html);
+    // Speed/stability
+    $mpdf->setAutoTopMargin = 'stretch';
+    $mpdf->setAutoBottomMargin = 'stretch';
 
-    // ✅ enforce font (no @font-face needed for mPDF when fontdata is set)
-    $forceCss = '<style>
-        @page { margin: 10mm; }
-        body, table, tr, td, th, p, div, span, h1,h2,h3,h4,h5,h6 { font-family: notosansgujarati !important; }
-    </style>';
+    $mpdf->WriteHTML($html);
 
-    if (stripos($html, '</head>') !== false) $html = str_ireplace('</head>', $forceCss . '</head>', $html);
-    else $html = $forceCss . $html;
-
-    // ✅ IMPORTANT: many templates use "page { ... }" (wrong). Convert to @page
-    $html = preg_replace('~\bpage\s*\{~i', '@page {', $html);
-
-    // Keep this low; high values can slow layout a lot
-    $mpdf->shrink_tables_to_fit = 0;
-        
-    $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::DEFAULT_MODE);
-
-    $pdfBinary = $mpdf->Output($filename, \Mpdf\Output\Destination::STRING_RETURN);
-
-    return $this->output
-        ->set_content_type('application/pdf')
-        ->set_header('Content-Disposition: inline; filename="' . $filename . '"')
-        ->set_output($pdfBinary);
+    // Inline view in browser
+    $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
+    exit;
 }
 
 private function render_pdf_with_dompdf(string $html, string $filename)
