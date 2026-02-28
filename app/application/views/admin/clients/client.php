@@ -117,7 +117,7 @@
 <?php if (isset($client)) { ?>
 <script>
 $(function() {
-    init_rel_tasks_table(<?php echo e($client->userid); ?>, 'customer');
+  //  init_rel_tasks_table(<?php echo e($client->userid); ?>, 'customer');
 });
 </script>
 <?php } ?>
