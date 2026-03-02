@@ -10,7 +10,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
+            /*background-color: #f0f0f0;*/
         }
 
         /* Container to mimic A4 Page */
@@ -20,7 +20,7 @@
             padding: 20mm;
             margin: 10px auto;
             background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
             box-sizing: border-box;
         }
 
@@ -29,6 +29,7 @@
             text-align: center;
             margin-bottom: 5px;
             text-decoration: underline;
+            font-weight: 900;
         }
 
         .header-section {
@@ -67,6 +68,7 @@
 
         th {
             background-color: #f9f9f9;
+            font-weight: 900;
         }
 
         .center-text {
@@ -220,7 +222,64 @@
     
     .empty-cell {
         width: 15%;
-    }
+    }input[type="text"], input[type="date"], input[type="number"], input[type="tel"], input[type="email"]{
+    border: none !important;
+    background: transparent !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font: inherit !important;
+    box-shadow: none !important;
+  }
+
+  /* ✅ underline input (works in browser + print + mPDF) */
+  .u-input{
+    display: inline-block;          /* important for underline width */
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    background: transparent !important;
+    outline: none !important;
+    padding: 2px 0 !important;      /* small breathing space */
+    line-height: 1.2;
+    vertical-align: baseline;
+  }
+
+  /* mPDF safer thin line */
+  .mpdf .u-input{
+    border-bottom: 0.5px solid #000 !important;
+  }
+
+  /* optional: full width underline inside td */
+  .u-100{ width:100%; }
+  .header-table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:14px;
+  }
+  .header-table td{
+    vertical-align:bottom;
+    padding:4px 6px;
+  }
+
+  /* label cell */
+  .lbl{
+    width:85px;              /* adjust */
+    white-space:nowrap;
+    border: none !important;
+  }
+
+  /* underline cell */
+  /*.line{*/
+  /*  border-bottom:1px solid #000 !important;*/
+    height:18px;             /* gives space */
+  /*}*/
+
+  /* printed value inside underline cell */
+  .val{
+    display:block;
+    padding-bottom:2px;      /* keeps text away from border */
+  }
 </style>
 </head>
 
@@ -231,23 +290,31 @@
             <h2>દર્દી સંતોષ ફોર્મ</h2>
             <h3 style="text-decoration: none;">ઓપીડી દર્દીનો પ્રતિસાદ</h3>
 
-            <table class="header-table">
+
+<table class="header-table" style="width: 100%; border-collapse: collapse;">
     <tr>
-        <td class="patient-name-cell" style="border:none">
-            <div class="field-container">
-                <span class="label-text">દર્દીનું નામ:</span>
-                <input type="text" class="border-bottom-input patient-name-input" id="patient_name" name="patient_name" />
-            </div>
+        <td style="border: none; width: 70px;">
+            <span style="font-weight: 900;">દર્દીનું નામ:</span>
         </td>
-        <td class="opd-no-cell" style="border:none">
-            <div class="field-container">
-                <span class="label-text">ઓપીડી નં.:</span>
-                <input type="text" class="border-bottom-input opd-no-input" id="opd_no" name="opd_no" />
-            </div>
+        <td style="border: none; border-bottom: 1px solid black; padding: 0;">
+            <input type="text" 
+                   id="patient_name" 
+                   name="patient_name" 
+                   style="width: 100%; border: none; outline: none; padding: 5px 0;" />
         </td>
-        
+        <td style="border: none; width: 80px; padding-left: 20px;">
+            <span style="font-weight: 900;">ઓપીડી નં.:</span>
+        </td>
+        <td style="border: none; border-bottom: 1px solid black; padding: 0;">
+            <input type="text" 
+                   id="opd_no" 
+                   name="opd_no" 
+                   style="width: 100%; border: none; outline: none; padding: 5px 0;" />
+        </td>
     </tr>
 </table>
+
+
 
             <div class="intro-text">
                 તમે તમારા મૂલ્યવાન સમયને તમારા સાથી / મિત્રના ઉપચારના સંબંધમાં હોસ્પિટલમાં વિતાવ્યા છે. તમને વિનંતી
@@ -255,7 +322,7 @@
                 આવે છે કે તમે જે દર્દીઓની મુલાકાત લીધી છે, તેઓની ગુણવત્તા વિશે તમારા અભિપ્રાય જણાવો. તમારા દ્વારા પ્રદાન
                 કરવામાં આવેલી માહિતી ગોપનીય રાખવામાં આવશે અને સેવાઓનો ઉપયોગ ફક્ત તેના ઉપયોગ કરવામાં આવશે.
                 <br>
-                <strong>મહેરબાની કરીને યોગ્ય બોક્સ પર ટીક કરો અને સૂચન બોક્સમાં પ્રશ્નાવલિ છોડો.</strong>
+                <span style="font-weight:900">મહેરબાની કરીને યોગ્ય બોક્સ પર ટીક કરો અને સૂચન બોક્સમાં પ્રશ્નાવલિ છોડો.</strong>
             </div>
 
             <table>
@@ -388,45 +455,98 @@
                 </tbody>
             </table>
 
-            <div class="question-section">
-                <div class="question">1. તમે હોસ્પિટલમાં શું સુધારણા જોવા માંગો છો ?
-                    <input type="text" id="input51" name="input51" style="width: 50%; border-bottom: 1px solid #ccc;">
-                </div>
-                <div class="question">2. તમે સારવાર માટે આ હોસ્પિટલમાં કેમ આવ્યા છો ?
-                    <input type="text" id="input52" name="input52" style="width: 50%; border-bottom: 1px solid #ccc;">
-                </div>
-                <div class="question">3. શું તમે સારવાર માટે આગલી વખતે આ હોસ્પિટલમાં પાછા આવવા માંગો છો ?
-                    <input type="text" id="input53" name="input53" style="width: 30%; border-bottom: 1px solid #ccc;">
-                </div>
-                <div class="question">4. તમારા મૂલ્યવાન સૂચનો
-                    <input type="text" id="input54" name="input54" style="width: 70%; border-bottom: 1px solid #ccc;">
-                </div>
-            </div>
-
-            <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+          
+            <table class="question-table" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+    <!-- Question 1 -->
     <tr>
-        <td style="width:25%; white-space:nowrap; border:none">
-            તારીખ:
-            <input type="text" id="today_date" name="today_date"
-                style="width:80px; border:none; border-bottom:1px solid black; outline:none;">
+        <td style="border: none; padding: 8px 5px; width: 60%;">
+            <span style="font-size: 14px;">1. તમે હોસ્પિટલમાં શું સુધારણા જોવા માંગો છો ?</span>
         </td>
-
-        <td style="width:25%; white-space:nowrap; border:none">
-            દવાખાનું:
-            <input type="text" id="input56" name="input56"
-                style="width:80px; border:none; border-bottom:1px solid black; outline:none;">
+        <td style="border: none; border-bottom: 1px solid #000000; padding: 0; width: 40%;">
+            <input type="text" 
+                   id="input51" 
+                   name="input51" 
+                   style="width: 100%; border: none; outline: none; padding: 8px 5px; font-size: 14px;" />
         </td>
-
-        <td style="width:25%; white-space:nowrap; border:none">
-            ઉંમર:
-            <input type="text" id="input57" name="input57"
-                style="width:50px; border:none; border-bottom:1px solid black; outline:none;">
+    </tr>
+    
+    <!-- Question 2 -->
+    <tr>
+        <td style="border: none; padding: 8px 5px;">
+            <span style="font-size: 14px;">2. તમે સારવાર માટે આ હોસ્પિટલમાં કેમ આવ્યા છો ?</span>
         </td>
+        <td style="border: none; border-bottom: 1px solid #000000; padding: 0;">
+            <input type="text" 
+                   id="input52" 
+                   name="input52" 
+                   style="width: 100%; border: none; outline: none; padding: 8px 5px; font-size: 14px;" />
+        </td>
+    </tr>
+    
+    <!-- Question 3 -->
+    <tr>
+        <td style="border: none; padding: 8px 5px;">
+            <span style="font-size: 14px;">3. શું તમે સારવાર માટે આગલી વખતે આ હોસ્પિટલમાં પાછા આવવા માંગો છો ?</span>
+        </td>
+        <td style="border: none; border-bottom: 1px solid #000000; padding: 0;">
+            <input type="text" 
+                   id="input53" 
+                   name="input53" 
+                   style="width: 100%; border: none; outline: none; padding: 5px 5px; font-size: 14px;" />
+        </td>
+    </tr>
+    
+    <!-- Question 4 -->
+    <tr>
+        <td style="border: none; padding: 8px 5px;">
+            <span style="font-size: 14px;">4. તમારા મૂલ્યવાન સૂચનો</span>
+        </td>
+        <td style="border: none; border-bottom: 1px solid #000000; padding: 0;">
+            <input type="text" 
+                   id="input54" 
+                   name="input54" 
+                   style="width: 100%; border: none; outline: none; padding: 8px 5px; font-size: 14px;" />
+        </td>
+    </tr>
+</table>
 
-        <td style="width:25%; white-space:nowrap; border:none">
-            જાતિ:
-            <input type="text" id="input58" name="input58"
-                style="width:50px; border:none; border-bottom:1px solid black; outline:none;">
+           
+<table style="width:100%; border-collapse:collapse; margin-top:10px; font-family:Arial, sans-serif;">
+    <!-- Date Field -->
+    <tr>
+        <td style="width:8%; border:none; white-space:nowrap; padding:5px 0;">
+            <span style="font-size:14px;">તારીખ:</span>
+        </td>
+        <td style="width:15%; border:none; border-bottom:1px solid #000000; padding:0;">
+            <input type="text" id="today_date" name="today_date" 
+                   style="width:100%; border:none; outline:none; padding:5px 0; font-size:14px;" />
+        </td>
+        
+        <!-- OPD Field -->
+        <td style="width:12%; border:none; white-space:nowrap; padding:5px 0 5px 15px;">
+            <span style="font-size:14px;">દવાખાનું:</span>
+        </td>
+        <td style="width:13%; border:none; border-bottom:1px solid #000000; padding:0;">
+            <input type="text" id="input56" name="input56" 
+                   style="width:100%; border:none; outline:none; padding:5px 0; font-size:14px;" />
+        </td>
+        
+        <!-- Age Field -->
+        <td style="width:8%; border:none; white-space:nowrap; padding:5px 0 5px 15px;">
+            <span style="font-size:14px;">ઉંમર:</span>
+        </td>
+        <td style="width:10%; border:none; border-bottom:1px solid #000000; padding:0;">
+            <input type="text" id="input57" name="input57" 
+                   style="width:100%; border:none; outline:none; padding:5px 0; font-size:14px;" />
+        </td>
+        
+        <!-- Gender Field -->
+        <td style="width:10%; border:none; white-space:nowrap; padding:5px 0 5px 15px;">
+            <span style="font-size:14px;">જાતિ:</span>
+        </td>
+        <td style="width:10%; border:none; border-bottom:1px solid #000000; padding:0;">
+            <input type="text" id="input58" name="input58" 
+                   style="width:100%; border:none; outline:none; padding:5px 0; font-size:14px;" />
         </td>
     </tr>
 </table>

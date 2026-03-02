@@ -12,11 +12,7 @@
             box-sizing: border-box;
         }
 
-        @page {
-            size: A4;
-            margin: 15mm;
-        }
-
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -30,7 +26,7 @@
         .page-container {
             width: 210mm;
             /* A4 width */
-            min-height: 297mm;
+            /*min-height: 297mm;*/
             /* A4 height */
             margin: 0 auto;
             padding: 15mm;
@@ -51,12 +47,12 @@
             float: right;
             padding: 6px 8px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 900;
         }
 
         .title {
             text-align: center;
-            font-weight: bold;
+            font-weight: 900;
             font-size: 16px;
             margin-top: 90px;
             margin-bottom: 15px;
@@ -69,7 +65,7 @@
         }
 
         .label {
-            font-weight: bold;
+            font-weight: 900;
             white-space: nowrap;
             padding-right: 6px;
             vertical-align: top;
@@ -84,7 +80,7 @@
 
         .section-header,
         .section-title {
-            font-weight: bold;
+            font-weight: 900;
             text-decoration: underline;
             margin-top: 12px;
             margin-bottom: 5px;
@@ -162,7 +158,7 @@
             <span style="border-bottom: 1px solid black; display: inline-block; width: 200px; position: relative;">
                 <input type="text" id="patient_name" name="patient_name" class="input-overlay" style="border: none; border-bottom: 1px solid black; width: 100%;">
             </span>,
-            આથી <strong>[તમારી સંસ્થા/હોસ્પિટલનું નામ]</strong> ની તબીબી ટીમને
+            આથી <span style="font-weight:900">[તમારી સંસ્થા/હોસ્પિટલનું નામ]</span> ની તબીબી ટીમને
             <strong>
                 <span style="border-bottom: 1px solid black; display: inline-block; width: 150px; position: relative;">
                     <input type="text" id="input13" name="input13" class="input-overlay" style="border: none; border-bottom: 1px solid black; width: 100%;">
@@ -190,10 +186,10 @@
                 <td class="line-cell"><input type="text" id="input16" name="input16" class="input-overlay" style="border: none; border-bottom: 1px solid black; width: 100%;"></td>
             </tr>
             <tr>
-                <td colspan="2" style="padding-top: 8px;"><strong>પ્રક્રિયાનો હેતુ:</strong></td>
+                <td colspan="2" style="padding-top: 8px;"><span style="font-weight:900">પ્રક્રિયાનો હેતુ:</span></td>
             </tr>
             <tr>
-                <td colspan="2" style="font-size: 11px; font-style: italic; color: #444;">
+                <td colspan="2" style="font-size: 14px;  color: #444;">
                     કૃપા કરીને પ્રક્રિયાનો હેતુ સરળ અને સમજાય તેવી ભાષામાં વર્ણવો.
                 </td>
             </tr>
@@ -208,7 +204,7 @@
         <div class="full-line"><input type="text" id="input18" name="input18" class="input-overlay"></div>
 
         <ul class="bullet-list">
-            <li><strong>સેડેટિવ દવાઓથી એલર્જીક પ્રતિક્રિયા</strong></li>
+            <li><span style="font-weight:900">સેડેટિવ દવાઓથી એલર્જીક પ્રતિક્રિયા</span></li>
             <li>શ્વાસ લેવામાં તકલીફ અથવા શ્વાસમાં ઘટાડો</li>
             <li>હૃદયની ધબકારા અથવા રક્તચાપમાં ફેરફાર</li>
             <li>પ્રક્રિયા સ્થળે ચેપ અથવા રક્તસ્ત્રાવ</li>
@@ -251,7 +247,7 @@
             પહેલાં કોઈ પણ સમયે હું મારી સંમતિ પાછી ખેંચી શકું છું.
         </p>
 
-        <span class="section-header" style="text-decoration:none; font-weight:bold;">ગોપનીયતા અને માહિતી સુરક્ષા:</span>
+        <span class="section-header" style="text-decoration:none; font-weight:900;">ગોપનીયતા અને માહિતી સુરક્ષા:</span>
 
         <p style="margin:0 0 12px 0;">
             હું સમજું છું કે મારી વ્યક્તિગત આરોગ્ય માહિતી દર્દીની ગોપનીયતા અને માહિતી સુરક્ષા સંબંધિત લાગુ કાયદા અને
@@ -271,8 +267,8 @@
         </p>
 
         <div style="margin-top:14px;">દર્દીની સહી અને નામ: <span class="line" style="min-width:200px;"><input type="text" id="patient_name" name="patient_name" class="input-overlay"style="border: none; border-bottom: 1px solid black; width: 100%;"></span></div>
-        <div style="margin-top:14px;">સાક્ષીની સહી અને નામ: <span class="line" style="min-width:200px;"><input type="text" id="input21" name="input21" class="input-ove style="border: none; border-bottom: 1px solid black; width: 100%;"rlay"></span></div>
-        <div style="margin-top:14px;">કન્સલ્ટન્ટ ડોક્ટરનું નામ અને સહી: <span class="line" style="min-width:200px;"><input type="text" id="input22" name="input22" class="input-overlay"style="border: none; border-bottom: 1px solid black; width: 100%;"></span></div>
+        <div style="margin-top:14px;">સાક્ષીની સહી અને નામ: <span class="line" style="min-width:200px;"><input type="text" id="input21" name="input21" class="input-overlay" style="border: none; border-bottom: 1px solid black; width: 100%;></span></div>
+        <div style="margin-top:14px;">કન્સલ્ટન્ટ ડોક્ટરનું નામ અને સહી: <span class="line" style="min-width:200px;"><input type="text" id="input22" name="input22" class="input-overlay" style="border: none; border-bottom: 1px solid black; width: 100%;"></span></div>
     </div>
 
     <!-- ====================== SUBMIT SECTION ====================== -->
