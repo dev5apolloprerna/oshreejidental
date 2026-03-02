@@ -665,6 +665,7 @@ $fontData['liberationsans'] = [
     // Speed/stability
     $mpdf->setAutoTopMargin = 'stretch';
     $mpdf->setAutoBottomMargin = 'stretch';
+    $html = $this->mpdf_convert_checkboxes_to_symbols($html);
     $html = $this->replace_text_inputs_with_underline($html);
 
     $mpdf->WriteHTML($html);
@@ -672,6 +673,25 @@ $fontData['liberationsans'] = [
     // Inline view in browser
     $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
     exit;
+}
+
+
+private function mpdf_convert_checkboxes_to_symbols($html)
+{
+    // Convert <input type="checkbox" checked> into ☑ and unchecked into ☐
+    return preg_replace_callback('~<input\b([^>]*\btype\s*=\s*["\']checkbox["\'][^>]*)>~i', function ($m) {
+
+        $attrs = $m[1];
+
+        // checked?
+        $isChecked = (bool)preg_match('~\bchecked\b~i', $attrs);
+
+        // keep it safe: use DejaVu Sans for these symbols (mPDF always supports it)
+        $symbol = $isChecked ? '☑' : '☐';
+
+        // No layout css, only font fallback so symbols never disappear
+        return '<span style="font-family: dejavusans, sans-serif;">' . $symbol . '</span>';
+    }, $html);
 }
 
 private function replace_text_inputs_with_underline($html)

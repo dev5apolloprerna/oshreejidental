@@ -6,10 +6,10 @@
     <title>દર્દી ફોર્મ</title>
     <style>
         /* PRINT: A4 exact */
-        @page {
-            size: A4;
-            margin: 10mm;
-        }
+        /*@page {*/
+        /*    size: A4;*/
+        /*    margin: 10mm;*/
+        /*}*/
         @media print {
             body {
                 background: #fff !important;
@@ -117,24 +117,44 @@
                 </tr>
                 <tr>
                     <td style="padding-top:2mm;">
-                        <table role="presentation">
-                            <tr>
-                                <td style="width:100%; padding-right:10mm;">
-                                    <div style="text-align: center;">
-                                        આ ફોર્મ દર્દી/દર્દીના સગા એ પોતાના અક્ષરોમાં ભરવું જરૂરી છે. આપેલ માહિતીમાં
-                                        પાછળથી કોઈ ફેરફાર થઈ શકશે નહીં.
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="width:35%;">
-                                    <div style="text-align:right;">
-                                        <div>એડમિશન તારીખ: <input type="text" id="input1" name="input1" class="line w35"></div>
-                                        <div class="mt10">એડમિશન સમય: <input type="text" id="input2" name="input2" class="line w35"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                      <table role="presentation" style="width:100%; border-collapse:collapse;">
+    <!-- First row for the instruction text -->
+    <tr>
+        <td colspan="2" style="padding-right:10mm; padding-bottom:10px;">
+            <table style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <td style="text-align: center;">
+                        આ ફોર્મ દર્દી/દર્દીના સગા એ પોતાના અક્ષરોમાં ભરવું જરૂરી છે. આપેલ માહિતીમાં
+                        પાછળથી કોઈ ફેરફાર થઈ શકશે નહીં.
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    
+    <!-- Second row for Admission date and time -->
+    <tr>
+        <td style="width:65%;"></td> <!-- Empty cell for spacing -->
+        <td style="width:35%;">
+            <table style="width:100%; border-collapse:collapse;">
+                <!-- Admission Date Row -->
+                <tr>
+                    <td style="text-align:right; white-space:nowrap; padding-right:5px;">એડમિશન તારીખ:</td>
+                    <td style="width:60%; border-bottom:1px solid black;">
+                        <input type="text" id="input1" name="input1" style="border:none; width:100%; background:transparent; outline:none;">
+                    </td>
+                </tr>
+                <!-- Admission Time Row -->
+                <tr>
+                    <td style="text-align:right; white-space:nowrap; padding-right:5px; padding-top:10px;">એડમિશન સમય:</td>
+                    <td style="width:60%; padding-top:10px; border-bottom:1px solid black;">
+                        <input type="text" id="input2" name="input2" style="border:none; width:100%; background:transparent; outline:none;">
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
                     </td>
                 </tr>
                 <tr>
@@ -144,42 +164,55 @@
                 </tr>
                 <tr>
                     <td>
-                        <table role="presentation">
-                            <tr>
-                                <td style="width:65%;">
-                                    દર્દીનું નામ: <input type="text" id="patient_name" name="patient_name" class="line" style="width:120mm;">
-                                </td>
-                                <td style="width:15%; text-align:left;">
-                                    ઉંમર: <input type="text" id="input4" name="input4" class="line w20">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-top:3mm;">
-                                    દર્દી સાથે આવેલ સંબંધિનું નામ: <input type="text" id="input5" name="input5" class="line" style="width:110mm;">
-                                </td>
-                                <td style="padding-top:3mm;">
-                                    જન્મ તારીખ: <input type="text" id="input6" name="input6" class="line w20">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-top:3mm;">
-                                    રેફ. ડોક્ટરનું નામ: <input type="text" id="input7" name="input7" class="line" style="width:115mm;">
-                                </td>
-                                <td style="padding-top:3mm;">
-                                    વૈવાહિક સ્થિતિ: પરણીત/અપરિણીત
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-top:3mm;">
-                                    કન્સલ્ટન્ટ ડોક્ટરનું નામ: <input type="text" id="input8" name="input8" class="line" style="width:105mm;">
-                                </td>
-                                <td style="padding-top:3mm;">
-                                    જાતિ:
-                                    <input type="checkbox" id="input9" name="input9" class="cb"> પુરુષ
-                                    <input type="checkbox" id="input10" name="input10" class="cb"> સ્ત્રી
-                                </td>
-                            </tr>
-                        </table>
+                        
+                        <table border="0" cellpadding="2" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <!-- Row 1: Patient Name and Age -->
+    <tr>
+        <td style="width:20%; font-weight:normal;">દર્દીનું નામ:</td>
+        <td style="width:50%; border-bottom:1px solid black;">
+            &nbsp;<input type="text" id="patient_name" name="patient_name" style="border:none; width:100%; background:transparent;" value="">
+        </td>
+        <td style="width:10%; font-weight:normal;">ઉંમર:</td>
+        <td style="width:20%; border-bottom:1px solid black;">
+            &nbsp;<input type="text" id="input4" name="input4" style="border:none; width:100%; background:transparent;" value="">
+        </td>
+    </tr>
+    
+    <!-- Row 2: Relative Name and Birth Date -->
+    <tr>
+        <td style="width:35%; font-weight:normal; padding-top:3mm;">દર્દી સાથે આવેલ સંબંધિનું નામ:</td>
+        <td style="width:35%; border-bottom:1px solid black; padding-top:3mm;">
+            &nbsp;<input type="text" id="input5" name="input5" style="border:none; width:100%; background:transparent;" value="">
+        </td>
+        <td style="width:10%; font-weight:normal; padding-top:3mm;">જન્મ તારીખ:</td>
+        <td style="width:20%; border-bottom:1px solid black; padding-top:3mm;">
+            &nbsp;<input type="text" id="input6" name="input6" style="border:none; width:100%; background:transparent;" value="">
+        </td>
+    </tr>
+    
+    <!-- Row 3: Ref Doctor and Marital Status -->
+    <tr>
+        <td style="width:35%; font-weight:normal; padding-top:3mm;">રેફ. ડોક્ટરનું નામ:</td>
+        <td style="width:35%; border-bottom:1px solid black; padding-top:3mm;">
+            &nbsp;<input type="text" id="input7" name="input7" style="border:none; width:100%; background:transparent;" value="">
+        </td>
+        <td style="width:10%; font-weight:normal; padding-top:3mm;">વૈવાહિક સ્થિતિ:</td>
+        <td style="width:20%; padding-top:3mm;">પરણીત/અપરિણીત</td>
+    </tr>
+    
+    <!-- Row 4: Consultant Doctor and Gender -->
+    <tr>
+        <td style="width:35%; font-weight:normal; padding-top:3mm;">કન્સલ્ટન્ટ ડોક્ટરનું નામ:</td>
+        <td style="width:35%; border-bottom:1px solid black; padding-top:3mm;">
+            &nbsp;<input type="text" id="input8" name="input8" style="border:none; width:100%; background:transparent;" value="">
+        </td>
+        <td style="width:10%; font-weight:normal; padding-top:3mm;">જાતિ:</td>
+        <td style="width:20%; padding-top:3mm;">
+            <input type="checkbox" id="input9" name="input9" style="margin-right:2px;"> પુરુષ
+            <input type="checkbox" id="input10" name="input10" style="margin-left:5px; margin-right:2px;"> સ્ત્રી
+        </td>
+    </tr>
+</table>
                     </td>
                 </tr>
                 <tr>
@@ -191,14 +224,22 @@
                     <td>
                         સરનામું: <input type="text" id="input11" name="input11" class="line full">
                         <div class="mt10"><input type="text" id="input12" name="input12" class="line full"></div>
-                        <table role="presentation" style="margin-top:4mm;">
-                            <tr>
-                                <td style="width:25%;">શહેર: <input type="text" id="input13" name="input13" class="line w30"></td>
-                                <td style="width:25%;">પીન કોડ: <input type="text" id="input14" name="input14" class="line w25"></td>
-                                <td style="width:25%;">જિલ્લો: <input type="text" id="input15" name="input15" class="line w25"></td>
-                                <td style="width:25%;">રાજ્ય: <input type="text" id="input16" name="input16" class="line w25"></td>
-                            </tr>
-                        </table>
+      
+<table role="presentation" style="margin-top:4mm; border-collapse: collapse; width: 100%;">
+  <tr>
+    <td style="width:5%;">શહેર:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input13" name="input13" class="line w30" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+    
+    <td style="width:5%;">પીન કોડ:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input14" name="input14" class="line w25" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+    
+    <td style="width:5%;">જિલ્લો:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input15" name="input15" class="line w25" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+    
+    <td style="width:5%;">રાજ્ય:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input16" name="input16" class="line w25" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+  </tr>
+</table>             
                     </td>
                 </tr>
                 <tr>
@@ -208,14 +249,22 @@
                 </tr>
                 <tr>
                     <td>
-                        <table role="presentation">
-                            <tr>
-                                <td style="width:25%;">એચ.ટી.ડી. કોડ: <input type="text" id="input17" name="input17" class="line w30"></td>
-                                <td style="width:25%;">રેહડા: <input type="text" id="input18" name="input18" class="line w30"></td>
-                                <td style="width:25%;">ઓફિસ: <input type="text" id="input19" name="input19" class="line w30"></td>
-                                <td style="width:25%;">મો.: <input type="text" id="input20" name="input20" class="line w30"></td>
-                            </tr>
-                        </table>
+                        
+                     <table role="presentation" style="border-collapse: collapse; width: 100%;">
+  <tr>
+    <td style="width:15%;">એચ.ટી.ડી. કોડ:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input17" name="input17" class="line w30" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+    
+    <td style="width:5%;">રેહડા:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input18" name="input18" class="line w30" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+
+    <td style="width:5%;">ઓફિસ:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input19" name="input19" class="line w30" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+    
+    <td style="width:5%;">મો.:</td>
+    <td style="width:15%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input20" name="input20" class="line w30" style="border: none; outline: none; width: 100%; background: transparent;"></td>
+  </tr>
+</table>
                         <div class="mt10">ઇ-મેલ: <input type="email" id="input21" name="input21" class="line" style="width:160mm;"></div>
                     </td>
                 </tr>
@@ -226,30 +275,28 @@
                 </tr>
                 <tr>
                     <td>
-                        <table role="presentation">
-                            <tr>
-                                <td style="width:45%;">
-                                    ૧. નામ: <input type="text" id="input22" name="input22" class="line" style="width:70mm;">
-                                </td>
-                                <td style="width:25%;">
-                                    સંપર્ક નંબર: <input type="text" id="input23" name="input23" class="line w35">
-                                </td>
-                                <td style="width:25%;">
-                                    દર્દી સાથેનો સંબંધ: <input type="text" id="input24" name="input24" class="line w35">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-top:3mm;">
-                                    ૨. નામ: <input type="text" id="input25" name="input25" class="line" style="width:70mm;">
-                                </td>
-                                <td style="padding-top:3mm;">
-                                    સંપર્ક નંબર: <input type="text" id="input26" name="input26" class="line w35">
-                                </td>
-                                <td style="padding-top:3mm;">
-                                    દર્દી સાથેનો સંબંધ: <input type="text" id="input27" name="input27" class="line w35">
-                                </td>
-                            </tr>
-                        </table>
+ <table role="presentation">
+  <!-- First Row -->
+  <tr>
+    <td style="width:5%;"><label for="input22">૧. નામ:</label></td>
+    <td style="width:25%;border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input22" name="input22" class="line" style="width:70mm;"></td>
+    <td style="width:8%;"><label for="input23">સંપર્ક નંબર:</label></td>
+    <td style="width:25%;border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input23" name="input23" class="line w35"></td>
+    <td style="width:8%;"><label for="input24">દર્દી સાથેનો સંબંધ:</label></td>
+    <td style="width:25%;border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input24" name="input24" class="line w35"></td>
+  </tr>
+  
+  <!-- Second Row with padding-top -->
+  <tr>
+    <td style="width:5%; padding-top: 15px;"><label for="input25">૨. નામ:</label></td>
+    <td style="width:25%;border-bottom: 1px solid #000; padding-bottom: 2px; padding-top: 15px;"><input type="text" id="input25" name="input25" class="line" style="width:70mm;"></td>
+    <td style="width:8%; padding-top: 15px;"><label for="input26">સંપર્ક નંબર:</label></td>
+    <td style="width:25%;border-bottom: 1px solid #000; padding-bottom: 2px; padding-top: 15px;"><input type="text" id="input26" name="input26" class="line w35"></td>
+    <td style="width:8%; padding-top: 15px;"><label for="input27">દર્દી સાથેનો સંબંધ:</label></td>
+    <td style="width:25%;border-bottom: 1px solid #000; padding-bottom: 2px; padding-top: 15px;"><input type="text" id="input27" name="input27" class="line w35"></td>
+  </tr>
+</table>          
+                        
                     </td>
                 </tr>
                 <tr>
@@ -273,19 +320,20 @@
                             <div><input type="checkbox" id="input31" name="input31" class="cb"> ખબર નથી</div>
                         </div>
                         <div class="mt14">દર્દીનું નામ: <input type="text" id="patient_name" name="patient_name" class="line" style="width:160mm;"></div>
-                        <table role="presentation" style="margin-top:4mm;">
-                            <tr>
-                                <td style="width:45%;">
-                                    દર્દીના સગાનું નામ: <input type="text" id="input33" name="input33" class="line" style="width:75mm;">
-                                </td>
-                                <td style="width:25%;">
-                                    દર્દી સાથેનો સંબંધ: <input type="text" id="input34" name="input34" class="line w35">
-                                </td>
-                                <td style="width:15%;">
-                                    સહી: <input type="text" id="input35" name="input35" class="line w25">
-                                </td>
-                            </tr>
-                        </table>
+                   
+                        <table role="presentation" style="margin-top:4mm; border-collapse: collapse;">
+  <!-- Row 1: Name -->
+  <tr>
+    <td style="width:10%;"><label for="input33">દર્દીના સગાનું નામ:</label></td>
+    <td style="width:25%;border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input33" name="input33" class="line" style="width:100%;"></td>
+
+    <td style="width:10%;"><label for="input34">દર્દી સાથેનો સંબંધ:</label></td>
+    <td style="width:25%; border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input34" name="input34" class="line w35" style="width:100%;"></td>
+
+    <td style="width:7%;"><label for="input35">સહી:</label></td>
+    <td style="width:10%;border-bottom: 1px solid #000; padding-bottom: 2px;"><input type="text" id="input35" name="input35" class="line w25" style="width:100%;"></td>
+  </tr>
+</table>
                     </td>
                 </tr>
             </table>

@@ -163,6 +163,7 @@
             margin: 3px 0 0;
             font-size: 11px;
             font-style: italic;
+            font-weight: 900 !important;
         }
 
         @media print {
@@ -232,53 +233,95 @@
             હું ઉપરોક્ત સારવાર / સારવારના કોર્સ માટે સંમત છું.
         </div>
 
-        <table class="signature-table">
+        <table class="signature-table" style="width: 100%; border-collapse: collapse;">
     <!-- First row: Consultant Name and Signature -->
     <tr>
-        <td style="width: 50%; border:none !important">
-            કન્સલ્ટન્ટ ડૉક્ટરનું નામ: <input type="text" id="input55" name="input55" class="underline">
+        <td style="width: 50%; border:none; padding: 5px 0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 130px; white-space: nowrap; padding-right: 5px; vertical-align: middle; border: none;">કન્સલ્ટન્ટ ડૉક્ટરનું નામ:</td>
+                    <td style="border: none; border-bottom: 1px solid #000; padding: 0;">
+                        <input type="text" id="input55" name="input55" style="border: none; width: 100%; background: transparent; outline: none; height: 20px;" />
+                    </td>
+                </tr>
+            </table>
         </td>
-        <td style="width: 50%; border:none !important">
-            સહી: <input type="text" id="input56" name="input56" class="sig-underline">
+        <td style="width: 50%; border:none; padding: 5px 0 5px 20px;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 40px; white-space: nowrap; padding-right: 5px; vertical-align: middle; border: none;">સહી:</td>
+                    <td style="border: none; border-bottom: 1px solid #000; padding: 0;">
+                        <input type="text" id="input56" name="input56" style="border: none; width: 100%; background: transparent; outline: none; height: 20px;" />
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     
     <!-- Second row: Patient/Relative Name and Signature -->
     <tr>
-        <td style="border:none">
-            દર્દી / સગાનું નામ: <input type="text" id="patient_name" name="patient_name" class="sig-underline">
+        <td style="border:none; padding: 5px 0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 100px; white-space: nowrap; padding-right: 5px; vertical-align: middle; border: none;">દર્દી / સગાનું નામ:</td>
+                    <td style="border: none; border-bottom: 1px solid #000; padding: 0;">
+                        <input type="text" id="patient_name" name="patient_name" style="border: none; width: 100%; background: transparent; outline: none; height: 20px;" />
+                    </td>
+                </tr>
+            </table>
         </td>
-        <td style="border:none">
-            સહી: <input type="text" id="input57" name="input57" class="sig-underline">
+        <td style="border:none; padding: 5px 0 5px 20px;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 40px; white-space: nowrap; padding-right: 5px; vertical-align: middle; border: none;">સહી:</td>
+                    <td style="border: none; border-bottom: 1px solid #000; padding: 0;">
+                        <input type="text" id="input57" name="input57" style="border: none; width: 100%; background: transparent; outline: none; height: 20px;" />
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>
 
         <div class="divider"></div>
 
-        <table class="info-table">
+        <table class="info-table" style="width: 100%; border-collapse: collapse;">
     <tr>
-        <td style="width: 50%; border:none">
-            તારીખ: <input type="text" id="today_date" name="today_date" class="underline-input">
+        <td style="width: 50%; border:none; padding: 5px 0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 40px; white-space: nowrap; padding-right: 5px; border: none;">તારીખ:</td>
+                    <td style="width: 100%; border: none; border-bottom: 1px solid #000; padding: 0;">
+                        <input type="text" id="today_date" name="today_date" style="border: none; width: 100%; background: transparent; outline: none; height: 20px;" />
+                    </td>
+                </tr>
+            </table>
         </td>
-        <td style="width: 50%;border:none">
-            સમય: <input type="text" id="input59" name="input59" class="underline-input">
+        <td style="width: 50%; border:none; padding: 5px 0 5px 20px;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 40px; white-space: nowrap; padding-right: 5px; border: none;">સમય:</td>
+                    <td style="width: 100%; border: none; border-bottom: 1px solid #000; padding: 0;">
+                        <input type="text" id="input59" name="input59" style="border: none; width: 100%; background: transparent; outline: none; height: 20px;" />
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>
 
-        <div class="change-title">
-            <h3 style="font-weight:900">પ્રક્રિયાના ખર્ચમાં ફેરફાર થાય તો</h3>
-            <p style="font-weight:900">(જો આપેલ અંદાજમાં ફેરફાર થાય તો ભરવું)</p>
+        <div class="">
+            <h3 style="font-weight:900; text-align:center;margin-bottom:0 !important">પ્રક્રિયાના ખર્ચમાં ફેરફાર થાય તો</h3>
+            <p style="font-weight:900;margin-bottom:10 !important; text-align:center">(જો આપેલ અંદાજમાં ફેરફાર થાય તો ભરવું)</p>
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th class="col-sr">ક્રમાંક</th>
-                    <th>પ્રક્રિયાનું નામ</th>
-                    <th class="col-cost">અંદાજિત ખર્ચ</th>
-                    <th class="col-reason">ફેરફારનું કારણ</th>
+                    <th class="col-sr" style="font-weight:900">ક્રમાંક</th>
+                    <th style="font-weight:900">પ્રક્રિયાનું નામ</th>
+                    <th class="col-cost" style="font-weight:900">અંદાજિત ખર્ચ</th>
+                    <th class="col-reason" style="font-weight:900">ફેરફારનું કારણ</th>
                 </tr>
             </thead>
             <tbody>
@@ -299,13 +342,13 @@
        <table class="signature-table">
     <tr>
         <td class="label-text" style="width: 15%;border:none">કન્સલ્ટન્ટ ડૉક્ટરનું નામ:</td>
-        <td style="width: 25%;border:none">
+        <td style="width: 25%;border:none; border-bottom:1px solid #000; vertical-align:middle">
             <!--<span class="field-wrapper">-->
                 <input type="text" id="input78" name="input78">
             <!--</span>-->
         </td>
         <td class="label-text" style="width: 10%; padding-left: 20px;border:none">સહી:</td>
-        <td style="width: 40%;border:none">
+        <td style="width: 30%;border:none; border-bottom:1px solid #000; vertical-align:middle">
             
                 <input type="text" id="input79" name="input79">
             
@@ -313,13 +356,13 @@
     </tr>
     <tr>
         <td class="label-text" style="border:none">દર્દી / સગાનું નામ:</td>
-        <td style="border:none">
+        <td style="border:none; border-bottom:1px solid #000; vertical-align:middle">
             
                 <input type="text" id="patient_name" name="patient_name">
             
         </td>
-        <td class="label-text" style="padding-left: 20px;border:none">સહી:</td>
-        <td style="border:none">
+        <td class="label-text" style="padding-left: 20px;border:none;">સહી:</td>
+        <td style="border:none;border-bottom:1px solid #000; vertical-align:middle">
             
                 <input type="text" id="input80" name="input80">
             

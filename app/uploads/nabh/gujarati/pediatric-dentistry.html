@@ -7,10 +7,10 @@
 
     <style>
         /* ===================== PRINT SETUP ===================== */
-        @page {
-            size: A4;
-            margin: 15mm;
-        }
+        /*@page {*/
+        /*    size: A4;*/
+        /*    margin: 15mm;*/
+        /*}*/
 
         * {
             box-sizing: border-box;
@@ -31,7 +31,11 @@
             width: 186mm;
             margin: 0 auto;
             padding: 0;
+        }
+        
+        .page-break {
             page-break-after: always;
+            
         }
 
         /* Prevent weird breaks inside tables while printing */
@@ -59,7 +63,7 @@
         /* This ensures the input behaves exactly like your original span line */
         .input-line {
             border: none;
-            border-bottom: 1px solid #000;
+            /*border-bottom: 1px solid #000;*/
             display: inline-block;
             vertical-align: baseline;
             height: 18px;
@@ -76,7 +80,7 @@
         /* ===================== ENGLISH PAGE 1 STYLES ===================== */
         .header {
             font-size: 22px;
-            font-weight: bold;
+            font-weight: 900;
             text-align: left;
             padding-bottom: 10px;
         }
@@ -115,7 +119,7 @@
         }
 
         .endorsement-table .hdr td {
-            font-weight: bold;
+            font-weight: 900;
         }
 
         .row-height {
@@ -125,7 +129,7 @@
         /* ===================== GUJARATI COMMON STYLES ===================== */
         .title {
             font-size: 26px;
-            font-weight: bold;
+            font-weight: 900;
             text-align: center;
             margin: 0 0 5px 0;
         }
@@ -173,7 +177,7 @@
         .numtbl .ncol {
             width: 28px;
             padding-right: 5px;
-            font-weight: bold;
+            font-weight: 900;
         }
 
         .signTbl td {
@@ -183,7 +187,7 @@
 
         .endorseTitle {
             font-size: 22px;
-            font-weight: bold;
+            font-weight: 900;
             text-align: center;
             margin-top: 16px;
             margin-bottom: 2px;
@@ -207,7 +211,7 @@
         }
 
         .endorseTbl th {
-            font-weight: bold;
+            font-weight: 900;
         }
 
         /* ===================== PAGE 3 CONTINUATION TABLE ===================== */
@@ -228,7 +232,7 @@
         /* column widths for cycle table */
         .c1 {
             width: 10%;
-            font-weight: bold;
+            font-weight: 900;
         }
 
         .c2 {
@@ -241,6 +245,10 @@
 
         .c4 {
             width: 38%;
+        }
+        
+        .table-input{
+            border: none !important;
         }
 
         /* ===================== PRINT FIXES ===================== */
@@ -293,7 +301,7 @@
                 <td class="ncol">1.</td>
                 <td>
                     હું અહીં અન્ય દંત ચિકિત્સક અને/અથવા ડેન્ટલ સહાયક દ્વારા મદદ કરવામાં આવેલ ડો.
-                    <span class="" style="min-width:260px;"><input type="text" class="input-line" id="doctor_name" name="doctor_name"></span>
+                    <span class="" style="min-width:260px;border-bottom:1px solid #000; vertical-align:middle"><input type="text" class="input-line" id="doctor_name" name="doctor_name"></span>
                     ને અધિકૃત અને નિર્દેશિત કરું છું, નીચેની દંત ચિકિત્સા અથવા મૌખિક શસ્ત્રક્રિયા પ્રક્રિયાઓ કરવા માટે,
                     જેમાં કોઈપણ જરૂરી અથવા સલાહભર્યું સ્થાનીક એનેસ્થેશિયા, રેડિયોગ્રાફ્સ (એક્સ-રે) અથવા ડાયગ્નોસ્ટિક
                     એઇડ્સનો
@@ -346,7 +354,7 @@
 
         <p class="p">
             મારા બાળકના દાંતના સ્વાસ્થ્યને જાળવવા માટે સારવાર કરવા માટે હું ડો. <span class=""
-                style="min-width:240px;"><input type="text" class="input-line" id="input56" name="input56"></span> ને અધિકૃત કરું છું.
+                style="min-width:240px;border-bottom:1px solid #000; vertical-align:middle"><input type="text" class="input-line" id="input56" name="input56"></span> ને અધિકૃત કરું છું.
         </p>
 
         <p class="p">
@@ -371,37 +379,33 @@
         <table class="signTbl">
             <tr>
                 <td style="width:70px;">તારીખ:</td>
-                <td><span class="" style="min-width:220px;"><input type="text" class="input-line" id="today_date" name="today_date"></span></td>
+                <td style="border-bottom:1px solid #000; vertical-align:middle"><span class="" style=""><input type="text" class="input-line" id="today_date" name="today_date"></span></td>
             </tr>
             <tr>
                 <td>સમય:</td>
-                <td><span class="" style="min-width:260px;"><input type="text" class="input-line" id="input58" name="input58"></span> &nbsp; AM/PM</td>
+                <td style="border-bottom:1px solid #000; vertical-align:middle"><span class="" style=""><input type="text" class="input-line" id="input58" name="input58"></span></td>
+            </tr>
+            <tr>
+                <td style="width:100px">દર્દીનું નામ:</td>
+                <td style="border-bottom:1px solid #000; vertical-align:middle"><span class="" style=""><input type="text" class="input-line" id="patient_name" name="patient_name"></span></td>
+            </tr>
+            
+            <tr>
+                <td style="width:180px">માતા-પિતા/વાલીની સહી:</td>
+                <td style="border-bottom:1px solid #000; vertical-align:middle"><span class="" style=""><input type="text" class="input-line" id="input60" name="input60"></span></td>
+            </tr>
+            
+            <tr>
+                <td>દર્દી સાથેનો સંબંધ:</td>
+                <td style="border-bottom:1px solid #000; vertical-align:middle"><span class="" style=""><input type="text" class="input-line" id="input61" name="input61"></span></td>
             </tr>
         </table>
 
     </div>
 
     <!-- ===================== PAGE 5 (GUJARATI) ===================== -->
+        <div class="page-break"></div>
     <div class="container">
-
-        <table class="signTbl" style="width:100%; border-collapse:collapse; font-size:18px;">
-            <tr>
-                <td style="padding: 2px 0;">
-                    દર્દીનું નામ: <span class="" style="min-width:520px;"><input type="text" class="input-line" id="patient_name" name="patient_name"></span>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 2px 0;">
-                    માતા-પિતા/વાલીની સહી: <span class="" style="min-width:280px;"><input type="text" class="input-line" id="input60" name="input60"></span>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 2px 0;">
-                    દર્દી સાથેનો સંબંધ: <span class="" style="min-width:220px;"><input type="text" class="input-line" id="input61" name="input61"></span>
-                </td>
-            </tr>
-        </table>
-
         <div class="title" style="font-size:32px; margin-top: 12px;">વર્તણૂક વ્યવસ્થાપન તકનીકો</div>
 
         <p class="p">
@@ -431,19 +435,19 @@
         </p>
 
         <ul class="bullets">
-            <li><b>સકારાત્મક મજબૂતીકરણ:</b> આ તકનીક બાળકને પ્રોત્સાહન આપે છે જે ઇચ્છનીય વર્તન દર્શાવે છે. પ્રોત્સાહનમાં
+            <li><span style="font-weight:900">સકારાત્મક મજબૂતીકરણ:</span> આ તકનીક બાળકને પ્રોત્સાહન આપે છે જે ઇચ્છનીય વર્તન દર્શાવે છે. પ્રોત્સાહનમાં
                 પ્રશંસાનો
                 સમાવેશ થાય છે.</li>
 
-            <li><b>અવાજ નિયંત્રણ:</b> સ્વર બદલવાથી અથવા દંત ચિકિત્સકના અવાજની માત્રા વધારવાથી વિક્ષિપ્ત બાળકનું ધ્યાન
+            <li><span style="font-weight:900">અવાજ નિયંત્રણ:</span> સ્વર બદલવાથી અથવા દંત ચિકિત્સકના અવાજની માત્રા વધારવાથી વિક્ષિપ્ત બાળકનું ધ્યાન
                 ખેંચાય છે.
                 વાતચીતની સામગ્રી કરતાં આદેશની અચાનકતા વધુ મહત્વની છે.</li>
 
-            <li><b>માઉથ પ્રોપ્સ:</b> જ્યારે બાળક મોં ખોલવા ઇનકાર કરે અથવા લાંબા સમય સુધી ખુલ્લું ન રાખી શકે ત્યારે, મોં
+            <li><span style="font-weight:900">માઉથ પ્રોપ્સ:</span> જ્યારે બાળક મોં ખોલવા ઇનકાર કરે અથવા લાંબા સમય સુધી ખુલ્લું ન રાખી શકે ત્યારે, મોં
                 બંધ ન થાય
                 તે માટે બાળકના મોંમાં રબર અથવા પ્લાસ્ટિક ઉપકરણ મૂકવામાં આવે છે.</li>
 
-            <li><b>સિડેશન દવાઓ:</b> ક્યારેક દવાઓનો ઉપયોગ એવા બાળકને આરામ કરવા માટે થાય છે જે અન્ય તકનીકોને પ્રતિસાદ
+            <li><span style="font-weight:900">સિડેશન દવાઓ:</span> ક્યારેક દવાઓનો ઉપયોગ એવા બાળકને આરામ કરવા માટે થાય છે જે અન્ય તકનીકોને પ્રતિસાદ
                 આપતું નથી
                 અથવા દંત પ્રક્રિયાઓને સમજી/સહકાર આપી શકતું નથી. આ દવાઓ મૌખિક રીતે, ઇન્જેક્શન દ્વારા અથવા ગેસ (નાઇટ્રસ
                 ઓક્સાઇડ અને
@@ -451,22 +455,22 @@
                 બાળકને સીડેટ નહીં
                 કરવામાં આવે.</li>
 
-            <li><b>જનરલ એનેસ્થેશિયા:</b> દંત ચિકિત્સક હોસ્પિટલના ઓપરેટિંગ રૂમમાં એનેસ્થેટાઇઝ કરેલા બાળક સાથે સારવાર કરે
+            <li><span style="font-weight:900">જનરલ એનેસ્થેશિયા:</span> દંત ચિકિત્સક હોસ્પિટલના ઓપરેટિંગ રૂમમાં એનેસ્થેટાઇઝ કરેલા બાળક સાથે સારવાર કરે
                 છે. તમને
                 જાણ કર્યા વિના અને તમારી ચોક્કસ સંમતિ લીધા વિના જનરલ એનેસ્થેશિયા આપવામાં આવશે નહીં.</li>
         </ul>
 
         <table style="width:100%; border-collapse:collapse; font-size:18px; margin-top: 14px;">
             <tr>
-                <td style="padding: 6px 0;">તબીબનું નામ: <span class="" style="min-width:520px;"><input type="text" class="input-line" id="input62" name="input62"></span></td>
+                <td style="padding: 6px 0;">તબીબનું નામ: <span class="" style="min-width:520px; border-bottom:1px solid #000; vertical-align:middle"><input type="text" class="input-line" id="input62" name="input62"></span></td>
 
-                <td style="padding: 6px 0;">તબીબની સહી: <span class="" style="min-width:360px;"><input type="text" class="input-line" id="input63" name="input63"></span></td>
+                <td style="padding: 6px 0;">તબીબની સહી: <span class="" style="min-width:360px; border-bottom:1px solid #000; vvertical-align:middle "><input type="text" class="input-line" id="input63" name="input63"></span></td>
             </tr>
             
         </table>
 
     </div>
-
+    <div class="page-break"></div>
     <!-- ===================== PAGE 6 (GUJARATI CONTINUATION TABLE) ===================== -->
     <div class="container">
     <div class="endorseTitle">દરેક ચક્ર પર સંમતિ સમર્થન</div>
@@ -482,7 +486,7 @@
         </tr>
         <tr>
             <td>૧</td>
-            <td style="padding:0;"><input type="text" class="table-input" id="input64" name="input64"></td>
+            <td style="padding:0;"><input type="text" class="table-input" id="input64" name="input64" style="border:none !important"></td>
             <td style="padding:0;"><input type="text" class="table-input" id="input65" name="input65"></td>
             <td style="padding:0;"><input type="text" class="table-input" id="input66" name="input66"></td>
         </tr>

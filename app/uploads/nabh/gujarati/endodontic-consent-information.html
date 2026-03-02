@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -62,7 +62,7 @@
         /* ✅ Input that matches .input-line EXACTLY (no pixel shift) */
         .input-line-input {
             border: 0;
-            border-bottom: 1px solid #000 !important;
+            /*border-bottom: 1px solid #000 !important;*/
             background: transparent;
             outline: none;
             padding: 0;
@@ -186,23 +186,57 @@
                 </td>
             </tr>
 
+            <!-- Signature, Date, Place Section - Each in separate row -->
+<tr>
+    <td style="padding-top: 30px;">
+        <!-- Signature Row -->
+        <table style="width: 100%;" cellpadding="0" cellspacing="0">
             <tr>
-                <td style="padding-top: 30px;">
-                    <div style="margin-bottom: 15px;">
-                        સહી:
-                        <input class="input-line-input" type="text" id="input47" name="input47" sty />
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        તારીખ:
-                        <input class="input-line-input" type="text" id="today_date" name="today_date" />
-                    </div>
-                    <div>
-                        સ્થળ:
-                        <input class="input-line-input" style="min-width: 150px;" type="text" id="input49"
-                            name="input49" />
+                <td>
+                    <div style="margin-bottom: 15px !important; padding-bottom: 20px;">
+                        સહી: <span style="border-bottom:1px solid #000; vertical-align:middle">
+                            <input class="input-line-input" type="text" id="input47" name="input47" />
+                        </span>
                     </div>
                 </td>
             </tr>
+        </table>
+    </td>
+</tr>
+
+<!-- Date Row - Separate row -->
+<tr>
+    <td>
+        <table style="width: 100%;" cellpadding="15" cellspacing="0">
+            <tr style="">
+                <td>
+                    <div style="margin-bottom: 15px;">
+                        તારીખ: <span style="border-bottom:1px solid #000; vertical-align:middle">
+                            <input class="input-line-input" type="text" id="today_date" name="today_date" />
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+<!-- Place Row - Separate row -->
+<tr>
+    <td>
+        <table style="width: 100%;" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <div>
+                        સ્થળ: <span style="vertical-align:middle; border-bottom:1px solid #000">
+                            <input class="input-line-input" style="min-width: 150px;" type="text" id="input49" name="input49" />
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
         </table>
 
         <div class="endorsement-title">દરેક સાયકલ માટે સંમતિ સમર્થન (Consent Endorsement)</div>
