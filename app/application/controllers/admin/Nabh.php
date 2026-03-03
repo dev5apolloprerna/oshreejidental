@@ -311,6 +311,9 @@ public function print_pdf()
     $raw = file_get_contents('php://input');
     $req = json_decode($raw, true);
 
+    $isJson = is_array($req) && !empty($req);         // AJAX JSON call?
+    $isGet  = !$isJson;                               // open new tab call?
+
     if (!$req) {
         $req = [
             'nabh_pdf_id'         => (int)$this->input->get('nabh_pdf_id'),
@@ -329,6 +332,29 @@ public function print_pdf()
     $appointment_id = (int)($req['appointment_id'] ?? 0);
     $lang           = (($req['lang'] ?? 'en') === 'gu') ? 'gu' : 'en';
 
+    // helper to respond nicely instead of CI error page
+    $respondTemplateMissing = function($msg) use ($isJson) {
+        if ($isJson) {
+            return $this->output
+                ->set_status_header(200) // keep 200 so frontend can handle easily
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'status'  => false,
+                    'code'    => 'TEMPLATE_MISSING',
+                    'message' => $msg,
+                ]));
+        }
+
+        // GET/new tab case
+        if (function_exists('set_alert')) {
+            set_alert('warning', $msg);
+        }
+        // redirect back if possible, else go to module list
+        $ref = $this->input->server('HTTP_REFERER');
+        redirect($ref ?: admin_url('nabh'));
+        exit;
+    };
+
     if ($nabh_pdf_id <= 0 || $appointment_id <= 0) {
         return $this->output
             ->set_status_header(422)
@@ -338,20 +364,28 @@ public function print_pdf()
 
     // 1) Load NABH master
     $master = $this->db->where('pdf_id', $nabh_pdf_id)->get('tblnabh_master')->row();
-    if (!$master) return $this->output->set_status_header(404)->set_output('NABH master record not found');
-
-    // 2) Resolve template filename by language (fallback other language)
-    $file = ($lang === 'gu') ? ($master->gujarati_file_name ?? '') : ($master->english_file_name ?? '');
-    $file = trim((string)$file);
-    if ($file === '') {
-        $file = trim((string)($master->english_file_name ?? '')) ?: trim((string)($master->gujarati_file_name ?? ''));
+    if (!$master) {
+        return $this->output->set_status_header(404)->set_output('NABH master record not found');
     }
-    if ($file === '') return $this->output->set_status_header(404)->set_output('Template file missing for both languages');
+
+    // 2) Resolve template filename ONLY for selected language (NO fallback)
+    $file = ($lang === 'gu')
+        ? trim((string)($master->gujarati_file_name ?? ''))
+        : trim((string)($master->english_file_name ?? ''));
+
+    // ✅ if db has no file for that language => disable + message
+    if ($file === '') {
+        return $respondTemplateMissing('File not exist for this language.');
+    }
 
     // 3) Load HTML from correct folder
     $folder = ($lang === 'gu') ? 'gujarati/' : 'english/';
-    $path = FCPATH . 'uploads/nabh/' . $folder . basename($file);
-    if (!file_exists($path)) return $this->output->set_status_header(404)->set_output('HTML template file missing: ' . $path);
+    $path   = FCPATH . 'uploads/nabh/' . $folder . basename($file);
+
+    // ✅ if file missing on disk => disable + message
+    if (!file_exists($path)) {
+        return $respondTemplateMissing('File not exist for this language.');
+    }
 
     $html = file_get_contents($path);
 
@@ -380,7 +414,6 @@ public function print_pdf()
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
 
     // 6) Fill HTML server-side (NO JS in PDF)
-    //    Also converts inputs into printable text so design stays stable.
     $html = $this->apply_saved_to_html_for_pdf($html, $saved);
 
     // 7) Remove submit bar/buttons in PDF
@@ -395,7 +428,7 @@ public function print_pdf()
 
         $guFontBold = FCPATH . 'assets/fonts/NotoSansGujarati-Bold.ttf'; // optional
 
-        $fontRegUrl = 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $guFontRegular);
+        $fontRegUrl  = 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $guFontRegular);
         $fontBoldUrl = file_exists($guFontBold)
             ? 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $guFontBold)
             : '';
@@ -425,15 +458,13 @@ public function print_pdf()
     }
 
     // 9) Choose engine
-    $title = trim((string)($master->pdf_name ?? 'NABH'));
+    $title    = trim((string)($master->pdf_name ?? 'NABH'));
     $filename = preg_replace('/[^A-Za-z0-9\-_]/', '_', $title) . '_' . date('Ymd_His') . '.pdf';
 
     if ($lang === 'gu') {
-        // ✅ GUJARATI => mPDF (proper Gujarati shaping)
         return $this->render_pdf_with_mpdf($html, $filename);
     }
 
-    // ✅ ENGLISH => DOMPDF (fast)
     return $this->render_pdf_with_dompdf($html, $filename);
 }
 

@@ -28,8 +28,8 @@
             margin: 0;
             padding: 20px;
             background-color: #fff;
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 34px;
+            line-height: 2;
         }
 
         .container {
@@ -48,7 +48,7 @@
         }
 
         .title {
-            font-size: 18px;
+            font-size: 30px;
             font-weight: 900;
             margin: 10px 0;
             text-decoration: underline;
@@ -72,6 +72,7 @@
 
         .letter {
             margin-right: 3px;
+            font-size: 14px !important;
         }
 
         .line-input {
@@ -86,8 +87,8 @@
         }
 
         .chk-box {
-            width: 15px;
-            height: 15px;
+            width: 18px;
+            height: 18px;
             border: 1px solid black;
             appearance: none;
             -webkit-appearance: none;
@@ -102,7 +103,7 @@
 
         .chk-box:checked:after {
             content: '\2713';
-            font-size: 13px;
+            font-size: 14px;
             color: #000;
             position: absolute;
             top: 50%;
@@ -145,6 +146,63 @@
         .pt-10 {
             padding-top: 10px;
         }
+        
+        .symptom-row {
+    font-size: 14px !important;  /* Added font size for symptoms */
+    padding-right: 20px;  /* Increased spacing */
+}
+
+@media print {
+    .symptom-row {
+        font-size: 34px !important;
+        padding-right: 0px !important;
+    }
+    
+    .letter {
+            margin-right: 3px;
+            font-size: 34px !important;
+        }
+        
+        .chk-box {
+            width: 35px;
+            height: 35px;
+            border: 1px solid black;
+            appearance: none;
+            -webkit-appearance: none;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+            position: relative;
+            background: transparent;
+            margin-right: 5px;
+            padding: 0;
+        }
+
+        .chk-box:checked:after {
+            content: '\2713';
+            font-size: 28px;
+            color: #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            font-weight: bold;
+        }
+        
+        .title {
+            font-size: 50px !important;
+            margin-bottom: 30px !important;
+        }
+        
+        body {
+            font-family: "NotoSansGujarati", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #fff;
+            font-size: 34px;
+            line-height: 2;
+        }
+}
     </style>
 </head>
 
@@ -167,7 +225,7 @@
                 <td style="text-align: left;">
                     <table>
                         <tr>
-                            <td style="width:18%">પેશન્ટ નું નામ : </td>
+                            <td style="width:35%">પેશન્ટ નું નામ : </td>
                             <td style="border-bottom:1px solid #000; vertical-align:middle"><input type="text" id="patient_name" name="patient_name" class="line-input" style="width: 250px;"></td>
                         </tr>
                     </table>

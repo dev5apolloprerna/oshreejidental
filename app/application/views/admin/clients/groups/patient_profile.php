@@ -648,75 +648,41 @@ i.fa.fa-circle.text-danger-glow.blink {
     pointer-events: none; / Disable interactions with blurred content /
 }
 </style>
-<!-- <style>
-    .patient-profile-content {
-    width: 40%;
-    height: auto;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-    background-color: white;
-    padding: 15px 15px 15px 15px;
+<style>
+/* Make large modal fit in screen and enable scrolling */
+#nabhListModal .modal-dialog {
+  width: 90%;
+  max-width: 1100px;      /* optional */
 }
-.patien-img-name {
-    display: flex;
+
+/* Header + footer fixed, only body scroll */
+#nabhListModal .modal-content {
+  max-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
 }
-.patient-name-uid {
-    margin: auto;
+
+#nabhListModal .modal-body {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  max-height: calc(100vh - 200px); /* header+footer space */
 }
-table#patiend-profile-details th {
-    width: 60%;
-    padding: 10px 0px;
-    font-weight: 700;
-}
-.edit-profile-btn {
-    display: flex;
-    justify-content: center;
-}
-button#edit-patient-profile-btn {
-    padding: 5px 35px;
+
+/* optional: sticky table header while scrolling */
+#nabhListModal thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
 }
 </style>
-<div class="patient-info">
-  <div class="patient-profile-content">
-    <div class="patien-img-name">
-      <div class="patient-img">
-        <img src="user8-128x128.jpg">
-      </div>
-      <div class="patient-name-uid">
-        <div class="patient-name">
-          <h4><?php echo $client->company ?></h4>
-        </div>
-        <div class="patient-uid">
-          <label>ID : </label><strong><?php echo $contact->uid ?></strong>
-        </div>
-      </div>
-    </div>
-      <table id="patiend-profile-details">
-        <tr>
-          <th>Gender</th>
-          <td><?php echo $contact->gender ?></td>
-        </tr>
-        <tr>
-          <th>Date of birth</th>
-          <td><?php echo $contact->dob ?></td>
-        </tr>
-        <tr>
-          <th>Bloog Group</th>
-          <td><?php echo $contact->blood_group ?></td>
-        </tr>
-        <tr>
-          <th>Email</th>
-          <td><?php echo $contact->email; ?></td>
-        </tr>
-        <tr>
-          <th>Phone</th>
-          <td><?php echo $client->phonenumber ?></td>
-        </tr>
-      </table>
-      <div class="edit-profile-btn">
-      <a href="<?php echo admin_url('clients/client/' . $client->userid);?>" id="edit-patient-profile-btn" type="button" >Edit Patient Profile</a>
-      </div>
-</div>
-</div> -->
+<style>
+  .btn-disabled {
+    pointer-events: none;
+    opacity: .55;
+    cursor: not-allowed !important;
+  }
+</style>
 <section class="main-section">
         <div class="container-patient">
         <div id="loader" class="loader" style="display: none;"></div> 
@@ -1595,52 +1561,72 @@ function loadNabhList() {
       var html='';
      
 
-      res.data.forEach(function(r,i){
+res.data.forEach(function(r,i){
 
+  var hasEn = !!r.has_en;
+  var hasGu = !!r.has_gu;
 
-         var hasEn = !!r.has_en;
-        var hasGu = !!r.has_gu;
+  var lang = $('#nabhLang').val(); // keep your current
+  var isGu = (lang === 'gu');
 
+  // ✅ only allow if file exists for selected language
+  var hasForSelectedLang = isGu ? hasGu : hasEn;
 
-        var title = '-';
-          if (lang === 'gu') title = hasGu ? (r.title_gu || r.title_en) : (r.title_en || r.title_gu);
-          else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);
+  var title = '-';
+  if (lang === 'gu') title = hasGu ? (r.title_gu || r.title_en) : (r.title_en || r.title_gu);
+  else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);
 
-          var avail = '';
-          if (hasEn && hasGu) avail = 'EN + GU';
-          else if (hasEn) avail = 'EN';
-          else if (hasGu) avail = 'GU';
-          else avail = 'Not Uploaded';
+  var avail = '';
+  if (hasEn && hasGu) avail = 'EN + GU';
+  else if (hasEn) avail = 'EN';
+  else if (hasGu) avail = 'GU';
+  else avail = 'Not Uploaded';
 
-          var disabled = (!hasEn && !hasGu) ? 'disabled' : '';
+  var viewUrl = admin_url + 'nabh/form/' + r.id
+      + '?lang=' + encodeURIComponent(lang)
+      + '&nabh_pdf_id=' + encodeURIComponent(r.id)
+      + '&appointment_id=' + encodeURIComponent(window.__NABH_META__.appointment_id)
+      + '&appointment_type_id=' + encodeURIComponent(parseInt($('#appointment_type_id').val()||"0",10))
+      + '&patient_id=' + encodeURIComponent(window.__NABH_META__.patient_id)
+      + '&doctor_id=' + encodeURIComponent(window.__NABH_META__.doctor_id)
+      + '&patient_name=' + encodeURIComponent(window.__NABH_META__.patient_name)
+      + '&doctor_name=' + encodeURIComponent(window.__NABH_META__.doctor_name);
 
-          var viewUrl = admin_url + 'nabh/form/' + r.id
-              + '?lang=' + encodeURIComponent(lang)
-              + '&nabh_pdf_id=' + encodeURIComponent(r.id)
-              + '&appointment_id=' + encodeURIComponent(window.__NABH_META__.appointment_id)
-              + '&appointment_type_id=' + encodeURIComponent(parseInt($('#appointment_type_id').val()||"0",10))
-              + '&patient_id=' + encodeURIComponent(window.__NABH_META__.patient_id)
-              + '&doctor_id=' + encodeURIComponent(window.__NABH_META__.doctor_id)
-              + '&patient_name=' + encodeURIComponent(window.__NABH_META__.patient_name)
-              + '&doctor_name=' + encodeURIComponent(window.__NABH_META__.doctor_name)
+  // ✅ disabled style + tooltip + safe onclick
+  var disCls  = hasForSelectedLang ? '' : ' btn-disabled';
+  var disAttr = hasForSelectedLang ? '' : ' disabled="disabled"';
+  var tip     = hasForSelectedLang ? '' : ' title="File not exist for this language"';
 
+  var viewBtn = '<button class="btn btn-sm btn-primary'+disCls+'" '+disAttr+tip+' '
+      + (hasForSelectedLang
+          ? 'onclick="openNabhViewer(\''+viewUrl+'\')"'
+          : 'onclick="return showNabhMissingTemplateMsg();"'
+        )
+      + '>View</button>';
 
-        html+='<tr>'
-          +'<td>'+(i+1)+'</td>'
-          +'<td>'+r.title_en+'</td>'
-          +   '<td>' + escapeHtml(avail) + '</td>'
+  var printBtn = '<button class="btn btn-sm btn-success'+disCls+'" '+disAttr+tip+' '
+      + (hasForSelectedLang
+          ? 'onclick="printNabhPdf('+ r.id +')"'
+          : 'onclick="return showNabhMissingTemplateMsg();"'
+        )
+      + '><i class="fa-regular fa-file-pdf"></i> Print PDF</button>';
 
-          +'<td>'
-          +'<button class="btn btn-sm btn-primary" onclick="openNabhViewer(\''+viewUrl+'\')">View</button>'
-        // /*  +'<button class="btn btn-sm btn-success" onclick="printNabhForm(\''+ viewUrl +'\')"><i class="fa fa-print"></i> Print</button>'*/
-+ '<button class="btn btn-sm btn-success" onclick="printNabhPdf('+ r.id +')">'
-+ '<i class="fa-regular fa-file-pdf"></i> Print PDF</button>'
-          +'</td></tr>';
-      });
+  html += '<tr>'
+    + '<td>'+(i+1)+'</td>'
+    + '<td>'+escapeHtml(r.title_en)+'</td>'
+    + '<td>' + escapeHtml(avail) + '</td>'
+    + '<td>' + viewBtn + ' ' + printBtn + '</td>'
+    + '</tr>';
+});
 
       $('#nabhTbody').html(html);
     },
   'json');
+}
+
+function showNabhMissingTemplateMsg(){
+  alert('File not exist for this language');
+  return false;
 }
 
 function printNabhPdf(nabhPdfId){
