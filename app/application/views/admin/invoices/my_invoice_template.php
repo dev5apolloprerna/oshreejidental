@@ -489,7 +489,8 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                <?php $this->load->view('admin/invoice_items/item_select'); ?>
+                <?php //$this->load->view('admin/invoice_items/item_select'); ?>
+                <?php $this->load->view('admin/invoice_items/item_select', ['item_select_placeholder' => 'Select Appointment Type']); ?>
             </div>
             <?php if (!isset($invoice_from_project) && isset($billable_tasks)) { ?>
             <div class="col-md-3">

@@ -282,6 +282,10 @@ $medical_history = isset($medical_history) ? $medical_history : null;
                                     <?php echo form_error('phonenumber');?>
                                 </div>
                             </div>
+                              <div class="patient_reference_from">
+                                <?php $value = (isset($contact) && property_exists($contact, 'reference_from')) ? $contact->reference_from : ''; ?>
+                                <?php echo render_input('reference_from', 'Reference From', $value); ?>
+                            </div>
                             <div class="patient_rx_start">
                                 <label for="rx-str-date" class="control-label">Current RX Start Date</label>
                                 <input type="date" id="rx-str-date" name="rx_str_date" class="form-control form-group" value="<?php echo $contact->rx_str_date ?? ''; ?>">
