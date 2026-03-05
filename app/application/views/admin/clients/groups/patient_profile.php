@@ -258,6 +258,19 @@ body {
     box-shadow: 0 0.25rem 1.25rem rgba(200,200,200,0.9);
     color: #000;
 }
+.patient_profile_action_btn {
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 6px 12px;
+    line-height: 1.2;
+}
+.appointment_head_wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 94%;
+    gap: 8px;
+}
 .medical_part .medical_head {
     margin: 0 0 15px 15px;
     font-size: 13px;
@@ -697,6 +710,7 @@ i.fa.fa-circle.text-danger-glow.blink {
                                     <img src="<?php echo $user_image_path;?>" alt="Person Image">
                                 </figure>
                             </div>
+
                             <div class="col-lg-9 person_detail">
                                 <div class="p_name">
                                     <h3><?php echo $client->company;?></h3>
@@ -705,7 +719,13 @@ i.fa.fa-circle.text-danger-glow.blink {
                                     <p><span>id : </span> <?php echo $contact->uid;?></p>
                                 </div>
                             </div>
+                            <div class="col-lg-6 text-right">
+                                <a href="<?php echo admin_url('clients/client/' . $client->userid . '?group=profile'); ?>" class="btn btn-default patient_profile_action_btn" style="margin-top: 5px;">
+                                    Edit Profile
+                                </a>
+                            </div>
                         </div>
+
                         <div class="row profile_detail">
                             <div>
                                 <table>
@@ -807,13 +827,18 @@ i.fa.fa-circle.text-danger-glow.blink {
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 appoinment_part">
+                  <div class="col-xl-4 col-lg-4 col-md-4 appoinment_part">
                     <div class="row text-center">
                         <div>
+                        <div class="appointment_head_wrap">
                             <h2 class="appoinment_head">Appoinments</h2>
+                            <button type="button" class="btn btn-primary patient_profile_action_btn" onclick="open_patient_appointment_create_modal();">
+                                Add Appointment
+                            </button>
                         </div>
                         
                     </div>
+                </div>
                     <div class="appoinment appoinment_data_scroll">
                         <?php 
 
@@ -919,6 +944,7 @@ if (!empty($check_prescription_exists)) { ?>
                             <div>
                            
                         </div>
+
                             <div class="row appoinment_dr_name">
                                   <?php if($staff_id != ''){?>
                                 <!--<div class="col-xl-2 col-lg-2 apoinment_img">-->
@@ -995,6 +1021,7 @@ if (!empty($check_prescription_exists)) { ?>
                             <?php }?>
                        
                     </div>
+
                     <div class="row treatment_part">
                         <div class="row treatment_head">
                             <h2>Lab Work</h2>
@@ -1510,7 +1537,31 @@ function getClientIdFromUrl() {
     }
     return clientId;
 }
+function open_patient_appointment_create_modal() {
+    if (typeof $ === 'undefined' || typeof admin_url === 'undefined') {
+        window.location.href = "<?php echo admin_url('appointly/appointments'); ?>";
+        return;
+    }
+
+    if (!$('#modal_wrapper').length) {
+        $('body').append('<div id="modal_wrapper"></div>');
+    }
+
+    $('#modal_wrapper').load(admin_url + 'appointly/appointments/modal', { slug: 'create' }, function () {
+        if ($('.modal-backdrop.fade').hasClass('in')) {
+            $('.modal-backdrop.fade').remove();
+        }
+
+        if ($('#newAppointmentModal').length) {
+            $('#newAppointmentModal').modal({ show: true, backdrop: 'static' });
+        } else {
+            window.location.href = "<?php echo admin_url('appointly/appointments'); ?>";
+        }
+    });
+}
+
 </script>
+
 
 
 
