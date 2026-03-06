@@ -1025,7 +1025,12 @@ i.fa.fa-circle.text-danger-glow.blink {
                             <h2 class="appoinment_head">Appoinments</h2>
                             <button type="button" class="btn btn-primary patient_profile_action_btn" onclick="open_patient_appointment_create_modal();">
                                 Add Appointment
+                            </button> 
+                            <!-- <button type="button" class="btn btn-primary patient_profile_action_btn" >
+                            <a class="btn btn-primary patient_profile_action_btn" href="<?php echo admin_url('appointly/appointments/patient_create/' . $client->userid); ?>">
+                                Add Appointment
                             </button>
+                            </a> -->
                         </div>
                         
                     </div>
@@ -1883,26 +1888,14 @@ function getClientIdFromUrl() {
 }
 function open_patient_appointment_create_modal() 
 {
-    if (typeof $ === 'undefined' || typeof admin_url === 'undefined') {
+    var contactId = <?= json_encode((string) ($contact->id ?? '')); ?>;
+
+    if (!contactId || typeof admin_url === 'undefined') {
         window.location.href = "<?php echo admin_url('appointly/appointments'); ?>";
         return;
     }
 
-    if (!$('#modal_wrapper').length) {
-        $('body').append('<div id="modal_wrapper"></div>');
-    }
-
-    $('#modal_wrapper').load(admin_url + 'appointly/appointments/modal', { slug: 'create' }, function () {
-        if ($('.modal-backdrop.fade').hasClass('in')) {
-            $('.modal-backdrop.fade').remove();
-        }
-
-        if ($('#newAppointmentModal').length) {
-            $('#newAppointmentModal').modal({ show: true, backdrop: 'static' });
-        } else {
-            window.location.href = "<?php echo admin_url('appointly/appointments'); ?>";
-        }
-    });
+    window.location.href = admin_url + 'appointly/appointments/patient_profile_create?contact_id=' + encodeURIComponent(contactId);
 }
 </script>
 
