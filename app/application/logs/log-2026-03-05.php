@@ -1213,3 +1213,137 @@ ERROR - 2026-03-05 19:03:21 --> Severity: Warning --> Undefined variable $staff_
 ERROR - 2026-03-05 19:03:21 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
 ERROR - 2026-03-05 19:03:21 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
 ERROR - 2026-03-05 19:03:21 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:19:44 --> Could not find the language line "Add Prescription"
+ERROR - 2026-03-05 19:19:44 --> Could not find the language line "Add Treatment"
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined array key "firstname" C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\patient_profile.php 964
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $appointment_id C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 35
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $patientId C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 36
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $ajaxItems C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_predcription.php 36
+ERROR - 2026-03-05 19:19:44 --> Could not find the language line "Add Medicine"
+ERROR - 2026-03-05 19:19:44 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:19:44 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:19:44 --> Could not find the language line "Time Slot"
+ERROR - 2026-03-05 19:19:44 --> Could not find the language line "Days"
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 46
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $value C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Trying to access array offset on value of type null C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:19:44 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:19:58 --> Could not find the language line "Medical History"
+ERROR - 2026-03-05 19:19:58 --> Severity: Warning --> Undefined property: stdClass::$middlename C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\my_profile.php 259
+ERROR - 2026-03-05 19:19:58 --> Severity: Warning --> Undefined property: stdClass::$uid C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\my_profile.php 310
+ERROR - 2026-03-05 19:19:58 --> Could not find the language line "Personal and Social History"
+ERROR - 2026-03-05 19:19:58 --> Could not find the language line "Personal and Social History"
+ERROR - 2026-03-05 19:19:58 --> Could not find the language line "Personal and Social History"
+ERROR - 2026-03-05 19:19:58 --> Could not find the language line "Allergies, Medical and Surgical History"
+ERROR - 2026-03-05 19:19:58 --> Could not find the language line "Risk Factors"
+ERROR - 2026-03-05 19:20:02 --> Could not find the language line "Add Prescription"
+ERROR - 2026-03-05 19:20:02 --> Could not find the language line "Add Treatment"
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined array key "firstname" C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\patient_profile.php 964
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $appointment_id C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 35
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $patientId C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 36
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $ajaxItems C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_predcription.php 36
+ERROR - 2026-03-05 19:20:02 --> Could not find the language line "Add Medicine"
+ERROR - 2026-03-05 19:20:02 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:02 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:02 --> Could not find the language line "Time Slot"
+ERROR - 2026-03-05 19:20:02 --> Could not find the language line "Days"
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 46
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $value C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Trying to access array offset on value of type null C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:02 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:03 --> Could not find the language line "Add Prescription"
+ERROR - 2026-03-05 19:20:03 --> Could not find the language line "Add Treatment"
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined array key "firstname" C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\patient_profile.php 964
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $appointment_id C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 35
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $patientId C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 36
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $ajaxItems C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_predcription.php 36
+ERROR - 2026-03-05 19:20:03 --> Could not find the language line "Add Medicine"
+ERROR - 2026-03-05 19:20:03 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:03 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:03 --> Could not find the language line "Time Slot"
+ERROR - 2026-03-05 19:20:03 --> Could not find the language line "Days"
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 46
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $value C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Trying to access array offset on value of type null C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:03 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:28 --> Could not find the language line "Add Prescription"
+ERROR - 2026-03-05 19:20:28 --> Could not find the language line "Add Treatment"
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined array key "firstname" C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\patient_profile.php 964
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $appointment_id C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 35
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $patientId C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 36
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $ajaxItems C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_predcription.php 36
+ERROR - 2026-03-05 19:20:28 --> Could not find the language line "Add Medicine"
+ERROR - 2026-03-05 19:20:28 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:28 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:28 --> Could not find the language line "Time Slot"
+ERROR - 2026-03-05 19:20:28 --> Could not find the language line "Days"
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 46
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $value C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Trying to access array offset on value of type null C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:28 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:58 --> Could not find the language line "Add Prescription"
+ERROR - 2026-03-05 19:20:58 --> Could not find the language line "Add Treatment"
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined array key "firstname" C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\patient_profile.php 964
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $appointment_id C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 35
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $patientId C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 36
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $ajaxItems C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_predcription.php 36
+ERROR - 2026-03-05 19:20:58 --> Could not find the language line "Add Medicine"
+ERROR - 2026-03-05 19:20:58 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:58 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:20:58 --> Could not find the language line "Time Slot"
+ERROR - 2026-03-05 19:20:58 --> Could not find the language line "Days"
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 46
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $value C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Trying to access array offset on value of type null C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:20:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:37 --> Could not find the language line "Add Prescription"
+ERROR - 2026-03-05 19:21:37 --> Could not find the language line "Add Treatment"
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined array key "firstname" C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\patient_profile.php 964
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $appointment_id C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 35
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $patientId C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 36
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $ajaxItems C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_predcription.php 36
+ERROR - 2026-03-05 19:21:37 --> Could not find the language line "Add Medicine"
+ERROR - 2026-03-05 19:21:37 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:21:37 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:21:37 --> Could not find the language line "Time Slot"
+ERROR - 2026-03-05 19:21:37 --> Could not find the language line "Days"
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 46
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $value C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Trying to access array offset on value of type null C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:37 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:58 --> Could not find the language line "Add Prescription"
+ERROR - 2026-03-05 19:21:58 --> Could not find the language line "Add Treatment"
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined array key "firstname" C:\wamp64\www\oshreejidental\app\application\views\admin\clients\groups\patient_profile.php 964
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $appointment_id C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 35
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $patientId C:\wamp64\www\oshreejidental\app\modules\appointly\views\patient_consent.php 36
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $ajaxItems C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_predcription.php 36
+ERROR - 2026-03-05 19:21:58 --> Could not find the language line "Add Medicine"
+ERROR - 2026-03-05 19:21:58 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:21:58 --> Could not find the language line "Medicine"
+ERROR - 2026-03-05 19:21:58 --> Could not find the language line "Time Slot"
+ERROR - 2026-03-05 19:21:58 --> Could not find the language line "Days"
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 46
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $value C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Trying to access array offset on value of type null C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 56
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-03-05 19:21:58 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59

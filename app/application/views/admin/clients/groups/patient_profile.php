@@ -55,7 +55,147 @@ $CI->db->where('role', '1');
 $CI->db->or_where('admin', '1');
 $staff = $CI->db->get(db_prefix() . 'staff')->result_array();
 
+// new code start 
 
+
+$appointment_ids = array_values(array_filter(array_map(function ($appointment) {
+    return isset($appointment['id']) ? (int) $appointment['id'] : 0;
+}, $appointments)));
+
+$treatment_rows = [];
+$medicine_rows = [];
+$doctor_rows = [];
+$prescription_table_rows = [];
+
+if (!empty($appointment_ids)) {
+    $CI->db->select('appointment_id, treatment, staff');
+    $CI->db->from(db_prefix() . 'appointment_treatment');
+    $CI->db->where_in('appointment_id', $appointment_ids);
+    $all_treatments = $CI->db->get()->result_array();
+
+    foreach ($all_treatments as $treatment_item) {
+        $appointment_id = (int) $treatment_item['appointment_id'];
+        if (!isset($treatment_rows[$appointment_id])) {
+            $treatment_rows[$appointment_id] = [];
+        }
+
+        if (!isset($doctor_rows[$appointment_id])) {
+            $doctor_rows[$appointment_id] = [];
+        }
+
+        if (!empty($treatment_item['treatment'])) {
+            $treatment_rows[$appointment_id][] = trim($treatment_item['treatment']);
+        }
+
+        if (!empty($treatment_item['staff'])) {
+            $doctor_rows[$appointment_id][] = (int) $treatment_item['staff'];
+        }
+    }
+
+    $CI->db->select(db_prefix() . 'appointment_prescriptions.appointment_id, ' . db_prefix() . 'appointment_prescription_items.description');
+    $CI->db->from(db_prefix() . 'appointment_prescriptions');
+    $CI->db->join(
+        db_prefix() . 'appointment_prescription_items',
+        db_prefix() . 'appointment_prescription_items.prescription_id = ' . db_prefix() . 'appointment_prescriptions.id',
+        'left'
+    );
+    $CI->db->where_in(db_prefix() . 'appointment_prescriptions.appointment_id', $appointment_ids);
+    $all_medicines = $CI->db->get()->result_array();
+
+    foreach ($all_medicines as $medicine_item) {
+        $appointment_id = (int) $medicine_item['appointment_id'];
+        if (!isset($medicine_rows[$appointment_id])) {
+            $medicine_rows[$appointment_id] = [];
+        }
+
+        if (!empty($medicine_item['description'])) {
+            $medicine_rows[$appointment_id][] = trim($medicine_item['description']);
+        }
+    }
+}
+
+$staff_lookup = [];
+foreach ($staff as $staff_item) {
+    $staff_lookup[(int) $staff_item['staffid']] = trim(($staff_item['firstname'] ?? '') . ' ' . ($staff_item['lastname'] ?? ''));
+}
+
+$history_labels = [
+    'occupation' => 'Occupation',
+    'marital_status' => 'Marital Status',
+    'chief_complaint' => 'Chief Complaint',
+    'allergies' => 'Allergies',
+    'surgical_history' => 'Surgical History',
+    'medication' => 'Medication',
+    'disease' => 'Disease',
+    'dental_history' => 'Previous Dental History',
+    'clinical_findings' => 'Clinical Findings',
+    'diagnosis' => 'Diagnosis',
+    'previous_medication' => 'Previous Medication',
+    'current_medication' => 'Current Medication',
+    'tobaco_past' => 'Tobacco Past',
+    'tobaco_present' => 'Tobacco Present',
+    'alcohol_past' => 'Alcohol Past',
+    'alcohol_present' => 'Alcohol Present',
+    'enviro_factors' => 'Environmental Factors',
+    'risk_factors' => 'Risk Factors',
+    'current_treatment' => 'Current Treatment',
+    'treatment_plan' => 'Treatment Plan',
+    'history_comment' => 'Comment',
+];
+
+$history_table_rows = [];
+
+if (!empty($medical_history) && is_object($medical_history)) {
+    if (!empty($medical_history->medical_history)) {
+        $medical_history_items = array_values(array_filter(array_map('trim', explode(',', $medical_history->medical_history))));
+        if (!empty($medical_history_items)) {
+            $history_table_rows[] = [
+                'label' => 'Medical Conditions',
+                'value' => implode(', ', $medical_history_items),
+            ];
+        }
+    }
+
+    foreach ($history_labels as $field_key => $field_label) {
+        if (!empty($medical_history->{$field_key})) {
+            $history_table_rows[] = [
+                'label' => $field_label,
+                'value' => trim((string) $medical_history->{$field_key}),
+            ];
+        }
+    }
+}
+
+if (!empty($appointment_ids)) {
+    $CI->db->select(db_prefix() . 'appointment_prescriptions.appointment_id, ' . db_prefix() . 'appointment_prescription_items.description, ' . db_prefix() . 'appointment_prescription_items.qty, ' . db_prefix() . 'appointment_prescription_items.days, ' . db_prefix() . 'appointment_prescription_items.time_slot');
+    $CI->db->from(db_prefix() . 'appointment_prescriptions');
+    $CI->db->join(
+        db_prefix() . 'appointment_prescription_items',
+        db_prefix() . 'appointment_prescription_items.prescription_id = ' . db_prefix() . 'appointment_prescriptions.id',
+        'left'
+    );
+    $CI->db->where_in(db_prefix() . 'appointment_prescriptions.appointment_id', $appointment_ids);
+    $prescription_rows = $CI->db->get()->result_array();
+
+    foreach ($prescription_rows as $prescription_row) {
+        $appointment_id = (int) $prescription_row['appointment_id'];
+
+        if (!isset($prescription_table_rows[$appointment_id])) {
+            $prescription_table_rows[$appointment_id] = [];
+        }
+
+        if (!empty($prescription_row['description'])) {
+            $prescription_table_rows[$appointment_id][] = [
+                'description' => trim($prescription_row['description']),
+                'qty' => $prescription_row['qty'],
+                'days' => $prescription_row['days'],
+                'time_slot' => $prescription_row['time_slot'],
+            ];
+        }
+    }
+}
+
+// new code end 
 
 ?>
 <?php if ($this->session->flashdata('success_message')): ?>
@@ -527,6 +667,31 @@ padding: 0px 0 0 25px;
   text-transform: uppercase !important;
 }
 
+.prescription-table-wrap {
+    margin-top: 12px;
+}
+.prescription-table-wrap .table {
+    margin-bottom: 0;
+    font-size: 12px;
+}
+.prescription-table-wrap .table th,
+.prescription-table-wrap .table td {
+    padding: 6px !important;
+    vertical-align: middle;
+}
+.prescription-table-wrap .prescription-empty {
+    font-size: 12px;
+    color: #64748b;
+    margin: 8px 0 0;
+}
+.table_summary_section {
+    margin: 18px 0 0 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0.25rem 1.25rem rgba(200,200,200,0.9);
+    padding: 16px;
+}
+
 body.admin_light_theme_initiated.appointments .label-warning {
   color: #fff !important;
 }
@@ -659,6 +824,32 @@ i.fa.fa-circle.text-danger-glow.blink {
 .blur {
     filter: blur(5px);
     pointer-events: none; / Disable interactions with blurred content /
+}
+
+.table_summary_section {
+    margin: 18px 0 0 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0.25rem 1.25rem rgba(200,200,200,0.9);
+    padding: 16px;
+}
+
+.table_summary_section h2 {
+    margin: 0 0 14px 0;
+    font-size: 16px;
+    color: rgb(71 85 105);
+}
+
+.table_summary_section .table > thead > tr > th {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #475569;
+}
+
+.table_summary_section .table > tbody > tr > td {
+    font-size: 12px;
+    color: #475569;
+    vertical-align: top;
 }
 </style>
 <style>
@@ -920,6 +1111,13 @@ $CI->db->where('appointment_id', $value['id']);
 $check_prescription_exists = $CI->db->get(db_prefix() . 'appointment_prescriptions')->row();
 
 // Always show the "Prescription" button
+
+
+$prescription_items = [];
+if (!empty($check_prescription_exists)) {
+    $CI->db->where('prescription_id', $check_prescription_exists->id);
+    $prescription_items = $CI->db->get(db_prefix() . 'appointment_prescription_items')->result_array();
+}
 ?>
 
 <button class="btn btn-primary add_pre" data-toggle="tooltip" title="<?php echo _l('Add Prescription'); ?>" onclick="open_prescrip_modal(<?php echo $value['id'] ?>)" style="border-radius: 31px;font-size: 12px;padding: 5px 5px 6px 9px;text-align: end;margin-top: 8px;">
@@ -942,8 +1140,7 @@ if (!empty($check_prescription_exists)) { ?>
                                 
                             </div>
                             <div>
-                           
-                        </div>
+                                                   </div>
 
                             <div class="row appoinment_dr_name">
                                   <?php if($staff_id != ''){?>
@@ -1391,6 +1588,153 @@ if (!empty($check_prescription_exists)) { ?>
             </div> -->
         </div>
 
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table_summary_section">
+                        <h2>Treatment &amp; Medicines Table View</h2>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th style="width: 120px;">Date</th>
+                                        <th style="width: 120px;">Appointment ID</th>
+                                        <th>Treatments</th>
+                                        <th>Medicines</th>
+                                        <th style="width: 180px;">Doctor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($appointments)) { ?>
+                                        <?php foreach ($appointments as $index => $appointment) {
+                                            $appointment_id = (int) ($appointment['id'] ?? 0);
+                                            $treatments = !empty($treatment_rows[$appointment_id]) ? array_unique($treatment_rows[$appointment_id]) : [];
+                                            $medicines = !empty($medicine_rows[$appointment_id]) ? array_unique($medicine_rows[$appointment_id]) : [];
+
+                                            $doctor_names = [];
+                                            if (!empty($doctor_rows[$appointment_id])) {
+                                                foreach (array_unique($doctor_rows[$appointment_id]) as $doctor_id) {
+                                                    if (!empty($staff_lookup[$doctor_id])) {
+                                                        $doctor_names[] = $staff_lookup[$doctor_id];
+                                                    }
+                                                }
+                                            }
+                                            ?>
+                                            <tr>
+                                                <td><?php echo (int) ($index + 1); ?></td>
+                                                <td><?php echo !empty($appointment['date']) ? date('d/m/Y', strtotime($appointment['date'])) : '-'; ?></td>
+                                                <td><?php echo $appointment_id ?: '-'; ?></td>
+                                                <td><?php echo !empty($treatments) ? e(implode(', ', $treatments)) : '-'; ?></td>
+                                                <td><?php echo !empty($medicines) ? e(implode(', ', $medicines)) : '-'; ?></td>
+                                                <td><?php echo !empty($doctor_names) ? e(implode(', ', $doctor_names)) : '-'; ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <tr>
+                                            <td colspan="6" class="text-center">No treatment records available.</td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table_summary_section">
+                        <h2>Patient History Table View</h2>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th style="width: 260px;">History Field</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($history_table_rows)) { ?>
+                                        <?php foreach ($history_table_rows as $row_index => $history_row) { ?>
+                                            <tr>
+                                                <td><?php echo (int) ($row_index + 1); ?></td>
+                                                <td><?php echo e($history_row['label']); ?></td>
+                                                <td><?php echo e($history_row['value']); ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <tr>
+                                            <td colspan="3" class="text-center">No patient history available.</td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+             <div class="row">
+                <div class="col-lg-12">
+                    <div class="table_summary_section">
+                        <h2>Prescription Table View</h2>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th style="width: 120px;">Date</th>
+                                        <th style="width: 140px;">Appointment ID</th>
+                                        <th>Medicine Name</th>
+                                        <th style="width: 100px;">Dosage</th>
+                                        <th style="width: 80px;">Days</th>
+                                        <th style="width: 120px;">Timing</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $prescription_index = 1;
+                                    if (!empty($appointments)) {
+                                        foreach ($appointments as $appointment) {
+                                            $appointment_id = (int) ($appointment['id'] ?? 0);
+                                            $appointment_prescriptions = $prescription_table_rows[$appointment_id] ?? [];
+
+                                            if (empty($appointment_prescriptions)) {
+                                                continue;
+                                            }
+
+                                            foreach ($appointment_prescriptions as $prescription_item) {
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $prescription_index++; ?></td>
+                                                    <td><?php echo !empty($appointment['date']) ? date('d/m/Y', strtotime($appointment['date'])) : '-'; ?></td>
+                                                    <td><?php echo $appointment_id ?: '-'; ?></td>
+                                                    <td><?php echo e($prescription_item['description']); ?></td>
+                                                    <td><?php echo !empty($prescription_item['qty']) ? e($prescription_item['qty']) : '-'; ?></td>
+                                                    <td><?php echo !empty($prescription_item['days']) ? e($prescription_item['days']) : '-'; ?></td>
+                                                    <td><?php echo !empty($prescription_item['time_slot']) ? e($prescription_item['time_slot']) : '-'; ?></td>
+                                                </tr>
+                                            <?php
+                                            }
+                                        }
+                                    }
+
+                                    if ($prescription_index === 1) {
+                                        ?>
+                                        <tr>
+                                            <td colspan="7" class="text-center">No prescription records available.</td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <!-- model start -->
         <!-- NABH List Modal -->
 <div class="modal fade" id="nabhListModal" tabindex="-1" role="dialog">
@@ -1537,7 +1881,8 @@ function getClientIdFromUrl() {
     }
     return clientId;
 }
-function open_patient_appointment_create_modal() {
+function open_patient_appointment_create_modal() 
+{
     if (typeof $ === 'undefined' || typeof admin_url === 'undefined') {
         window.location.href = "<?php echo admin_url('appointly/appointments'); ?>";
         return;
@@ -1559,7 +1904,6 @@ function open_patient_appointment_create_modal() {
         }
     });
 }
-
 </script>
 
 
