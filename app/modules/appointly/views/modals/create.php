@@ -35,6 +35,8 @@
                             <div class="col-md-6">
 
                                 <?php $appointment_types = get_appointment_types();
+
+                               echo  count($appointment_types);
                         if (count($appointment_types) > 0) { ?>
                             <div class="form-group appointment_type_holder">
                                 <label for="appointment_select_type" class="control-label"><?= _l('appointments_type_heading'); ?></label>
