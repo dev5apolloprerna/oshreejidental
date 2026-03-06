@@ -32,6 +32,38 @@ class Appointments extends AdminController
     }
 
     /**
+     * Dedicated create appointment page for patient profile flow.
+     *
+     * @return void
+     */
+    public function patient_profile_create()
+    {
+        if (!(staff_can('create', 'appointments') || staff_appointments_responsible())) {
+            access_denied('Appointments');
+        }
+
+        $contact_id = (int) $this->input->get('contact_id');
+
+        if (!$contact_id) {
+            redirect(admin_url('appointly/appointments'));
+        }
+
+        $this->load->model('clients_model');
+
+        $data['user'] = $this->clients_model->get_contact($contact_id);
+
+        if (!$data['user']) {
+            show_404();
+        }
+
+        $data['staff'] = $this->staff_model->get('', ['active' => 1]);
+        $data['return_url'] = admin_url('clients/client/' . $data['user']->userid . '?group=patient_profile');
+
+        $this->load->view('patient_profile_create', $data);
+    }
+
+
+    /**
      * Single appointment view
      *
      * @return void
