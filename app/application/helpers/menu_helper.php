@@ -26,6 +26,13 @@ function app_init_admin_sidebar_menu_items()
             'icon'     => 'fa-regular fa-user',
             'badge'    => [],
         ]);
+        $CI->app_menu->add_sidebar_menu_item('global-patient-search', [
+            'name'     => 'Global Patient Search',
+            'href'     => admin_url('clients/global_search'),
+            'position' => 16,
+            'icon'     => 'fa-solid fa-magnifying-glass',
+            'badge'    => [],
+        ]);
     }
 
     $CI->app_menu->add_sidebar_menu_item('sales', [

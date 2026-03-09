@@ -62,6 +62,190 @@ class Clients extends AdminController
         App_table::find('clients')->output();
     }
 
+  public function global_search()
+    {
+        if (staff_cant('view', 'customers')) {
+            if (!have_assigned_customers() && staff_cant('create', 'customers')) {
+                access_denied('customers');
+            }
+        }
+
+        $data['title'] = 'Global Patient Search';
+
+        $this->load->view('admin/clients/global_search', $data);
+    }
+
+    public function global_search_table()
+    {
+        if (staff_cant('view', 'customers')) {
+            if (!have_assigned_customers() && staff_cant('create', 'customers')) {
+                ajax_access_denied();
+            }
+        }
+
+        $draw   = (int) $this->input->post('draw');
+        $start  = max((int) $this->input->post('start'), 0);
+        $length = (int) $this->input->post('length');
+        if ($length <= 0) {
+            $length = 25;
+        }
+
+        $searchValue = trim((string) (($this->input->post('search') ?? [])['value'] ?? ''));
+        $orderData   = $this->input->post('order');
+        $orderIndex  = (int) ($orderData[0]['column'] ?? 7);
+        $orderDir    = strtolower((string) ($orderData[0]['dir'] ?? 'desc')) === 'asc' ? 'asc' : 'desc';
+
+        $rows = $this->fetch_global_patient_rows($searchValue);
+        $totalRecords = count($rows);
+
+        $columnMap = [
+            0 => 'userid',
+            1 => 'uid',
+            2 => 'branch_name',
+            3 => 'company',
+            4 => 'fullname',
+            5 => 'email',
+            6 => 'phonenumber',
+            7 => 'datecreated',
+        ];
+
+        $sortKey = $columnMap[$orderIndex] ?? 'datecreated';
+
+        usort($rows, function ($a, $b) use ($sortKey, $orderDir) {
+            $left  = strtolower((string) ($a[$sortKey] ?? ''));
+            $right = strtolower((string) ($b[$sortKey] ?? ''));
+
+            if ($left === $right) {
+                return 0;
+            }
+
+            if ($orderDir === 'asc') {
+                return $left <=> $right;
+            }
+
+            return $right <=> $left;
+        });
+
+        $pagedRows = array_slice($rows, $start, $length);
+        $data = [];
+
+        foreach ($pagedRows as $row) {
+            $data[] = [
+                $row['userid'],
+                e($row['uid']),
+                e($row['branch_name']),
+                e($row['company']),
+                e($row['fullname']),
+                $row['email'] ? '<a href="mailto:' . e($row['email']) . '">' . e($row['email']) . '</a>' : '-',
+                $row['phonenumber'] ? '<a href="tel:' . e($row['phonenumber']) . '">' . e($row['phonenumber']) . '</a>' : '-',
+                e(_dt($row['datecreated'])),
+            ];
+        }
+
+        $output = [
+            'draw'            => $draw,
+            'recordsTotal'    => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data'            => $data,
+            'aaData'          => $data,
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($output);
+        exit;
+    }
+
+    private function fetch_global_patient_rows($searchValue = '')
+    {
+        $mainDb   = $this->load->database('default', true);
+        $rows     = [];
+        $branches = $this->get_global_search_branches($mainDb);
+
+        foreach ($branches as $branch) {
+            if (!$this->is_valid_db_identifier($branch['branch_db'])) {
+                continue;
+            }
+
+            $dbName      = $branch['branch_db'];
+            $branchLabel = $branch['branch_label'];
+
+            $sql = 'SELECT c.userid, ct.uid, c.company, CONCAT(IFNULL(ct.firstname, ""), " ", IFNULL(ct.lastname, "")) as fullname, ct.email, c.phonenumber, c.datecreated '
+                . 'FROM `' . $dbName . '`.`' . db_prefix() . 'clients` c '
+                . 'LEFT JOIN `' . $dbName . '`.`' . db_prefix() . 'contacts` ct ON ct.userid = c.userid AND ct.is_primary = 1 '
+                . 'WHERE 1=1';
+
+            $binds = [];
+            if ($searchValue !== '') {
+                $sql .= ' AND (ct.uid LIKE ? OR c.phonenumber LIKE ? OR c.company LIKE ? OR ct.firstname LIKE ? OR ct.lastname LIKE ?)';
+                $like = '%' . $searchValue . '%';
+                $binds = [$like, $like, $like, $like, $like];
+            }
+
+            try {
+                $result = $mainDb->query($sql, $binds)->result_array();
+            } catch (Throwable $e) {
+                continue;
+            }
+
+            foreach ($result as $record) {
+                $rows[] = [
+                    'userid'      => $record['userid'] ?? '',
+                    'uid'         => $record['uid'] ?? '',
+                    'branch_name' => $branchLabel,
+                    'company'     => $record['company'] ?? '',
+                    'fullname'    => trim((string) ($record['fullname'] ?? '')),
+                    'email'       => $record['email'] ?? '',
+                    'phonenumber' => $record['phonenumber'] ?? '',
+                    'datecreated' => $record['datecreated'] ?? '',
+                ];
+            }
+        }
+
+        return $rows;
+    }
+
+    private function get_global_search_branches($mainDb)
+    {
+        $branchFields = $mainDb->list_fields(db_prefix() . 'branch');
+        $select = ['branch_db'];
+
+        if (in_array('branch', $branchFields, true)) {
+            $select[] = 'branch';
+        }
+
+        if (in_array('branch_code', $branchFields, true)) {
+            $select[] = 'branch_code';
+        }
+
+        $mainDb->select(implode(',', $select));
+        $mainDb->where('branch_db !=', '');
+        $branchRows = $mainDb->get(db_prefix() . 'branch')->result_array();
+
+        $branches = [];
+        foreach ($branchRows as $item) {
+            $label = '';
+            if (!empty($item['branch'])) {
+                $label = $item['branch'];
+            } elseif (!empty($item['branch_code'])) {
+                $label = $item['branch_code'];
+            } else {
+                $label = $item['branch_db'];
+            }
+
+            $branches[] = [
+                'branch_db'    => $item['branch_db'],
+                'branch_label' => $label,
+            ];
+        }
+
+        return array_slice($branches, 0, 4);
+    }
+
+    private function is_valid_db_identifier($name)
+    {
+        return (bool) preg_match('/^[A-Za-z0-9_]+$/', (string) $name);
+    }
+    
     public function all_contacts()
     {
         if ($this->input->is_ajax_request()) {
