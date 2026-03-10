@@ -62,7 +62,13 @@ class Clients extends AdminController
         App_table::find('clients')->output();
     }
 
-  public function global_search()
+      public function global_search()
+    {
+        return $this->branch_wise_patients();
+    }
+
+
+   public function branch_wise_patients()
     {
         if (staff_cant('view', 'customers')) {
             if (!have_assigned_customers() && staff_cant('create', 'customers')) {
@@ -70,12 +76,18 @@ class Clients extends AdminController
             }
         }
 
-        $data['title'] = 'Global Patient Search';
+        $data['title'] = 'Branch Wise Patient Search';
 
-        $this->load->view('admin/clients/global_search', $data);
+        $this->load->view('admin/clients/branch_wise_patients', $data);
     }
 
+
     public function global_search_table()
+    {
+        return $this->branch_wise_patients_table();
+    }
+
+     public function branch_wise_patients_table()
     {
         if (staff_cant('view', 'customers')) {
             if (!have_assigned_customers() && staff_cant('create', 'customers')) {
@@ -84,19 +96,23 @@ class Clients extends AdminController
         }
 
         $draw   = (int) $this->input->post('draw');
-        $start  = max((int) $this->input->post('start'), 0);
+        $start  = (int) $this->input->post('start');
         $length = (int) $this->input->post('length');
+
+        if ($start < 0) {
+            $start = 0;
+        }
+
         if ($length <= 0) {
             $length = 25;
         }
 
-        $searchValue = trim((string) (($this->input->post('search') ?? [])['value'] ?? ''));
-        $orderData   = $this->input->post('order');
-        $orderIndex  = (int) ($orderData[0]['column'] ?? 7);
-        $orderDir    = strtolower((string) ($orderData[0]['dir'] ?? 'desc')) === 'asc' ? 'asc' : 'desc';
-
-        $rows = $this->fetch_global_patient_rows($searchValue);
-        $totalRecords = count($rows);
+        
+        $searchValue = '';
+        $searchData = $this->input->post('search');
+        if (is_array($searchData) && isset($searchData['value'])) {
+            $searchValue = trim((string) $searchData['value']);
+        }
 
         $columnMap = [
             0 => 'userid',
@@ -109,65 +125,38 @@ class Clients extends AdminController
             7 => 'datecreated',
         ];
 
-        $sortKey = $columnMap[$orderIndex] ?? 'datecreated';
+        
+        $orderIndex = 7;
+        $orderDir   = 'desc';
+        $orderData  = $this->input->post('order');
 
-        usort($rows, function ($a, $b) use ($sortKey, $orderDir) {
-            $left  = strtolower((string) ($a[$sortKey] ?? ''));
-            $right = strtolower((string) ($b[$sortKey] ?? ''));
-
-            if ($left === $right) {
-                return 0;
+           
+        if (is_array($orderData) && isset($orderData[0])) {
+            if (isset($orderData[0]['column'])) {
+                $orderIndex = (int) $orderData[0]['column'];
             }
 
-            if ($orderDir === 'asc') {
-                return $left <=> $right;
+           
+            if (isset($orderData[0]['dir']) && strtolower((string) $orderData[0]['dir']) === 'asc') {
+                $orderDir = 'asc';
             }
 
-            return $right <=> $left;
-        });
+            
+        $sortKey = isset($columnMap[$orderIndex]) ? $columnMap[$orderIndex] : 'datecreated';
 
-        $pagedRows = array_slice($rows, $start, $length);
-        $data = [];
-
-        foreach ($pagedRows as $row) {
-            $data[] = [
-                $row['userid'],
-                e($row['uid']),
-                e($row['branch_name']),
-                e($row['company']),
-                e($row['fullname']),
-                $row['email'] ? '<a href="mailto:' . e($row['email']) . '">' . e($row['email']) . '</a>' : '-',
-                $row['phonenumber'] ? '<a href="tel:' . e($row['phonenumber']) . '">' . e($row['phonenumber']) . '</a>' : '-',
-                e(_dt($row['datecreated'])),
-            ];
-        }
-
-        $output = [
-            'draw'            => $draw,
-            'recordsTotal'    => $totalRecords,
-            'recordsFiltered' => $totalRecords,
-            'data'            => $data,
-            'aaData'          => $data,
-        ];
-
-        header('Content-Type: application/json');
-        echo json_encode($output);
-        exit;
-    }
-
-    private function fetch_global_patient_rows($searchValue = '')
-    {
+     
         $mainDb   = $this->load->database('default', true);
         $rows     = [];
         $branches = $this->get_global_search_branches($mainDb);
 
-        foreach ($branches as $branch) {
-            if (!$this->is_valid_db_identifier($branch['branch_db'])) {
+        foreach ($branches as $branch) 
+        {
+            if (!isset($branch['branch_db']) || !$this->is_valid_db_identifier($branch['branch_db'])) {
                 continue;
             }
 
             $dbName      = $branch['branch_db'];
-            $branchLabel = $branch['branch_label'];
+            $branchLabel = isset($branch['branch_label']) ? $branch['branch_label'] : $dbName;
 
             $sql = 'SELECT c.userid, ct.uid, c.company, CONCAT(IFNULL(ct.firstname, ""), " ", IFNULL(ct.lastname, "")) as fullname, ct.email, c.phonenumber, c.datecreated '
                 . 'FROM `' . $dbName . '`.`' . db_prefix() . 'clients` c '
@@ -183,28 +172,86 @@ class Clients extends AdminController
 
             try {
                 $result = $mainDb->query($sql, $binds)->result_array();
-            } catch (Throwable $e) {
+            } catch (Exception $e) {
                 continue;
             }
 
             foreach ($result as $record) {
                 $rows[] = [
-                    'userid'      => $record['userid'] ?? '',
-                    'uid'         => $record['uid'] ?? '',
-                    'branch_name' => $branchLabel,
-                    'company'     => $record['company'] ?? '',
-                    'fullname'    => trim((string) ($record['fullname'] ?? '')),
-                    'email'       => $record['email'] ?? '',
-                    'phonenumber' => $record['phonenumber'] ?? '',
-                    'datecreated' => $record['datecreated'] ?? '',
+                    'userid'      => isset($record['userid']) ? (string) $record['userid'] : '',
+                    'uid'         => isset($record['uid']) ? (string) $record['uid'] : '',
+                    'branch_name' => (string) $branchLabel,
+                    'company'     => isset($record['company']) ? (string) $record['company'] : '',
+                    'fullname'    => isset($record['fullname']) ? trim((string) $record['fullname']) : '',
+                    'email'       => isset($record['email']) ? (string) $record['email'] : '',
+                    'phonenumber' => isset($record['phonenumber']) ? (string) $record['phonenumber'] : '',
+                    'datecreated' => isset($record['datecreated']) ? (string) $record['datecreated'] : '',
                 ];
             }
         }
 
-        return $rows;
-    }
+     
+       usort($rows, function ($a, $b) use ($sortKey, $orderDir) {
+            $left  = isset($a[$sortKey]) ? $a[$sortKey] : '';
+            $right = isset($b[$sortKey]) ? $b[$sortKey] : '';
 
-    private function get_global_search_branches($mainDb)
+            if ($sortKey === 'datecreated') {
+                $leftValue  = strtotime((string) $left);
+                $rightValue = strtotime((string) $right);
+
+                $leftValue  = $leftValue !== false ? $leftValue : 0;
+                $rightValue = $rightValue !== false ? $rightValue : 0;
+            } elseif ($sortKey === 'userid') {
+                $leftValue  = (int) $left;
+                $rightValue = (int) $right;
+            } else {
+                $leftValue  = strtolower((string) $left);
+                $rightValue = strtolower((string) $right);
+            }
+
+            if ($leftValue == $rightValue) {
+                return 0;
+            }
+
+            if ($orderDir === 'asc') {
+                return ($leftValue < $rightValue) ? -1 : 1;
+            }
+
+            return ($leftValue > $rightValue) ? -1 : 1;
+        });
+
+        $totalRecords    = count($rows);
+        $filteredRecords = $totalRecords;
+        $pagedRows       = array_slice($rows, $start, $length);
+
+        $data = [];
+        foreach ($pagedRows as $row) {
+            $data[] = [
+                $row['userid'],
+                e($row['uid']),
+                e($row['branch_name']),
+                e($row['company']),
+                e($row['fullname']),
+                $row['email'] !== '' ? '<a href="mailto:' . e($row['email']) . '">' . e($row['email']) . '</a>' : '-',
+                $row['phonenumber'] !== '' ? '<a href="tel:' . e($row['phonenumber']) . '">' . e($row['phonenumber']) . '</a>' : '-',
+                $row['datecreated'] !== '' ? e(_dt($row['datecreated'])) : '-',
+            ];
+        }
+
+        $output = [
+            'draw'            => $draw,
+            'recordsTotal'    => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data'            => $data,
+            'aaData'          => $data,
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($output);
+        exit;
+    }
+}
+       private function get_global_search_branches($mainDb)
     {
         $branchFields = $mainDb->list_fields(db_prefix() . 'branch');
         $select = ['branch_db'];
@@ -222,24 +269,46 @@ class Clients extends AdminController
         $branchRows = $mainDb->get(db_prefix() . 'branch')->result_array();
 
         $branches = [];
+        $seenDatabases = [];
+
+        $defaultDbName = isset($mainDb->database) ? (string) $mainDb->database : '';
+        if ($defaultDbName !== '') {
+            $branches[] = [
+                'branch_db'    => $defaultDbName,
+                'branch_label' => 'Main Branch',
+            ];
+            $seenDatabases[$defaultDbName] = true;
+        }
+
         foreach ($branchRows as $item) {
+            if (!isset($item['branch_db']) || $item['branch_db'] === '') {
+                continue;
+            }
+
+            $branchDb = (string) $item['branch_db'];
+            if (isset($seenDatabases[$branchDb])) {
+                continue;
+            }
+
             $label = '';
             if (!empty($item['branch'])) {
                 $label = $item['branch'];
             } elseif (!empty($item['branch_code'])) {
                 $label = $item['branch_code'];
             } else {
-                $label = $item['branch_db'];
+                $label = $branchDb;
             }
 
             $branches[] = [
-                'branch_db'    => $item['branch_db'],
+                'branch_db'    => $branchDb,
                 'branch_label' => $label,
             ];
+            $seenDatabases[$branchDb] = true;
         }
 
-        return array_slice($branches, 0, 4);
+        return $branches;
     }
+
 
     private function is_valid_db_identifier($name)
     {
