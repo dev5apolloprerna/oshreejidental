@@ -1087,6 +1087,72 @@ function handle_staff_profile_image_upload($staff_id = '')
     return false;
 }
 
+// new code start
+function handle_staff_doctor_sign_upload($staff_id = '')
+{
+    if (!is_numeric($staff_id)) {
+        return false;
+    }
+
+    if (!isset($_FILES['doctor_sign']['name']) || $_FILES['doctor_sign']['name'] == '') {
+        return false;
+    }
+
+    if (_perfex_upload_error($_FILES['doctor_sign']['error'])) {
+        set_alert('warning', _perfex_upload_error($_FILES['doctor_sign']['error']));
+
+        return false;
+    }
+
+    $path = get_upload_path_by_type('staff') . $staff_id . '/doctor_sign/';
+    $tmpFilePath = $_FILES['doctor_sign']['tmp_name'];
+
+    if (empty($tmpFilePath)) {
+        return false;
+    }
+
+    $extension = strtolower(pathinfo($_FILES['doctor_sign']['name'], PATHINFO_EXTENSION));
+    $allowed_extensions = [
+        'jpg',
+        'jpeg',
+        'png',
+        'webp',
+    ];
+
+    if (!in_array($extension, $allowed_extensions)) {
+        set_alert('warning', _l('file_php_extension_blocked'));
+
+        return false;
+    }
+
+    _maybe_create_upload_path($path);
+    $filename = unique_filename($path, $_FILES['doctor_sign']['name']);
+    $newFilePath = $path . $filename;
+
+    if (!move_uploaded_file($tmpFilePath, $newFilePath)) {
+        return false;
+    }
+
+    $CI = &get_instance();
+    $CI->db->select('doctor_sign');
+    $CI->db->where('staffid', $staff_id);
+    $oldSign = $CI->db->get(db_prefix() . 'staff')->row('doctor_sign');
+
+    if (!empty($oldSign) && $oldSign !== $filename) {
+        $oldPath = $path . $oldSign;
+        if (file_exists($oldPath)) {
+            unlink($oldPath);
+        }
+    }
+
+    $CI->db->where('staffid', $staff_id);
+    $CI->db->update(db_prefix() . 'staff', [
+        'doctor_sign' => $filename,
+    ]);
+
+    return true;
+}
+// new code end
 /**
  * Maybe upload contact profile image
  * @param  string $contact_id contact_id or current logged in contact id will be used if not passed

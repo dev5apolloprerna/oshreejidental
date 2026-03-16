@@ -106,6 +106,24 @@
                                         </div>
                                     </div>
                                 </div>
+                                 <div class="form-group">
+                                    <label for="doctor_sign" class="profile-image"><?php echo _l('staff_doctor_sign'); ?></label>
+                                    <input type="file" name="doctor_sign" class="form-control" id="doctor_sign" accept="image/*">
+                                </div>
+                                <?php if (isset($member) && !empty($member->doctor_sign)) { ?>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <img src="<?php echo base_url('uploads/staff_profile_images/' . $member->staffid . '/doctor_sign/' . $member->doctor_sign); ?>"
+                                                class="img img-responsive" style="max-height: 70px;" alt="Doctor Sign">
+                                        </div>
+                                        <div class="col-md-3 text-right">
+                                            <a href="<?php echo admin_url('staff/remove_staff_doctor_sign/' . $member->staffid); ?>"><i class="fa fa-remove"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                
                                 <?php } ?>
                                 <?php $value = (isset($member) ? $member->firstname : ''); ?>
                                 <?php $attrs = (isset($member) ? [] : ['autofocus' => true]); ?>

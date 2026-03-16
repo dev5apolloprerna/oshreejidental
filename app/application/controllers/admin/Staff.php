@@ -47,6 +47,7 @@ class Staff extends AdminController
                 $id = $this->staff_model->add($data);
                 if ($id) {
                     handle_staff_profile_image_upload($id);
+                    handle_staff_doctor_sign_upload($id);
                     set_alert('success', _l('added_successfully', _l('staff_member')));
                     redirect(admin_url('staff/member/' . $id));
                 }
@@ -55,6 +56,7 @@ class Staff extends AdminController
                     access_denied('staff');
                 }
                 handle_staff_profile_image_upload($id);
+                handle_staff_doctor_sign_upload($id);
                 $response = $this->staff_model->update($data, $id);
                 if (is_array($response)) {
                     if (isset($response['cant_remove_main_admin'])) {
@@ -442,5 +444,31 @@ class Staff extends AdminController
         if (is_numeric($post_data['task_id'])) {
             update_staff_meta(get_staff_user_id(), 'task-hide-completed-items-'. $post_data['task_id'], $post_data['hideCompleted']);
         }
+    }
+    //new code
+     public function remove_staff_doctor_sign($id = '')
+    {
+        if (!is_numeric($id) || (staff_cant('create', 'staff') && staff_cant('edit', 'staff'))) {
+            access_denied('staff');
+        }
+
+        $member = $this->staff_model->get($id);
+        if (!$member) {
+            blank_page('Staff Member Not Found', 'danger');
+        }
+
+        if (!empty($member->doctor_sign)) {
+            $path = get_upload_path_by_type('staff') . $id . '/doctor_sign/' . $member->doctor_sign;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+
+        $this->db->where('staffid', $id);
+        $this->db->update(db_prefix() . 'staff', [
+            'doctor_sign' => null,
+        ]);
+
+        redirect(admin_url('staff/member/' . $id));
     }
 }

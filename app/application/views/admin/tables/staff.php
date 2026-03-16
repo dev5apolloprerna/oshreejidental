@@ -10,6 +10,7 @@ $custom_fields = get_custom_fields('staff', [
 $aColumns = [
     'firstname',
     'email',
+    'doctor_sign',
     db_prefix() . 'roles.name',
     'last_login',
     'active',
@@ -88,6 +89,13 @@ foreach ($rResult as $aRow) {
             $_data .= '</div>';
         } elseif ($aColumns[$i] == 'email') {
             $_data = '<a href="mailto:' . e($_data) . '">' . e($_data) . '</a>';
+        } elseif ($aColumns[$i] == 'doctor_sign') {
+            if (!empty($_data)) {
+                $_data = '<img src="' . base_url('uploads/staff_profile_images/' . $aRow['staffid'] . '/doctor_sign/' . $_data) . '" alt="Doctor Sign" class="img img-responsive" style="max-height:40px;">';
+            } else {
+                $_data = '--';
+            }
+            
         } else {
             if (strpos($aColumns[$i], 'date_picker_') !== false) {
                 $_data = (strpos($_data, ' ') !== false ? _dt($_data) : _d($_data));
