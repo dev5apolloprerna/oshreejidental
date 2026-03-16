@@ -413,22 +413,8 @@ public function print_pdf()
     if (!isset($saved['doctor_name'])  && !empty($req['doctor_name']))  $saved['doctor_name']  = $req['doctor_name'];
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
 
-// 5.1) Resolve signature images and place them near signature labels
-    $doctorSignatureSrc  = $this->resolve_signature_image_src(
-        array_merge([$req], [$saved]),
-        ['doctor_signature', 'doctor_sign', 'dr_signature', 'dr_sign']
-    );
-    $patientSignatureSrc = $this->resolve_signature_image_src(
-        array_merge([$req], [$saved]),
-        ['patient_signature', 'patient_sign']
-    );
-
     // 6) Fill HTML server-side (NO JS in PDF)
     $html = $this->apply_saved_to_html_for_pdf($html, $saved);
-
-  // 6.1) Replace/augment signature labels with images where possible
-    $html = $this->inject_signature_images_by_label($html, $doctorSignatureSrc, $patientSignatureSrc);
-
 
     // 7) Remove submit bar/buttons in PDF
     $html = preg_replace('~<div[^>]*class="submit-bar"[^>]*>.*?</div>~is', '', $html);
@@ -482,79 +468,7 @@ public function print_pdf()
     return $this->render_pdf_with_dompdf($html, $filename);
 }
 
-private function resolve_signature_image_src(array $sources, array $keys)
-{
-    foreach ($sources as $source) {
-        if (!is_array($source)) {
-            continue;
-        }
 
-        foreach ($keys as $key) {
-            if (!isset($source[$key])) {
-                continue;
-            }
-
-            $value = trim((string)$source[$key]);
-            if ($value === '') {
-                continue;
-            }
-
-            if (stripos($value, 'data:image/') === 0 || preg_match('~^https?://~i', $value)) {
-                return $value;
-            }
-
-            $value = ltrim($value, '/');
-
-            $candidatePaths = [
-                FCPATH . $value,
-                FCPATH . 'uploads/' . $value,
-                FCPATH . 'uploads/nabh/signatures/' . basename($value),
-                FCPATH . 'uploads/signatures/' . basename($value),
-            ];
-
-            foreach ($candidatePaths as $absPath) {
-                if (is_file($absPath)) {
-                    return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $absPath);
-                }
-            }
-        }
-    }
-
-    return '';
-}
-
-private function inject_signature_images_by_label($html, $doctorSignatureSrc, $patientSignatureSrc)
-{
-    if ($doctorSignatureSrc === '' && $patientSignatureSrc === '') {
-        return $html;
-    }
-
-    $doctorImg  = $doctorSignatureSrc !== ''
-        ? '<br><img src="' . htmlspecialchars($doctorSignatureSrc, ENT_QUOTES, 'UTF-8') . '" alt="Doctor Signature" style="max-height:70px; max-width:220px;">'
-        : '';
-
-    $patientImg = $patientSignatureSrc !== ''
-        ? '<br><img src="' . htmlspecialchars($patientSignatureSrc, ENT_QUOTES, 'UTF-8') . '" alt="Patient Signature" style="max-height:70px; max-width:220px;">'
-        : '';
-
-    if ($doctorImg !== '') {
-        $html = preg_replace(
-            '/\b(doctor\s*signature|doctor\s*sign)\b(?![^<]*<img)/i',
-            '$1' . $doctorImg,
-            $html
-        );
-    }
-
-    if ($patientImg !== '') {
-        $html = preg_replace(
-            '/\b(patient\s*signature|patient\s*sign)\b(?![^<]*<img)/i',
-            '$1' . $patientImg,
-            $html
-        );
-    }
-
-    return $html;
-}
 
    private function apply_saved_to_html_for_pdf($html, array $saved)
 {
@@ -565,8 +479,6 @@ private function inject_signature_images_by_label($html, $doctorSignatureSrc, $p
     $dom = new DOMDocument('1.0', 'UTF-8');
     $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     $xpath = new DOMXPath($dom);
-
-    $saved = $this->apply_doctor_defaults_for_pdf($xpath, $saved);
 
     foreach ($saved as $key => $val) {
         $key = (string)$key;
@@ -880,113 +792,4 @@ private function render_pdf_with_dompdf(string $html, string $filename)
         ->set_header('Content-Disposition: inline; filename="' . $filename . '"')
         ->set_output($pdfBinary);
 }
-
-private function apply_doctor_defaults_for_pdf(DOMXPath $xpath, array $saved): array
-{
-    $doctorName = trim((string)($saved['doctor_name'] ?? ''));
-    if ($doctorName === '') {
-        return $saved;
-    }
-
-    $doctorSign = $this->extract_doctor_signature_value($saved);
-
-    foreach ($xpath->query('//input|//textarea') as $node) {
-        $keyName = trim((string)$node->getAttribute('name'));
-        $keyId   = trim((string)$node->getAttribute('id'));
-
-        $existingByName = ($keyName !== '' && isset($saved[$keyName]) && trim((string)$saved[$keyName]) !== '');
-        $existingById   = ($keyId !== '' && isset($saved[$keyId]) && trim((string)$saved[$keyId]) !== '');
-        if ($existingByName || $existingById) {
-            continue;
-        }
-
-        $context = $this->collect_doctor_context_text($xpath, $node);
-        if ($context === '' || !$this->is_doctor_related_context($context)) {
-            continue;
-        }
-
-        $fillValue = $this->is_signature_related_context($context)
-            ? ($doctorSign !== '' ? $doctorSign : $doctorName)
-            : $doctorName;
-
-        if ($keyName !== '' && !isset($saved[$keyName])) {
-            $saved[$keyName] = $fillValue;
-        }
-
-        if ($keyId !== '' && !isset($saved[$keyId])) {
-            $saved[$keyId] = $fillValue;
-        }
-    }
-
-    return $saved;
-}
-
-private function extract_doctor_signature_value(array $saved): string
-{
-    foreach ($saved as $k => $v) {
-        if (!is_scalar($v)) {
-            continue;
-        }
-
-        $key = strtolower((string)$k);
-        $isDoctorKey = (strpos($key, 'doctor') !== false)
-            || (strpos($key, 'dr') !== false)
-            || (strpos($key, 'consultant') !== false)
-            || (strpos($key, 'surgeon') !== false)
-            || (strpos($key, 'surgen') !== false);
-
-        $isSignKey = (strpos($key, 'sign') !== false) || (strpos($key, 'signature') !== false);
-
-        if ($isDoctorKey && $isSignKey) {
-            $value = trim((string)$v);
-            if ($value !== '') {
-                return $value;
-            }
-        }
-    }
-
-    return '';
-}
-
-private function collect_doctor_context_text(DOMXPath $xpath, DOMNode $node): string
-{
-    $chunks = [];
-    $chunks[] = strtolower(trim((string)$node->getAttribute('name')));
-    $chunks[] = strtolower(trim((string)$node->getAttribute('id')));
-    $chunks[] = strtolower(trim((string)$node->getAttribute('placeholder')));
-    $chunks[] = strtolower(trim((string)$node->getAttribute('class')));
-
-    if ($node->parentNode) {
-        $chunks[] = strtolower(trim((string)$node->parentNode->textContent));
-    }
-
-    $tableRow = $xpath->query('ancestor::tr[1]', $node)->item(0);
-    if ($tableRow) {
-        $chunks[] = strtolower(trim((string)$tableRow->textContent));
-    }
-
-    $label = $xpath->query('preceding::label[1]', $node)->item(0);
-    if ($label) {
-        $chunks[] = strtolower(trim((string)$label->textContent));
-    }
-
-    return trim(implode(' ', array_filter($chunks)));
-}
-
-private function is_doctor_related_context(string $context): bool
-{
-    return (strpos($context, 'doctor') !== false)
-        || (strpos($context, 'consultant') !== false)
-        || (strpos($context, 'dr') !== false)
-        || (strpos($context, 'surgeon') !== false)
-        || (strpos($context, 'surgen') !== false);
-}
-
-private function is_signature_related_context(string $context): bool
-{
-    return (strpos($context, 'sign') !== false)
-        || (strpos($context, 'signature') !== false);
-}
-
-
 }
