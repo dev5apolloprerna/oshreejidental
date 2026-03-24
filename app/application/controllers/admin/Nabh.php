@@ -43,8 +43,333 @@ class Nabh extends AdminController
         echo json_encode(['status'=>true,'data'=>$data]);
         exit;
     }
+                public function all_forms_json()
+    {
+        $patient_id = (int) $this->input->post('patient_id');
+
+        if ($patient_id <= 0) {
+            echo json_encode(['status' => false, 'data' => [], 'message' => 'Invalid patient id']);
+            exit;
+        }
+
+        $forms = $this->db
+            ->select('pdf_id, pdf_name, english_file_name, gujarati_file_name')
+            ->from('tblnabh_master')
+            ->order_by('pdf_name', 'ASC')
+            ->get()
+            ->result_array();
+
+        if (empty($forms)) {
+            echo json_encode(['status' => true, 'data' => []]);
+            exit;
+        }
+
+        $form_ids = array_values(array_filter(array_map('intval', array_column($forms, 'pdf_id'))));
+
+        $submissions = [];
+        if (!empty($form_ids)) {
+            $submissions = $this->db
+                ->select('id, nabh_pdf_id, appointment_id, appointment_type_id, patient_name, doctor_id, doctor_name, updated_at, created_at, form_data_json')
+                ->from(db_prefix() . 'nabh_form_submissions')
+                ->where('patient_id', $patient_id)
+                ->where_in('nabh_pdf_id', $form_ids)
+                ->order_by('id', 'DESC')
+                ->get()
+                ->result_array();
+        }
+
+        $latest_submission_by_form = [];
+        foreach ($submissions as $submission) {
+            $form_id = (int) ($submission['nabh_pdf_id'] ?? 0);
+            if ($form_id <= 0) {
+                continue;
+            }
+            if (!isset($latest_submission_by_form[$form_id])) {
+                $latest_submission_by_form[$form_id] = $submission;
+            }
+        }
+
+        $rows = [];
+        foreach ($forms as $form) {
+            $form_id = (int) ($form['pdf_id'] ?? 0);
+            if ($form_id <= 0) {
+                continue;
+            }
+
+            $submission = $latest_submission_by_form[$form_id] ?? null;
+
+            $filled_data = [];
+            if (!empty($submission['form_data_json'])) {
+                $decoded = json_decode($submission['form_data_json'], true);
+                if (is_array($decoded)) {
+                    foreach ($decoded as $f_key => $f_val) {
+                        $val = is_scalar($f_val) ? trim((string) $f_val) : '';
+                        if ($val === '' || $val === '0' || strtolower($val) === 'null') {
+                            continue;
+                        }
+                        $filled_data[] = $f_key . ': ' . $val;
+                        if (count($filled_data) >= 3) {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $rows[] = [
+                'appointment_id' => !empty($submission['appointment_id']) ? (int) $submission['appointment_id'] : 0,
+                'appointment_type_id' => !empty($submission['appointment_type_id']) ? (int) $submission['appointment_type_id'] : 0,
+                'appointment_date' => '-',
+                'form_id' => $form_id,
+                'form_name' => $form['pdf_name'] ?? ('Form #' . $form_id),
+                'has_en' => !empty($form['english_file_name']),
+                'has_gu' => !empty($form['gujarati_file_name']),
+                'is_filled' => !empty($submission),
+                'doctor_id' => !empty($submission['doctor_id']) ? (int) $submission['doctor_id'] : 0,
+                'patient_name' => !empty($submission['patient_name']) ? trim((string) $submission['patient_name']) : '',
+                'doctor_name' => !empty($submission['doctor_name']) ? trim((string) $submission['doctor_name']) : '',
+                'filled_at' => !empty($submission['updated_at']) ? $submission['updated_at'] : ($submission['created_at'] ?? ''),
+                'filled_preview' => !empty($filled_data) ? implode(' | ', $filled_data) : '',
+            ];
+        }
+
+        echo json_encode(['status' => true, 'data' => $rows]);
+        exit;
+    }
+
+    public function patient_history_pdf($patient_id = 0)
+    {
+        $patient_id = (int) $patient_id;
+        if ($patient_id <= 0) {
+            show_error('Invalid patient id', 422);
+        }
+
+        $patient = $this->db
+            ->select('userid, company, phonenumber')
+            ->from(db_prefix() . 'clients')
+            ->where('userid', $patient_id)
+            ->get()
+            ->row();
 
 
+        $primary_contact = $this->db
+            ->select('email')
+            ->from(db_prefix() . 'contacts')
+            ->where('userid', $patient_id)
+            ->order_by('is_primary', 'DESC')
+            ->order_by('id', 'ASC')
+            ->get()
+            ->row();
+
+        $medical_history = $this->db
+            ->from(db_prefix() . 'medical_history')
+            ->where('userid', $patient_id)
+            ->get()
+            ->row_array();
+
+        $contacts = $this->db
+            ->select('id')
+            ->from(db_prefix() . 'contacts')
+            ->where('userid', $patient_id)
+            ->get()
+            ->result_array();
+
+        $contact_ids = array_values(array_filter(array_map('intval', array_column($contacts, 'id'))));
+
+        $appointments = [];
+        if (!empty($contact_ids)) {
+            $appointment_table = db_prefix() . 'appointly_appointments';
+            $appointment_fields = $this->db->list_fields($appointment_table);
+
+            $appointment_select = ['id', 'date', 'type_id', 'description'];
+            if (in_array('start_hour', $appointment_fields, true)) {
+                $appointment_select[] = 'start_hour';
+            } elseif (in_array('start_time', $appointment_fields, true)) {
+                $appointment_select[] = 'start_time';
+            }
+
+            if (in_array('finish_hour', $appointment_fields, true)) {
+                $appointment_select[] = 'finish_hour';
+            } elseif (in_array('end_hour', $appointment_fields, true)) {
+                $appointment_select[] = 'end_hour';
+            } elseif (in_array('end_time', $appointment_fields, true)) {
+                $appointment_select[] = 'end_time';
+            }
+
+            $appointments = $this->db
+                ->select(implode(', ', array_unique($appointment_select)))
+                ->from($appointment_table)
+                ->where_in('contact_id', $contact_ids)
+                ->order_by('date', 'DESC')
+                ->get()
+                ->result_array();
+        }
+
+        $appointment_ids = array_values(array_filter(array_map('intval', array_column($appointments, 'id'))));
+
+        $treatments = [];
+        if (!empty($appointment_ids)) {
+            $treatments = $this->db
+                ->select(db_prefix() . 'appointment_treatment.appointment_id, ' . db_prefix() . 'appointment_treatment.treatment, ' . db_prefix() . 'appointment_treatment.staff, ' . db_prefix() . 'staff.firstname, ' . db_prefix() . 'staff.lastname')
+                ->from(db_prefix() . 'appointment_treatment')
+                ->join(db_prefix() . 'staff', db_prefix() . 'staff.staffid = ' . db_prefix() . 'appointment_treatment.staff', 'left')
+                ->where_in(db_prefix() . 'appointment_treatment.appointment_id', $appointment_ids)
+                ->order_by(db_prefix() . 'appointment_treatment.id', 'DESC')
+                ->get()
+                ->result_array();
+        }
+
+        $treatments_by_appointment = [];
+        foreach ($treatments as $tr) {
+            $aid = (int) ($tr['appointment_id'] ?? 0);
+            if ($aid <= 0) {
+                continue;
+            }
+            if (!isset($treatments_by_appointment[$aid])) {
+                $treatments_by_appointment[$aid] = [];
+            }
+            $doctor_name = trim((string) (($tr['firstname'] ?? '') . ' ' . ($tr['lastname'] ?? '')));
+            $entry = trim((string) ($tr['treatment'] ?? ''));
+            if ($doctor_name !== '') {
+                $entry .= ($entry !== '' ? ' (Dr. ' . $doctor_name . ')' : 'Dr. ' . $doctor_name);
+            }
+            if ($entry !== '') {
+                $treatments_by_appointment[$aid][] = $entry;
+            }
+        }
+
+        $submissions = $this->db
+            ->select(
+                db_prefix() . 'nabh_form_submissions.*, ' .
+                'tblnabh_master.pdf_name, ' .
+                db_prefix() . 'appointly_appointments.date as appointment_date, ' .
+                db_prefix() . 'staff.firstname as doctor_firstname, ' .
+                db_prefix() . 'staff.lastname as doctor_lastname'
+            )
+            ->from(db_prefix() . 'nabh_form_submissions')
+            ->join('tblnabh_master', 'tblnabh_master.pdf_id = ' . db_prefix() . 'nabh_form_submissions.nabh_pdf_id', 'left')
+            ->join(db_prefix() . 'appointly_appointments', db_prefix() . 'appointly_appointments.id = ' . db_prefix() . 'nabh_form_submissions.appointment_id', 'left')
+            ->join(db_prefix() . 'staff', db_prefix() . 'staff.staffid = ' . db_prefix() . 'nabh_form_submissions.doctor_id', 'left')
+            ->where(db_prefix() . 'nabh_form_submissions.patient_id', $patient_id)
+            ->order_by(db_prefix() . 'nabh_form_submissions.updated_at', 'DESC')
+            ->order_by(db_prefix() . 'nabh_form_submissions.id', 'DESC')
+            ->get()
+            ->result_array();
+
+        $patient_name = trim((string) ($patient->company ?? ''));
+        $title = 'Patient Complete Clinical History';
+
+        $html = '<html><head><meta charset="UTF-8"><style>'
+            . 'body{font-family:DejaVu Sans, sans-serif; font-size:11px; color:#222;}'
+            . 'h2{margin:0 0 8px 0;} h3{margin:14px 0 6px 0;}'
+            . '.meta{margin-bottom:10px;} table{width:100%; border-collapse:collapse; margin-bottom:10px;}'
+            . 'th,td{border:1px solid #d5d5d5; padding:5px; vertical-align:top;}'
+            . 'th{background:#f5f5f5;} .small{color:#666; font-size:10px;}'
+            . '</style></head><body>';
+
+        $html .= '<h2>' . html_escape($title) . '</h2>';
+        $html .= '<div class="meta"><strong>Patient:</strong> ' . html_escape($patient_name !== '' ? $patient_name : ('ID ' . $patient_id))
+            . ' | <strong>Phone:</strong> ' . html_escape((string) ($patient->phonenumber ?? '-'))
+            . ' | <strong>Email:</strong> ' . html_escape((string) ($primary_contact->email ?? '-'))
+            . '<br><strong>Generated:</strong> ' . date('d/m/Y H:i') . '</div>';
+
+        $html .= '<h3>Medical History</h3><table><tbody>';
+        if (empty($medical_history)) {
+            $html .= '<tr><td>No medical history available.</td></tr>';
+        } else {
+            foreach ($medical_history as $field => $value) {
+                if (in_array($field, ['id', 'userid'], true)) {
+                    continue;
+                }
+                $val = trim((string) $value);
+                if ($val === '') {
+                    continue;
+                }
+                $label = ucwords(str_replace('_', ' ', $field));
+                $html .= '<tr><th style="width:220px;">' . html_escape($label) . '</th><td>' . html_escape($val) . '</td></tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+
+        $html .= '<h3>Appointment & Treatment History</h3>';
+        $html .= '<table><thead><tr><th style="width:35px;">#</th><th style="width:90px;">Date</th><th style="width:70px;">Appt ID</th><th style="width:90px;">Time</th><th>Details</th><th>Treatments</th></tr></thead><tbody>';
+        if (empty($appointments)) {
+            $html .= '<tr><td colspan="6" style="text-align:center;">No appointments found.</td></tr>';
+        } else {
+            foreach ($appointments as $i => $appt) {
+                $aid = (int) ($appt['id'] ?? 0);
+                $tlist = $treatments_by_appointment[$aid] ?? [];
+                $start_time = $appt['start_hour'] ?? ($appt['start_time'] ?? '');
+                $end_time = $appt['finish_hour'] ?? ($appt['end_hour'] ?? ($appt['end_time'] ?? ''));
+                $time = trim((string) $start_time);
+                if (!empty($end_time)) {
+                    $time .= ($time !== '' ? ' - ' : '') . trim((string) $end_time);
+                }
+                $html .= '<tr>'
+                    . '<td>' . (int) ($i + 1) . '</td>'
+                    . '<td>' . (!empty($appt['date']) ? date('d/m/Y', strtotime($appt['date'])) : '-') . '</td>'
+                    . '<td>' . $aid . '</td>'
+                    . '<td>' . html_escape($time !== '' ? $time : '-') . '</td>'
+                    . '<td>' . html_escape((string) (!empty($appt['description']) ? $appt['description'] : '-')) . '</td>'
+                    . '<td>' . (!empty($tlist) ? html_escape(implode(', ', array_unique($tlist))) : '-') . '</td>'
+                    . '</tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+
+        $html .= '<h3>NABH Filled Forms History</h3>';
+        $html .= '<table><thead><tr>'
+            . '<th style="width:35px;">#</th>'
+            . '<th style="width:85px;">Date</th>'
+            . '<th style="width:70px;">Appt ID</th>'
+            . '<th style="width:170px;">NABH Form</th>'
+            . '<th style="width:120px;">Doctor</th>'
+            . '<th>Filled Details</th>'
+            . '</tr></thead><tbody>';
+
+        if (empty($submissions)) {
+            $html .= '<tr><td colspan="6" style="text-align:center;">No NABH history found.</td></tr>';
+        } else {
+            foreach ($submissions as $index => $row) {
+                $doctor_name = trim((string) ($row['doctor_name'] ?? ''));
+                if ($doctor_name === '') {
+                    $doctor_name = trim((string) (($row['doctor_firstname'] ?? '') . ' ' . ($row['doctor_lastname'] ?? '')));
+                }
+
+                $details = [];
+                if (!empty($row['form_data_json'])) {
+                    $decoded = json_decode($row['form_data_json'], true);
+                    if (is_array($decoded)) {
+                        foreach ($decoded as $k => $v) {
+                            if (!is_scalar($v)) {
+                                continue;
+                            }
+                            $val = trim((string) $v);
+                            if ($val === '' || $val === '0' || strtolower($val) === 'null') {
+                                continue;
+                            }
+                            $details[] = html_escape((string) $k) . ': ' . html_escape($val);
+                        }
+                    }
+                }
+
+                $html .= '<tr>'
+                    . '<td>' . (int) ($index + 1) . '</td>'
+                    . '<td>' . (!empty($row['appointment_date']) ? date('d/m/Y', strtotime($row['appointment_date'])) : '-') . '</td>'
+                    . '<td>' . (int) ($row['appointment_id'] ?? 0) . '</td>'
+                    . '<td>' . html_escape((string) ($row['pdf_name'] ?? '')) . '</td>'
+                    . '<td>' . html_escape($doctor_name !== '' ? $doctor_name : '-') . '<div class="small">'
+                    . html_escape((string) (!empty($row['updated_at']) ? $row['updated_at'] : ($row['created_at'] ?? '')))
+                    . '</div></td>'
+                    . '<td>' . (!empty($details) ? implode('<br>', $details) : '-') . '</td>'
+                    . '</tr>';
+            }
+        }
+
+        $html .= '</tbody></table></body></html>';
+
+        $filename = 'patient_complete_history_' . $patient_id . '_' . date('Ymd_His') . '.pdf';
+        return $this->render_pdf_with_dompdf($html, $filename);
+    }
     /* =========================================================
        2) LOAD FORM (HTML + DB DATA + INJECT JS)
     ==========================================================*/
