@@ -109,13 +109,49 @@ class Nabh extends AdminController
         if ($row && !empty($row['form_data_json'])) {
             $saved = json_decode($row['form_data_json'], true);
         }
+
+        if (!is_array($saved)) {
+            $saved = [];
+        }
+
         $patient_name = $this->input->get('patient_name', true);
         $doctor_name  = $this->input->get('doctor_name', true);
+
+        $doctor_signature_image = $this->input->get('doctor_signature_image', true);
+        $patient_signature_image = $this->input->get('patient_signature_image', true);
 
         // if encoded, CI usually decodes, but safe:
         $patient_name = urldecode((string)$patient_name);
         $doctor_name  = urldecode((string)$doctor_name);
 
+         $doctor_signature_image = urldecode((string)$doctor_signature_image);
+        $patient_signature_image = urldecode((string)$patient_signature_image);
+        // backward-compatible alias to avoid undefined-variable notices from older typo usage
+        $patient_signature_imag = $patient_signature_image;
+
+        if ($patient_name === '' && $row && !empty($row['patient_name'])) {
+            $patient_name = trim((string)$row['patient_name']);
+        }
+
+        if ($doctor_name === '' && $row && !empty($row['doctor_name'])) {
+            $doctor_name = trim((string)$row['doctor_name']);
+        }
+
+        if ($doctor_name === '' && $doctor_id > 0 && function_exists('get_staff_full_name')) {
+            $doctor_name = trim((string)get_staff_full_name($doctor_id));
+        }
+
+        if ($doctor_signature_image === '' && !empty($saved['doctor_signature_image'])) {
+            $doctor_signature_image = trim((string)$saved['doctor_signature_image']);
+        }
+
+        if ($doctor_signature_image === '' && $doctor_id > 0) {
+            $doctor_signature_image = $this->resolve_doctor_signature_image_from_staff_dir($doctor_id);
+        }
+
+        if ($patient_signature_image === '' && !empty($saved['patient_signature_image'])) {
+            $patient_signature_image = trim((string)$saved['patient_signature_image']);
+        }
 
         $ctx = [
           'pdf_id'              => $pdf_id,
@@ -126,6 +162,8 @@ class Nabh extends AdminController
           'lang'                => $lang,
           'patient_name'        => $patient_name,
           'doctor_name'         => $doctor_name,
+          'doctor_signature_image' => $doctor_signature_image,
+          'patient_signature_image' => $patient_signature_image !== '' ? $patient_signature_image : $patient_signature_imag ?? null,
         ];
 
     // ✅ 6️⃣ THIS IS WHERE YOU PUT IT
@@ -175,6 +213,19 @@ class Nabh extends AdminController
         $lang          = $payload['lang'];
 
         $formData      = $payload['form_data'] ?? [];
+
+       if ($doctor_name === '' && $doctor_id > 0 && function_exists('get_staff_full_name')) {
+            $doctor_name = trim((string)get_staff_full_name($doctor_id));
+        }
+
+        if ($patient_name === '' && isset($formData['patient_name'])) {
+            $patient_name = trim((string)$formData['patient_name']);
+        }
+
+        if ($doctor_name === '' && isset($formData['doctor_name'])) {
+            $doctor_name = trim((string)$formData['doctor_name']);
+        }
+
 
         $table = db_prefix().'nabh_form_submissions';
 
@@ -330,7 +381,12 @@ public function print_pdf()
 
     $nabh_pdf_id    = (int)($req['nabh_pdf_id'] ?? 0);
     $appointment_id = (int)($req['appointment_id'] ?? 0);
+    $doctor_id      = (int)($req['doctor_id'] ?? 0);
     $lang           = (($req['lang'] ?? 'en') === 'gu') ? 'gu' : 'en';
+
+    if (empty($req['doctor_name']) && $doctor_id > 0 && function_exists('get_staff_full_name')) {
+        $req['doctor_name'] = trim((string)get_staff_full_name($doctor_id));
+    }
 
     // helper to respond nicely instead of CI error page
     $respondTemplateMissing = function($msg) use ($isJson) {
@@ -411,6 +467,14 @@ public function print_pdf()
     // 5) Ensure common fields exist
     if (!isset($saved['patient_name']) && !empty($req['patient_name'])) $saved['patient_name'] = $req['patient_name'];
     if (!isset($saved['doctor_name'])  && !empty($req['doctor_name']))  $saved['doctor_name']  = $req['doctor_name'];
+
+     if (!isset($saved['doctor_signature_image']) || trim((string)$saved['doctor_signature_image']) === '') {
+        $fallbackDoctorSignImage = $this->resolve_doctor_signature_image_from_staff_dir($doctor_id);
+        if ($fallbackDoctorSignImage !== '') {
+            $saved['doctor_signature_image'] = $fallbackDoctorSignImage;
+        }
+    }
+
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
 
     // 6) Fill HTML server-side (NO JS in PDF)
@@ -469,6 +533,30 @@ public function print_pdf()
 }
 
 
+private function resolve_doctor_signature_image_from_staff_dir(int $doctor_id): string
+{
+    if ($doctor_id <= 0) {
+        return '';
+    }
+
+    $baseDir = FCPATH . 'uploads/staff_profile_images/' . $doctor_id . '/doctor_sign/';
+    if (!is_dir($baseDir)) {
+        return '';
+    }
+
+    $files = glob($baseDir . '*.{png,jpg,jpeg,gif,webp,svg}', GLOB_BRACE);
+    if (empty($files)) {
+        return '';
+    }
+
+    usort($files, function ($a, $b) {
+        return filemtime($b) <=> filemtime($a);
+    });
+
+    $relative = str_replace(FCPATH, '', $files[0]);
+    return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+}
+
 
    private function apply_saved_to_html_for_pdf($html, array $saved)
 {
@@ -480,7 +568,9 @@ public function print_pdf()
     $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     $xpath = new DOMXPath($dom);
 
-    foreach ($saved as $key => $val) {
+    $saved = $this->apply_party_defaults_for_pdf($xpath, $saved);
+
+        foreach ($saved as $key => $val) {
         $key = (string)$key;
 
         // by name
@@ -554,6 +644,253 @@ public function print_pdf()
     return $out;
 
 }
+
+private function apply_party_defaults_for_pdf(DOMXPath $xpath, array $saved): array
+{
+    $doctorName = trim((string)($saved['doctor_name'] ?? ''));
+    $patientName = trim((string)($saved['patient_name'] ?? ''));
+
+    if ($doctorName === '' && $patientName === '') {
+        return $saved;
+    }
+
+    $doctorSign = $this->extract_signature_value($saved, 'doctor');
+    $patientSign = $this->extract_signature_value($saved, 'patient');
+    $doctorSignImage = $this->extract_signature_image_value($saved, 'doctor');
+    $patientSignImage = $this->extract_signature_image_value($saved, 'patient');
+
+    if ($doctorSign === '' && $doctorName !== '') {
+        $doctorSign = $doctorName;
+    }
+    if ($patientSign === '' && $patientName !== '') {
+        $patientSign = $patientName;
+    }
+
+    if (!isset($saved['doctor_signature']) && $doctorSign !== '') {
+        $saved['doctor_signature'] = $doctorSign;
+    }
+    if (!isset($saved['patient_signature']) && $patientSign !== '') {
+        $saved['patient_signature'] = $patientSign;
+    }
+    if (!isset($saved['doctor_signature_image']) && $doctorSignImage !== '') {
+        $saved['doctor_signature_image'] = $doctorSignImage;
+    }
+    if (!isset($saved['patient_signature_image']) && $patientSignImage !== '') {
+        $saved['patient_signature_image'] = $patientSignImage;
+    }
+
+    $this->apply_signature_images_for_pdf($xpath, $saved, $doctorSignImage, $patientSignImage);
+
+    foreach ($xpath->query('//input|//textarea') as $node) {
+        $keyName = trim((string)$node->getAttribute('name'));
+        $keyId   = trim((string)$node->getAttribute('id'));
+
+        $existingByName = ($keyName !== '' && isset($saved[$keyName]) && trim((string)$saved[$keyName]) !== '');
+        $existingById   = ($keyId !== '' && isset($saved[$keyId]) && trim((string)$saved[$keyId]) !== '');
+        if ($existingByName || $existingById) {
+            continue;
+        }
+
+        $context = $this->collect_context_text_for_pdf($xpath, $node);
+        if ($context === '') {
+            continue;
+        }
+
+        $fillValue = '';
+        if ($this->is_doctor_related_context($context) && $doctorName !== '') {
+            $fillValue = $this->is_signature_related_context($context)
+                ? ($doctorSign !== '' ? $doctorSign : $doctorName)
+                : $doctorName;
+        } elseif ($this->is_patient_related_context($context) && $patientName !== '') {
+            $fillValue = $this->is_signature_related_context($context)
+                ? ($patientSign !== '' ? $patientSign : $patientName)
+                : $patientName;
+        }
+
+        if ($fillValue === '') {
+            continue;
+        }
+
+        if ($keyName !== '' && !isset($saved[$keyName])) {
+            $saved[$keyName] = $fillValue;
+        }
+
+        if ($keyId !== '' && !isset($saved[$keyId])) {
+            $saved[$keyId] = $fillValue;
+        }
+    }
+
+    return $saved;
+}
+
+private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, string $doctorSignImage, string $patientSignImage): void
+{
+    if ($doctorSignImage === '' && $patientSignImage === '') {
+        return;
+    }
+
+    foreach ($xpath->query('//img') as $img) {
+        $context = $this->collect_context_text_for_pdf($xpath, $img);
+        if ($context === '' || !$this->is_signature_related_context($context)) {
+            continue;
+        }
+
+        $currentSrc = trim((string)$img->getAttribute('src'));
+        if ($currentSrc !== '') {
+            continue;
+        }
+
+        if ($doctorSignImage !== '' && $this->is_doctor_related_context($context)) {
+            $img->setAttribute('src', $doctorSignImage);
+            continue;
+        }
+
+        if ($patientSignImage !== '' && $this->is_patient_related_context($context)) {
+            $img->setAttribute('src', $patientSignImage);
+        }
+    }
+}
+
+private function extract_signature_image_value(array $saved, string $party): string
+{
+    foreach ($saved as $k => $v) {
+        if (!is_scalar($v)) {
+            continue;
+        }
+
+        $key = strtolower((string)$k);
+        $value = trim((string)$v);
+        if ($value === '') {
+            continue;
+        }
+
+        if (!$this->is_signature_related_context($key)) {
+            continue;
+        }
+
+        if (!$this->is_signature_image_value($value)) {
+            continue;
+        }
+
+        if ($party === 'doctor' && $this->is_doctor_related_context($key)) {
+            return $value;
+        }
+
+        if ($party === 'patient' && $this->is_patient_related_context($key)) {
+            return $value;
+        }
+    }
+
+    return '';
+}
+
+private function is_signature_image_value(string $value): bool
+{
+    $v = strtolower(trim($value));
+
+    if (strpos($v, 'data:image/') === 0) {
+        return true;
+    }
+
+    if (preg_match('/\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i', $v)) {
+        return true;
+    }
+
+    return (strpos($v, '/uploads/') !== false) || (strpos($v, 'http://') === 0) || (strpos($v, 'https://') === 0);
+}
+
+private function extract_signature_value(array $saved, string $party): string
+{
+    foreach ($saved as $k => $v) {
+        if (!is_scalar($v)) {
+            continue;
+        }
+
+        $key = strtolower((string)$k);
+        $value = trim((string)$v);
+        if ($value === '') {
+            continue;
+        }
+
+        $isSignKey = (strpos($key, 'sign') !== false) || (strpos($key, 'signature') !== false);
+        if (!$isSignKey) {
+            continue;
+        }
+
+        if ($party === 'doctor' && $this->is_doctor_related_context($key)) {
+            return $value;
+        }
+
+        if ($party === 'patient' && $this->is_patient_related_context($key)) {
+            return $value;
+        }
+    }
+
+    return '';
+}
+
+private function collect_context_text_for_pdf(DOMXPath $xpath, DOMNode $node): string
+{
+    $chunks = [];
+    $chunks[] = strtolower(trim((string)$node->getAttribute('name')));
+    $chunks[] = strtolower(trim((string)$node->getAttribute('id')));
+    $chunks[] = strtolower(trim((string)$node->getAttribute('placeholder')));
+    $chunks[] = strtolower(trim((string)$node->getAttribute('alt')));
+    $chunks[] = strtolower(trim((string)$node->getAttribute('title')));
+    $chunks[] = strtolower(trim((string)$node->getAttribute('class')));
+
+    if ($node->parentNode) {
+        $chunks[] = strtolower(trim((string)$node->parentNode->textContent));
+    }
+
+    $tableRow = $xpath->query('ancestor::tr[1]', $node)->item(0);
+    if ($tableRow) {
+        $chunks[] = strtolower(trim((string)$tableRow->textContent));
+    }
+
+    $label = $xpath->query('preceding::label[1]', $node)->item(0);
+    if ($label) {
+        $chunks[] = strtolower(trim((string)$label->textContent));
+    }
+
+    $name = trim((string)$node->getAttribute('name'));
+    $id = trim((string)$node->getAttribute('id'));
+
+    if ($id !== '') {
+        $forLabel = $xpath->query("//label[@for='$id']")->item(0);
+        if ($forLabel) {
+            $chunks[] = strtolower(trim((string)$forLabel->textContent));
+        }
+    }
+
+    if ($name !== '') {
+        $forLabel = $xpath->query("//label[@for='$name']")->item(0);
+        if ($forLabel) {
+            $chunks[] = strtolower(trim((string)$forLabel->textContent));
+        }
+    }
+
+    return trim(implode(' ', array_filter($chunks)));
+}
+
+private function is_doctor_related_context(string $context): bool
+{
+    return (bool) preg_match('/\b(doctor|consultant|dr\.?|surgeon|surgen)\b/i', $context);
+}
+
+private function is_patient_related_context(string $context): bool
+{
+    return (strpos($context, 'patient') !== false)
+        || (strpos($context, 'relative') !== false)
+        || (strpos($context, 'guardian') !== false)
+        || (strpos($context, 'attendant') !== false);
+}
+
+private function is_signature_related_context(string $context): bool
+{
+    return (bool) preg_match('/\b(sign|signature|signator|signatory)\b/i', $context);
+}
+
 
 /*private function render_pdf_with_mpdf(string $html, string $filename)
 {

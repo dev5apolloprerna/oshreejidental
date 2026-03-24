@@ -1,5 +1,0 @@
-ERROR - 2026-02-25 16:10:03 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at C:\wamp64\www\oshreejidental\app\application\vendor\mpdf\mpdf\src\Mpdf.php:3611) C:\wamp64\www\oshreejidental\app\system\core\Common.php 574
-ERROR - 2026-02-25 16:10:03 --> Severity: Error --> Maximum execution time of 500 seconds exceeded C:\wamp64\www\oshreejidental\app\application\vendor\mpdf\mpdf\src\Mpdf.php 3611
-ERROR - 2026-02-25 16:22:58 --> Severity: error --> Exception: Cannot write to an undeclared property Mpdf\Mpdf::$useOTL C:\wamp64\www\oshreejidental\app\application\vendor\mpdf\mpdf\src\Strict.php 44
-ERROR - 2026-02-25 18:02:51 --> Severity: error --> Exception: Cannot write to an undeclared property Mpdf\Mpdf::$useOTL C:\wamp64\www\oshreejidental\app\application\vendor\mpdf\mpdf\src\Strict.php 44
-ERROR - 2026-02-25 18:03:25 --> Severity: error --> Exception: Cannot write to an undeclared property Mpdf\Mpdf::$useOTL C:\wamp64\www\oshreejidental\app\application\vendor\mpdf\mpdf\src\Strict.php 44
