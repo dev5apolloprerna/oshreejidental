@@ -192,3 +192,5 @@ if (file_exists(APPPATH . 'config/my_routes.php')) {
 $route['admin/nabh/list-json'] = 'admin/nabh/list_json';
 $route['admin/nabh/view/(:num)'] = 'admin/nabh/view_pdf/$1';
 $route['admin/nabh/view-html/(:num)'] = 'admin/nabh/view_html/$1';
+$route['admin/nabh/all-forms-json'] = 'admin/nabh/all_forms_json';
+$route['admin/nabh/patient-history-pdf/(:num)'] = 'admin/nabh/patient_history_pdf/$1';

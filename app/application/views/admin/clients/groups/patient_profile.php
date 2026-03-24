@@ -1592,6 +1592,19 @@ if (!empty($check_prescription_exists)) { ?>
                 <div class="col-xl-4 col-lg-4 card-body"></div>
             </div> -->
         </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table_summary_section" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:flex-end; margin-bottom:12px;">
+                        <button type="button" class="btn btn-info" onclick="openAllNabhFormsModal(<?php echo (int) $client->userid; ?>, '<?php echo addslashes($client->company ?? ''); ?>');">
+                            View All NABH Forms
+                        </button>
+                        <a class="btn btn-success" target="_blank" href="<?php echo admin_url('nabh/patient-history-pdf/' . (int) $client->userid); ?>">
+                            <i class="fa-regular fa-file-pdf"></i> Download NABH History PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+
 
 
             <div class="row">
@@ -1741,6 +1754,48 @@ if (!empty($check_prescription_exists)) { ?>
             </div>
 
         <!-- model start -->
+<div class="modal fade" id="allNabhFormsModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl" role="document" style="width:95%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">All NABH Forms (All Appointments)</h4>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <select id="allNabhLang" class="form-control" style="width:160px;">
+            <option value="gu">Gujarati</option>
+            <option value="en">English</option>
+          </select>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th style="width:120px;">Date</th>
+                <th style="width:90px;">Appt ID</th>
+                <th>Form Name</th>
+                <th style="width:110px;">Status</th>
+                <th style="width:160px;">Patient Name</th>
+                <th style="width:160px;">Doctor Name</th>
+                <th>Filled Detail</th>
+                <th style="width:190px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="allNabhTbody">
+              <tr><td colspan="9">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
         <!-- NABH List Modal -->
 <div class="modal fade" id="nabhListModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
@@ -1907,7 +1962,111 @@ function open_patient_appointment_create_modal()
 
 
 
-  window.openNabhFormsModal = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
+ // window.openNabhFormsModal = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
+  function openNabhFormsModal(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
+    if (typeof window.__openNabhFormsModalImpl === 'function') {
+      return window.__openNabhFormsModalImpl(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName);
+    }
+
+    window.__NABH_META__ = {
+      appointment_id: parseInt(appointmentId || "0", 10),
+      patient_id: parseInt(patientId || "0", 10),
+      doctor_id: parseInt(doctorId || "0", 10),
+      patient_name: patientName || '',
+      doctor_name: doctorName || '',
+      appointment_type_id: parseInt(appointmentTypeId || "0", 10)
+    };
+
+    $('#appointment_type_id').val(window.__NABH_META__.appointment_type_id);
+    $('#nabhListModal').modal('show');
+    if (typeof loadNabhList === 'function') {
+      loadNabhList();
+    }
+  }
+
+  window.openNabhFormsModal = openNabhFormsModal;
+
+  window.__ALL_NABH_META__ = { patient_id: 0, patient_name: '' };
+
+  window.openAllNabhFormsModal = function(patientId, patientName) {
+    window.__ALL_NABH_META__ = {
+      patient_id: parseInt(patientId || '0', 10),
+      patient_name: patientName || ''
+    };
+
+    $('#allNabhFormsModal').modal('show');
+    loadAllNabhForms();
+  };
+
+  $(document).on('change', '#allNabhLang', function () {
+    loadAllNabhForms();
+  });
+
+  function loadAllNabhForms() {
+    var patientId = (window.__ALL_NABH_META__ || {}).patient_id || 0;
+    if (!patientId) {
+      $('#allNabhTbody').html('<tr><td colspan="9" class="text-center">Invalid patient.</td></tr>');
+      return;
+    }
+
+    $.post(admin_url + 'nabh/all_forms_json', { patient_id: patientId }, function(res) {
+      if (!res || !res.status) {
+        $('#allNabhTbody').html('<tr><td colspan="9" class="text-center">No NABH form records found.</td></tr>');
+        return;
+      }
+
+      var html = '';
+      var selectedLang = $('#allNabhLang').val();
+
+      res.data.forEach(function(row, index) {
+        var hasForSelectedLang = (selectedLang === 'gu') ? !!row.has_gu : !!row.has_en;
+        var disabledClass = hasForSelectedLang ? '' : ' btn-disabled';
+        var disabledAttr = hasForSelectedLang ? '' : ' disabled="disabled" title="File not exist for this language"';
+        var doctorId = parseInt(row.doctor_id || '0', 10);
+        var doctorName = row.doctor_name || '';
+        var patientName = row.patient_name || (window.__ALL_NABH_META__.patient_name || '');
+
+        var viewUrl = admin_url + 'nabh/form/' + row.form_id
+          + '?lang=' + encodeURIComponent(selectedLang)
+          + '&nabh_pdf_id=' + encodeURIComponent(row.form_id)
+          + '&appointment_id=' + encodeURIComponent(row.appointment_id)
+          + '&appointment_type_id=' + encodeURIComponent(row.appointment_type_id || 0)
+          + '&patient_id=' + encodeURIComponent(patientId)
+          + '&doctor_id=' + encodeURIComponent(doctorId)
+          + '&patient_name=' + encodeURIComponent(patientName)
+          + '&doctor_name=' + encodeURIComponent(doctorName);
+
+        var openBtn = '<button class="btn btn-sm btn-primary' + disabledClass + '" ' + disabledAttr
+          + (hasForSelectedLang ? ' onclick="openNabhViewer(\'' + viewUrl + '\')"' : ' onclick="return showNabhMissingTemplateMsg();"')
+          + '>Open</button>';
+
+        var statusBadge = row.is_filled
+          ? '<span class="label label-success">Filled</span>'
+          : '<span class="label label-default">Not Filled</span>';
+
+        html += '<tr>'
+          + '<td>' + (index + 1) + '</td>'
+          + '<td>' + escapeHtml(row.appointment_date || '-') + '</td>'
+          + '<td>' + escapeHtml(String(row.appointment_id || '-')) + '</td>'
+          + '<td>' + escapeHtml(row.form_name || '-') + '</td>'
+          + '<td>' + statusBadge + '</td>'
+          + '<td>' + escapeHtml(patientName || '-') + '</td>'
+          + '<td>' + escapeHtml(doctorName || '-') + '</td>'
+          + '<td>' + escapeHtml(row.filled_preview || '-') + '</td>'
+          + '<td>' + openBtn + '</td>'
+          + '</tr>';
+      });
+
+      if (!html) {
+        html = '<tr><td colspan="9" class="text-center">No NABH forms found for this patient.</td></tr>';
+      }
+
+      $('#allNabhTbody').html(html);
+    }, 'json');
+  }
+
+
+  window.__openNabhFormsModalImpl = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
 
 
  window.__NABH_META__ = {
