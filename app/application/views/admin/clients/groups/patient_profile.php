@@ -1599,7 +1599,7 @@ if (!empty($check_prescription_exists)) { ?>
                             View All NABH Forms
                         </button>
                         <a class="btn btn-success" target="_blank" href="<?php echo admin_url('nabh/patient-history-pdf/' . (int) $client->userid); ?>">
-                            <i class="fa-regular fa-file-pdf"></i> Download NABH History PDF
+                            <i class="fa-regular fa-file-pdf"></i> Download PDF
                         </a>
                     </div>
                 </div>
@@ -1760,7 +1760,7 @@ if (!empty($check_prescription_exists)) { ?>
       <div class="modal-header">
         <h4 class="modal-title">All NABH Forms (All Appointments)</h4>
         <div style="display:flex; gap:10px; align-items:center;">
-          <select id="allNabhLang" class="form-control" style="width:160px;">
+          <select id="allNabhLang" class="form-control" style="width:160px;" onchange="loadAllNabhForms();">
             <option value="gu">Gujarati</option>
             <option value="en">English</option>
           </select>
@@ -1796,6 +1796,7 @@ if (!empty($check_prescription_exists)) { ?>
   </div>
 </div>
 
+
         <!-- NABH List Modal -->
 <div class="modal fade" id="nabhListModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
@@ -1804,7 +1805,7 @@ if (!empty($check_prescription_exists)) { ?>
         <h4 class="modal-title">NABH Forms</h4>
         <input type="hidden" id="appointment_type_id" name="appointment_type_id" >
         <div style="display:flex; gap:10px; align-items:center;">
-          <select id="nabhLang" class="form-control" style="width:160px;">
+          <select id="nabhLang" class="form-control" style="width:160px;" onchange="loadNabhList();">
             <option value="gu">Gujarati</option>
             <option value="en">English</option>
           </select>
@@ -2003,6 +2004,7 @@ function open_patient_appointment_create_modal()
   });
 
   function loadAllNabhForms() {
+    $('#allNabhTbody').html('<tr><td colspan="9" class="text-center">Loading...</td></tr>');
     var patientId = (window.__ALL_NABH_META__ || {}).patient_id || 0;
     if (!patientId) {
       $('#allNabhTbody').html('<tr><td colspan="9" class="text-center">Invalid patient.</td></tr>');
@@ -2067,6 +2069,7 @@ function open_patient_appointment_create_modal()
 
 
   window.__openNabhFormsModalImpl = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
+
 
 
  window.__NABH_META__ = {
