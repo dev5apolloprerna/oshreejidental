@@ -111,9 +111,6 @@ $autoload['drivers'] = ['session'];
 /*
 * @deprecated version 2.3.0
  */
-
-$autoload['helper'] = array('url', 'mpdf');
-
 include_once(APPPATH . 'third_party/action_hooks.php');
 
 $autoload['helper'] = [

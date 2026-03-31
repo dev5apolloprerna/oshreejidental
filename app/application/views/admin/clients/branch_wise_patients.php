@@ -7,7 +7,7 @@
                 <div class="panel_s">
                     <div class="panel-body">
                         <h4 class="tw-mt-0 tw-font-semibold"><?php echo e($title); ?></h4>
-                        <p class="text-muted">Search by <strong>Patient ID</strong>, <strong>Mobile Number</strong>, patient name, or company to get patients from all branch databases (<code>tblclients</code>/<code>tblcontacts</code>) in a single listing.</p>
+                        <p class="text-muted">Search by <strong>Patient ID</strong>, <strong>Mobile Number</strong>, patient name, or company to get patients from all branch databases in a single listing.</p>
                         <?php
                         $table_data = [
                             _l('the_number_sign'),

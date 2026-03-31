@@ -254,13 +254,13 @@ class Clients_model extends App_Model
                 'blood_group' => $data['blood_group'] != '' ? $data['blood_group'] : '',
                 'email' => $data['email'] != '' ? $data['email'] : '',
                 'phonenumber' => $data['phonenumber'],
-                'reference_from' => isset($data['reference_from']) ? $data['reference_from'] : '',
+                 'reference_from' => isset($data['reference_from']) ? $data['reference_from'] : '',
                 'rx_str_date' => $data['rx_str_date'] != '' ? $data['rx_str_date'] : '0000-00-00',
                 'rx_end_date' => $data['rx_end_date'] != '' ? $data['rx_end_date'] : '0000-00-00',
                  'otp' => $data['otp'] != '' ? $data['otp'] : '0',
                 // 'profile_image' => $data['profile_image'],
             ];
-
+            
             if (!$this->db->field_exists('reference_from', db_prefix() . 'contacts')) {
                 unset($contact_data['reference_from']);
             }
@@ -501,13 +501,15 @@ class Clients_model extends App_Model
                 'blood_group' => $data['blood_group'] != '' ? $data['blood_group'] : '',
                 'email' => $data['email'] != '' ? $data['email'] : '',
                 'phonenumber' => $data['phonenumber'],
-                'reference_from' => isset($data['reference_from']) ? $data['reference_from'] : '',
+                 'reference_from' => isset($data['reference_from']) ? $data['reference_from'] : '',
                 'rx_str_date' => $data['rx_str_date'] != '' ? $data['rx_str_date'] : '0000-00-00',
                 'rx_end_date' => $data['rx_end_date'] != '' ? $data['rx_end_date'] : '0000-00-00',
                  'otp' => $data['otp'] != '' ? $data['otp'] : '0',
             ];
 
-           
+            if (!$this->db->field_exists('reference_from', db_prefix() . 'contacts')) {
+                unset($contact_data['reference_from']);
+            }
         }
 
 
