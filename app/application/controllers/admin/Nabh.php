@@ -1249,6 +1249,7 @@ private function normalize_patient_signature_value(string $signatureValue): stri
 
 private function append_universal_signature_block(string $html): string
 {
+    
     if (stripos($html, 'id="nabh-universal-signatures"') !== false) {
         return $html;
     }
