@@ -780,12 +780,24 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         }
 
         if ($doctor_signature_image === '' && $doctor_id > 0) {
-            $doctor_signature_image = $this->resolve_doctor_signature_image_from_staff_dir($doctor_id);
+            //$doctor_signature_image = $this->resolve_doctor_signature_image_from_staff_dir($doctor_id);
+                    $doctor_signature_image = $this->resolve_doctor_signature_image($doctor_id);
         }
 
         if ($patient_signature_image === '' && !empty($saved['patient_signature_image'])) {
             $patient_signature_image = trim((string)$saved['patient_signature_image']);
         }
+
+
+
+        if ($patient_signature_image === '' && $patient_id > 0) {
+            $patient_signature_image = $this->resolve_patient_signature_image_from_consent($patient_id, $appointment_id);
+        }
+
+        if ($patient_signature_image !== '' && empty($saved['patient_signature_image'])) {
+            $saved['patient_signature_image'] = $patient_signature_image;
+        }
+
 
         $ctx = [
           'pdf_id'              => $pdf_id,
@@ -799,6 +811,8 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
           'doctor_signature_image' => $doctor_signature_image,
           'patient_signature_image' => $patient_signature_image !== '' ? $patient_signature_image : $patient_signature_imag ?? null,
         ];
+
+    $html = $this->append_universal_signature_block($html);
 
     // ✅ 6️⃣ THIS IS WHERE YOU PUT IT
     $html = $this->inject_global($html, $ctx, $saved);
@@ -1096,6 +1110,11 @@ public function print_pdf()
         }
         if (empty($req['patient_name']) && $row && !empty($row->patient_name)) $req['patient_name'] = $row->patient_name;
         if (empty($req['doctor_name'])  && $row && !empty($row->doctor_name))  $req['doctor_name']  = $row->doctor_name;
+
+        if ($doctor_id <= 0 && $row && !empty($row->doctor_id)) {
+            $doctor_id = (int) $row->doctor_id;
+            $req['doctor_id'] = $doctor_id;
+        }
     }
 
     // 5) Ensure common fields exist
@@ -1103,13 +1122,24 @@ public function print_pdf()
     if (!isset($saved['doctor_name'])  && !empty($req['doctor_name']))  $saved['doctor_name']  = $req['doctor_name'];
 
      if (!isset($saved['doctor_signature_image']) || trim((string)$saved['doctor_signature_image']) === '') {
-        $fallbackDoctorSignImage = $this->resolve_doctor_signature_image_from_staff_dir($doctor_id);
-        if ($fallbackDoctorSignImage !== '') {
+        $fallbackDoctorSignImage = $this->resolve_doctor_signature_image($doctor_id);        if ($fallbackDoctorSignImage !== '') {
             $saved['doctor_signature_image'] = $fallbackDoctorSignImage;
         }
     }
 
+     if (!isset($saved['patient_signature_image']) || trim((string)$saved['patient_signature_image']) === '') {
+        $fallbackPatientSignImage = $this->resolve_patient_signature_image_from_consent((int)($req['patient_id'] ?? 0), $appointment_id);
+        if ($fallbackPatientSignImage !== '') {
+            $saved['patient_signature_image'] = $fallbackPatientSignImage;
+        }
+    }
+
+
+
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
+
+    $html = $this->append_universal_signature_block($html);
+
 
     // 6) Fill HTML server-side (NO JS in PDF)
     $html = $this->apply_saved_to_html_for_pdf($html, $saved);
@@ -1167,10 +1197,114 @@ public function print_pdf()
 }
 
 
-private function resolve_doctor_signature_image_from_staff_dir(int $doctor_id): string
+private function resolve_patient_signature_image_from_consent(int $patient_id, int $appointment_id = 0): string
+{
+    if ($patient_id <= 0) {
+        return '';
+    }
+
+    $table = db_prefix() . 'patient_signatures';
+
+    if ($appointment_id > 0) {
+        $row = $this->db
+            ->select('signature_value')
+            ->from($table)
+            ->where('appointment_id', $appointment_id)
+            ->order_by('id', 'DESC')
+            ->get()
+            ->row_array();
+
+        $sig = $this->normalize_patient_signature_value((string)($row['signature_value'] ?? ''));
+        if ($sig !== '') {
+            return $sig;
+        }
+    }
+
+    $row = $this->db
+        ->select($table . '.signature_value')
+        ->from($table)
+        ->join(db_prefix() . 'appointly_appointments', db_prefix() . 'appointly_appointments.id = ' . $table . '.appointment_id', 'left')
+        ->join(db_prefix() . 'contacts', db_prefix() . 'contacts.id = ' . db_prefix() . 'appointly_appointments.contact_id', 'left')
+        ->where(db_prefix() . 'contacts.userid', $patient_id)
+        ->order_by($table . '.id', 'DESC')
+        ->limit(1)
+        ->get()
+        ->row_array();
+
+    return $this->normalize_patient_signature_value((string)($row['signature_value'] ?? ''));
+}
+
+private function normalize_patient_signature_value(string $signatureValue): string
+{
+    $value = trim($signatureValue);
+    if ($value === '') {
+        return '';
+    }
+
+    if (strpos($value, 'data:image/') === 0) {
+        return $value;
+    }
+
+    $value = preg_replace('/\s+/', '', $value);
+    if ($value === '') {
+        return '';
+    }
+
+    return 'data:image/png;base64,' . $value;
+}
+
+private function append_universal_signature_block(string $html): string
+{
+    if (stripos($html, 'id="nabh-universal-signatures"') !== false) {
+        return $html;
+    }
+
+    $block = '<div id="nabh-universal-signatures" style="margin-top:24px;">'
+        . '<table style="width:100%; border-collapse:collapse;">'
+        . '<tr>'
+        . '<td style="width:50%; vertical-align:top; padding-right:16px;">'
+        . '<div style="font-weight:600; margin-bottom:6px;">Patient Signature</div>'
+        . '<img name="patient_signature_image" alt="Patient Signature" style="max-height:80px; max-width:100%; display:block; margin-bottom:8px;" />'
+        . '<input type="text" name="patient_signature" placeholder="Patient Signature" style="width:100%; border:none; border-top:1px solid #333; padding-top:4px;" />'
+        . '</td>'
+        . '<td style="width:50%; vertical-align:top; padding-left:16px;">'
+        . '<div style="font-weight:600; margin-bottom:6px;">Doctor Signature</div>'
+        . '<img name="doctor_signature_image" alt="Doctor Signature" style="max-height:80px; max-width:100%; display:block; margin-bottom:8px;" />'
+        . '<input type="text" name="doctor_signature" placeholder="Doctor Signature" style="width:100%; border:none; border-top:1px solid #333; padding-top:4px;" />'
+        . '</td>'
+        . '</tr>'
+        . '</table>'
+        . '</div>';
+
+    if (stripos($html, '</body>') !== false) {
+        return str_ireplace('</body>', $block . '</body>', $html);
+    }
+
+    return $html . $block;
+}
+
+
+
+private function resolve_doctor_signature_image(int $doctor_id): string
 {
     if ($doctor_id <= 0) {
-        return '';
+        return "";
+    }
+
+    $staff = $this->db
+        ->select('doctor_sign')
+        ->from(db_prefix() . "staff")
+        ->where('staffid', $doctor_id)
+        ->get()
+        ->row_array();
+
+    $doctorSignFile = trim((string)($staff['doctor_sign'] ?? ""));
+    if ($doctorSignFile !== "") {
+        $candidate = FCPATH . "uploads/staff_profile_images/" . $doctor_id . "/doctor_sign/" . basename($doctorSignFile);
+        if (file_exists($candidate)) {
+            $relative = str_replace(FCPATH, "", $candidate);
+            return rtrim(site_url(), "/") . "/" . ltrim(str_replace(DIRECTORY_SEPARATOR, "/", $relative), "/");
+        }
     }
 
     $baseDir = FCPATH . 'uploads/staff_profile_images/' . $doctor_id . '/doctor_sign/';
