@@ -2285,3 +2285,27 @@ function openNabhViewer(url){
 }
 
 </script>
+
+
+<script>
+(function () {
+  function setSignatureImages(role, src) {
+    if (!src) return;
+    document.querySelectorAll('img[name="' + role + '_signature_image"], img[data-sign-role="' + role + '"]').forEach(function (img) {
+      img.setAttribute('src', src);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = window.__NABH_SAVED || {};
+    var ctx = window.__NABH_CTX || {};
+
+    // priority: saved -> ctx
+    var patientSrc = (saved.patient_signature_image || ctx.patient_signature_image || '').trim();
+    var doctorSrc  = (saved.doctor_signature_image  || ctx.doctor_signature_image  || '').trim();
+
+    setSignatureImages('patient', patientSrc);
+    setSignatureImages('doctor', doctorSrc);
+  });
+})();
+</script>

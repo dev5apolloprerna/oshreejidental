@@ -348,7 +348,8 @@ $xray_files = [];
             $this->db->order_by('id', 'DESC');
             $lab_work_tasks = $this->db->get()->result_array();
         }
-        
+
+
         $patient_name = trim((string) ($patient->company ?? ''));
         $title = 'Patient Complete Clinical History';
 
@@ -698,7 +699,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
                         ->get('tblnabh_master')
                         ->row_array();
 
-        if (!$pdf) show_error('Invalid PDF');
+                                if (!$pdf) show_error('Invalid PDF');
 
         $fileName = ($lang == 'en') 
             ? $pdf['english_file_name'] 
@@ -812,7 +813,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
           'patient_signature_image' => $patient_signature_image !== '' ? $patient_signature_image : $patient_signature_imag ?? null,
         ];
 
-    $html = $this->append_universal_signature_block($html);
+   //    $html = $this->append_universal_signature_block($html);
 
     // ✅ 6️⃣ THIS IS WHERE YOU PUT IT
     $html = $this->inject_global($html, $ctx, $saved);
@@ -828,20 +829,37 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
     ==========================================================*/
     public function save_submission()
     {
-        $payloadStr = $this->input->post('payload');
+        $payload = [];
 
-        if (!$payloadStr) {
+        $payloadStr = $this->input->post('payload', false);
+        if (is_string($payloadStr) && trim($payloadStr) !== '') {
+            $payload = json_decode($payloadStr, true);
+        }
+
+        if (!is_array($payload) || empty($payload)) {
+            $raw = file_get_contents('php://input');
+            if (is_string($raw) && trim($raw) !== '') {
+                $decodedRaw = json_decode($raw, true);
+                if (is_array($decodedRaw)) {
+                    $payload = $decodedRaw;
+                }
+            }
+        }
+
+        if (!is_array($payload) || empty($payload)) {
+            $payload = $this->input->post(null, false);
+        }
+
+        if (!is_array($payload) || empty($payload)) {
             echo json_encode(['status'=>false,'message'=>'Missing payload']); exit;
         }
 
-        $payload = json_decode($payloadStr,true);
-
-        if (!is_array($payload)) {
-            echo json_encode(['status'=>false,'message'=>'Invalid JSON']); exit;
+        if (!isset($payload['form_data']) || !is_array($payload['form_data'])) {
+            $payload['form_data'] = [];
         }
 
 
-        $patient_name = trim($payload['patient_name'] ?? '');
+        $patient_name = trim((string)($payload['patient_name'] ?? ''));
         $doctor_name  = trim($payload['doctor_name'] ?? '');
 
         // fallback: if top-level not provided, attempt from form_data
@@ -860,7 +878,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         $doctor_id     = (int)$payload['doctor_id'];
         $lang          = $payload['lang'];
 
-        $formData      = $payload['form_data'] ?? [];
+        $formData      = is_array($payload['form_data']) ? $payload['form_data'] : [];
 
        if ($doctor_name === '' && $doctor_id > 0 && function_exists('get_staff_full_name')) {
             $doctor_name = trim((string)get_staff_full_name($doctor_id));
@@ -872,6 +890,32 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
 
         if ($doctor_name === '' && isset($formData['doctor_name'])) {
             $doctor_name = trim((string)$formData['doctor_name']);
+        }
+
+        $doctorSignatureImage  = trim((string)($formData['doctor_signature_image'] ?? ''));
+        $patientSignatureImage = trim((string)($formData['patient_signature_image'] ?? ''));
+
+        $resolvedDoctorSignatureImage = $doctor_id > 0 ? $this->resolve_doctor_signature_image($doctor_id) : '';
+        if ($doctorSignatureImage === '') {
+            $doctorSignatureImage = $resolvedDoctorSignatureImage;
+        }
+
+        if ($patientSignatureImage === '' && $patient_id > 0) {
+            $patientSignatureImage = $this->resolve_patient_signature_image_from_consent($patient_id, $appointment_id);
+        }
+
+        if ($doctorSignatureImage !== '' && $patientSignatureImage !== '' && $doctorSignatureImage === $patientSignatureImage && $resolvedDoctorSignatureImage === '') {
+            $doctorSignatureImage = '';
+        }
+
+        if ($doctorSignatureImage !== '') {
+            $formData['doctor_signature_image'] = $doctorSignatureImage;
+        } else {
+            unset($formData['doctor_signature_image']);
+        }
+
+        if ($patientSignatureImage !== '') {
+            $formData['patient_signature_image'] = $patientSignatureImage;
         }
 
 
@@ -893,7 +937,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
             'lang'=>$lang,
             'patient_name'   => $patient_name,
             'doctor_name'    => $doctor_name,
-              'form_data_json' => json_encode($payload['form_data'] ?? [], JSON_UNESCAPED_UNICODE),
+              'form_data_json' => json_encode($formData, JSON_UNESCAPED_UNICODE),
             'updated_at'=>date('Y-m-d H:i:s'),
         ];
 
@@ -1005,6 +1049,7 @@ window.__NABH_SAVED = {$savedJson};
 
 
 public function print_pdf()
+
 {
     // Accept JSON POST OR GET (new tab)
     $raw = file_get_contents('php://input');
@@ -1138,7 +1183,7 @@ public function print_pdf()
 
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
 
-    $html = $this->append_universal_signature_block($html);
+    //$html = $this->append_universal_signature_block($html);
 
 
     // 6) Fill HTML server-side (NO JS in PDF)
@@ -1253,7 +1298,7 @@ private function normalize_patient_signature_value(string $signatureValue): stri
     return 'data:image/png;base64,' . $value;
 }
 
-private function append_universal_signature_block(string $html): string
+/*private function append_universal_signature_block(string $html): string
 {
     if (stripos($html, 'id="nabh-universal-signatures"') !== false) {
         return $html;
@@ -1281,7 +1326,7 @@ private function append_universal_signature_block(string $html): string
     }
 
     return $html . $block;
-}
+}*/
 
 
 
@@ -1341,15 +1386,20 @@ private function resolve_doctor_signature_image(int $doctor_id): string
         foreach ($saved as $key => $val) {
         $key = (string)$key;
 
+        $isSignatureImageKey = $this->is_signature_related_context(strtolower($key)) && $this->is_signature_image_value((string)$val);
+
         // by name
         foreach ($xpath->query("//input[@name='$key']") as $input) {
+            if ($isSignatureImageKey) {
+                continue;
+            }
+
             $type = strtolower($input->getAttribute('type'));
             if ($type === 'checkbox') {
                 $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
                 $checked ? $input->setAttribute('checked','checked') : $input->removeAttribute('checked');
             } elseif ($type === 'radio') {
-                ((string)$input->getAttribute('value') === (string)$val)
-                    ? $input->setAttribute('checked','checked')
+                ((string)$input->getAttribute('value') === (string)$val) ? $input->setAttribute('checked','checked')
                     : $input->removeAttribute('checked');
             } else {
                 $input->setAttribute('value', (string)$val);
@@ -1371,6 +1421,10 @@ private function resolve_doctor_signature_image(int $doctor_id): string
 
         // fallback by id (if your json keys are ids)
         foreach ($xpath->query("//input[@id='$key']") as $input) {
+            if ($isSignatureImageKey) {
+                continue;
+            }
+
             $type = strtolower($input->getAttribute('type'));
             if ($type === 'checkbox') {
                 $checked = ($val == 1 || $val === true || $val === "1" || $val === "on");
@@ -1394,6 +1448,16 @@ private function resolve_doctor_signature_image(int $doctor_id): string
                 ((string)$opt->getAttribute('value') === (string)$val)
                     ? $opt->setAttribute('selected','selected')
                     : $opt->removeAttribute('selected');
+            }
+        }
+
+        if ($isSignatureImageKey) {
+            foreach ($xpath->query("//img[@name='$key']") as $img) {
+                $img->setAttribute('src', (string)$val);
+            }
+
+            foreach ($xpath->query("//img[@id='$key']") as $img) {
+                $img->setAttribute('src', (string)$val);
             }
         }
 
