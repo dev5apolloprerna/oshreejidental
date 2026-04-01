@@ -121,6 +121,10 @@
       || String(saved.patient_signature_image || "").trim()
       || String(ctx.patient_signature_image || "").trim();
 
+    if (doctorSignImage && patientSignImage && doctorSignImage === patientSignImage && !String(ctx.doctor_signature_image || "").trim()) {
+      doctorSignImage = "";
+    }
+
     if (!hasText(saved.doctor_signature) && hasText(doctorSign)) saved.doctor_signature = doctorSign;
     if (!hasText(saved.patient_signature) && hasText(patientSign)) saved.patient_signature = patientSign;
     if (!hasText(saved.doctor_signature_image) && hasText(doctorSignImage)) saved.doctor_signature_image = doctorSignImage;
@@ -221,6 +225,11 @@
      if (!data.doctor_name && CTX.doctor_name) data.doctor_name = CTX.doctor_name;
      if (!data.today_date) data.today_date = todayDDMMYYYY();
  
+ var patientSignatureImg = document.querySelector('img[name="patient_signature_image"], img#patient_signature_image');
+     var doctorSignatureImg = document.querySelector('img[name="doctor_signature_image"], img#doctor_signature_image');
+     if (patientSignatureImg && hasText(patientSignatureImg.getAttribute('src'))) data.patient_signature_image = patientSignatureImg.getAttribute('src').trim();
+     if (doctorSignatureImg && hasText(doctorSignatureImg.getAttribute('src'))) data.doctor_signature_image = doctorSignatureImg.getAttribute('src').trim();
+     
      ["patient_name", "doctor_name", "today_date"].forEach(function (k) {
        if (data[k]) return;
        var el = document.getElementById(k);

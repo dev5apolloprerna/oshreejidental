@@ -308,3 +308,12 @@ ERROR - 2026-04-01 23:31:54 --> Severity: Warning --> Undefined variable $staff_
 ERROR - 2026-04-01 23:31:54 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
 ERROR - 2026-04-01 23:31:54 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
 ERROR - 2026-04-01 23:31:54 --> Severity: Warning --> Undefined variable $staff_id C:\wamp64\www\oshreejidental\app\application\views\admin\clients\modals\add_treatment.php 59
+ERROR - 2026-04-01 19:09:29 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 959
+ERROR - 2026-04-01 19:09:42 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 959
+ERROR - 2026-04-01 19:09:49 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 959
+ERROR - 2026-04-01 19:10:34 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 959
+ERROR - 2026-04-01 19:12:30 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 959
+ERROR - 2026-04-01 19:14:27 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 959
+ERROR - 2026-04-01 19:14:45 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 959
+ERROR - 2026-04-01 19:15:26 --> Severity: error --> Exception: syntax error, unexpected token "public", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 830
+ERROR - 2026-04-01 19:35:07 --> Severity: error --> Exception: Unclosed '{' on line 1401 C:\wamp64\www\oshreejidental\app\application\controllers\admin\Nabh.php 1402
