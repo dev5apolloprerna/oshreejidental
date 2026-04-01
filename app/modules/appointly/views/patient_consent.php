@@ -32,8 +32,9 @@
 
         <?php echo form_open(admin_url('appointly/appointments/add_patient_signature/'), ['id' => 'signatureForm', 'class' => 'form-horizontal']); ?>
 
-            <input type="hidden" name="appointment_id" id="appointment_sig" value="<?php echo $appointment_id; ?>">
-            <input type="hidden" name="patient_id" id="cur_patientID" value="<?php echo $patientId; ?>">
+            <input type="hidden" name="appointment_id" id="appointment_sig" value="<?php echo isset($appointment_id) ? $appointment_id : ''; ?>">
+            <input type="hidden" name="patient_id" id="cur_patientID" value="<?php echo isset($patientId) ? $patientId : ''; ?>">
+            
             <div style="border: 1px solid #ccc; border-radius: 5px;">
           <canvas id="sig_board"></canvas>
           <input type="hidden" name="signature_value" id="signature_data">
