@@ -1759,13 +1759,14 @@ if (!empty($check_prescription_exists)) { ?>
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">All NABH Forms (All Appointments)</h4>
-        <div style="display:flex; gap:10px; align-items:center;">
+        <!-- <div style="display:flex; gap:10px; align-items:center;">
           <select id="allNabhLang" class="form-control" style="width:160px;" onchange="loadAllNabhForms();">
             <option value="gu">Gujarati</option>
             <option value="en">English</option>
           </select>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        </div>
+        </div> -->
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
       </div>
       <div class="modal-body">
         <div class="table-responsive">
@@ -1773,18 +1774,13 @@ if (!empty($check_prescription_exists)) { ?>
             <thead>
               <tr>
                 <th style="width:60px;">#</th>
-                <th style="width:120px;">Date</th>
-                <th style="width:90px;">Appt ID</th>
                 <th>Form Name</th>
                 <th style="width:110px;">Status</th>
-                <th style="width:160px;">Patient Name</th>
-                <th style="width:160px;">Doctor Name</th>
-                <th>Filled Detail</th>
-                <th style="width:190px;">Action</th>
+                <th style="width:370px;">Action</th>
               </tr>
             </thead>
             <tbody id="allNabhTbody">
-              <tr><td colspan="9">Loading...</td></tr>
+              <tr><td colspan="7">Loading...</td></tr>
             </tbody>
           </table>
         </div>
@@ -1804,7 +1800,7 @@ if (!empty($check_prescription_exists)) { ?>
       <div class="modal-header">
         <h4 class="modal-title">NABH Forms</h4>
         <input type="hidden" id="appointment_type_id" name="appointment_type_id" >
-        <div style="display:flex; gap:10px; align-items:center;">
+        <!-- <div style="display:flex; gap:10px; align-items:center;">
           <select id="nabhLang" class="form-control" style="width:160px;" onchange="loadNabhList();">
             <option value="gu">Gujarati</option>
             <option value="en">English</option>
@@ -1813,7 +1809,10 @@ if (!empty($check_prescription_exists)) { ?>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
-        </div>
+        </div> -->
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
 
       <div class="modal-body">
@@ -1824,7 +1823,7 @@ if (!empty($check_prescription_exists)) { ?>
                 <th style="width:70px;">#</th>
                 <th>Form Name</th>
                 <th style="width:140px;">Available</th>
-                <th style="width:120px;">Action</th>
+                <th style="width:370px;">Action</th>
               </tr>
             </thead>
             <tbody id="nabhTbody">
@@ -1999,36 +1998,36 @@ function open_patient_appointment_create_modal()
     loadAllNabhForms();
   };
 
-  $(document).on('change', '#allNabhLang', function () {
+  /*$(document).on('change', '#allNabhLang', function () {
     loadAllNabhForms();
-  });
+  });*/
 
   function loadAllNabhForms() {
-    $('#allNabhTbody').html('<tr><td colspan="9" class="text-center">Loading...</td></tr>');
+    $('#allNabhTbody').html('<tr><td colspan="7" class="text-center">Loading...</td></tr>');
     var patientId = (window.__ALL_NABH_META__ || {}).patient_id || 0;
     if (!patientId) {
-      $('#allNabhTbody').html('<tr><td colspan="9" class="text-center">Invalid patient.</td></tr>');
+      $('#allNabhTbody').html('<tr><td colspan="7" class="text-center">Invalid patient.</td></tr>');
       return;
     }
 
     $.post(admin_url + 'nabh/all_forms_json', { patient_id: patientId }, function(res) {
       if (!res || !res.status) {
-        $('#allNabhTbody').html('<tr><td colspan="9" class="text-center">No NABH form records found.</td></tr>');
+        $('#allNabhTbody').html('<tr><td colspan="7" class="text-center">No NABH form records found.</td></tr>');
         return;
       }
 
       var html = '';
-      var selectedLang = $('#allNabhLang').val();
+      //var selectedLang = $('#allNabhLang').val();
 
       res.data.forEach(function(row, index) {
-        var hasForSelectedLang = (selectedLang === 'gu') ? !!row.has_gu : !!row.has_en;
+        /*var hasForSelectedLang = (selectedLang === 'gu') ? !!row.has_gu : !!row.has_en;
         var disabledClass = hasForSelectedLang ? '' : ' btn-disabled';
-        var disabledAttr = hasForSelectedLang ? '' : ' disabled="disabled" title="File not exist for this language"';
+        var disabledAttr = hasForSelectedLang ? '' : ' disabled="disabled" title="File not exist for this language"';*/
         var doctorId = parseInt(row.doctor_id || '0', 10);
         var doctorName = row.doctor_name || '';
         var patientName = row.patient_name || (window.__ALL_NABH_META__.patient_name || '');
 
-        var viewUrl = admin_url + 'nabh/form/' + row.form_id
+        /*var viewUrl = admin_url + 'nabh/form/' + row.form_id
           + '?lang=' + encodeURIComponent(selectedLang)
           + '&nabh_pdf_id=' + encodeURIComponent(row.form_id)
           + '&appointment_id=' + encodeURIComponent(row.appointment_id)
@@ -2040,7 +2039,46 @@ function open_patient_appointment_create_modal()
 
         var openBtn = '<button class="btn btn-sm btn-primary' + disabledClass + '" ' + disabledAttr
           + (hasForSelectedLang ? ' onclick="openNabhViewer(\'' + viewUrl + '\')"' : ' onclick="return showNabhMissingTemplateMsg();"')
-          + '>Open</button>';
+          + '>Open</button>';*/
+
+ var formNameHtml = escapeHtml(row.form_name || '-');
+
+        var buildOpenBtn = function(langCode, label, btnClass) {
+          var viewUrl = admin_url + 'nabh/form/' + row.form_id
+            + '?lang=' + encodeURIComponent(langCode)
+            + '&nabh_pdf_id=' + encodeURIComponent(row.form_id)
+            + '&appointment_id=' + encodeURIComponent(row.appointment_id)
+            + '&appointment_type_id=' + encodeURIComponent(row.appointment_type_id || 0)
+            + '&patient_id=' + encodeURIComponent(patientId)
+            + '&doctor_id=' + encodeURIComponent(doctorId)
+            + '&patient_name=' + encodeURIComponent(patientName)
+            + '&doctor_name=' + encodeURIComponent(doctorName);
+          return '<button class="btn btn-xs ' + btnClass + '" onclick="openNabhViewer(\'' + viewUrl + '\')">' + label + '</button>';
+        };
+
+        var buildPdfBtn = function(langCode, label) {
+          var pdfUrl = admin_url + 'nabh/print_pdf'
+            + '?nabh_pdf_id=' + encodeURIComponent(row.form_id)
+            + '&lang=' + encodeURIComponent(langCode)
+            + '&appointment_id=' + encodeURIComponent(row.appointment_id || 0)
+            + '&appointment_type_id=' + encodeURIComponent(row.appointment_type_id || 0)
+            + '&patient_id=' + encodeURIComponent(patientId)
+            + '&doctor_id=' + encodeURIComponent(doctorId)
+            + '&patient_name=' + encodeURIComponent(patientName)
+            + '&doctor_name=' + encodeURIComponent(doctorName);
+          return '<button class="btn btn-xs btn-default" onclick="window.open(\'' + pdfUrl + '\', \'_blank\')"><i class="fa-regular fa-file-pdf"></i> ' + label + '</button>';
+        };
+
+        var actionBtns = '';
+        if (row.has_en) {
+          actionBtns += buildOpenBtn('en', 'View ENG', 'btn-primary') + ' ' + buildPdfBtn('en', 'PDF ENG') + ' ';
+        }
+        if (row.has_gu) {
+          actionBtns += buildOpenBtn('gu', 'View GUJ', 'btn-success') + ' ' + buildPdfBtn('gu', 'PDF GUJ');
+        }
+        if (!actionBtns) {
+          actionBtns = '<span class="text-muted">File not uploaded</span>';
+        }
 
         var statusBadge = row.is_filled
           ? '<span class="label label-success">Filled</span>'
@@ -2048,19 +2086,19 @@ function open_patient_appointment_create_modal()
 
         html += '<tr>'
           + '<td>' + (index + 1) + '</td>'
-          + '<td>' + escapeHtml(row.appointment_date || '-') + '</td>'
-          + '<td>' + escapeHtml(String(row.appointment_id || '-')) + '</td>'
-          + '<td>' + escapeHtml(row.form_name || '-') + '</td>'
+          //+ '<td>' + escapeHtml(row.form_name || '-') + '</td>'
+          + '<td>' + formNameHtml + '</td>'
           + '<td>' + statusBadge + '</td>'
-          + '<td>' + escapeHtml(patientName || '-') + '</td>'
+/*          + '<td>' + escapeHtml(patientName || '-') + '</td>'
           + '<td>' + escapeHtml(doctorName || '-') + '</td>'
-          + '<td>' + escapeHtml(row.filled_preview || '-') + '</td>'
-          + '<td>' + openBtn + '</td>'
+          + '<td>' + escapeHtml(row.filled_preview || '-') + '</td>'*/
+          //+ '<td>' + openBtn + '</td>'
+          + '<td>' + actionBtns + '</td>'
           + '</tr>';
       });
 
       if (!html) {
-        html = '<tr><td colspan="9" class="text-center">No NABH forms found for this patient.</td></tr>';
+        html = '<tr><td colspan="7" class="text-center">No NABH forms found for this patient.</td></tr>';
       }
 
       $('#allNabhTbody').html(html);
@@ -2089,9 +2127,9 @@ function open_patient_appointment_create_modal()
   loadNabhList();
 
 
-  $(document).on('change', '#nabhLang', function () {
+  /*$(document).on('change', '#nabhLang', function () {
     loadNabhList();
-  });
+  });*/
 
 
 };
@@ -2100,7 +2138,7 @@ function open_patient_appointment_create_modal()
 function loadNabhList() {
 
   var appointmentTypeId = window.__NABH_META__.appointment_type_id;
-    var lang = $('#nabhLang').val();
+   // var lang = $('#nabhLang').val();
 
   $.post(admin_url + 'nabh/list_json',
     { appointment_type_id: appointmentTypeId },
@@ -2116,7 +2154,7 @@ res.data.forEach(function(r,i){
   var hasEn = !!r.has_en;
   var hasGu = !!r.has_gu;
 
-  var lang = $('#nabhLang').val(); // keep your current
+  /*var lang = $('#nabhLang').val(); // keep your current
   var isGu = (lang === 'gu');
 
   // ✅ only allow if file exists for selected language
@@ -2124,7 +2162,7 @@ res.data.forEach(function(r,i){
 
   var title = '-';
   if (lang === 'gu') title = hasGu ? (r.title_gu || r.title_en) : (r.title_en || r.title_gu);
-  else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);
+  else title = hasEn ? (r.title_en || r.title_gu) : (r.title_gu || r.title_en);*/
 
   var avail = '';
   if (hasEn && hasGu) avail = 'EN + GU';
@@ -2132,8 +2170,11 @@ res.data.forEach(function(r,i){
   else if (hasGu) avail = 'GU';
   else avail = 'Not Uploaded';
 
-  var viewUrl = admin_url + 'nabh/form/' + r.id
-      + '?lang=' + encodeURIComponent(lang)
+  /*var viewUrl = admin_url + 'nabh/form/' + r.id
+      + '?lang=' + encodeURIComponent(lang)*/
+    var buildViewUrl = function(langCode) {
+    return admin_url + 'nabh/form/' + r.id
+      + '?lang=' + encodeURIComponent(langCode)
       + '&nabh_pdf_id=' + encodeURIComponent(r.id)
       + '&appointment_id=' + encodeURIComponent(window.__NABH_META__.appointment_id)
       + '&appointment_type_id=' + encodeURIComponent(parseInt($('#appointment_type_id').val()||"0",10))
@@ -2141,8 +2182,16 @@ res.data.forEach(function(r,i){
       + '&doctor_id=' + encodeURIComponent(window.__NABH_META__.doctor_id)
       + '&patient_name=' + encodeURIComponent(window.__NABH_META__.patient_name)
       + '&doctor_name=' + encodeURIComponent(window.__NABH_META__.doctor_name);
+   };
 
-  // ✅ disabled style + tooltip + safe onclick
+  var makeActionButtons = function(langCode, shortLabel, styleClass) {
+    var viewUrl = buildViewUrl(langCode);
+    var viewBtn = '<button class="btn btn-xs ' + styleClass + '" onclick="openNabhViewer(\'' + viewUrl + '\')">View ' + shortLabel + '</button>';
+    var printBtn = '<button class="btn btn-xs btn-default" onclick="printNabhPdf('+ r.id +', \'' + langCode + '\')"><i class="fa-regular fa-file-pdf"></i> PDF ' + shortLabel + '</button>';
+    return viewBtn + ' ' + printBtn;
+  };
+
+/*  // ✅ disabled style + tooltip + safe onclick
   var disCls  = hasForSelectedLang ? '' : ' btn-disabled';
   var disAttr = hasForSelectedLang ? '' : ' disabled="disabled"';
   var tip     = hasForSelectedLang ? '' : ' title="File not exist for this language"';
@@ -2159,13 +2208,29 @@ res.data.forEach(function(r,i){
           ? 'onclick="printNabhPdf('+ r.id +')"'
           : 'onclick="return showNabhMissingTemplateMsg();"'
         )
-      + '><i class="fa-regular fa-file-pdf"></i> Print PDF</button>';
+      + '><i class="fa-regular fa-file-pdf"></i> Print PDF</button>';*/
+
+
+var langTags = '';
+  var actionBtns = '';
+  if (hasEn) {
+    langTags += ' <span class="label label-primary">ENG</span>';
+    actionBtns += makeActionButtons('en', 'ENG', 'btn-primary') + ' ';
+  }
+  if (hasGu) {
+    langTags += ' <span class="label label-success">GUJ</span>';
+    actionBtns += makeActionButtons('gu', 'GUJ', 'btn-success');
+  }
+  if (!actionBtns) {
+    actionBtns = '<button class="btn btn-sm btn-disabled" disabled="disabled" onclick="return showNabhMissingTemplateMsg();">File not uploaded</button>';
+  }
+
 
   html += '<tr>'
     + '<td>'+(i+1)+'</td>'
     + '<td>'+escapeHtml(r.title_en)+'</td>'
-    + '<td>' + escapeHtml(avail) + '</td>'
-    + '<td>' + viewBtn + ' ' + printBtn + '</td>'
+        + '<td>' + escapeHtml(avail) + '</td>'
+    + '<td>' + actionBtns + '</td>'
     + '</tr>';
 });
 
@@ -2179,8 +2244,8 @@ function showNabhMissingTemplateMsg(){
   return false;
 }
 
-function printNabhPdf(nabhPdfId){
-  var lang = $('#nabhLang').val(); // en/gu
+function printNabhPdf(nabhPdfId, lang){
+  lang = lang || 'en';
   var meta = window.__NABH_META__ || {};
 
   var url = admin_url + 'nabh/print_pdf'
