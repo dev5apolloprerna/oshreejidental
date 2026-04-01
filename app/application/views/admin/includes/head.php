@@ -27,11 +27,11 @@
         _table_api;
     </script>
     <?php app_admin_head(); ?>
-    <?php echo $login_class != '' ? '<style>body.login_admin {
+    <?php $login_class=''; echo isset($login_class) && $login_class != '' ? '<style>body.login_admin {
     background-image: url(https://oshreejidental.com/app/assets/images/login-bg.jpg) !important;
     background-size: 100% auto !important;
 }</style>' : '';?>
 </head>
 
-<body <?php echo admin_body_class(isset($bodyclass) ? $bodyclass . $login_class : ''); ?>>
+<body <?php echo admin_body_class(isset($bodyclass) ? $bodyclass . (isset($login_class) ? $login_class : '') : ''); ?>>
     <?php hooks()->do_action('after_body_start'); ?>

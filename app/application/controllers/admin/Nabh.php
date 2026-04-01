@@ -150,16 +150,34 @@ class Nabh extends AdminController
             ->get()
             ->row();
 
+        $patient_all_data = [];
+        if ($patient) {
+            $patient_all_data = (array) $patient;
+        }
+
+        $contacts_table = db_prefix() . 'contacts';
+        $contact_fields = $this->db->list_fields($contacts_table);
+        $contact_select_fields = ['id', 'userid', 'email'];
+        foreach (['uid', 'gender', 'blood_group', 'phonenumber', 'rx_str_date', 'rx_end_date'] as $optional_contact_field) {
+            if (in_array($optional_contact_field, $contact_fields, true)) {
+                $contact_select_fields[] = $optional_contact_field;
+            }
+        }
 
         $primary_contact = $this->db
-            ->select('email')
-            ->from(db_prefix() . 'contacts')
+            ->select(implode(', ', array_unique($contact_select_fields)))
+            ->from($contacts_table)
             ->where('userid', $patient_id)
             ->order_by('is_primary', 'DESC')
             ->order_by('id', 'ASC')
             ->get()
             ->row();
 
+        if ($primary_contact) {
+            $patient_all_data = array_merge($patient_all_data, (array) $primary_contact);
+        }
+
+        
         $medical_history = $this->db
             ->from(db_prefix() . 'medical_history')
             ->where('userid', $patient_id)
@@ -205,6 +223,14 @@ class Nabh extends AdminController
         }
 
         $appointment_ids = array_values(array_filter(array_map('intval', array_column($appointments, 'id'))));
+         $appointment_history_by_id = [];
+        foreach ($appointments as $appointment_row) {
+            $row_id = (int) ($appointment_row['id'] ?? 0);
+            if ($row_id <= 0) {
+                continue;
+            }
+            $appointment_history_by_id[$row_id] = $appointment_row;
+        }
 
         $treatments = [];
         if (!empty($appointment_ids)) {
@@ -236,7 +262,30 @@ class Nabh extends AdminController
                 $treatments_by_appointment[$aid][] = $entry;
             }
         }
-
+        
+     $prescriptions = [];
+        if (!empty($appointment_ids)) {
+            $prescriptions = $this->db
+                ->select(
+                    db_prefix() . 'appointment_prescriptions.id as prescription_id, ' .
+                    db_prefix() . 'appointment_prescriptions.appointment_id, ' .
+                    db_prefix() . 'appointment_prescription_items.description, ' .
+                    db_prefix() . 'appointment_prescription_items.qty, ' .
+                    db_prefix() . 'appointment_prescription_items.days, ' .
+                    db_prefix() . 'appointment_prescription_items.time_slot'
+                )
+                ->from(db_prefix() . 'appointment_prescriptions')
+                ->join(
+                    db_prefix() . 'appointment_prescription_items',
+                    db_prefix() . 'appointment_prescription_items.prescription_id = ' . db_prefix() . 'appointment_prescriptions.id',
+                    'left'
+                )
+                ->where_in(db_prefix() . 'appointment_prescriptions.appointment_id', $appointment_ids)
+                ->order_by(db_prefix() . 'appointment_prescriptions.id', 'DESC')
+                ->get()
+                ->result_array();
+        }
+        
         $submissions = $this->db
             ->select(
                 db_prefix() . 'nabh_form_submissions.*, ' .
@@ -255,6 +304,51 @@ class Nabh extends AdminController
             ->get()
             ->result_array();
 
+$xray_files = [];
+        $files_table = db_prefix() . 'files';
+        if ($this->db->table_exists($files_table)) {
+            $file_fields = $this->db->list_fields($files_table);
+            $file_select = ['id', 'file_name'];
+            foreach (['filetype', 'dateadded', 'xray_title'] as $optional_file_field) {
+                if (in_array($optional_file_field, $file_fields, true)) {
+                    $file_select[] = $optional_file_field;
+                }
+            }
+
+            $this->db->select(implode(', ', array_unique($file_select)));
+            $this->db->from($files_table);
+            $this->db->where('rel_id', $patient_id);
+            if (in_array('rel_type', $file_fields, true)) {
+                $this->db->where('rel_type', 'customer');
+            }
+            $this->db->order_by('id', 'DESC');
+            $xray_files = $this->db->get()->result_array();
+        }
+
+        $lab_work_tasks = [];
+        $tasks_table = db_prefix() . 'tasks';
+        if ($this->db->table_exists($tasks_table)) {
+            $task_fields = $this->db->list_fields($tasks_table);
+            $task_select = ['id', 'name'];
+            foreach (['description', 'startdate', 'duedate', 'status'] as $optional_task_field) {
+                if (in_array($optional_task_field, $task_fields, true)) {
+                    $task_select[] = $optional_task_field;
+                }
+            }
+
+            $this->db->select(implode(', ', array_unique($task_select)));
+            $this->db->from($tasks_table);
+            $this->db->where('rel_id', $patient_id);
+            if (in_array('rel_type', $task_fields, true)) {
+                $this->db->where('rel_type', 'customer');
+            }
+            if (in_array('is_lab_task', $task_fields, true)) {
+                $this->db->where('is_lab_task', 1);
+            }
+            $this->db->order_by('id', 'DESC');
+            $lab_work_tasks = $this->db->get()->result_array();
+        }
+        
         $patient_name = trim((string) ($patient->company ?? ''));
         $title = 'Patient Complete Clinical History';
 
@@ -272,6 +366,66 @@ class Nabh extends AdminController
             . ' | <strong>Email:</strong> ' . html_escape((string) ($primary_contact->email ?? '-'))
             . '<br><strong>Generated:</strong> ' . date('d/m/Y H:i') . '</div>';
 
+        $html .= '<h3>Patient Profile (All Available Data)</h3><table><tbody>';
+        if (empty($patient_all_data)) {
+            $html .= '<tr><td>No patient profile data available.</td></tr>';
+        } else {
+            foreach ($patient_all_data as $field => $value) {
+                $val = trim((string) $value);
+                if ($val === '') {
+                    continue;
+                }
+                $label = ucwords(str_replace('_', ' ', (string) $field));
+                $html .= '<tr><th style="width:220px;">' . html_escape($label) . '</th><td>' . html_escape($val) . '</td></tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+
+
+$rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
+        if ($rx_start_date === '' || $rx_start_date === '0000-00-00') {
+            $rx_start_date = '-';
+        }
+        $rx_end_date = (string) ($primary_contact->rx_end_date ?? '');
+        if ($rx_end_date === '' || $rx_end_date === '0000-00-00') {
+            $rx_end_date = '-';
+        }
+        $current_treatment = trim((string) ($medical_history['current_treatment'] ?? ''));
+        if ($current_treatment === '') {
+            $current_treatment = '-';
+        }
+
+        $patient_profile_required_rows = [
+            'Gender' => trim((string) ($primary_contact->gender ?? '')) !== '' ? (string) $primary_contact->gender : '-',
+            'Blood G' => trim((string) ($primary_contact->blood_group ?? '')) !== '' ? (string) $primary_contact->blood_group : '-',
+            'Email' => trim((string) ($primary_contact->email ?? '')) !== '' ? (string) $primary_contact->email : '-',
+            'Phone' => trim((string) ($patient->phonenumber ?? ($primary_contact->phonenumber ?? ''))) !== '' ? (string) ($patient->phonenumber ?? $primary_contact->phonenumber) : '-',
+            'Current RX Start Date' => $rx_start_date,
+            'Current RX End Date' => $rx_end_date,
+            'Current Treatment' => $current_treatment,
+        ];
+
+        $html .= '<h3>Patient Summary</h3><table><tbody>';
+        foreach ($patient_profile_required_rows as $field_label => $field_value) {
+            $html .= '<tr><th style="width:220px;">' . html_escape($field_label) . '</th><td>' . html_escape((string) $field_value) . '</td></tr>';
+        }
+        $html .= '</tbody></table>';
+
+        $html .= '<h3>Patient Profile (All Available Data)</h3><table><tbody>';
+        if (empty($patient_all_data)) {
+            $html .= '<tr><td>No patient profile data available.</td></tr>';
+        } else {
+            foreach ($patient_all_data as $field => $value) {
+                $val = trim((string) $value);
+                if ($val === '') {
+                    continue;
+                }
+                $label = ucwords(str_replace('_', ' ', (string) $field));
+                $html .= '<tr><th style="width:220px;">' . html_escape($label) . '</th><td>' . html_escape($val) . '</td></tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+        
         $html .= '<h3>Medical History</h3><table><tbody>';
         if (empty($medical_history)) {
             $html .= '<tr><td>No medical history available.</td></tr>';
@@ -290,6 +444,163 @@ class Nabh extends AdminController
         }
         $html .= '</tbody></table>';
 
+        $html .= '<h3>Prescription History</h3>';
+        $html .= '<table><thead><tr>'
+            . '<th style="width:35px;">#</th>'
+            . '<th style="width:85px;">Appt ID</th>'
+            . '<th style="width:90px;">Date</th>'
+            . '<th style="width:90px;">Time</th>'
+            . '<th>Medicine</th>'
+            . '<th style="width:60px;">Qty</th>'
+            . '<th style="width:60px;">Days</th>'
+            . '<th style="width:120px;">Time Slot</th>'
+            . '</tr></thead><tbody>';
+        if (empty($prescriptions)) {
+            $html .= '<tr><td colspan="8" style="text-align:center;">No prescription history found.</td></tr>';
+        } else {
+            $row_index = 1;
+            foreach ($prescriptions as $prescription_row) {
+                $aid = (int) ($prescription_row['appointment_id'] ?? 0);
+                $appt_data = $appointment_history_by_id[$aid] ?? [];
+                $appt_date = !empty($appt_data['date']) ? date('d/m/Y', strtotime($appt_data['date'])) : '-';
+                $start_time = $appt_data['start_hour'] ?? ($appt_data['start_time'] ?? '');
+                $end_time = $appt_data['finish_hour'] ?? ($appt_data['end_hour'] ?? ($appt_data['end_time'] ?? ''));
+                $appt_time = trim((string) $start_time);
+                if (!empty($end_time)) {
+                    $appt_time .= ($appt_time !== '' ? ' - ' : '') . trim((string) $end_time);
+                }
+
+                $html .= '<tr>'
+                    . '<td>' . (int) $row_index++ . '</td>'
+                    . '<td>' . $aid . '</td>'
+                    . '<td>' . html_escape($appt_date) . '</td>'
+                    . '<td>' . html_escape($appt_time !== '' ? $appt_time : '-') . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['description'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['qty'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['days'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['time_slot'] ?? '-')) . '</td>'
+                    . '</tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+        
+        $html .= '<h3>Uploaded X-Ray / Image Files</h3>';
+        $html .= '<table><thead><tr>'
+            . '<th style="width:35px;">#</th>'
+            . '<th style="width:180px;">Title/File</th>'
+            . '<th style="width:120px;">Added On</th>'
+            . '<th style="width:120px;">Type</th>'
+            . '<th>Preview / Path</th>'
+            . '</tr></thead><tbody>';
+        if (empty($xray_files)) {
+            $html .= '<tr><td colspan="5" style="text-align:center;">No uploaded files found.</td></tr>';
+        } else {
+            $xray_index = 1;
+            foreach ($xray_files as $xray_file) {
+                $file_name = trim((string) ($xray_file['file_name'] ?? ''));
+                if ($file_name === '') {
+                    continue;
+                }
+                $file_url = base_url('uploads/clients/' . $patient_id . '/' . $file_name);
+                $file_ext = strtolower((string) pathinfo($file_name, PATHINFO_EXTENSION));
+                $is_image = in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'], true);
+                $preview = html_escape($file_url);
+                if ($is_image) {
+                    $preview = '<img src="' . html_escape($file_url) . '" style="max-width:180px; max-height:120px; display:block; margin-bottom:4px;" />'
+                        . '<span class="small">' . html_escape($file_url) . '</span>';
+                }
+
+                $title_or_name = trim((string) ($xray_file['xray_title'] ?? ''));
+                if ($title_or_name === '') {
+                    $title_or_name = $file_name;
+                }
+
+                $added_on = trim((string) ($xray_file['dateadded'] ?? ''));
+                $file_type = trim((string) ($xray_file['filetype'] ?? $file_ext));
+
+                $html .= '<tr>'
+                    . '<td>' . (int) $xray_index++ . '</td>'
+                    . '<td>' . html_escape($title_or_name) . '</td>'
+                    . '<td>' . html_escape($added_on !== '' ? $added_on : '-') . '</td>'
+                    . '<td>' . html_escape($file_type !== '' ? $file_type : '-') . '</td>'
+                    . '<td>' . $preview . '</td>'
+                    . '</tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+
+        $html .= '<h3>Lab Work Data</h3>';
+        $html .= '<table><thead><tr>'
+            . '<th style="width:35px;">#</th>'
+            . '<th style="width:70px;">Task ID</th>'
+            . '<th style="width:170px;">Task Name</th>'
+            . '<th style="width:140px;">Date Range</th>'
+            . '<th style="width:90px;">Status</th>'
+            . '<th>Description</th>'
+            . '</tr></thead><tbody>';
+        if (empty($lab_work_tasks)) {
+            $html .= '<tr><td colspan="6" style="text-align:center;">No lab work data found.</td></tr>';
+        } else {
+            foreach ($lab_work_tasks as $task_index => $lab_work_task) {
+                $start_date = !empty($lab_work_task['startdate']) ? date('d/m/Y', strtotime((string) $lab_work_task['startdate'])) : '-';
+                $end_date = !empty($lab_work_task['duedate']) ? date('d/m/Y', strtotime((string) $lab_work_task['duedate'])) : '-';
+                $date_range = $start_date;
+                if ($end_date !== '-') {
+                    $date_range .= ' to ' . $end_date;
+                }
+
+                $html .= '<tr>'
+                    . '<td>' . (int) ($task_index + 1) . '</td>'
+                    . '<td>' . (int) ($lab_work_task['id'] ?? 0) . '</td>'
+                    . '<td>' . html_escape((string) ($lab_work_task['name'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape($date_range) . '</td>'
+                    . '<td>' . html_escape((string) ($lab_work_task['status'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape((string) ($lab_work_task['description'] ?? '-')) . '</td>'
+                    . '</tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+
+        $html .= '<h3>Prescription History</h3>';
+        $html .= '<table><thead><tr>'
+            . '<th style="width:35px;">#</th>'
+            . '<th style="width:85px;">Appt ID</th>'
+            . '<th style="width:90px;">Date</th>'
+            . '<th style="width:90px;">Time</th>'
+            . '<th>Medicine</th>'
+            . '<th style="width:60px;">Qty</th>'
+            . '<th style="width:60px;">Days</th>'
+            . '<th style="width:120px;">Time Slot</th>'
+            . '</tr></thead><tbody>';
+        if (empty($prescriptions)) {
+            $html .= '<tr><td colspan="8" style="text-align:center;">No prescription history found.</td></tr>';
+        } else {
+            $row_index = 1;
+            foreach ($prescriptions as $prescription_row) {
+                $aid = (int) ($prescription_row['appointment_id'] ?? 0);
+                $appt_data = $appointment_history_by_id[$aid] ?? [];
+                $appt_date = !empty($appt_data['date']) ? date('d/m/Y', strtotime($appt_data['date'])) : '-';
+                $start_time = $appt_data['start_hour'] ?? ($appt_data['start_time'] ?? '');
+                $end_time = $appt_data['finish_hour'] ?? ($appt_data['end_hour'] ?? ($appt_data['end_time'] ?? ''));
+                $appt_time = trim((string) $start_time);
+                if (!empty($end_time)) {
+                    $appt_time .= ($appt_time !== '' ? ' - ' : '') . trim((string) $end_time);
+                }
+
+                $html .= '<tr>'
+                    . '<td>' . (int) $row_index++ . '</td>'
+                    . '<td>' . $aid . '</td>'
+                    . '<td>' . html_escape($appt_date) . '</td>'
+                    . '<td>' . html_escape($appt_time !== '' ? $appt_time : '-') . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['description'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['qty'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['days'] ?? '-')) . '</td>'
+                    . '<td>' . html_escape((string) ($prescription_row['time_slot'] ?? '-')) . '</td>'
+                    . '</tr>';
+            }
+        }
+        $html .= '</tbody></table>';
+        
         $html .= '<h3>Appointment & Treatment History</h3>';
         $html .= '<table><thead><tr><th style="width:35px;">#</th><th style="width:90px;">Date</th><th style="width:70px;">Appt ID</th><th style="width:90px;">Time</th><th>Details</th><th>Treatments</th></tr></thead><tbody>';
         if (empty($appointments)) {
@@ -323,7 +634,6 @@ class Nabh extends AdminController
             . '<th style="width:70px;">Appt ID</th>'
             . '<th style="width:170px;">NABH Form</th>'
             . '<th style="width:120px;">Doctor</th>'
-            . '<th>Filled Details</th>'
             . '</tr></thead><tbody>';
 
         if (empty($submissions)) {
@@ -360,7 +670,6 @@ class Nabh extends AdminController
                     . '<td>' . html_escape($doctor_name !== '' ? $doctor_name : '-') . '<div class="small">'
                     . html_escape((string) (!empty($row['updated_at']) ? $row['updated_at'] : ($row['created_at'] ?? '')))
                     . '</div></td>'
-                    . '<td>' . (!empty($details) ? implode('<br>', $details) : '-') . '</td>'
                     . '</tr>';
             }
         }
@@ -478,6 +787,16 @@ class Nabh extends AdminController
             $patient_signature_image = trim((string)$saved['patient_signature_image']);
         }
 
+
+        if ($patient_signature_image === '' && $patient_id > 0) {
+            $patient_signature_image = $this->resolve_patient_signature_image_from_consent($patient_id, $appointment_id);
+        }
+
+        if ($patient_signature_image !== '' && empty($saved['patient_signature_image'])) {
+            $saved['patient_signature_image'] = $patient_signature_image;
+        }
+
+
         $ctx = [
           'pdf_id'              => $pdf_id,
           'appointment_id'      => $appointment_id,
@@ -490,6 +809,8 @@ class Nabh extends AdminController
           'doctor_signature_image' => $doctor_signature_image,
           'patient_signature_image' => $patient_signature_image !== '' ? $patient_signature_image : $patient_signature_imag ?? null,
         ];
+
+    $html = $this->append_universal_signature_block($html);
 
     // ✅ 6️⃣ THIS IS WHERE YOU PUT IT
     $html = $this->inject_global($html, $ctx, $saved);
@@ -800,7 +1121,19 @@ public function print_pdf()
         }
     }
 
+     if (!isset($saved['patient_signature_image']) || trim((string)$saved['patient_signature_image']) === '') {
+        $fallbackPatientSignImage = $this->resolve_patient_signature_image_from_consent((int)($req['patient_id'] ?? 0), $appointment_id);
+        if ($fallbackPatientSignImage !== '') {
+            $saved['patient_signature_image'] = $fallbackPatientSignImage;
+        }
+    }
+
+
+
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
+
+    $html = $this->append_universal_signature_block($html);
+
 
     // 6) Fill HTML server-side (NO JS in PDF)
     $html = $this->apply_saved_to_html_for_pdf($html, $saved);
@@ -855,6 +1188,93 @@ public function print_pdf()
     }
 
     return $this->render_pdf_with_dompdf($html, $filename);
+}
+
+
+private function resolve_patient_signature_image_from_consent(int $patient_id, int $appointment_id = 0): string
+{
+    if ($patient_id <= 0) {
+        return '';
+    }
+
+    $table = db_prefix() . 'patient_signatures';
+
+    if ($appointment_id > 0) {
+        $row = $this->db
+            ->select('signature_value')
+            ->from($table)
+            ->where('appointment_id', $appointment_id)
+            ->order_by('id', 'DESC')
+            ->get()
+            ->row_array();
+
+        $sig = $this->normalize_patient_signature_value((string)($row['signature_value'] ?? ''));
+        if ($sig !== '') {
+            return $sig;
+        }
+    }
+
+    $row = $this->db
+        ->select($table . '.signature_value')
+        ->from($table)
+        ->join(db_prefix() . 'appointly_appointments', db_prefix() . 'appointly_appointments.id = ' . $table . '.appointment_id', 'left')
+        ->join(db_prefix() . 'contacts', db_prefix() . 'contacts.id = ' . db_prefix() . 'appointly_appointments.contact_id', 'left')
+        ->where(db_prefix() . 'contacts.userid', $patient_id)
+        ->order_by($table . '.id', 'DESC')
+        ->limit(1)
+        ->get()
+        ->row_array();
+
+    return $this->normalize_patient_signature_value((string)($row['signature_value'] ?? ''));
+}
+
+private function normalize_patient_signature_value(string $signatureValue): string
+{
+    $value = trim($signatureValue);
+    if ($value === '') {
+        return '';
+    }
+
+    if (strpos($value, 'data:image/') === 0) {
+        return $value;
+    }
+
+    $value = preg_replace('/\s+/', '', $value);
+    if ($value === '') {
+        return '';
+    }
+
+    return 'data:image/png;base64,' . $value;
+}
+
+private function append_universal_signature_block(string $html): string
+{
+    if (stripos($html, 'id="nabh-universal-signatures"') !== false) {
+        return $html;
+    }
+
+    $block = '<div id="nabh-universal-signatures" style="margin-top:24px;">'
+        . '<table style="width:100%; border-collapse:collapse;">'
+        . '<tr>'
+        . '<td style="width:50%; vertical-align:top; padding-right:16px;">'
+        . '<div style="font-weight:600; margin-bottom:6px;">Patient Signature</div>'
+        . '<img name="patient_signature_image" alt="Patient Signature" style="max-height:80px; max-width:100%; display:block; margin-bottom:8px;" />'
+        . '<input type="text" name="patient_signature" placeholder="Patient Signature" style="width:100%; border:none; border-top:1px solid #333; padding-top:4px;" />'
+        . '</td>'
+        . '<td style="width:50%; vertical-align:top; padding-left:16px;">'
+        . '<div style="font-weight:600; margin-bottom:6px;">Doctor Signature</div>'
+        . '<img name="doctor_signature_image" alt="Doctor Signature" style="max-height:80px; max-width:100%; display:block; margin-bottom:8px;" />'
+        . '<input type="text" name="doctor_signature" placeholder="Doctor Signature" style="width:100%; border:none; border-top:1px solid #333; padding-top:4px;" />'
+        . '</td>'
+        . '</tr>'
+        . '</table>'
+        . '</div>';
+
+    if (stripos($html, '</body>') !== false) {
+        return str_ireplace('</body>', $block . '</body>', $html);
+    }
+
+    return $html . $block;
 }
 
 

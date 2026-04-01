@@ -166,7 +166,6 @@
      var CTX = window.__NABH_CTX || {};
      var SAVED = window.__NABH_SAVED || {};
  
--    // 1) fill everything from SAVED first
      Object.keys(SAVED).forEach(function (k) {
        document.querySelectorAll('[name="' + k + '"]').forEach(function (el) {
          setOne(el, SAVED[k]);
@@ -174,7 +173,6 @@
        setOne(document.getElementById(k), SAVED[k]);
      });
  
--    // 2) apply defaults ONLY if not present in SAVED
      var defaults = {
        patient_name: CTX.patient_name || "",
        doctor_name: CTX.doctor_name || "",
@@ -194,7 +192,6 @@
          });
        }
  
--      // fill by id (spans/divs)
        var byId = document.getElementById(k);
        if (byId) {
          if (byId.value !== undefined) {
@@ -219,13 +216,11 @@
        else data[el.name] = el.value;
      });
  
--    // ensure defaults are included even if they are spans (no input)
      var CTX = window.__NABH_CTX || {};
      if (!data.patient_name && CTX.patient_name) data.patient_name = CTX.patient_name;
      if (!data.doctor_name && CTX.doctor_name) data.doctor_name = CTX.doctor_name;
      if (!data.today_date) data.today_date = todayDDMMYYYY();
  
--    // if spans exist, take from them
      ["patient_name", "doctor_name", "today_date"].forEach(function (k) {
        if (data[k]) return;
        var el = document.getElementById(k);

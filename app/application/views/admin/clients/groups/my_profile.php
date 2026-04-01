@@ -282,7 +282,7 @@ $medical_history = isset($medical_history) ? $medical_history : null;
                                     <?php echo form_error('phonenumber');?>
                                 </div>
                             </div>
-                            <div class="patient_reference_from">
+                              <div class="patient_reference_from">
                                 <?php $value = (isset($contact) && property_exists($contact, 'reference_from')) ? $contact->reference_from : ''; ?>
                                 <?php echo render_input('reference_from', 'Reference From', $value); ?>
                             </div>

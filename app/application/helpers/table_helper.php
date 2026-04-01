@@ -7,6 +7,11 @@ hooks()->add_action('admin_init', function () {
         App_table::new('clients')->customfieldable('customers')->setPrimaryKeyName('userid')
     );
 
+     App_table::register(
+        App_table::new('global_patient_search')->setPrimaryKeyName('userid')
+    );
+
+
     App_table::register(
         App_table::new('expenses')->customfieldable('expenses')
     );

@@ -27,7 +27,7 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
         $CI->app_menu->add_sidebar_menu_item('global-patient-search', [
-            'name'     => 'Patient Search',
+            'name'     => 'Branch Wise Patient Search',
             'href'     => admin_url('clients/branch_wise_patients'),
             'position' => 16,
             'icon'     => 'fa-solid fa-magnifying-glass',

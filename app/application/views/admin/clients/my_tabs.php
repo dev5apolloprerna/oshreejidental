@@ -115,8 +115,8 @@ ul#slider-menu li .edit_profile .edit_title {
       <?PHP }?>
     </li>
   <?php } ?>
+  
 </ul>
-</div>
 </div>
 
 

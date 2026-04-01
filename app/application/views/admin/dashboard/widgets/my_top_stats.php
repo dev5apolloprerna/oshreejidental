@@ -33,11 +33,11 @@
                         </div> 
                          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 uid">
                         <label for="rx-str-date" class="control-label">From Date</label>
-                        <input type="date" id="from_date" name="from_date" class="form-control" value="<?php echo $_GET['from_date'];?>">
+                        <input type="date" id="from_date" name="from_date" class="form-control" value="<?php echo $_GET['from_date'] ?? '';?>">
                     </div>
                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 uid">
                         <label for="rx-str-date" class="control-label">To Date</label>
-                        <input type="date" id="to_date" name="to_date" class="form-control" value="<?php echo $_GET['to_date'];?>">
+                        <input type="date" id="to_date" name="to_date" class="form-control" value="<?php echo $_GET['to_date'] ?? '';?>">
                     </div>
                     <div class="col-xl-1 col-lg-1 col-md-1 col-sm-12 col-12 uid" style="padding-right: 0px;">
                        

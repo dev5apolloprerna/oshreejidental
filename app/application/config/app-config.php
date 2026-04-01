@@ -17,8 +17,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 * environments.
 *
 */
-define('APP_BASE_URL', 'https://oshreejidental.com/app/');
-
+//define('APP_BASE_URL', 'https://oshreejidental.com/app/');
+define('APP_BASE_URL', 'http://localhost/oshreejidental/app/');
 
 
 /*
@@ -45,17 +45,20 @@ define('APP_DB_HOSTNAME', 'localhost');
 /**
  * The username used to connect to the database
  */
-define('APP_DB_USERNAME', 'u614622744_main_db');
+//define('APP_DB_USERNAME', 'u614622744_main_db');
+define('APP_DB_USERNAME', 'root');
 
 /**
  * The password used to connect to the database
  */
-define('APP_DB_PASSWORD', 'k;e7E/onHM3G');
+//define('APP_DB_PASSWORD', 'k;e7E/onHM3G');
+define('APP_DB_PASSWORD', '');
 
 /**
  * The name of the database you want to connect to
  */
-define('APP_DB_NAME', 'u614622744_main_db');
+//define('APP_DB_NAME', 'u614622744_main_db');
+define('APP_DB_NAME', 'oshreejidental_main');
 
 
 
