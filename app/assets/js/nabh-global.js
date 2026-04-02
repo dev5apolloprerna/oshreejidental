@@ -109,6 +109,16 @@
     return /\b(sign|signature|signator|signatory)\b/i.test(context || "");
   }
 
+  function getContextParty(context) {
+    var hasDoctor = isDoctorContext(context);
+    var hasPatient = isPatientContext(context);
+
+    if (hasDoctor && hasPatient) return "";
+    if (hasDoctor) return "doctor";
+    if (hasPatient) return "patient";
+    return "";
+  }
+
   function fillPartyDefaultsByContext(saved, ctx) {
     var doctorName = String(ctx.doctor_name || saved.doctor_name || "").trim();
     var patientName = String(ctx.patient_name || saved.patient_name || "").trim();
@@ -136,11 +146,13 @@
 
       var context = getContextText(el);
       if (!context) return;
+      var party = getContextParty(context);
+      if (!party) return;
 
       var fillValue = "";
-      if (doctorName && isDoctorContext(context)) {
+      if (party === "doctor" && doctorName) {
         fillValue = isSignatureContext(context) ? (doctorSign || doctorName) : doctorName;
-      } else if (patientName && isPatientContext(context)) {
+      } else if (party === "patient" && patientName) {
         fillValue = isSignatureContext(context) ? (patientSign || patientName) : patientName;
       }
 
@@ -154,13 +166,15 @@
 
       var context = getContextText(img);
       if (!context || !isSignatureContext(context)) return;
+      var party = getContextParty(context);
+      if (!party) return;
 
-      if (doctorSignImage && isDoctorContext(context)) {
+      if (party === "doctor" && doctorSignImage) {
         img.setAttribute("src", doctorSignImage);
         return;
       }
 
-      if (patientSignImage && isPatientContext(context)) {
+      if (party === "patient" && patientSignImage) {
         img.setAttribute("src", patientSignImage);
       }
     });

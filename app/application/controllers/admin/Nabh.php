@@ -813,7 +813,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
           'patient_signature_image' => $patient_signature_image !== '' ? $patient_signature_image : $patient_signature_imag ?? null,
         ];
 
-   //    $html = $this->append_universal_signature_block($html);
+     $html = $this->append_universal_signature_block($html);
 
     // ✅ 6️⃣ THIS IS WHERE YOU PUT IT
     $html = $this->inject_global($html, $ctx, $saved);
@@ -1183,7 +1183,7 @@ public function print_pdf()
 
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
 
-    //$html = $this->append_universal_signature_block($html);
+    $html = $this->append_universal_signature_block($html);
 
 
     // 6) Fill HTML server-side (NO JS in PDF)
@@ -1298,7 +1298,7 @@ private function normalize_patient_signature_value(string $signatureValue): stri
     return 'data:image/png;base64,' . $value;
 }
 
-/*private function append_universal_signature_block(string $html): string
+private function append_universal_signature_block(string $html): string
 {
     if (stripos($html, 'id="nabh-universal-signatures"') !== false) {
         return $html;
@@ -1326,7 +1326,7 @@ private function normalize_patient_signature_value(string $signatureValue): stri
     }
 
     return $html . $block;
-}*/
+}
 
 
 
@@ -1573,14 +1573,46 @@ private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, s
         }
 
         if ($doctorSignImage !== '' && $this->is_doctor_related_context($context)) {
-            $img->setAttribute('src', $doctorSignImage);
+          //  $img->setAttribute('src', $doctorSignImage);
+                       $img->setAttribute('src', $this->normalize_signature_src_for_pdf($doctorSignImage)); 
             continue;
         }
 
         if ($patientSignImage !== '' && $this->is_patient_related_context($context)) {
-            $img->setAttribute('src', $patientSignImage);
+             $img->setAttribute('src', $this->normalize_signature_src_for_pdf($patientSignImage));
+           // $img->setAttribute('src', $patientSignImage);
         }
     }
+}
+
+private function normalize_signature_src_for_pdf(string $src): string
+{
+    $src = trim($src);
+    if ($src === '') {
+        return '';
+    }
+
+    if (strpos($src, 'data:image/') === 0) {
+        return $src;
+    }
+
+    if (strpos($src, '/uploads/') === 0) {
+        $candidate = FCPATH . ltrim($src, '/');
+        if (file_exists($candidate)) {
+            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $candidate);
+        }
+    }
+
+    $siteBase = rtrim(site_url(), '/');
+    if (strpos($src, $siteBase) === 0) {
+        $relative = ltrim(substr($src, strlen($siteBase)), '/');
+        $candidate = FCPATH . $relative;
+        if (file_exists($candidate)) {
+            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $candidate);
+        }
+    }
+
+    return $src;
 }
 
 private function extract_signature_image_value(array $saved, string $party): string
