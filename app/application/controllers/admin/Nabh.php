@@ -43,7 +43,7 @@ class Nabh extends AdminController
         echo json_encode(['status'=>true,'data'=>$data]);
         exit;
     }
-                public function all_forms_json()
+ public function all_forms_json()
     {
         $patient_id = (int) $this->input->post('patient_id');
 
@@ -90,6 +90,9 @@ class Nabh extends AdminController
         }
 
         $rows = [];
+
+        $latestContext = $this->resolve_latest_patient_appointment_context($patient_id);
+
         foreach ($forms as $form) {
             $form_id = (int) ($form['pdf_id'] ?? 0);
             if ($form_id <= 0) {
@@ -115,18 +118,41 @@ class Nabh extends AdminController
                 }
             }
 
+
+             $appointmentId = !empty($submission['appointment_id'])
+                ? (int) $submission['appointment_id']
+                : (int) ($latestContext['appointment_id'] ?? 0);
+
+            $appointmentTypeId = !empty($submission['appointment_type_id'])
+                ? (int) $submission['appointment_type_id']
+                : (int) ($latestContext['appointment_type_id'] ?? 0);
+
+            $doctorId = !empty($submission['doctor_id'])
+                ? (int) $submission['doctor_id']
+                : ($appointmentId > 0 ? $this->resolve_doctor_for_appointment($appointmentId) : (int) ($latestContext['doctor_id'] ?? 0));
+
+            $doctorName = !empty($submission['doctor_name'])
+                ? trim((string) $submission['doctor_name'])
+                : trim((string) ($latestContext['doctor_name'] ?? ''));
+
+            if ($doctorName === '' && $doctorId > 0 && function_exists('get_staff_full_name')) {
+                $doctorName = trim((string) get_staff_full_name($doctorId));
+            }
+
+
+
             $rows[] = [
-                'appointment_id' => !empty($submission['appointment_id']) ? (int) $submission['appointment_id'] : 0,
-                'appointment_type_id' => !empty($submission['appointment_type_id']) ? (int) $submission['appointment_type_id'] : 0,
+                'appointment_id' => $appointmentId,
+                'appointment_type_id' => $appointmentTypeId,
                 'appointment_date' => '-',
                 'form_id' => $form_id,
                 'form_name' => $form['pdf_name'] ?? ('Form #' . $form_id),
                 'has_en' => !empty($form['english_file_name']),
                 'has_gu' => !empty($form['gujarati_file_name']),
                 'is_filled' => !empty($submission),
-                'doctor_id' => !empty($submission['doctor_id']) ? (int) $submission['doctor_id'] : 0,
+                'doctor_id' => $doctorId,
                 'patient_name' => !empty($submission['patient_name']) ? trim((string) $submission['patient_name']) : '',
-                'doctor_name' => !empty($submission['doctor_name']) ? trim((string) $submission['doctor_name']) : '',
+                'doctor_name' => $doctorName,
                 'filled_at' => !empty($submission['updated_at']) ? $submission['updated_at'] : ($submission['created_at'] ?? ''),
                 'filled_preview' => !empty($filled_data) ? implode(' | ', $filled_data) : '',
             ];
@@ -134,6 +160,95 @@ class Nabh extends AdminController
 
         echo json_encode(['status' => true, 'data' => $rows]);
         exit;
+    }
+        private function resolve_default_doctor_id(): int
+    {
+        $defaultDoctorId = (int) get_option('appointly_responsible_person');
+        if ($defaultDoctorId > 0) {
+            return $defaultDoctorId;
+        }
+
+        $staffRow = $this->db
+            ->select('staffid')
+            ->from(db_prefix() . 'staff')
+            ->where('active', 1)
+            ->order_by('staffid', 'ASC')
+            ->limit(1)
+            ->get()
+            ->row_array();
+
+        return !empty($staffRow['staffid']) ? (int) $staffRow['staffid'] : 0;
+    }
+
+    private function resolve_doctor_for_appointment(int $appointment_id): int
+    {
+        if ($appointment_id > 0) {
+            $doctorRow = $this->db
+                ->select('staff')
+                ->from(db_prefix() . 'appointment_treatment')
+                ->where('appointment_id', $appointment_id)
+                ->order_by('id', 'DESC')
+                ->limit(1)
+                ->get()
+                ->row_array();
+
+            if (!empty($doctorRow['staff'])) {
+                return (int) $doctorRow['staff'];
+            }
+        }
+
+        return $this->resolve_default_doctor_id();
+    }
+
+    private function resolve_latest_patient_appointment_context(int $patient_id): array
+    {
+        $context = [
+            'appointment_id' => 0,
+            'appointment_type_id' => 0,
+            'doctor_id' => 0,
+            'doctor_name' => '',
+        ];
+
+        if ($patient_id <= 0) {
+            return $context;
+        }
+
+        $contactRows = $this->db
+            ->select('id')
+            ->from(db_prefix() . 'contacts')
+            ->where('userid', $patient_id)
+            ->get()
+            ->result_array();
+
+        $contactIds = array_values(array_filter(array_map('intval', array_column($contactRows, 'id'))));
+
+        if (empty($contactIds)) {
+            return $context;
+        }
+
+        $appointment = $this->db
+            ->select('id, type_id, date')
+            ->from(db_prefix() . 'appointly_appointments')
+            ->where_in('contact_id', $contactIds)
+            ->order_by('date', 'DESC')
+            ->order_by('id', 'DESC')
+            ->limit(1)
+            ->get()
+            ->row_array();
+
+        if (empty($appointment['id'])) {
+            return $context;
+        }
+
+        $context['appointment_id'] = (int) $appointment['id'];
+        $context['appointment_type_id'] = !empty($appointment['type_id']) ? (int) $appointment['type_id'] : 0;
+
+        $context['doctor_id'] = $this->resolve_doctor_for_appointment($context['appointment_id']);
+        if ($context['doctor_id'] > 0 && function_exists('get_staff_full_name')) {
+            $context['doctor_name'] = trim((string) get_staff_full_name($context['doctor_id']));
+        }
+
+        return $context;
     }
 
     public function patient_history_pdf($patient_id = 0)
@@ -694,6 +809,11 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         $doctor_id           = (int)$this->input->get('doctor_id');
         $lang                = $this->input->get('lang');
 
+
+        if ($doctor_id <= 0 && $appointment_id > 0) {
+            $doctor_id = $this->resolve_doctor_for_appointment($appointment_id);
+        }
+
         // 1️⃣ Get template
         $pdf = $this->db->where('pdf_id',$pdf_id)
                         ->get('tblnabh_master')
@@ -880,6 +1000,10 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         $patient_id    = (int)$payload['patient_id'];
         $doctor_id     = (int)$payload['doctor_id'];
         $lang          = $payload['lang'];
+
+        if ($doctor_id <= 0 && $appointment_id > 0) {
+            $doctor_id = $this->resolve_doctor_for_appointment($appointment_id);
+        }
 
         $formData      = is_array($payload['form_data']) ? $payload['form_data'] : [];
 
@@ -1079,6 +1203,12 @@ public function print_pdf()
     $appointment_id = (int)($req['appointment_id'] ?? 0);
     $doctor_id      = (int)($req['doctor_id'] ?? 0);
     $lang           = (($req['lang'] ?? 'en') === 'gu') ? 'gu' : 'en';
+
+    if ($doctor_id <= 0 && $appointment_id > 0) {
+        $doctor_id = $this->resolve_doctor_for_appointment($appointment_id);
+        $req['doctor_id'] = $doctor_id;
+    }
+
 
     if (empty($req['doctor_name']) && $doctor_id > 0 && function_exists('get_staff_full_name')) {
         $req['doctor_name'] = trim((string)get_staff_full_name($doctor_id));

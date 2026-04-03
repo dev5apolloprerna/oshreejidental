@@ -2026,6 +2026,7 @@ function open_patient_appointment_create_modal()
         var doctorId = parseInt(row.doctor_id || '0', 10);
         var doctorName = row.doctor_name || '';
         var patientName = row.patient_name || (window.__ALL_NABH_META__.patient_name || '');
+        var appointmentId = parseInt(row.appointment_id || '0', 10);
 
         /*var viewUrl = admin_url + 'nabh/form/' + row.form_id
           + '?lang=' + encodeURIComponent(selectedLang)
@@ -2044,10 +2045,14 @@ function open_patient_appointment_create_modal()
  var formNameHtml = escapeHtml(row.form_name || '-');
 
         var buildOpenBtn = function(langCode, label, btnClass) {
+            if (!appointmentId) {
+            return '<button class="btn btn-xs ' + btnClass + '" disabled="disabled" title="No appointment found for this patient.">' + label + '</button>';
+          }
+
           var viewUrl = admin_url + 'nabh/form/' + row.form_id
             + '?lang=' + encodeURIComponent(langCode)
             + '&nabh_pdf_id=' + encodeURIComponent(row.form_id)
-            + '&appointment_id=' + encodeURIComponent(row.appointment_id)
+            + '&appointment_id=' + encodeURIComponent(appointmentId)
             + '&appointment_type_id=' + encodeURIComponent(row.appointment_type_id || 0)
             + '&patient_id=' + encodeURIComponent(patientId)
             + '&doctor_id=' + encodeURIComponent(doctorId)
@@ -2057,11 +2062,16 @@ function open_patient_appointment_create_modal()
         };
 
         var buildPdfBtn = function(langCode, label) {
+
+        if (!appointmentId) {
+            return '<button class="btn btn-xs btn-default" disabled="disabled" title="No appointment found for this patient."><i class="fa-regular fa-file-pdf"></i> ' + label + '</button>';
+          }
+
           var pdfUrl = admin_url + 'nabh/print_pdf'
             + '?nabh_pdf_id=' + encodeURIComponent(row.form_id)
             + '&lang=' + encodeURIComponent(langCode)
             + '&appointment_id=' + encodeURIComponent(row.appointment_id || 0)
-            + '&appointment_type_id=' + encodeURIComponent(row.appointment_type_id || 0)
+            + '&appointment_id=' + encodeURIComponent(appointmentId)
             + '&patient_id=' + encodeURIComponent(patientId)
             + '&doctor_id=' + encodeURIComponent(doctorId)
             + '&patient_name=' + encodeURIComponent(patientName)
