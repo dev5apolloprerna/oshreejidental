@@ -1473,7 +1473,7 @@ private function resolve_doctor_profile_image(int $doctor_id): string
 
        $url = $this->local_path_to_site_url($files[0]);
     return $url !== '' ? $url : '';
-}
+ }
 
 
    private function apply_saved_to_html_for_pdf($html, array $saved)
