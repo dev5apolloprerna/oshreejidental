@@ -759,7 +759,8 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         $patient_name = urldecode((string)$patient_name);
         $doctor_name  = urldecode((string)$doctor_name);
 
-         $doctor_signature_image = urldecode((string)$doctor_signature_image);
+
+        $doctor_signature_image = urldecode((string)$doctor_signature_image);
         $patient_signature_image = urldecode((string)$patient_signature_image);
         // backward-compatible alias to avoid undefined-variable notices from older typo usage
         $patient_signature_imag = $patient_signature_image;
@@ -785,6 +786,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
                     $doctor_signature_image = $this->resolve_doctor_signature_image($doctor_id);
         }
 
+
         if ($patient_signature_image === '' && !empty($saved['patient_signature_image'])) {
             $patient_signature_image = trim((string)$saved['patient_signature_image']);
         }
@@ -800,6 +802,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         }
 
 
+
         $ctx = [
           'pdf_id'              => $pdf_id,
           'appointment_id'      => $appointment_id,
@@ -810,10 +813,10 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
           'patient_name'        => $patient_name,
           'doctor_name'         => $doctor_name,
           'doctor_signature_image' => $doctor_signature_image,
-          'patient_signature_image' => $patient_signature_image !== '' ? $patient_signature_image : $patient_signature_imag ?? null,
+          'patient_signature_image' => $patient_signature_image !== '' ? $patient_signature_image : ($patient_signature_imag ?: null),
         ];
 
-     $html = $this->append_universal_signature_block($html);
+    // $html = $this->append_universal_signature_block($html);
 
     // ✅ 6️⃣ THIS IS WHERE YOU PUT IT
     $html = $this->inject_global($html, $ctx, $saved);
@@ -1172,18 +1175,16 @@ public function print_pdf()
         }
     }
 
-     if (!isset($saved['patient_signature_image']) || trim((string)$saved['patient_signature_image']) === '') {
-        $fallbackPatientSignImage = $this->resolve_patient_signature_image_from_consent((int)($req['patient_id'] ?? 0), $appointment_id);
+    if (!isset($saved['patient_signature_image']) || trim((string)$saved['patient_signature_image']) === '') {        $fallbackPatientSignImage = $this->resolve_patient_signature_image_from_consent((int)($req['patient_id'] ?? 0), $appointment_id);
         if ($fallbackPatientSignImage !== '') {
             $saved['patient_signature_image'] = $fallbackPatientSignImage;
         }
     }
 
 
-
     if (!isset($saved['today_date'])) $saved['today_date'] = date('d/m/Y');
 
-    $html = $this->append_universal_signature_block($html);
+   // $html = $this->append_universal_signature_block($html);
 
 
     // 6) Fill HTML server-side (NO JS in PDF)
@@ -1298,7 +1299,7 @@ private function normalize_patient_signature_value(string $signatureValue): stri
     return 'data:image/png;base64,' . $value;
 }
 
-private function append_universal_signature_block(string $html): string
+/*private function append_universal_signature_block(string $html): string
 {
     if (stripos($html, 'id="nabh-universal-signatures"') !== false) {
         return $html;
@@ -1313,9 +1314,9 @@ private function append_universal_signature_block(string $html): string
         . '<input type="text" name="patient_signature" placeholder="Patient Signature" style="width:100%; border:none; border-top:1px solid #333; padding-top:4px;" />'
         . '</td>'
         . '<td style="width:50%; vertical-align:top; padding-left:16px;">'
-        . '<div style="font-weight:600; margin-bottom:6px;">Doctor Signature</div>'
-        . '<img name="doctor_signature_image" alt="Doctor Signature" style="max-height:80px; max-width:100%; display:block; margin-bottom:8px;" />'
-        . '<input type="text" name="doctor_signature" placeholder="Doctor Signature" style="width:100%; border:none; border-top:1px solid #333; padding-top:4px;" />'
+        . '<div style="font-weight:600; margin-bottom:6px;">Doctor Image</div>'
+        . '<img name="doctor_profile_image" alt="Doctor Image" style="max-height:100px; max-width:100%; display:block; margin-bottom:8px;" />'
+        . '<input type="text" name="doctor_name" placeholder="Doctor Name" style="width:100%; border:none; border-top:1px solid #333; padding-top:4px;" />'
         . '</td>'
         . '</tr>'
         . '</table>'
@@ -1326,10 +1327,7 @@ private function append_universal_signature_block(string $html): string
     }
 
     return $html . $block;
-}
-
-
-
+}*/
 private function resolve_doctor_signature_image(int $doctor_id): string
 {
     if ($doctor_id <= 0) {
@@ -1347,12 +1345,62 @@ private function resolve_doctor_signature_image(int $doctor_id): string
     if ($doctorSignFile !== "") {
         $candidate = FCPATH . "uploads/staff_profile_images/" . $doctor_id . "/doctor_sign/" . basename($doctorSignFile);
         if (file_exists($candidate)) {
+            // Return site URL (JS/browser use) — normalize_signature_src_for_pdf converts to file:// for PDF
             $relative = str_replace(FCPATH, "", $candidate);
             return rtrim(site_url(), "/") . "/" . ltrim(str_replace(DIRECTORY_SEPARATOR, "/", $relative), "/");
         }
     }
 
     $baseDir = FCPATH . 'uploads/staff_profile_images/' . $doctor_id . '/doctor_sign/';
+    if (!is_dir($baseDir)) {
+        return '';
+    }
+
+    $files = glob($baseDir . '*.{png,jpg,jpeg,gif,webp,svg}', GLOB_BRACE);
+    if (empty($files)) {
+        return '';
+    }
+
+    usort($files, function ($a, $b) {
+        return filemtime($b) <=> filemtime($a);
+    });
+
+    $relative = str_replace(FCPATH, '', $files[0]);
+    return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+}
+
+
+
+private function resolve_doctor_profile_image(int $doctor_id): string
+{
+    if ($doctor_id <= 0) {
+        return '';
+    }
+
+    $staff = $this->db
+        ->select('*')
+        ->from(db_prefix() . 'staff')
+        ->where('staffid', $doctor_id)
+        ->get()
+        ->row_array();
+
+    $profileImage = trim((string)($staff['profile_image'] ?? $staff['staff_profile_image'] ?? ''));
+    $baseDir = FCPATH . 'uploads/staff_profile_images/' . $doctor_id . '/';
+
+    if ($profileImage !== '') {
+        $preferred = [
+            $baseDir . 'small_' . $profileImage,
+            $baseDir . $profileImage,
+        ];
+
+        foreach ($preferred as $candidate) {
+            if (file_exists($candidate)) {
+                $relative = str_replace(FCPATH, '', $candidate);
+                return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+            }
+        }
+    }
+
     if (!is_dir($baseDir)) {
         return '';
     }
@@ -1386,7 +1434,9 @@ private function resolve_doctor_signature_image(int $doctor_id): string
         foreach ($saved as $key => $val) {
         $key = (string)$key;
 
-        $isSignatureImageKey = $this->is_signature_related_context(strtolower($key)) && $this->is_signature_image_value((string)$val);
+        $isImageValue = $this->is_signature_image_value((string)$val);
+        $normalizedImageValue = $isImageValue ? $this->normalize_signature_src_for_pdf((string)$val) : '';
+        $isSignatureImageKey = $this->is_signature_related_context(strtolower($key)) && $isImageValue;
 
         // by name
         foreach ($xpath->query("//input[@name='$key']") as $input) {
@@ -1451,13 +1501,14 @@ private function resolve_doctor_signature_image(int $doctor_id): string
             }
         }
 
-        if ($isSignatureImageKey) {
+        if ($normalizedImageValue !== '') {
+        $normalizedVal = $this->normalize_signature_src_for_pdf((string)$val);
             foreach ($xpath->query("//img[@name='$key']") as $img) {
-                $img->setAttribute('src', (string)$val);
+                $img->setAttribute('src', $normalizedVal);
             }
 
             foreach ($xpath->query("//img[@id='$key']") as $img) {
-                $img->setAttribute('src', (string)$val);
+                $img->setAttribute('src', $normalizedVal);
             }
         }
 
@@ -1592,24 +1643,47 @@ private function normalize_signature_src_for_pdf(string $src): string
         return '';
     }
 
+    // base64 data URI — pass through directly (works in both Dompdf and mPDF)
     if (strpos($src, 'data:image/') === 0) {
         return $src;
     }
 
+    // Already a file:// path — pass through
+    if (strpos($src, 'file://') === 0) {
+        return $src;
+    }
+
+    // Relative path starting with /uploads/
     if (strpos($src, '/uploads/') === 0) {
         $candidate = FCPATH . ltrim($src, '/');
         if (file_exists($candidate)) {
-            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $candidate);
+            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
         }
     }
 
+    // Absolute URL starting with the site base (http:// or https://)
+    // resolve_doctor_signature_image() returns site_url()-based URLs — convert to file://
     $siteBase = rtrim(site_url(), '/');
     if (strpos($src, $siteBase) === 0) {
         $relative = ltrim(substr($src, strlen($siteBase)), '/');
         $candidate = FCPATH . $relative;
         if (file_exists($candidate)) {
-            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', $candidate);
+            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
         }
+    }
+
+    // Fallback: any http/https URL — try to map to local file via FCPATH
+    if (strpos($src, 'http://') === 0 || strpos($src, 'https://') === 0) {
+        // Strip scheme + host to get path portion
+        $parsed = parse_url($src);
+        if (!empty($parsed['path'])) {
+            $candidate = FCPATH . ltrim($parsed['path'], '/');
+            if (file_exists($candidate)) {
+                return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
+            }
+        }
+        // Cannot map to local — return as-is (Dompdf isRemoteEnabled will handle it)
+        return $src;
     }
 
     return $src;
@@ -1976,7 +2050,8 @@ private function render_pdf_with_dompdf(string $html, string $filename)
 
     $options = new \Dompdf\Options();
     $options->set('isHtml5ParserEnabled', true);
-    $options->set('isRemoteEnabled', false);
+    // Allow loading local file:// images (signatures stored on disk)
+    $options->set('isRemoteEnabled', true);
     $options->set('defaultFont', 'DejaVu Sans');
     $options->set('fontSubsettingEnabled', true);
     $options->set('chroot', FCPATH);
