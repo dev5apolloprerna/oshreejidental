@@ -1240,6 +1240,34 @@ public function print_pdf()
     }
 
     return $this->render_pdf_with_dompdf($html, $filename);
+
+
+    $saved = json_decode($submission['form_data_json'] ?? '{}', true);
+if (!is_array($saved)) {
+    $saved = [];
+}
+
+// doctor signature from doctor master table if needed
+if (empty($saved['doctor_signature_image']) && !empty($submission['doctor_id'])) {
+    $saved['doctor_signature_image'] = $this->resolve_doctor_signature_image((int) $submission['doctor_id']);
+}
+
+// patient signature normalize if you store raw base64
+if (!empty($saved['patient_signature_image'])) {
+    $saved['patient_signature_image'] = $this->normalize_signature_src_for_pdf((string) $saved['patient_signature_image']);
+}
+if (!empty($saved['doctor_signature_image'])) {
+    $saved['doctor_signature_image'] = $this->normalize_signature_src_for_pdf((string) $saved['doctor_signature_image']);
+}
+
+$html = file_get_contents($templatePath);
+$html = $this->set_form_values_for_pdf($html, $saved);
+
+if ($lang === 'gu') {
+    return $this->render_pdf_with_mpdf($html, $filename);
+}
+
+return $this->render_pdf_with_dompdf($html, $filename);
 }
 
 
@@ -1328,6 +1356,31 @@ private function normalize_patient_signature_value(string $signatureValue): stri
 
     return $html . $block;
 }*/
+
+private function local_path_to_site_url(string $path): string
+{
+    $path = trim($path);
+    if ($path === '') {
+        return '';
+    }
+
+    $realPath = realpath($path);
+    if ($realPath === false || !file_exists($realPath)) {
+        return '';
+    }
+
+    $normalizedRoot = str_replace('\\', '/', rtrim(realpath(FCPATH), DIRECTORY_SEPARATOR));
+    $normalizedPath = str_replace('\\', '/', $realPath);
+
+    if (strpos($normalizedPath, $normalizedRoot) !== 0) {
+        return '';
+    }
+
+    $relative = ltrim(substr($normalizedPath, strlen($normalizedRoot)), '/');
+    return rtrim(site_url(), '/') . '/' . $relative;
+}
+
+
 private function resolve_doctor_signature_image(int $doctor_id): string
 {
     if ($doctor_id <= 0) {
@@ -1346,8 +1399,10 @@ private function resolve_doctor_signature_image(int $doctor_id): string
         $candidate = FCPATH . "uploads/staff_profile_images/" . $doctor_id . "/doctor_sign/" . basename($doctorSignFile);
         if (file_exists($candidate)) {
             // Return site URL (JS/browser use) — normalize_signature_src_for_pdf converts to file:// for PDF
-            $relative = str_replace(FCPATH, "", $candidate);
-            return rtrim(site_url(), "/") . "/" . ltrim(str_replace(DIRECTORY_SEPARATOR, "/", $relative), "/");
+            $url = $this->local_path_to_site_url($candidate);
+            if ($url !== '') {
+                return $url;
+            }
         }
     }
 
@@ -1365,8 +1420,8 @@ private function resolve_doctor_signature_image(int $doctor_id): string
         return filemtime($b) <=> filemtime($a);
     });
 
-    $relative = str_replace(FCPATH, '', $files[0]);
-    return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+    $url = $this->local_path_to_site_url($files[0]);
+    return $url !== '' ? $url : '';
 }
 
 
@@ -1395,8 +1450,10 @@ private function resolve_doctor_profile_image(int $doctor_id): string
 
         foreach ($preferred as $candidate) {
             if (file_exists($candidate)) {
-                $relative = str_replace(FCPATH, '', $candidate);
-                return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+                $url = $this->local_path_to_site_url($candidate);
+                if ($url !== '') {
+                    return $url;
+                }
             }
         }
     }
@@ -1414,8 +1471,8 @@ private function resolve_doctor_profile_image(int $doctor_id): string
         return filemtime($b) <=> filemtime($a);
     });
 
-    $relative = str_replace(FCPATH, '', $files[0]);
-    return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+       $url = $this->local_path_to_site_url($files[0]);
+    return $url !== '' ? $url : '';
 }
 
 
@@ -1606,7 +1663,7 @@ private function apply_party_defaults_for_pdf(DOMXPath $xpath, array $saved): ar
     return $saved;
 }
 
-private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, string $doctorSignImage, string $patientSignImage): void
+/*private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, string $doctorSignImage, string $patientSignImage): void
 {
     if ($doctorSignImage === '' && $patientSignImage === '') {
         return;
@@ -1634,7 +1691,7 @@ private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, s
            // $img->setAttribute('src', $patientSignImage);
         }
     }
-}
+}*/
 
 private function normalize_signature_src_for_pdf(string $src): string
 {
@@ -1643,50 +1700,149 @@ private function normalize_signature_src_for_pdf(string $src): string
         return '';
     }
 
-    // base64 data URI — pass through directly (works in both Dompdf and mPDF)
-    if (strpos($src, 'data:image/') === 0) {
+    // Already base64
+    if (stripos($src, 'data:image/') === 0) {
         return $src;
     }
 
-    // Already a file:// path — pass through
-    if (strpos($src, 'file://') === 0) {
+    // Full URL
+    if (preg_match('~^https?://~i', $src)) {
         return $src;
     }
 
-    // Relative path starting with /uploads/
+    // /uploads/...
     if (strpos($src, '/uploads/') === 0) {
-        $candidate = FCPATH . ltrim($src, '/');
-        if (file_exists($candidate)) {
-            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
+        $localPath = FCPATH . ltrim($src, '/');
+        if (file_exists($localPath)) {
+            return $localPath;
         }
+        return rtrim(site_url(), '/') . $src;
     }
 
-    // Absolute URL starting with the site base (http:// or https://)
-    // resolve_doctor_signature_image() returns site_url()-based URLs — convert to file://
-    $siteBase = rtrim(site_url(), '/');
-    if (strpos($src, $siteBase) === 0) {
-        $relative = ltrim(substr($src, strlen($siteBase)), '/');
-        $candidate = FCPATH . $relative;
-        if (file_exists($candidate)) {
-            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
+    // uploads/...
+    if (strpos($src, 'uploads/') === 0) {
+        $localPath = FCPATH . ltrim($src, '/');
+        if (file_exists($localPath)) {
+            return $localPath;
         }
+        return rtrim(site_url(), '/') . '/' . ltrim($src, '/');
     }
 
-    // Fallback: any http/https URL — try to map to local file via FCPATH
-    if (strpos($src, 'http://') === 0 || strpos($src, 'https://') === 0) {
-        // Strip scheme + host to get path portion
-        $parsed = parse_url($src);
-        if (!empty($parsed['path'])) {
-            $candidate = FCPATH . ltrim($parsed['path'], '/');
-            if (file_exists($candidate)) {
-                return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
+    // Absolute local file path
+    if (file_exists($src)) {
+        return $src;
+    }
+
+    // Relative file path from project public root
+    $localPath = FCPATH . ltrim($src, '/');
+    if (file_exists($localPath)) {
+        return $localPath;
+    }
+
+    return '';
+}
+
+private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved): void
+{
+    $map = [
+        'patient_signature_image' => $saved['patient_signature_image'] ?? '',
+        'doctor_signature_image'  => $saved['doctor_signature_image'] ?? '',
+    ];
+
+    foreach ($map as $key => $rawValue) {
+        $normalizedVal = $this->normalize_signature_src_for_pdf((string) $rawValue);
+        if ($normalizedVal === '') {
+            continue;
+        }
+
+        foreach ($xpath->query("//img[@name='{$key}']") as $img) {
+            $img->setAttribute('src', $normalizedVal);
+        }
+
+        foreach ($xpath->query("//img[@id='{$key}']") as $img) {
+            $img->setAttribute('src', $normalizedVal);
+        }
+    }
+}
+
+private function set_form_values_for_pdf(string $html, array $saved): string
+{
+    libxml_use_internal_errors(true);
+
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $xpath = new DOMXPath($dom);
+
+    foreach ($saved as $key => $val) {
+        $val = is_scalar($val) ? (string) $val : '';
+
+        foreach ($xpath->query("//*[@name='{$key}']") as $node) {
+            $tag = strtolower($node->nodeName);
+
+            if ($tag === 'input') {
+                $type = strtolower((string) $node->getAttribute('type'));
+
+                if ($type === 'checkbox') {
+                    ((string) $val === '1' || strtolower($val) === 'true')
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } elseif ($type === 'radio') {
+                    ((string) $node->getAttribute('value') === (string) $val)
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } else {
+                    $node->setAttribute('value', $val);
+                }
+            } elseif ($tag === 'textarea') {
+                while ($node->firstChild) {
+                    $node->removeChild($node->firstChild);
+                }
+                $node->appendChild($dom->createTextNode($val));
             }
         }
-        // Cannot map to local — return as-is (Dompdf isRemoteEnabled will handle it)
-        return $src;
+
+        foreach ($xpath->query("//*[@id='{$key}']") as $node) {
+            $tag = strtolower($node->nodeName);
+
+            if ($tag === 'input') {
+                $type = strtolower((string) $node->getAttribute('type'));
+
+                if ($type === 'checkbox') {
+                    ((string) $val === '1' || strtolower($val) === 'true')
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } elseif ($type === 'radio') {
+                    ((string) $node->getAttribute('value') === (string) $val)
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } else {
+                    $node->setAttribute('value', $val);
+                }
+            } elseif ($tag === 'textarea') {
+                while ($node->firstChild) {
+                    $node->removeChild($node->firstChild);
+                }
+                $node->appendChild($dom->createTextNode($val));
+            }
+        }
     }
 
-    return $src;
+    // Apply signature images
+    $this->apply_signature_images_for_pdf($xpath, $saved);
+
+    // Hide submit bar in PDF
+    $submitBars = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' submit-bar ')]");
+    if ($submitBars && $submitBars->length > 0) {
+        foreach ($submitBars as $bar) {
+            $existingStyle = $bar->getAttribute('style');
+            $bar->setAttribute('style', trim($existingStyle . ';display:none !important;'));
+        }
+    }
+
+    $out = $dom->saveHTML();
+    libxml_clear_errors();
+
+    return $out;
 }
 
 private function extract_signature_image_value(array $saved, string $party): string
@@ -1920,36 +2076,34 @@ private function is_signature_related_context(string $context): bool
 private function render_pdf_with_mpdf($html, $filename)
 {
     $autoload = APPPATH . 'vendor/autoload.php';
-    if (!file_exists($autoload)) show_error('Composer autoload not found: ' . $autoload);
+    if (!file_exists($autoload)) {
+        show_error('Composer autoload not found: ' . $autoload);
+    }
     require_once $autoload;
 
-    // ✅ Font directory (local)
     $fontDirPath = FCPATH . 'assets/fonts/';
-    $fontFile    = $fontDirPath . 'NotoSansGujarati-Regular.ttf';
+    if (!is_dir($fontDirPath)) {
+        show_error('Font folder not found: ' . $fontDirPath);
+    }
 
-    if (!is_dir($fontDirPath)) show_error('Font folder not found: ' . $fontDirPath);
-    if (!file_exists($fontFile)) show_error('Font file not found: ' . $fontFile);
-
-    // ✅ Merge defaults + custom font
     $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
-    $fontDirs      = $defaultConfig['fontDir'];
+    $fontDirs = $defaultConfig['fontDir'];
 
     $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
-    $fontData          = $defaultFontConfig['fontdata'];
+    $fontData = $defaultFontConfig['fontdata'];
 
     $fontDirs[] = $fontDirPath;
 
-    // key = notogujarati (same name used in CSS)
     $fontData['notogujarati'] = [
         'R' => 'NotoSansGujarati-Regular.ttf',
-        // Optional if you have bold:
-         'B' => 'NotoSansGujarati-Bold.ttf',
+        'B' => 'NotoSansGujarati-Bold.ttf',
     ];
 
-$fontData['liberationsans'] = [
+    $fontData['liberationsans'] = [
         'R' => 'LiberationSans-Regular.ttf',
         'B' => 'LiberationSans-Bold.ttf',
     ];
+
     $mpdf = new \Mpdf\Mpdf([
         'mode' => 'utf-8',
         'format' => 'A4',
@@ -1957,30 +2111,45 @@ $fontData['liberationsans'] = [
         'margin_right' => 10,
         'margin_top' => 10,
         'margin_bottom' => 10,
-
-        'fontDir'   => $fontDirs,
-        'fontdata'  => $fontData,
+        'fontDir' => $fontDirs,
+        'fontdata' => $fontData,
         'default_font' => 'notogujarati',
-        'tempDir' => APPPATH . 'cache/mpdf', // ✅ make sure writable
+        'tempDir' => APPPATH . 'cache/mpdf',
     ]);
 
-    // ✅ THIS FIXES BROKEN GUJARATI WORDS / SHAPING
     $mpdf->autoScriptToLang = true;
-    $mpdf->autoLangToFont   = true;
-
-    // Speed/stability
+    $mpdf->autoLangToFont = true;
     $mpdf->setAutoTopMargin = 'stretch';
     $mpdf->setAutoBottomMargin = 'stretch';
-    $html = $this->mpdf_convert_checkboxes_to_symbols($html);
-    $html = $this->replace_text_inputs_with_underline($html);
+    $mpdf->shrink_tables_to_fit = 0;
 
-    $mpdf->WriteHTML($html);
+    $forceCss = '<style>
+        @page { margin: 10mm; }
+        body, table, tr, td, th, p, div, span, h1, h2, h3, h4, h5, h6 {
+            font-family: notogujarati !important;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>';
 
-    // Inline view in browser
-    $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
-    exit;
+    if (stripos($html, '</head>') !== false) {
+        $html = str_ireplace('</head>', $forceCss . '</head>', $html);
+    } else {
+        $html = $forceCss . $html;
+    }
+
+    $html = preg_replace('~\bpage\s*\{~i', '@page {', $html);
+
+    $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::DEFAULT_MODE);
+
+    $pdfBinary = $mpdf->Output($filename, \Mpdf\Output\Destination::STRING_RETURN);
+
+    return $this->output
+        ->set_content_type('application/pdf')
+        ->set_header('Content-Disposition: inline; filename="' . $filename . '"')
+        ->set_output($pdfBinary);
 }
-
 
 private function mpdf_convert_checkboxes_to_symbols($html)
 {
@@ -2045,12 +2214,13 @@ private function replace_text_inputs_with_underline($html)
 private function render_pdf_with_dompdf(string $html, string $filename)
 {
     $autoload = APPPATH . 'vendor/autoload.php';
-    if (!file_exists($autoload)) show_error('Composer autoload not found: ' . $autoload);
+    if (!file_exists($autoload)) {
+        show_error('Composer autoload not found: ' . $autoload);
+    }
     require_once $autoload;
 
     $options = new \Dompdf\Options();
     $options->set('isHtml5ParserEnabled', true);
-    // Allow loading local file:// images (signatures stored on disk)
     $options->set('isRemoteEnabled', true);
     $options->set('defaultFont', 'DejaVu Sans');
     $options->set('fontSubsettingEnabled', true);
