@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Informed Consent for Orthodontic Treatment</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+            color: #000;
+        }
+
+        .page-container {
+            width: 100%;
+            margin: 0 auto 20px auto;
+            background: #fff;
+            page-break-after: always;
+        }
+
+        .page-container:last-child {
+            page-break-after: auto;
+        }
+
+        /* Input styling for DOMPDF */
+        input[type="text"] {
+            border: none;
+            /*border-bottom: 1px solid #000000;*/
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            width: 100%;
+            padding: 2px 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* Table styling for DOMPDF */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        /* Remove print-specific media queries */
+        
+        /* Gujarati font fallbacks */
+        .gu {
+            font-family: "Noto Sans Gujarati", "Nirmala UI", "Shruti", Arial, sans-serif;
+            font-size: 12pt;
+        }
+
+        h2 {
+            text-align: center;
+            text-decoration: underline;
+            font-size: 16pt;
+            text-transform: uppercase;
+            margin: 20px 0 30px 0;
+            font-weight: bold;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 14pt;
+            margin: 30px 0 20px 0;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        p {
+            margin: 12px 0;
+            text-align: justify;
+        }
+
+        .bullet-point {
+            width: 20px;
+            vertical-align: top;
+            padding: 0 5px 15px 0;
+        }
+
+        .bullet-content {
+            padding-bottom: 15px;
+            text-align: justify;
+        }
+
+        .signature-table {
+            width: 65%;
+            margin: 20px 0;
+        }
+
+        .signature-table td {
+            padding: 5px 0;
+        }
+
+        .signature-table td:first-child {
+            width: 200px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .signature-table td:last-child {
+            border-bottom: 1px solid #000;
+            width: auto;
+        }
+
+        /* Endorsement table styling */
+        .endorse-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            margin: 20px 0;
+        }
+
+        .endorse-table th {
+            border: 1px solid #000;
+            padding: 8px;
+            font-weight: bold;
+            text-align: center;
+            background: #fff;
+        }
+
+        .endorse-table td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: middle;
+        }
+
+        .endorse-table td:first-child {
+            text-align: center;
+            font-weight: bold;
+            width: 10%;
+        }
+
+        .endorse-table td input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 2px;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* Submit section */
+        .submit-bar {
+            margin: 30px 0 0 0;
+            width: 100%;
+            background: #fff;
+            padding: 12px 0;
+            border-top: 1px solid #ddd;
+        }
+        
+        .submit-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+        }
+
+        /* Data from PDF */
+        .footer-data {
+            margin-top: 20px;
+            font-size: 11pt;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page 1 -->
+    <div class="page-container">
+        <div >
+            <h2>Informed Consent for Orthodontic Treatment</h2>
+
+            <p style="margin-bottom:10px;">
+                We are required by law to obtain your consent for your child's contemplated orthodontic treatment.
+                Please read the following carefully and ask about anything you do not understand. It will be our
+                pleasure to explain it further. Informed consent indicates your awareness of the positive and
+                negative aspects of orthodontic treatment.
+            </p>
+
+            <p style="margin-bottom:10px;">
+                <span style="font-weight:bold;">Patient Cooperation:</span>
+                The improper wearing of elastics or removable appliances, frequently broken appliances, significant
+                missed appointments and poor oral hygiene may prevent us from obtaining the desired tooth position
+                &amp; may even prolong the duration of the treatment procedure.
+            </p>
+
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:20px; vertical-align:top; padding:0 5px 15px 0;">•</td>
+                    <td style="padding-bottom:10px; text-align:justify;">
+                        <span style="font-weight:bold;">Oral Health/Oral Hygiene:</span>
+                        All other dental treatment must be completed prior to starting orthodontic therapy.
+                        While undergoing orthodontic treatment, excellent (not just good) oral hygiene is essential.
+                        Improper brushing and not flossing while undergoing orthodontic treatment may result in
+                        cavities,
+                        demineralization of the enamel (decalcification or "white spots"), discoloured teeth and gum disease.
+                        It is important to brush the teeth and gums, and floss after each meal.
+                        Also, minimize sugar and soda consumption while undergoing treatment.
+                        Routine visits to your dentist for cleanings and topical fluoride treatments are an important part of
+                        maintaining good oral health while in treatment.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:20px; vertical-align:top; padding:0 5px 15px 0;">•</td>
+                    <td style="padding-bottom:10px; text-align:justify;">
+                        <span style="font-weight:bold;">Non-Vital teeth:</span>
+                        A tooth may become non-vital or dead with or without orthodontic treatment.
+                        This usually happens to a tooth that has sustained an injury in the past or a tooth that has a deep restoration.
+                        Devitalisation is a rare occurrence and is seldom caused by orthodontic treatment.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:20px; vertical-align:top; padding:0 5px 15px 0;">•</td>
+                    <td style="padding-bottom:15px; text-align:justify;">
+                        <span style="font-weight:bold;">Headgear/Facebow:</span>
+                        If a headgear is recommended, instructions must be followed carefully. Always release the elastic forces
+                        before moving appliance. To prevent accidents or injury, headgear/face bow should not be worn during sports
+                        or rough play.
+                        
+                        <span style="font-weight:bold;">Root Resorption/Root Shortening:</span>
+                        In some cases, the ends of the roots may become blunt or shorter. This is called root resorption.
+                        Under healthy circumstances, the shortened roots do not cause a problem for the patient.
+                        It is noted that root resorption can be caused by a number of factors such as impactions, trauma,
+                        endocrine disorders or idiopathic (unknown) reasons.
+                    </td>
+                </tr>
+                
+            </table>
+        </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div class="page-container">
+        <div style="padding: 20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:20px; vertical-align:top; padding:0 5px 15px 0;">•</td>
+                    <td style="padding-bottom:15px; text-align:justify;">
+                        <span style="font-weight:bold;">Impacted teeth:</span>
+                        Impacted teeth are teeth that are unable to erupt on their own. The tooth may be impacted due to lack of adequate space,
+                        history of trauma or unknown etiology. Sometimes it is necessary to surgically expose the impacted tooth
+                        (commonly performed on impacted canines) or extract the impacted tooth (as with wisdom teeth).
+                        If the tooth is surgically exposed for tooth movement, it could become non-vital or ankylosed (stuck to the bone),
+                        or suffer root resorption. If a tooth becomes ankylosed, it may require a second surgical procedure to free it or remove it.
+                        
+                        <span style="font-weight:bold;">Extractions:</span>
+                        In case of over retained deciduous/permanent teeth may require extraction. There are additional risks associated with the
+                        removal of teeth which should be discussed with family dentist/surgeon prior to the procedure.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:20px; vertical-align:top; padding:0 5px 15px 0;">•</td>
+                    <td style="padding-bottom:15px; text-align:justify;">
+                        <span style="font-weight:bold;">Temporomandibular Disorder (TMD):</span>
+                        Problems may arise in the temporomandibular joints (TMJ) before, during or after orthodontic treatment.
+                        Bite correction, splint therapy, tooth alignment or tooth equilibration (selective tooth grinding by your dentist)
+                        may be recommended; however, not all TMJ problems are bite related. In case of TMJ problems that are bite related
+                        we will refer you to the specialist for evaluation.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:20px; vertical-align:top; padding:0 5px 15px 0;">•</td>
+                    <td style="padding-bottom:15px; text-align:justify;">
+                        <span style="font-weight:bold;">Periodontal disease:</span>
+                        Proper and regular brushing and flossing can usually prevent swollen, painful, bleeding gums.
+                        Periodontal (gum) case can be caused by an accumulation of plaque and debris around the teeth and gums,
+                        but there are also several unknown causes that can lead to progressive loss of bone and gum tissue around
+                        the roots of the teeth. In some cases, due to lack of adequate tissue thickness the tissue will recede.
+                        Should recession occur, the need for selected periodontal procedures such as gum grafting may arise.
+                        Grafting may be recommended at the beginning, during or after orthodontic treatment.
+                        Though rare, should periodontal disease become uncontrollable orthodontic treatment may need to be discontinued
+                        before its completion. Regular dental check-ups and cleanings are necessary every six months at a minimum.
+                    </td>
+                </tr>
+            </table>
+
+            <p style="margin-bottom:20px;"><span style="font-weight:bold;">Use of Tobacco Products:</span>
+                Tobacco users are prone to oral cancer, gum diseases and delayed tooth movement during ortho treatment.
+                If you consume tobacco, you must carefully consider the possibilities of compromised ortho treatment.
+            </p>
+
+            <p style="margin-bottom:20px;"><span style="font-weight:bold;">Unusual Occurrences:</span>
+                Swallowing an appliance, chipping a tooth, dislodging a restoration, ankylosed teeth (a tooth that is stuck to the bone),
+                an abscess or dental cyst while rare, may occur.
+            </p>
+
+            <p style="margin-bottom:20px;"><span style="font-weight:bold;">Discomfort:</span>
+                The mouth is very sensitive so you can expect an adjustment period and some discomfort due to the introduction of orthodontic appliances.
+                Non-prescription pain medication can be used during this adjustment period.
+            </p>
+
+            <p style="margin-bottom:20px;"><span style="font-weight:bold;">Relapse (Post-Treatment Movement):</span>
+                Settling or shifting of teeth after treatment as well as during the retention and crowding of the lower front teeth is the most common
+                area for relapse. Recurrent space in extraction sites or space front teeth is also possible.
+                For this reason, it is important for you to carefully follow instructions regarding retainer wear.
+            </p>
+
+            <p style="margin-bottom:20px;"><span style="font-weight:bold;">Non-compliance:</span>
+                Poor cooperation, poor motivation, poor oral hygiene, broken appliances and missed appointments will time and negatively affect the quality
+                of the result cavities, gum disease, loss of space, and impaction of teeth to name a few.
+                It may be necessary to terminate treatment prior to completion to prevent further negative side effects.
+            </p>
+
+            <p style="margin-bottom:20px;"><span style="font-weight:bold;">Expectations:</span>
+                All ortho patients can expect improvement of their particular problem, but in many cases absolute perfection is impossible due to lack of
+                muscle balance, tooth size, shape, varying degree of co-operation during the treatment, along with hereditary aspects that affects the treatment results.
+            </p>
+
+            <p style="margin-bottom:20px;"><span style="font-weight:bold;">Mouth guards:</span>
+                Patients should wear a mouth guard for any sports where it is possible to sustain injury to the mouth or teeth.
+            </p>
+            <p style="margin-bottom:10px;"><span style="font-weight:bold;">Allergy:</span>
+                Some patients may develop a sensitivity to some of the metals that are used in orthodontic appliances.
+                If the patient has any known metal sensitivities, be sure to inform prior to fabrication or placement of orthodontic appliances.
+                Please consult with dentist if any consequence occurs.
+            </p>
+
+            <p style="margin-bottom:25px;"><span style="font-weight:bold;">Injury from Orthodontic Appliances:</span>
+                Activities or foods which could damage, loosen or dislodge orthodontic appliances need to be avoided.
+                Loosened or damaged orthodontic appliances can be inhaled or swallowed or could cause other damage to the patient.
+            </p>
+
+            <p style="font-style:italic; font-weight:bold; margin-bottom:30px;">
+                I consent to taking of photographs, X-ray, study models during and after the treatment to assist in planning progress of treatment.
+                If the case proves to be of special scientific interest, the doctor reserves the right to present the records
+                in scientific papers or demonstration to the profession.
+            </p>
+            
+            <table class="signature-table">
+                <tr>
+                    <td>Patient's Name: Mr./Ms./Mrs.</td>
+                    <td><input type="text" id="patient_name" name="patient_name" value="Apollo infotech"></td>
+                </tr>
+                <tr>
+                    <td>UHID NO.</td>
+                    <td><input type="text" id="input1" name="input1" value="8108970870"></td>
+                </tr>
+                <tr>
+                    <td>Date:</td>
+                    <td><input type="text" id="today_date" name="today_date" value="24/02/2026"></td>
+                </tr>
+                <tr>
+                    <td>Signature of Patient/Guardian</td>
+                    <td><input type="text" id="input3" name="input3"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Page 3 -->
+    <!--<div class="page-container">-->
+    <!--    <div style="padding: 20px;">-->
+            
+
+            
+    <!--    </div>-->
+    <!--</div>-->
+
+    <!-- Page 4 -->
+    <div class="page-container">
+        <div style="padding: 20px;">
+            <h3>CONSENT ENDORSEMENT FOR EACH CYCLE</h3>
+
+            <table class="endorse-table">
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Date and time</th>
+                    <th>Signature of patient/patients relative</th>
+                    <th>Signature of doctor</th>
+                </tr>
+                <tr><td>1.</td><td><input type="text" id="input4" name="input4"></td><td><input type="text" id="input5" name="input5"></td><td><input type="text" id="input6" name="input6"></td></tr>
+                <tr><td>2.</td><td><input type="text" id="input7" name="input7"></td><td><input type="text" id="input8" name="input8"></td><td><input type="text" id="input9" name="input9"></td></tr>
+                <tr><td>3.</td><td><input type="text" id="input10" name="input10"></td><td><input type="text" id="input11" name="input11"></td><td><input type="text" id="input12" name="input12"></td></tr>
+                <tr><td>4.</td><td><input type="text" id="input13" name="input13"></td><td><input type="text" id="input14" name="input14"></td><td><input type="text" id="input15" name="input15"></td></tr>
+                <tr><td>5.</td><td><input type="text" id="input16" name="input16"></td><td><input type="text" id="input17" name="input17"></td><td><input type="text" id="input18" name="input18"></td></tr>
+                <tr><td>6.</td><td><input type="text" id="input19" name="input19"></td><td><input type="text" id="input20" name="input20"></td><td><input type="text" id="input21" name="input21"></td></tr>
+                <tr><td>7.</td><td><input type="text" id="input22" name="input22"></td><td><input type="text" id="input23" name="input23"></td><td><input type="text" id="input24" name="input24"></td></tr>
+                <tr><td>8.</td><td><input type="text" id="input25" name="input25"></td><td><input type="text" id="input26" name="input26"></td><td><input type="text" id="input27" name="input27"></td></tr>
+                <tr><td>9.</td><td><input type="text" id="input28" name="input28"></td><td><input type="text" id="input29" name="input29"></td><td><input type="text" id="input30" name="input30"></td></tr>
+                <tr><td>10.</td><td><input type="text" id="input31" name="input31"></td><td><input type="text" id="input32" name="input32"></td><td><input type="text" id="input33" name="input33"></td></tr>
+                <tr><td>11.</td><td><input type="text" id="input34" name="input34"></td><td><input type="text" id="input35" name="input35"></td><td><input type="text" id="input36" name="input36"></td></tr>
+                <tr><td>12.</td><td><input type="text" id="input37" name="input37"></td><td><input type="text" id="input38" name="input38"></td><td><input type="text" id="input39" name="input39"></td></tr>
+                <tr><td>13.</td><td><input type="text" id="input40" name="input40"></td><td><input type="text" id="input41" name="input41"></td><td><input type="text" id="input42" name="input42"></td></tr>
+                <tr><td>14.</td><td><input type="text" id="input43" name="input43"></td><td><input type="text" id="input44" name="input44"></td><td><input type="text" id="input45" name="input45"></td></tr>
+                <tr><td>15.</td><td><input type="text" id="input46" name="input46"></td><td><input type="text" id="input47" name="input47"></td><td><input type="text" id="input48" name="input48"></td></tr>
+            </table>
+            
+            <!--<div class="footer-data">-->
+            <!--    <p><strong>Apollo infotech</strong> | 8108970870 | 24/02/2026</p>-->
+            <!--</div>-->
+            
+            <!-- ====================== SUBMIT SECTION ====================== -->
+            <div class="submit-bar">
+                <div class="submit-content">
+                    <div style="font-size:12px; color:#444;">
+                        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+                    </div>
+                    <button id="submitBtn" type="button">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+
+</html>
