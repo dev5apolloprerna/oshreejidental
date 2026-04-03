@@ -2341,6 +2341,7 @@ private function replace_text_inputs_with_underline($html)
         return '<span class="mpdf-uline" style="width:' . $width . ';">' . $safeValue . '</span>';
     }, $html);
 }
+
 private function render_pdf_with_dompdf(string $html, string $filename)
 {
     $autoload = APPPATH . 'vendor/autoload.php';
