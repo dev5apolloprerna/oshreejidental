@@ -850,7 +850,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
 
 
 
-        // 2️⃣ Get saved submission
+        /*// 2️⃣ Get saved submission
         $this->db->where('nabh_pdf_id',$pdf_id);
         $this->db->where('patient_id',$patient_id);
         $this->db->where('appointment_id',$appointment_id);
@@ -858,7 +858,18 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
 
         $row = $this->db->order_by('id','DESC')
                         ->get(db_prefix().'nabh_form_submissions')
-                        ->row_array();
+                        ->row_array();*/
+
+        // 2️⃣ Get saved submission for this appointment first,
+        // then fallback to the latest submission of the same patient + appointment type.
+        $row = $this->find_submission_for_prefill(
+            $pdf_id,
+            $patient_id,
+            $appointment_id,
+            $appointment_type_id,
+            $lang
+        );
+
 
         $saved = [];
         if ($row && !empty($row['form_data_json'])) {
@@ -1080,6 +1091,48 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         exit;
     }
 
+ private function find_submission_for_prefill(
+        int $pdf_id,
+        int $patient_id,
+        int $appointment_id,
+        int $appointment_type_id,
+        string $lang
+    ): ?array
+    {
+        if ($pdf_id <= 0 || $patient_id <= 0) {
+            return null;
+        }
+
+        $table = db_prefix() . 'nabh_form_submissions';
+
+        $current = $this->db
+            ->where('nabh_pdf_id', $pdf_id)
+            ->where('patient_id', $patient_id)
+            ->where('appointment_id', $appointment_id)
+            ->where('lang', $lang)
+            ->order_by('id', 'DESC')
+            ->get($table)
+            ->row_array();
+
+        if (!empty($current)) {
+            return $current;
+        }
+
+        if ($appointment_type_id <= 0) {
+            return null;
+        }
+
+        return $this->db
+            ->where('nabh_pdf_id', $pdf_id)
+            ->where('patient_id', $patient_id)
+            ->where('appointment_type_id', $appointment_type_id)
+            ->where('lang', $lang)
+            ->order_by('updated_at', 'DESC')
+            ->order_by('id', 'DESC')
+            ->get($table)
+            ->row_array();
+    }
+
 
     /* =========================================================
        4) COMMON SCRIPT INJECTION
@@ -1276,21 +1329,31 @@ public function print_pdf()
     if (!is_array($saved)) $saved = [];
 
     if (empty($saved)) {
-        $this->db->where('nabh_pdf_id', $nabh_pdf_id);
-        $this->db->where('appointment_id', $appointment_id);
-        $this->db->where('lang', $lang);
-        $this->db->order_by('id', 'DESC');
-        $row = $this->db->get(db_prefix() . 'nabh_form_submissions')->row();
+            $row = $this->find_submission_for_prefill(
+            $nabh_pdf_id,
+            (int) ($req['patient_id'] ?? 0),
+            $appointment_id,
+            (int) ($req['appointment_type_id'] ?? 0),
+            $lang
+        );
 
-        if ($row && !empty($row->form_data_json)) {
-            $decoded = json_decode($row->form_data_json, true);
+        if (!empty($row) && !empty($row['form_data_json'])) {
+            $decoded = json_decode($row['form_data_json'], true);
+
             if (is_array($decoded)) $saved = $decoded;
         }
-        if (empty($req['patient_name']) && $row && !empty($row->patient_name)) $req['patient_name'] = $row->patient_name;
-        if (empty($req['doctor_name'])  && $row && !empty($row->doctor_name))  $req['doctor_name']  = $row->doctor_name;
+       /* if (empty($req['patient_name']) && $row && !empty($row->patient_name)) $req['patient_name'] = $row->patient_name;
+        if (empty($req['doctor_name'])  && $row && !empty($row->doctor_name))  $req['doctor_name']  = $row->doctor_name;*/
 
-        if ($doctor_id <= 0 && $row && !empty($row->doctor_id)) {
-            $doctor_id = (int) $row->doctor_id;
+        if (empty($req['patient_name']) && !empty($row['patient_name'])) $req['patient_name'] = $row['patient_name'];
+        if (empty($req['doctor_name'])  && !empty($row['doctor_name']))  $req['doctor_name']  = $row['doctor_name'];
+
+/*        if ($doctor_id <= 0 && $row && !empty($row->doctor_id)) {
+            $doctor_id = (int) $row->doctor_id;*/
+                    
+            if ($doctor_id <= 0 && !empty($row['doctor_id'])) {
+            $doctor_id = (int) $row['doctor_id'];
+
             $req['doctor_id'] = $doctor_id;
         }
     }
