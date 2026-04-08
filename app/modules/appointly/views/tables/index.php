@@ -83,7 +83,8 @@ $additionalSelect = [
     'outlook_calendar_link',
     'outlook_added_by_id',
     'outlook_event_id',
-    'feedback'
+    'feedback',
+    'type_id'
 ];
 
 $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalSelect);
@@ -106,7 +107,18 @@ foreach ($rResult as $aRow) {
     $hrefAttr = 'data-toggle="tooltip" title="' . _l('appointment_view_meeting') . '" href="' . admin_url('appointly/appointments/view?appointment_id=' . $aRow['id']) . '"';
     $row[] = $aRow['id'];
 
-    $nameRow = '<a href="' . admin_url('appointly/appointments/view?appointment_id=' . $aRow['id']) . '">' . $aRow['subject'] . '</a>';
+   // $nameRow = '<a href="' . admin_url('appointly/appointments/view?appointment_id=' . $aRow['id']) . '">' . $aRow['subject'] . '</a>';
+
+ $displaySubject = $aRow['subject'] ?? '';
+    if (function_exists('appointly_resolve_subject_for_display')) {
+        $displaySubject = appointly_resolve_subject_for_display(
+            $aRow['subject'] ?? '',
+            (int) ($aRow['type_id'] ?? 0),
+            $aRow['name'] ?? ''
+        );
+    }
+    $nameRow = '<a href="' . admin_url('appointly/appointments/view?appointment_id=' . $aRow['id']) . '">' . $displaySubject . '</a>';
+
 
     if ($aRow['approved'] && $aRow['cancelled'] == 0) {
         $nameRow .= '<p class="text-success no-mbot">' . _l('appointment_approved') . '</p>';

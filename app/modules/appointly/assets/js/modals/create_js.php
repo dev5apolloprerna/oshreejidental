@@ -11,6 +11,29 @@
           var div_email = $('#div_email');
           var div_phone = $('#div_phone');
 
+          function getSelectedAppointmentTypeText() {
+               var typeSelect = document.getElementById('appointment_select_type');
+               if (!typeSelect || !typeSelect.value) {
+                    return '';
+               }
+
+               var selectedText = typeSelect.options[typeSelect.selectedIndex]
+                    ? typeSelect.options[typeSelect.selectedIndex].text
+                    : '';
+
+               return selectedText ? selectedText.trim() : '';
+          }
+
+          function buildSubjectFromTypeAndName(fullName) {
+               var cleanName = (fullName || '').trim();
+               if (!cleanName) {
+                    return '';
+               }
+
+               var appointmentTypeText = getSelectedAppointmentTypeText();
+               return appointmentTypeText ? (appointmentTypeText + ' for ' + cleanName) : cleanName;
+          }
+
           init_editor('textarea[name="notes"]', {
                menubar: false,
           });
@@ -140,20 +163,9 @@
                          div_email.children('input').val(email).attr('disabled', (response.email == '') ? false : true);
                          //div_email.children('input[name="email"]').val(email).attr('required', (response.email == '') ? true : false);
                          div_phone.children('input').val(phone).attr('disabled', true);
-                         var e = document.getElementById("appointment_select_type");
-                         if(e){
-                              var value = e.value;
-                              var text = e.options[e.selectedIndex].text;   
-
-                              if( (typeof(response.firstname) != 'undefined') ){
-                                    document.getElementById('subject').value = text + ' for ' + full_name;
-                              }  
-                         }else{
-
-                              var text = '';
-                                   if( (typeof(response.firstname) != 'undefined') ){
-                                    document.getElementById('subject').value = text + full_name;
-                              }
+                         if (typeof(response.firstname) != 'undefined' || typeof(response.name) != 'undefined') {
+                              document.getElementById('subject').value = buildSubjectFromTypeAndName(full_name);
+                         
                          }
                          
                          
@@ -163,6 +175,13 @@
           });
 
 
+          $('body').on('change', '#appointment_select_type', function() {
+               var full_name = div_name.children('input').val();
+               if (full_name && full_name.trim() !== '') {
+                    document.getElementById('subject').value = buildSubjectFromTypeAndName(full_name);
+               }
+          });
+          
            $('body').on('change', '#contact_id, #rel_id', function() {
           });
 

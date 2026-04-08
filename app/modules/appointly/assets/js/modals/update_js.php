@@ -9,6 +9,30 @@
           var div_email = $('#div_email');
           var div_phone = $('#div_phone');
 
+            function getSelectedAppointmentTypeText() {
+               var typeSelect = document.getElementById('appointment_select_type');
+               if (!typeSelect || !typeSelect.value) {
+                    return '';
+               }
+
+               var selectedText = typeSelect.options[typeSelect.selectedIndex]
+                    ? typeSelect.options[typeSelect.selectedIndex].text
+                    : '';
+
+               return selectedText ? selectedText.trim() : '';
+          }
+
+          function buildSubjectFromTypeAndName(fullName) {
+               var cleanName = (fullName || '').trim();
+               if (!cleanName) {
+                    return '';
+               }
+
+               var appointmentTypeText = getSelectedAppointmentTypeText();
+               return appointmentTypeText ? (appointmentTypeText + ' for ' + cleanName) : cleanName;
+          }
+
+
           init_editor('textarea[name="notes"]', {
                menubar: false,
           });
@@ -38,6 +62,13 @@
           }, apply_appointments_form_data, {
                'attendees[]': "Please select at least 1 staff member"
           });
+            $('body').on('change', '#appointment_select_type', function() {
+               var fullName = $('#name').val() || '';
+               if (fullName.trim() !== '') {
+                    $('#subject').val(buildSubjectFromTypeAndName(fullName));
+               }
+          });
+
      });
 
      function apply_appointments_form_data(form) {

@@ -166,7 +166,15 @@
                                     <span class="spmodified">
                                             <boldit><?= _l('appointment_subject'); ?>
                                             </boldit>
-                                            <?= $appointment['subject']; ?>
+                                            <?=
+                                            function_exists('appointly_resolve_subject_for_display')
+                                                ? appointly_resolve_subject_for_display(
+                                                    $appointment['subject'] ?? '',
+                                                    (int) ($appointment['type_id'] ?? 0),
+                                                    $appointment['name'] ?? ''
+                                                )
+                                                : ($appointment['subject'] ?? '');
+                                            ?>
                                         </span><br>
 
                                     <span class="spmodified">

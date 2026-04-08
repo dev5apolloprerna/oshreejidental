@@ -295,6 +295,45 @@ if ( ! function_exists('fetch_appointment_data')) {
         return [];
     }
 }
+/**
+ * Resolve appointment subject for display when legacy placeholder text was saved.
+ *
+ * @param string $subject
+ * @param int    $type_id
+ * @param string $fallback_name
+ *
+ * @return string
+ */
+if ( ! function_exists('appointly_resolve_subject_for_display')) {
+    function appointly_resolve_subject_for_display($subject, $type_id = 0, $fallback_name = '')
+    {
+        $subject = trim((string) $subject);
+        $fallback_name = trim((string) $fallback_name);
+
+        if ($subject === '') {
+            $type = ($type_id > 0) ? get_appointment_type((int) $type_id) : '';
+            if ($type) {
+                return $fallback_name !== '' ? ($type . ' for ' . $fallback_name) : $type;
+            }
+
+            return $fallback_name;
+        }
+
+        if (preg_match('/^Nothing selected(?:\s+for)?\s*/i', $subject)) {
+            $name_part = trim((string) preg_replace('/^Nothing selected(?:\s+for)?\s*/i', '', $subject));
+            $type = ($type_id > 0) ? get_appointment_type((int) $type_id) : '';
+
+            if ($type) {
+                $resolved_name = $name_part !== '' ? $name_part : $fallback_name;
+                return $resolved_name !== '' ? ($type . ' for ' . $resolved_name) : $type;
+            }
+
+            return $name_part !== '' ? $name_part : ($fallback_name !== '' ? $fallback_name : $subject);
+        }
+
+        return $subject;
+    }
+}
 
 /**
  * Convert dates for database insertion

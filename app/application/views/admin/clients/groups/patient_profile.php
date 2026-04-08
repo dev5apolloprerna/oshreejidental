@@ -1067,7 +1067,8 @@ i.fa.fa-circle.text-danger-glow.blink {
                                     <div>
                                         <p class="app_date"><i class="fa-regular fa-calendar calendar-icon" aria-hidden="true"></i>
                                         <?php echo date("d/m/y", strtotime($value['date'])) . ' ' .date("H:i A", strtotime($value['start_hour']));?></p>
-                                        <h3><?php echo $value['subject'];?></h3>
+                                        <h3><?php echo function_exists('appointly_resolve_subject_for_display') ? appointly_resolve_subject_for_display($value['subject'] ?? '', (int)($value['type_id'] ?? 0), $value['name'] ?? '') : ($value['subject'] ?? ''); ?></h3>
+
                                         <p><?php echo $value['description'];?></p>
                                     </div>
                                 </div>

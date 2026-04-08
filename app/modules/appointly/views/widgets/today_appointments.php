@@ -17,8 +17,19 @@ $appointments = $CI->apm->fetch_todays_appointments();
             <?php } ?>
             <?php if (!empty($appointments)) { ?>
                 <?php foreach ($appointments as $appointment) { ?>
+                  <?php
+                    $display_subject = $appointment['subject'] ?? '';
+                    if (function_exists('appointly_resolve_subject_for_display')) {
+                        $display_subject = appointly_resolve_subject_for_display(
+                            $appointment['subject'] ?? '',
+                            (int) ($appointment['type_id'] ?? 0),
+                            $appointment['name'] ?? ''
+                        );
+                    }
+                    ?>
+                    
                     <div class="todays_appointment col-2 mleft20 appointly-secondary pull-left mtop10">
-                        <h3 class="text-muted mtop1"><a href="<?= admin_url('appointly/appointments/view?appointment_id=' . $appointment['id']); ?>"><?= $appointment['subject']; ?></a></h3>
+                        <h3 class="text-muted mtop1"><a href="<?= admin_url('appointly/appointments/view?appointment_id=' . $appointment['id']); ?>"><?= $display_subject; ?></a></h3>
                         <span class="text-muted span_limited">
                             <?= _l('appointment_description'); ?> <?= $appointment['description']; ?>
                         </span>

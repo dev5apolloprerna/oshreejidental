@@ -818,6 +818,14 @@ class Appointly_model extends App_Model
 
         foreach ($appointments as $key => $appointment) {
 
+             if (function_exists('appointly_resolve_subject_for_display')) {
+                $appointment['title'] = appointly_resolve_subject_for_display(
+                    $appointment['title'] ?? '',
+                    (int) ($appointment['type_id'] ?? 0),
+                    ''
+                );
+            }
+
             $appointment['url'] = admin_url('appointly/appointments/view?appointment_id=' . $appointment['id']);
 
             if (is_client_logged_in()) {
