@@ -874,6 +874,13 @@ class Appointments extends AdminController
         }
 
     }
+    public function patient_signature_form($appointment_id = 0, $patient_id = 0)
+    {
+        $data['title'] = 'Patient Consent Signature';
+        $data['appointment_id'] = (int) $appointment_id;
+        $data['patient_id'] = (int) $patient_id;
+        $this->load->view('appointly/patient_signature_form', $data);
+    }
     
     public function add_patient_signature() {
 
@@ -895,7 +902,7 @@ class Appointments extends AdminController
             set_alert('success', 'Signature saved successfully.');
         }
 
-        redirect(admin_url('clients/client/' . $patient_id . '?group=patient_profile'));
+        redirect(admin_url('appointly/appointments/patient_signature_form/' . (int)$data['appointment_id'] . '/' . (int)$patient_id));
     } else {
         set_alert('warning', 'Missing appointment ID or signature data.');
         redirect($_SERVER['HTTP_REFERER']);
