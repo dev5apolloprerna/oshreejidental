@@ -1175,7 +1175,7 @@ if (!empty($check_prescription_exists)) { ?>
                                 <!--    </select>-->
                                 <!--Patient Consent Model-->
                                 <button class="btn btn-primary add_free_hand_dental" 
-                                    onclick="openSignatureModal(<?php echo $value['id']; ?>, <?php echo $client->userid; ?>)"  
+                                    onclick="window.open('<?php echo admin_url('appointly/appointments/patient_signature_form/' . (int)$value['id'] . '/' . (int)$client->userid); ?>', '_blank');"   
                                     style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">Patient Consent
                                 </button>
 
