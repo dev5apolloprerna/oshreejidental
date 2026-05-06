@@ -15,6 +15,12 @@
             <canvas id="sig_board" width="700" height="220" style="width:100%;height:220px;"></canvas>
             <input type="hidden" name="signature_value" id="signature_data">
           </div>
+          <div id="existingSignatureWrap" style="display:none;max-width:700px;margin-top:10px;">
+            <label style="font-weight:600;">Existing Signature</label>
+            <div style="border:1px dashed #ccc;border-radius:5px;padding:8px;background:#fafafa;">
+              <img id="existingSignaturePreview" src="" alt="Existing Signature" style="max-width:100%;height:120px;object-fit:contain;">
+            </div>
+          </div>
           <br>
           <div style="max-width:700px;">
             <input type="text" name="patient_name" class="form-control" placeholder="Patient Name">
@@ -33,6 +39,7 @@
 </div>
 <script>
   var existApponID = <?php echo (int) ($appointment_id ?? 0); ?>;
+    var initialSignaturePayload = <?php echo json_encode($existing_signature ?? null); ?>;
   const canvas = document.getElementById('sig_board');
   const ctx = canvas.getContext('2d');
   let drawing = false;
@@ -61,6 +68,30 @@
   canvas.addEventListener('mouseup', () => drawing = false);
   canvas.addEventListener('mouseleave', () => drawing = false);
 
+  canvas.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    drawing = true;
+    ctx.beginPath();
+    ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+    if (!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    ctx.stroke();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', function (e) {
+    e.preventDefault();
+    drawing = false;
+  }, { passive: false });
+
+
   document.getElementById('signatureForm').addEventListener('submit', function () {
     document.getElementById('signature_data').value = canvas.toDataURL('image/png');
   });
@@ -68,26 +99,46 @@
   document.getElementById('eraseAll').addEventListener('click', function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     document.querySelector('input[name="patient_name"]').value = '';
+        document.getElementById('existingSignatureWrap').style.display = 'none';
+    document.getElementById('existingSignaturePreview').src = '';
   });
 
-  function loadExistingSign(appointmentId) {
+    function renderSignature(response) {
+    if (!(response && response.signature_value && response.signature_value.length > 0)) return;
+
+    document.getElementById('delete_sign').style.display = 'inline-block';
+    document.querySelector('input[name="patient_name"]').value = response.patient_name || '';
+
+    var img = new Image();
+    var rawSignature = (response.signature_value || '').toString().replace('[removed]', '').trim();
+    var normalizedSignature = rawSignature;
+
+    if (normalizedSignature.indexOf('data:image') !== 0 && normalizedSignature.indexOf(',') !== -1) {
+      normalizedSignature = normalizedSignature.split(',').pop().trim();
+    }
+
+    if (normalizedSignature.indexOf('data:image') !== 0) {
+      normalizedSignature = 'data:image/png;base64,' + normalizedSignature;
+    }
+
+    img.src = normalizedSignature;
+    document.getElementById('existingSignaturePreview').src = normalizedSignature;
+    document.getElementById('existingSignatureWrap').style.display = 'block';
+    img.onload = function () {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+  }
+
+    function loadExistingSign(appointmentId) {
     if (!appointmentId) return;
     $.ajax({
       url: "<?php echo admin_url('appointly/appointments/get_patient_signature/'); ?>" + appointmentId,
       type: 'GET',
       dataType: 'json',
       success: function (response) {
-        if (!(response && response.signature_value && response.signature_value.length > 0)) return;
-
-        document.getElementById('delete_sign').style.display = 'inline-block';
-        document.querySelector('input[name="patient_name"]').value = response.patient_name || '';
-
-        var img = new Image();
-        img.src = 'data:image/png;base64,' + response.signature_value;
-        img.onload = function () {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        };
+      
+        renderSignature(response);
       }
     });
   }
@@ -109,6 +160,8 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         document.querySelector('input[name="patient_name"]').value = '';
         document.getElementById('delete_sign').style.display = 'none';
+                document.getElementById('existingSignatureWrap').style.display = 'none';
+        document.getElementById('existingSignaturePreview').src = '';
       },
       error: function () {
         alert('Error deleting signature.');
@@ -116,6 +169,10 @@
     });
   });
 
-  loadExistingSign(existApponID);
+  if (initialSignaturePayload) {
+    renderSignature(initialSignaturePayload);
+  } else {
+    loadExistingSign(existApponID);
+  }
 </script>
 <?php init_tail(); ?>
