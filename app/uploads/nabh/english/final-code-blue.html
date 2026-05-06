@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Blue and CPR Record Sheet</title>
+
+  <style>
+    @page { size: A4; margin: 12mm; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+
+    /* Page wrapper */
+    .page {  page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+
+    /* Input styling */
+    input[type="text"]{
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+    .table-input { width: 100%; border: none !important; }
+
+    /* Header layout: table (no float) */
+    .header-table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+    .header-table td { vertical-align: top; }
+
+    .patient-box {
+      border: 1.5px solid #003366;
+      width: 280px;
+      padding: 8px 10px;
+      font-size: 11pt;
+      line-height: 1.6;
+    }
+    .patient-box .line {
+      display: inline-block;
+      border-bottom: 1px dotted #000;
+      width: 180px;
+      height: 16px;
+      vertical-align: bottom;
+    }
+    .patient-box .line input { height: 16px; }
+
+    h1 {
+      text-align: center;
+      font-size: 15px;
+      text-decoration: underline;
+      margin: 0 0 4px 0;
+    }
+    .sub {
+      text-align: center;
+      font-size: 13px;
+      margin: 0 0 8px 0;
+    }
+
+    /* Section title: table borders (no ::before/after, no flex) */
+    .section-title {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 10px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .section-title td { vertical-align: middle; }
+    .section-title .linecell { border-bottom: 1px solid #000; height: 1px; width: 40%; }
+    .section-title .textcell { text-align: center; padding: 0 10px; white-space: nowrap; }
+
+    /* Form rows: table based */
+    .row-table { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 10.5pt; }
+    .row-table td { padding: 2px 0; vertical-align: baseline; }
+
+    .underline {
+      display: inline-block;
+      border-bottom: 1px solid #000;
+      height: 16px;
+      vertical-align: bottom;
+    }
+    .u100 { width: 100%; }
+    .u120 { width: 120px; }
+    .u100px { width: 100px; }
+    .u150 { width: 150px; }
+    .u200 { width: 200px; }
+
+    /* Checkboxes: keep native + align */
+    input[type="checkbox"]{
+      width: 12px;
+      height: 12px;
+      margin: 0 6px 0 0;
+      vertical-align: middle;
+    }
+    .chk { white-space: nowrap; }
+
+    /* Tables */
+    table.grid { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10pt; }
+    table.grid th, table.grid td { border: 1px solid #000; padding: 6px; text-align: left; }
+    .center { text-align: center; }
+
+    .factors { font-size: 7pt; margin: 100px 0; line-height: 1.35; }
+
+    /* Hide submit bar in PDF */
+    .no-print { display: none; }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <h1>CODEBLUE AND CPR RECORD SHEET</h1>
+    <p class="sub">(Part A- Code blue record, Part B – CPR Record.)</p>
+  <table class="header-table">
+    <tr>
+      <td style="width:60%;"></td>
+      <td style="width:40%; text-align:right;">
+        <div class="patient-box">
+          Patient ID sticker or<br>
+          Patient Name:
+          <span class="dots"><span class="val"></span></span><br>
+          UHID NO:
+          <span class="dots"><span class="val"></span></span><br>
+          Consultant:
+          <span class="dots"><span class="val"></span></span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+
+    <table class="row-table" style="margin-top: 12px;">
+      <tr>
+        <td style="width: 50%;">
+          <b>Date:</b>
+          <span class="underline u150"><input type="text" id="today_date" name="today_date"></span>
+        </td>
+        <td style="width: 50%;">
+          <b>Sheet No:</b>
+          <span class="underline u150"><input type="text" id="input4" name="input4"></span>
+        </td>
+      </tr>
+    </table>
+
+    <table class="section-title">
+      <tr>
+        <td class="linecell"></td>
+        <td class="textcell">Part A -Code blue Record</td>
+        <td class="linecell"><input type="text" id="input140" name="input140"></td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td style="width:30%"><b>Diagnosis till Date:</b> <span class="underline u100"><input type="text" id="input5" name="input5"></span></td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td style="width: 32%;"><b>Reason of Code activation</b></td>
+        <td class="chk" style="width: 26%;">
+          <input type="checkbox" id="input6" name="input6"> Not Required, Reason:
+        </td>
+        <td style="width: 42%;">
+          <span class="underline u100"><input type="text" id="input7" name="input7"></span>
+        </td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td class="chk"><input type="checkbox" id="input8" name="input8"> Unresponsiveness</td>
+        <td class="chk"><input type="checkbox" id="input9" name="input9"> Arrhythmia</td>
+        <td class="chk"><input type="checkbox" id="input10" name="input10"> Gasping</td>
+        <td class="chk"><input type="checkbox" id="input11" name="input11"> Seizure</td>
+        <td style="width: 120px;">
+          <span class="underline u120"><input type="text" id="input12" name="input12"></span>
+        </td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td class="chk" style="width: 25%;">
+          Responder: 1<sup>st</sup>
+          <span class="underline u100px"><input type="text" id="input13" name="input13"></span>
+        </td>
+        <td class="chk" style="width: 25%;">
+          2<sup>nd</sup>
+          <span class="underline u100px"><input type="text" id="input14" name="input14"></span>
+        </td>
+        <td style="width: 50%;">
+          Code activated by:
+          <span class="underline u100"><input type="text" id="input15" name="input15"></span>
+        </td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td style="width: 33%;">Time of event: <span class="underline u150"><input type="text" id="input16" name="input16"></span></td>
+        <td style="width: 33%;">Code Activated at: <span class="underline u150"><input type="text" id="input17" name="input17"></span></td>
+        <td style="width: 34%;">Team arrived at: <span class="underline u150"><input type="text" id="input18" name="input18"></span></td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td style="width: 12%;"><b>Location:</b></td>
+        <td class="chk"><input type="checkbox" id="input19" name="input19"> ER</td>
+        <td class="chk"><input type="checkbox" id="input20" name="input20"> OPD</td>
+        <td class="chk"><input type="checkbox" id="input21" name="input21"> General OT</td>
+        <td class="chk"><input type="checkbox" id="input22" name="input22"> Labor OT</td>
+        <td style="width: 28%;">Others (Specify): <span class="underline u120"><input type="text" id="input23" name="input23"></span></td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td style="width: 22%;"><b>First Monitored Rhythm:</b></td>
+        <td class="chk"><input type="checkbox" id="input24" name="input24"> VF</td>
+        <td class="chk"><input type="checkbox" id="input25" name="input25"> VT</td>
+        <td style="width: 28%;">Others: <span class="underline u100"><input type="text" id="input26" name="input26"></span></td>
+        <td style="width: 28%;">Diagnosed By: <span class="underline u100"><input type="text" id="input27" name="input27"></span></td>
+      </tr>
+    </table>
+
+    <table class="row-table">
+      <tr>
+        <td>
+          Cardiac arrest confirmed by checking Carotid Pulse –
+          <span class="chk" style="margin-left:10px;"><input type="checkbox" id="input28" name="input28"> Yes</span>
+        </td>
+      </tr>
+    </table>
+
+    <!--<div class="factors">-->
+      <b>Contributory factor - 1.6H - Hyperkalemia /H+Ions/ Hyperthermia /Hypovolemia /Hypoxia /Hypoglycemia</b><br>
+      <span style="margin-left: 95px;"><b>2.6T</b> Toxins / Cardiac Tamponade /Tension pneumothorax /Thrombosis (coronary& pulmonary)/Trauma</span>
+    <!--</div>-->
+
+    <p style="font-weight:bold; margin: 8px 0 5px;">Relevant Lab test done during code.</p>
+    <table class="grid">
+      <tr>
+        <th width="15%">Test</th>
+        <td><input type="text" id="input29" name="input29" class="table-input"></td>
+        <td><input type="text" id="input30" name="input30" class="table-input"></td>
+        <td><input type="text" id="input31" name="input31" class="table-input"></td>
+        <td><input type="text" id="input32" name="input32" class="table-input"></td>
+        <td><input type="text" id="input33" name="input33" class="table-input"></td>
+        <td><input type="text" id="input34" name="input34" class="table-input"></td>
+      </tr>
+      <tr>
+        <th>Time</th>
+        <td><input type="text" id="input35" name="input35" class="table-input"></td>
+        <td><input type="text" id="input36" name="input36" class="table-input"></td>
+        <td><input type="text" id="input37" name="input37" class="table-input"></td>
+        <td><input type="text" id="input38" name="input38" class="table-input"></td>
+        <td><input type="text" id="input39" name="input39" class="table-input"></td>
+        <td><input type="text" id="input40" name="input40" class="table-input"></td>
+      </tr>
+    </table>
+
+    <p style="font-weight:bold; margin: 12px 0 5px;">CPR and Outcome Summary</p>
+    <table class="grid">
+      <tr class="center" style="font-weight:bold;">
+        <td width="25%">STRTED AT</td><td width="25%">STOPED AT</td><td width="25%">OUTCOME</td><td width="25%">DURATION</td>
+      </tr>
+      <tr>
+        <td><input type="text" id="input41" name="input41" class="table-input"></td>
+        <td><input type="text" id="input42" name="input42" class="table-input"></td>
+        <td><input type="text" id="input43" name="input43" class="table-input"></td>
+        <td><input type="text" id="input44" name="input44" class="table-input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" id="input45" name="input45" class="table-input"></td>
+        <td><input type="text" id="input46" name="input46" class="table-input"></td>
+        <td><input type="text" id="input47" name="input47" class="table-input"></td>
+        <td><input type="text" id="input48" name="input48" class="table-input"></td>
+      </tr>
+      <tr>
+        <td class="center" style="font-weight:bold;">Final outcome</td>
+        <td class="center"><input type="checkbox" id="input49" name="input49"> ROSC at</td>
+        <td class="center" colspan="2"><input type="checkbox" id="input50" name="input50"> Death declared at</td>
+      </tr>
+    </table>
+
+    <table class="section-title">
+      <tr>
+        <td class="linecell"></td>
+        <td class="textcell">Part B -CPR Record</td>
+        <td class="linecell"></td>
+      </tr>
+    </table>
+
+    <table class="grid">
+      <tr class="center" style="font-weight:bold;">
+        <td rowspan="2">Time</td><td rowspan="2">Rhythm</td><td colspan="3">Treatment</td><td rowspan="2">Given by</td>
+      </tr>
+      <tr class="center" style="font-weight:bold;">
+        <td>CPR Ratio</td><td>DC Joules</td><td>STAT Drugs</td>
+      </tr>
+      <tr>
+        <td height="35px"><input type="text" id="input51" name="input51" class="table-input"></td>
+        <td><input type="text" id="input52" name="input52" class="table-input"></td>
+        <td><input type="text" id="input53" name="input53" class="table-input"></td>
+        <td><input type="text" id="input54" name="input54" class="table-input"></td>
+        <td><input type="text" id="input55" name="input55" class="table-input"></td>
+        <td><input type="text" id="input56" name="input56" class="table-input"></td>
+      </tr>
+      <tr>
+        <td height="35px"><input type="text" id="input57" name="input57" class="table-input"></td>
+        <td><input type="text" id="input58" name="input58" class="table-input"></td>
+        <td><input type="text" id="input59" name="input59" class="table-input"></td>
+        <td><input type="text" id="input60" name="input60" class="table-input"></td>
+        <td><input type="text" id="input61" name="input61" class="table-input"></td>
+        <td><input type="text" id="input62" name="input62" class="table-input"></td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div class="page">
+
+    <table class="header-table">
+      <tr>
+        <td style="width: 65%;"></td>
+        <td style="width: 35%; text-align:right;">
+          <div class="patient-box">
+            Patient ID sticker or<br>
+            Patient Name: <span class="line"><input type="text" id="patient_name_2" name="patient_name"></span><br>
+            UHID NO: <span class="line"><input type="text" id="input63" name="input63"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <p class="center" style="font-weight:bold;">(*Begin from the 1<sup>st</sup> page )</p>
+
+    <table class="grid">
+      <tr class="center" style="font-weight:bold;">
+        <td rowspan="2" width="8%">Time</td>
+        <td rowspan="2" width="12%">Rhythm</td>
+        <td colspan="3">Treatment</td>
+        <td rowspan="2" width="15%">Given by</td>
+      </tr>
+      <tr class="center" style="font-weight:bold;">
+        <td width="20%">CPR Ratio</td><td width="15%">DC Joules</td><td width="30%">STAT Drugs</td>
+      </tr>
+
+       Keep your same rows (64..123) 
+      <tr><td height="50px"><input type="text" id="input64" name="input64" class="table-input"></td><td><input type="text" id="input65" name="input65" class="table-input"></td><td><input type="text" id="input66" name="input66" class="table-input"></td><td><input type="text" id="input67" name="input67" class="table-input"></td><td><input type="text" id="input68" name="input68" class="table-input"></td><td><input type="text" id="input69" name="input69" class="table-input"></td></tr>
+      <tr><td height="50px"><input type="text" id="input70" name="input70" class="table-input"></td><td><input type="text" id="input71" name="input71" class="table-input"></td><td><input type="text" id="input72" name="input72" class="table-input"></td><td><input type="text" id="input73" name="input73" class="table-input"></td><td><input type="text" id="input74" name="input74" class="table-input"></td><td><input type="text" id="input75" name="input75" class="table-input"></td></tr>
+      <tr><td height="50px"><input type="text" id="input76" name="input76" class="table-input"></td><td><input type="text" id="input77" name="input77" class="table-input"></td><td><input type="text" id="input78" name="input78" class="table-input"></td><td><input type="text" id="input79" name="input79" class="table-input"></td><td><input type="text" id="input80" name="input80" class="table-input"></td><td><input type="text" id="input81" name="input81" class="table-input"></td></tr>
+      <tr><td height="55px"><input type="text" id="input82" name="input82" class="table-input"></td><td><input type="text" id="input83" name="input83" class="table-input"></td><td><input type="text" id="input84" name="input84" class="table-input"></td><td><input type="text" id="input85" name="input85" class="table-input"></td><td><input type="text" id="input86" name="input86" class="table-input"></td><td><input type="text" id="input87" name="input87" class="table-input"></td></tr>
+      <tr><td height="55px"><input type="text" id="input88" name="input88" class="table-input"></td><td><input type="text" id="input89" name="input89" class="table-input"></td><td><input type="text" id="input90" name="input90" class="table-input"></td><td><input type="text" id="input91" name="input91" class="table-input"></td><td><input type="text" id="input92" name="input92" class="table-input"></td><td><input type="text" id="input93" name="input93" class="table-input"></td></tr>
+      <tr><td height="55px"><input type="text" id="input94" name="input94" class="table-input"></td><td><input type="text" id="input95" name="input95" class="table-input"></td><td><input type="text" id="input96" name="input96" class="table-input"></td><td><input type="text" id="input97" name="input97" class="table-input"></td><td><input type="text" id="input98" name="input98" class="table-input"></td><td><input type="text" id="input99" name="input99" class="table-input"></td></tr>
+      <tr><td height="55px"><input type="text" id="input100" name="input100" class="table-input"></td><td><input type="text" id="input101" name="input101" class="table-input"></td><td><input type="text" id="input102" name="input102" class="table-input"></td><td><input type="text" id="input103" name="input103" class="table-input"></td><td><input type="text" id="input104" name="input104" class="table-input"></td><td><input type="text" id="input105" name="input105" class="table-input"></td></tr>
+      <tr><td height="55px"><input type="text" id="input106" name="input106" class="table-input"></td><td><input type="text" id="input107" name="input107" class="table-input"></td><td><input type="text" id="input108" name="input108" class="table-input"></td><td><input type="text" id="input109" name="input109" class="table-input"></td><td><input type="text" id="input110" name="input110" class="table-input"></td><td><input type="text" id="input111" name="input111" class="table-input"></td></tr>
+      <tr><td height="55px"><input type="text" id="input112" name="input112" class="table-input"></td><td><input type="text" id="input113" name="input113" class="table-input"></td><td><input type="text" id="input114" name="input114" class="table-input"></td><td><input type="text" id="input115" name="input115" class="table-input"></td><td><input type="text" id="input116" name="input116" class="table-input"></td><td><input type="text" id="input117" name="input117" class="table-input"></td></tr>
+      <tr><td height="55px"><input type="text" id="input118" name="input118" class="table-input"></td><td><input type="text" id="input119" name="input119" class="table-input"></td><td><input type="text" id="input120" name="input120" class="table-input"></td><td><input type="text" id="input121" name="input121" class="table-input"></td><td><input type="text" id="input122" name="input122" class="table-input"></td><td><input type="text" id="input123" name="input123" class="table-input"></td></tr>
+    </table>
+
+    <table class="grid" style="margin-top: 12px;">
+      <tr><td width="33%">Team Leader</td><td><input type="text" id="input124" name="input124" class="table-input"></td><td><input type="text" id="input125" name="input125" class="table-input"></td></tr>
+      <tr><td>Code Blue Nurse</td><td><input type="text" id="input126" name="input126" class="table-input"></td><td><input type="text" id="input127" name="input127" class="table-input"></td></tr>
+      <tr><td>BLS Providers</td><td><input type="text" id="input128" name="input128" class="table-input"></td><td><input type="text" id="input129" name="input129" class="table-input"></td></tr>
+      <tr><td>Nursing Supervisor/Incharge</td><td><input type="text" id="input130" name="input130" class="table-input"></td><td><input type="text" id="input131" name="input131" class="table-input"></td></tr>
+    </table>
+
+    <p style="font-size: 10pt; margin: 6px 0 0;">&bull; Part B must be filled during the event of CPR.</p>
+
+     <!--submit bar should NOT be in PDF -->
+      <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div style="font-size:12px; color:#444;">
+            <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+          </div>
+          <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+            Submit
+          </button>
+        </div>
+      </div>
+    
+
+  </div>
+
+</body>
+</html>

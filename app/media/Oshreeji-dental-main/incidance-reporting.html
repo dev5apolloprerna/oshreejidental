@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Reporting Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .page-container {
+            width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            page-break-after: always;
+        }
+
+        .outer-border {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        td {
+            /* padding: 5px; */
+            vertical-align: middle;
+        }
+
+        .header-box {
+            border: 1.5px solid black;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            width: 300px;
+            margin: 0 auto 10px auto;
+            font-size: 16px;
+        }
+
+        .underline {
+            border-bottom: 1px solid black;
+            display: inline-block;
+        }
+
+        .input-line {
+            border: none;
+            border-bottom: 1px solid black;
+            width: 100%;
+            outline: none;
+        }
+
+        .checkbox-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .section-footer {
+            border: 1px solid black;
+            font-size: 11px;
+        }
+
+        .section-footer td {
+            border: 1px solid black;
+            vertical-align: top;
+            padding: 8px;
+        }
+
+        .footer-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+
+            .page-container {
+                border: none;
+                width: 100%;
+            }
+
+            button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+        <div class="outer-border">
+
+            <div class="header-box">INCIDENT REPORTING FORM</div>
+
+            <div class="checkbox-container">
+                (Kindly fill & submit to the Quality Department)<br>
+                <input type="checkbox"> Clinical &nbsp; <input type="checkbox"> Non- Clinical
+            </div>
+
+            <table>
+                <tr>
+                    <td width="15%">Title of Incident :</td>
+                    <td width="45%"><input type="text" class="input-line"></td>
+                    <td width="15%" style="text-align: right;">Incident Code :</td>
+                    <td width="25%"><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="font-size: px; color: #555;">(Please refer Page 2 for Incident Title &
+                        Code)</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td width="15%">Type of Incident :</td>
+                    <td>
+                        <input type="checkbox"> No Harm &nbsp;
+                        <input type="checkbox"> Near Miss &nbsp;
+                        <input type="checkbox"> Adverse Event &nbsp;
+                        <input type="checkbox"> Sentinel Event
+                    </td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td width="15%">Date of Incident :</td>
+                    <td width="35%"><input type="text" class="input-line"></td>
+                    <td width="15%">Time of Incident :</td>
+                    <td width="25%"><input type="text" class="input-line"></td>
+                    <td width="10%" style="text-align: right;">AM / PM</td>
+                </tr>
+                <tr>
+                    <td>Reporting Date :</td>
+                    <td><input type="text" class="input-line"></td>
+                    <td>Reporting Time :</td>
+                    <td><input type="text" class="input-line"></td>
+                    <td width="10%" style="text-align: right;">AM / PM</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td width="25%">Pertaining to (Unit Department) :</td>
+                    <td width="30%"><input type="text" class="input-line"></td>
+                    <td width="10%">Location :</td>
+                    <td width="30%"><input type="text" class="input-line"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td width="15%">Name of Patient :</td>
+                    <td width="35%"><input type="text" class="input-line"></td>
+                    <td width="15%">Age / Gender :</td>
+                    <td width="15%"><input type="text" class="input-line"></td>
+                    <td width="8%">IP No. :</td>
+                    <td width="12%"><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td>Diagnosis :</td>
+                    <td><input type="text" class="input-line"></td>
+                    <td>Doctor :</td>
+                    <td colspan="3"><input type="text" class="input-line"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td width="20%">Name of staff (in case of injury) :</td>
+                    <td width="50%"><input type="text" class="input-line"></td>
+                    <td width="10%">Emp Id :</td>
+                    <td width="20%"><input type="text" class="input-line"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td width="20%">Staff involved in Incident :</td>
+                    <td style="text-align: right;">1.</td>
+                    <td width="25%"><input type="text" class="input-line"></td>
+                    <td width="10%">EMP. ID :</td>
+                    <td width="15%"><input type="text" class="input-line"></td>
+                    <td width="10%">Designation :</td>
+                    <td width="15%"><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td width="20%"></td>
+                    <td style="text-align: right;">2.</td>
+                    <td><input type="text" class="input-line"></td>
+                    <td>EMP. ID :</td>
+                    <td><input type="text" class="input-line"></td>
+                    <td>Designation :</td>
+                    <td><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td width="20%"></td>
+                    <td style="text-align: right;">3.</td>
+                    <td><input type="text" class="input-line"></td>
+                    <td>EMP. ID :</td>
+                    <td><input type="text" class="input-line"></td>
+                    <td>Designation :</td>
+                    <td><input type="text" class="input-line"></td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 10px;">
+                Incident Description : (Use additional sheet, if required) :
+                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                Apparent Cause : <span
+                    style="display: inline-block; width: 85%; border-bottom: 1px solid black;">&nbsp;</span>
+            </div>
+
+            <br>
+
+            <table class="section-footer">
+                <tr>
+                    <td width="33%">
+                        <span class="footer-title">1. ENVIRONMENT RELATED</span>
+                        1.1) Burn Incident from any source<br>
+                        1.2) Person slip / trip / fall<br>
+                        1.3) Electric shock
+                    </td>
+                    <td width="34%">
+                        <span class="footer-title">6. SECURITY RELATED / CRIMINAL EVENT</span>
+                        6.1) Physical assault<br>
+                        6.2) Sexual assault<br>
+                        6.3) Homicide
+                    </td>
+                    <td width="33%">
+                        <span class="footer-title">9. PATIENT PROTECTION EVENT</span>
+                        9.1) Vulnerable patient discharged to wrong person<br>
+                        9.2) Patient suicide / attempted suicide
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div class="page-container">
+        <div class="outer-border">
+
+            <table class="section-footer">
+                <tr>
+                    <td width="33%">
+                        <span class="footer-title">1. ENVIRONMENT RELATED</span>
+                        1.1) Burn Incident from any source<br>
+                        1.2) Person slip / trip / fall<br>
+                        1.3) Electric shock<br>
+                        1.4) Bumped or stuck by object<br>
+                        1.5) Injury due to restraints / bedside rails
+                    </td>
+                    <td width="34%">
+                        <span class="footer-title">6. SECURITY RELATED / CRIMINAL EVENT</span>
+                        6.1) Physical assault<br>
+                        6.2) Sexual assault<br>
+                        6.3) Homicide<br>
+                        6.4) Grievance against another employee<br>
+                        6.5) Theft<br>
+                        6.6) Act of Indiscipline<br>
+                        6.7) Misbehaviour of security staff<br>
+                        6.8) Abduction of patient<br>
+                        6.9) Care provided by an individual impersonating a clinical member / staff
+                    </td>
+                    <td width="33%">
+                        <span class="footer-title">9. PATIENT PROTECTION EVENT</span>
+                        9.1) Vulnerable patient discharged to wrong person<br>
+                        9.2) Patient suicide / attempted suicide / self-harm<br>
+                        9.3) Intentional injury to patient by staff / another patient / visitor / another<br>
+                        9.4) Patient absconding<br>
+                        9.5) Wrong gas / gas contaminated by toxic substances delivered<br>
+                        9.6) Self removal of RT / ET / IV Cannula / CVP / Catheter
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="footer-title">2. DEVICE / CLINICAL / NON CLINICAL EQUIPMENT RELATED</span>
+                        2.1) Damage/ breakdown of any equipment when in use<br>
+                        2.2) Use and function of a device in a manner other than it's intended use<br>
+                        2.3) Use of contaminated drug, device or any other product<br>
+                        2.4) Failure or breakdown of device or medical equipment<br>
+                        2.5) Intravascular air embolism<br>
+                        2.6) Burn (e.g. Cautery burns)
+                    </td>
+                    <td>
+                        <span class="footer-title">7. ADMISSION, DISCHAGE AND TRANSFER OF PATIENT</span>
+                        7.1) Wrong I.D. band<br>
+                        7.2) Wring name of patient in file<br>
+                        7.3) Wring information in I.D. band<br>
+                        7.4) Any other
+                    </td>
+                    <td>
+                        <span class="footer-title">10. CARE MANAGEMENT EVENT</span>
+                        10.1) Transfusion reaction related to administration on incompatible blood/ blood product<br>
+                        10.2) Use of out dated drug / IV Fluid<br>
+                        10.3) An avoidable delay in treatment or response to abnormal test result<br>
+                        10.4) Contrast Related Reaction<br>
+                        10.5) Reporting Error in Imaging Services / Pathology Department<br>
+                        10.6) Wrong Diet given to patient<br>
+                        10.7) Re-intubation within 48 hours
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="footer-title">3. ACCOUNTS RELATED</span>
+                        3.1) Wrong cheque given to vendor<br>
+                        3.2) Wrong amount credited<br>
+                        <span class="footer-title">4. BILLING RELATED</span>
+                        4.1) Wrong bill generated<br>
+                        4.2) Difference in Bills and estimate without any reason<br>
+                        <span class="footer-title">5. TPA RELATED</span>
+                        5.1) Delay in Application to TPA > 1 Hr.<br>
+                        5.2) Wrong information sent to TPA
+                    </td>
+                    <td>
+                        <span class="footer-title">8. SURGERY OF ANESTHESIA RELATED</span>
+                        8.1) Performed on wrong site/ side<br>
+                        8.2) Performed on wrong patient<br>
+                        8.3) Wrong surgical procedure performed<br>
+                        8.4) Retained instrument / material discovered post surgery<br>
+                        8.5) Death during or immediately after surgery<br>
+                        8.6) Anaesthesia related adverse event<br>
+                        8.7) Death / Disability due to spinal manipulative surgery<br>
+                        8.8) Wrong information in clinical clearance form
+                    </td>
+                    <td>
+                        <span class="footer-title">11. ANY OTHER (NOT LISTED ABOVE)</span>
+                        ___________________________________<br>
+                        ___________________________________<br>
+                        ___________________________________<br>
+                        ___________________________________<br>
+                        ___________________________________
+                    </td>
+                </tr>
+            </table>
+
+            <div style="margin-top:10px;">
+                IMMEDIATE INTERVENTION DONE :
+                ________________________________________________________________________________<br>
+                __________________________________________________________________________________________________<br>
+                __________________________________________________________________________________________________
+            </div>
+
+            <table style="margin-top:10px;">
+                <tr>
+                    <td>INFORMED TO THE MD BY : _________________________________</td>
+                    <td>ON : _________________________________</td>
+                </tr>
+                <tr>
+                    <td>INFORMED TO THE CEO BY : ________________________________</td>
+                    <td>ON : _________________________________</td>
+                </tr>
+            </table>
+
+            <div style="border: 1px solid black; padding: 10px; margin-top: 10px;">
+                <strong>FOR OFFICE USE (DEPT OF CQI) :</strong><br><br>
+                Form received by : _____________________________ Date : __________ Time : __________ AM/ PM<br><br>
+                Cost of poor Quality : ________________________________________________________________________<br><br>
+                Further actions : <input type="checkbox"> RCA <input type="checkbox"> To be addressed by
+                ________________________________ Committee
+            </div>
+
+            <table style="margin-top: 20px;">
+                <tr>
+                    <td width="50%">__________________________<br>Clinical Head Sign.</td>
+                    <td width="50%" style="text-align: right;">__________________________<br>Name & Sign of CQI Manager
+                    </td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 10px;">
+                <strong>Root Cause Analysis:</strong>
+                <div style="border-bottom: 1px solid #ccc; height: 20px; margin-top: 5px;"></div>
+                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
+                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
+                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
+                <div style="border-bottom: 1px solid #ccc; height: 20px;"></div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+    <div class="page-container">
+        <div class="outer-border">
+
+            <div style="margin-top: 10px;">
+                <strong>Root Cause Analysis:</strong>
+                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <strong>Corrective Actions:</strong>
+                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <strong>Preventive Actions:</strong>
+                <div style="border-bottom: 1px solid black; height: 25px; margin-top: 5px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+                <div style="border-bottom: 1px solid black; height: 25px;"></div>
+            </div>
+
+            <div style="border: 1px solid black; height: 60px; margin-top: 15px;"></div>
+
+            <table class="section-footer" style="margin-top: 0px; width: 100%;">
+                <tr>
+                    <td width="48%" style="font-weight: bold;">Signature of HOD</td>
+                    <td width="22%" style="font-weight: bold;">Date</td>
+                    <td width="30%" style="font-weight: bold;">Time</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; height: 25px;">Signature of Medical Director</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; height: 25px;">Signature of quality coordinator</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    </div>
+
+    </div>
+</body>
+
+</html>

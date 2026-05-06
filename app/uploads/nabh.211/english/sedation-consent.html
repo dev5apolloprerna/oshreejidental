@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Procedural Sedation Consent Form</title>
+
+    <style>
+        /* Reset + Print Safe */
+        * {
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000;
+            font-size: 13px;
+            /*line-height: 1.3;*/
+            background: #fff;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width:190mm;
+            margin: 0 auto;
+            /*padding: 15mm;*/
+            background: #fff;
+            position: relative;
+        }
+
+        .page-container:last-child {
+            page-break-after: auto;
+        }
+
+        /* Addressograph Box (works for both pages) */
+        .header-box,
+        .addressograph {
+            border: 1px solid #000;
+            width: 280px;
+            height: 70px;
+            float: right;
+            padding: 6px 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            clear: both;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .label {
+            font-weight: bold;
+            white-space: nowrap;
+            padding-right: 6px;
+            vertical-align: top;
+        }
+
+        .line-cell {
+            border-bottom: 1px solid #000;
+            width: 100%;
+            height: 16px;
+            position: relative;
+        }
+
+        .section-header,
+        .section-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 12px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .bullet-list {
+            margin: 5px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .bullet-list li {
+            margin-bottom: 3px;
+        }
+
+        /* Full width lines for blank writing areas */
+        .full-line {
+            border-bottom: 1px solid #000;
+            height: 18px;
+            width: 100%;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        /* Inline blank line */
+        .line {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            min-width: 200px;
+            height: 14px;
+            vertical-align: baseline;
+            position: relative;
+        }
+
+        /* Overlay Input - Zero Pixel Shift */
+        .input-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            padding: 0;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .page-container {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+        <div class="header-box">ADDRESSOGRAPH</div>
+
+        <div class="title">Informed Consent Form for Administration of Procedural Sedation</div>
+
+        <table style="margin-bottom: 10px;">
+            <tr>
+                <td style="vertical-align: bottom;">
+                    I,
+                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px; position: relative;">
+                        <input type="text" id="patient_name" name="patient_name" class="input-overlay">
+                    </span>,
+                    hereby give my informed consent to the medical team at [Your Organization/Hospital] to administer
+                    procedural sedation for the purpose of 
+                    <span style="border-bottom: 1px solid black; display: inline-block; width: 200px; position: relative;">
+                        <input type="text" id="input2" name="input2" class="input-overlay">
+                    </span>. I have had the opportunity
+                    to discuss the procedure, its risks, benefits, alternatives, and expected outcomes with the
+                    healthcare provider listed below. I understand the nature of the procedure, the potential risks
+                    involved, and the sedation techniques that will be used.
+                </td>
+            </tr>
+        </table>
+
+        <table style="margin-top: 5px;">
+            <tr>
+                <td colspan="2" class="label" style="padding-bottom: 8px;">Procedure Details:</td>
+            </tr>
+            <tr>
+                <td class="label" style="width: 80px;">Procedure:</td>
+                <td class="line-cell"><input type="text" id="input3" name="input3" class="input-overlay"></td>
+            </tr>
+            <tr>
+                <td class="label" style="padding-top: 8px;">Date and Time:</td>
+                <td class="line-cell"><input type="text" id="input4" name="input4" class="input-overlay"></td>
+            </tr>
+            <tr>
+                <td class="label" style="padding-top: 8px;">Name of the consultant doctor:</td>
+                <td class="line-cell"><input type="text" id="input5" name="input5" class="input-overlay"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top: 8px;">Purpose of the Procedure:</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="font-size: 11px; font-style: italic; color: #444;">
+                    Please describe the purpose of the procedure in simple, understandable terms.
+                </td>
+            </tr>
+        </table>
+
+        <span class="section-header">Risks:</span>
+        <p style="margin: 5px 0;">
+            I have been informed of the potential risks associated with the administration of procedural sedation,
+            including but not limited to:
+        </p>
+        <div class="full-line"><input type="text" id="input6" name="input6" class="input-overlay"></div>
+        <div class="full-line"><input type="text" id="input7" name="input7" class="input-overlay"></div>
+
+        <ul class="bullet-list">
+            <li><strong>Allergic reactions to sedative medications</strong></li>
+            <li>Respiratory depression or difficulty breathing</li>
+            <li>Changes in heart rate or blood pressure</li>
+            <li>Infection or bleeding at the site of the procedure</li>
+            <li>Nausea, vomiting, or other gastrointestinal disturbances</li>
+            <li>Headache or dizziness</li>
+            <li>Adverse drug reactions</li>
+            <li>In extremely rare cases, sedation-related complications resulting in disability or death</li>
+        </ul>
+
+        <span class="section-header">Benefits:</span>
+        <p style="margin: 5px 0;">
+            I have also been informed of the potential benefits of undergoing procedural sedation, which include:
+        </p>
+        <ul class="bullet-list">
+            <li>Increased comfort during the procedure</li>
+            <li>Reduced anxiety and stress</li>
+            <li>Enhanced cooperation and compliance</li>
+            <li>Improved procedural success rate</li>
+        </ul>
+
+        <span class="section-header">Alternatives:</span>
+        <p style="margin: 5px 0;">
+            I have been informed of the alternatives to procedural sedation, including but not limited to:
+        </p>
+        <div class="full-line"><input type="text" id="input8" name="input8" class="input-overlay"></div>
+    </div>
+
+    <div class="page-container">
+        <div class="addressograph">ADDRESSOGRAPH</div>
+
+        <div class="title" style="margin-top:10px;"></div>
+
+        <p style="margin:0 0 10px 0;">Local anesthesia</p>
+        <p style="margin:0 0 10px 0;">General anesthesia</p>
+        <p style="margin:0 0 12px 0;">
+            Non-pharmacological techniques such as distraction, relaxation, or cognitive-behavioral therapy
+        </p>
+
+        <p style="margin:0 0 12px 0;">
+            I understand that I have the right to ask questions about the procedure, its risks and benefits, and
+            the available alternatives. The healthcare provider has addressed all my concerns to my satisfaction,
+            and I am aware that I have the right to withdraw my consent at any time before the procedure.
+        </p>
+
+        <span class="section-title" style="text-decoration:none; font-weight:bold;">Confidentiality and Data
+            Privacy:</span>
+
+        <p style="margin:0 0 12px 0;">
+            I understand that my personal health information will be handled in accordance with the applicable
+            laws and regulations regarding patient confidentiality and data privacy. I authorize the use of my
+            health information for the purpose of this procedure and any related medical documentation or
+            billing processes.
+        </p>
+
+        <p style="margin:0 0 12px 0;">
+            I acknowledge that no guarantees have been made regarding the outcome of the procedure, and
+            unforeseen circumstances or complications may arise during or after the sedation.
+        </p>
+
+        <p style="margin:0 0 16px 0;">
+            By signing below, I confirm that I have read and understood the information provided to me
+            regarding the procedure, risks, benefits, and alternatives. I have had the opportunity to ask questions
+            and have received satisfactory answers. I voluntarily consent to the administration of procedural
+            sedation.
+        </p>
+
+        <div style="margin-top:14px;">Patient Signature and name: <span class="line" style="min-width:140px;"><input type="text" id="patient_name" name="patient_name"patient_name class="input-overlay"></span>
+        </div>
+        <div style="margin-top:14px;">Witness Signature and name: <span class="line" style="min-width:140px;"><input type="text" id="input10" name="input10" class="input-overlay"></span>
+        </div>
+        <div style="margin-top:14px;">Consultant doctor name and Signature: <span class="line"
+                style="min-width:140px;"><input type="text" id="input11" name="input11" class="input-overlay"></span></div>
+    </div>
+    <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+
+</body>
+
+</html>

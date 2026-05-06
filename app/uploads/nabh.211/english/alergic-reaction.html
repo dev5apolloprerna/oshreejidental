@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alergic Reaction</title>
+
+  <style>
+    @page { size: A4; margin: 12mm 12mm 14mm 12mm; }
+
+    body {
+      font-family: DejaVu Sans, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      background: #fff;
+    }
+
+    .container {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* header table only */
+    .main-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .header {
+      text-align: center;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: underline;
+      margin: 0 0 10px 0;
+    }
+
+    .patient-info-cell {
+      vertical-align: top;
+      padding: 0;
+    }
+
+    .patient-info {
+      font-size: 14px;
+    }
+
+    .content {
+      margin-top: 8px;
+    }
+
+    .item-number {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    /* dompdf-safe horizontal options */
+    .item-content {
+      margin-left: 20px;
+      margin-top: 4px;
+    }
+
+    .symptom-item {
+      display: inline-block;
+      margin-right: 18px;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+    .letter {
+      margin-left: 6px;
+      margin-right: 3px;
+    }
+
+    .line-input {
+      border: none;
+      border-bottom: 1px solid #000;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* native checkbox is most stable in dompdf */
+    .chk-box {
+      width: 13px;
+      height: 13px;
+      vertical-align: middle;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Prevent ugly cutting for signature section */
+    .avoid-break,
+    .avoid-break * {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    /* hide submit in pdf */
+    .submit-bar { display: none !important; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- HEADER + PATIENT INFO (keep table here) -->
+    <table class="main-table">
+      <tr>
+        <td colspan="2">
+          <div class="header">
+            <div class="title">Education about the allergies by using dental materials</div>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="patient-info-cell" style="text-align:left;">
+          <div class="patient-info">
+            Name of Patient:
+            <input type="text" id="patient_name" name="patient_name" class="line-input" style="width:250px;">
+          </div>
+        </td>
+
+        <td class="patient-info-cell" style="text-align:right;">
+          <div class="patient-info">
+            UHID:
+            <input type="text" id="input1" name="input1" class="line-input" style="width:150px;">
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- ✅ MAIN CONTENT OUTSIDE TABLE (THIS FIXES DOMPDF PAGINATION) -->
+    <div class="content">
+
+      <div class="item-number">1. GUTTA PERCHA</div>
+      <div class="item-content">
+        <div class="symptom-item"><input type="checkbox" id="input2" name="input2" class="chk-box"><span class="letter">a.</span> Itching</div>
+        <div class="symptom-item"><input type="checkbox" id="input3" name="input3" class="chk-box"><span class="letter">b.</span> Hives</div>
+        <div class="symptom-item"><input type="checkbox" id="input4" name="input4" class="chk-box"><span class="letter">c.</span> Anaphylaxis</div>
+      </div>
+
+      <div class="item-number">2. Zinc Oxide Ointment</div>
+      <div class="item-content">
+        <div class="symptom-item"><input type="checkbox" id="input5" name="input5" class="chk-box"><span class="letter">a.</span> Skin irritation.</div>
+        <div class="symptom-item"><input type="checkbox" id="input6" name="input6" class="chk-box"><span class="letter">b.</span> Rashes</div>
+        <div class="symptom-item"><input type="checkbox" id="input7" name="input7" class="chk-box"><span class="letter">c.</span> itching/swelling</div>
+        <div class="symptom-item"><input type="checkbox" id="input8" name="input8" class="chk-box"><span class="letter">d.</span> Trouble breathing</div>
+      </div>
+ <div class="item-number">3. ROOT CANAL SEALER</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input9" name="input9" class="chk-box"><span class="letter">a.</span> Severe pain in the jaw</div>
+                                <div class="symptom-item"><input type="checkbox" id="input10" name="input10" class="chk-box"><span class="letter">b.</span> Swelling of mouth/lip</div>
+                                <div class="symptom-item"><input type="checkbox" id="input11" name="input11" class="chk-box"><span class="letter">c.</span> Rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input12" name="input12" class="chk-box"><span class="letter">d.</span> Difficulty breathing</div>
+                            </div>
+    
+                            <div class="item-number">4. CA[OH]2 ,IODOFORM</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input13" name="input13" class="chk-box"><span class="letter">a.</span> Sever pain</div>
+                                <div class="symptom-item"><input type="checkbox" id="input14" name="input14" class="chk-box"><span class="letter">b.</span> Swelling in jaw</div>
+                                <div class="symptom-item"><input type="checkbox" id="input15" name="input15" class="chk-box"><span class="letter">c.</span> Skin rashes</div>
+                            </div>
+    
+                            <div class="item-number">5. Ethylenediaminetetraacetic (EDTA)</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input16" name="input16" class="chk-box"><span class="letter">a.</span> Hives</div>
+                                <div class="symptom-item"><input type="checkbox" id="input17" name="input17" class="chk-box"><span class="letter">b.</span> Difficulty breathing</div>
+                                <div class="symptom-item"><input type="checkbox" id="input18" name="input18" class="chk-box"><span class="letter">c.</span> Swelling face/lips/tongue</div>
+                            </div>
+    
+                            <div class="item-number">6. FORMOCRESOL</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input19" name="input19" class="chk-box"><span class="letter">a.</span> Dyspnea</div>
+                                <div class="symptom-item"><input type="checkbox" id="input20" name="input20" class="chk-box"><span class="letter">b.</span> Cough</div>
+                                <div class="symptom-item"><input type="checkbox" id="input21" name="input21" class="chk-box"><span class="letter">c.</span> Triggering of asthma</div>
+                            </div>
+    
+                            <div class="item-number">7. RUBBER BASE IMPRESSION MATERIAL</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input22" name="input22" class="chk-box"><span class="letter">a.</span> Gag reflects</div>
+                                <div class="symptom-item"><input type="checkbox" id="input23" name="input23" class="chk-box"><span class="letter">b.</span> Rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input24" name="input24" class="chk-box"><span class="letter">c.</span> Itching</div>
+                            </div>
+    
+                            <div class="item-number">8. ALGINATE</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input25" name="input25" class="chk-box"><span class="letter">a.</span> Gag reflects</div>
+                                <div class="symptom-item"><input type="checkbox" id="input26" name="input26" class="chk-box"><span class="letter">b.</span> Rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input27" name="input27" class="chk-box"><span class="letter">c.</span> Itching</div>
+                            </div>
+    
+                            <div class="item-number">9. WAX SHEET</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input28" name="input28" class="chk-box"><span class="letter">a.</span> Hives</div>
+                                <div class="symptom-item"><input type="checkbox" id="input29" name="input29" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input30" name="input30" class="chk-box"><span class="letter">c.</span> Ulcers</div>
+                            </div>
+    
+                            <div class="item-number">10. ZINC PHOSPHATE CEMENT</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input31" name="input31" class="chk-box"><span class="letter">a.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input32" name="input32" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                            </div>
+    
+                            <div class="item-number">11. POLYCARBOXYLATE CEMENT</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input33" name="input33" class="chk-box"><span class="letter">a.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input34" name="input34" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                            </div>
+    
+                            <div class="item-number">12. GIC</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input35" name="input35" class="chk-box"><span class="letter">a.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input36" name="input36" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                            </div>
+    
+                            <div class="item-number">13. COMPOSITE</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input37" name="input37" class="chk-box"><span class="letter">a.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input38" name="input38" class="chk-box"><span class="letter">b.</span> Swelling</div>
+                                <div class="symptom-item"><input type="checkbox" id="input39" name="input39" class="chk-box"><span class="letter">c.</span> Urticaria</div>
+                            </div>
+    
+                            <div class="item-number">14. POST & CORE MATERIAL</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input40" name="input40" class="chk-box"><span class="letter">a.</span> Urticaria</div>
+                                <div class="symptom-item"><input type="checkbox" id="input41" name="input41" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input42" name="input42" class="chk-box"><span class="letter">c.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input43" name="input43" class="chk-box"><span class="letter">d.</span> Swelling</div>
+                            </div>
+    
+                            <div class="item-number">15. DUAL CORE CEMENT</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input44" name="input44" class="chk-box"><span class="letter">a.</span> Urticaria</div>
+                                <div class="symptom-item"><input type="checkbox" id="input45" name="input45" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input46" name="input46" class="chk-box"><span class="letter">c.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input47" name="input47" class="chk-box"><span class="letter">d.</span> Swelling</div>
+                            </div>
+    
+                            <div class="item-number">16. BLEACHING MATERIAL</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input48" name="input48" class="chk-box"><span class="letter">a.</span> Hives</div>
+                                <div class="symptom-item"><input type="checkbox" id="input49" name="input49" class="chk-box"><span class="letter">b.</span> Rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input50" name="input50" class="chk-box"><span class="letter">c.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input51" name="input51" class="chk-box"><span class="letter">d.</span> Ulcer</div>
+                                <div class="symptom-item"><input type="checkbox" id="input52" name="input52" class="chk-box"><span class="letter">e.</span>Difficulty in breathing</div>
+                                <div class="symptom-item"><input type="checkbox" id="input53" name="input53" class="chk-box"><span class="letter">f.</span>Dental hyper sensitivity</div>
+                            </div>
+    
+                            <div class="item-number">17. NORMAL SALINE</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input54" name="input54" class="chk-box"><span class="letter">a.</span> Skin rashes</div>
+                            </div>
+    
+                            <div class="item-number">18. SODIUM HYPOCHLORIDE</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input55" name="input55" class="chk-box"><span class="letter">a.</span> Hives</div>
+                                <div class="symptom-item"><input type="checkbox" id="input56" name="input56" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input57" name="input57" class="chk-box"><span class="letter">c.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input58" name="input58" class="chk-box"><span class="letter">d.</span> Ulcer</div>
+                                <div class="symptom-item"><input type="checkbox" id="input59" name="input59" class="chk-box"><span class="letter">e.</span>Difficulty in breathing</div>
+                            </div>
+    
+                            <div class="item-number">19. H2O2</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input60" name="input60" class="chk-box"><span class="letter">a.</span> Hives</div>
+                                <div class="symptom-item"><input type="checkbox" id="input61" name="input61" class="chk-box"><span class="letter">b.</span> Skin rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input62" name="input62" class="chk-box"><span class="letter">c.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input63" name="input63" class="chk-box"><span class="letter">d.</span> Ulcer</div>
+                                <div class="symptom-item"><input type="checkbox" id="input64" name="input64" class="chk-box"><span class="letter">e.</span>Difficulty in breathing</div>
+                            </div>
+    
+                            <div class="item-number">20. BETADINE</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input65" name="input65" class="chk-box"><span class="letter">a.</span> Skin rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input66" name="input66" class="chk-box"><span class="letter">b.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input67" name="input67" class="chk-box"><span class="letter">c.</span> Swelling</div>
+                            </div>
+    
+                            <div class="item-number">21. IMPRESSION COMPOUND</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input68" name="input68" class="chk-box"><span class="letter">a.</span> Redness</div>
+                                <div class="symptom-item"><input type="checkbox" id="input69" name="input69" class="chk-box"><span class="letter">b.</span> Sever pain</div>
+                                <div class="symptom-item"><input type="checkbox" id="input70" name="input70" class="chk-box"><span class="letter">c.</span> Burning mouth</div>
+                            </div>
+    
+                            <div class="item-number">22. GREEN STICK ,ZOE IMPRESSION PASTE</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input71" name="input71" class="chk-box"><span class="letter">a.</span> Irritation</div>
+                                <div class="symptom-item"><input type="checkbox" id="input72" name="input72" class="chk-box"><span class="letter">b.</span> Rashes</div>
+                                <div class="symptom-item"><input type="checkbox" id="input73" name="input73" class="chk-box"><span class="letter">c.</span> itching</div>
+                                <div class="symptom-item"><input type="checkbox" id="input74" name="input74" class="chk-box"><span class="letter">d.</span> Breathing</div>
+                                <div class="symptom-item"><input type="checkbox" id="input75" name="input75" class="chk-box"><span class="letter">e.</span> Hives</div>
+                                <div class="symptom-item"><input type="checkbox" id="input76" name="input76" class="chk-box"><span class="letter">f.</span> Ulcers</div>
+                            </div>
+    
+                            <div class="item-number">23. BASE PLATE </div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input77" name="input77" class="chk-box"><span class="letter">a.</span> Edema</div>
+                                <div class="symptom-item"><input type="checkbox" id="input78" name="input78" class="chk-box"><span class="letter">b.</span> Dyspnea</div>
+                                <div class="symptom-item"><input type="checkbox" id="input79" name="input79" class="chk-box"><span class="letter">c.</span> Cough</div>
+                                <div class="symptom-item"><input type="checkbox" id="input80" name="input80" class="chk-box"><span class="letter">d.</span>Triggering of asthma</div>
+                            </div>
+    
+                            <div class="item-number"> 24. ACRYLIC RESIN</div>
+                            <div class="item-content">
+                                <div class="symptom-item"><input type="checkbox" id="input81" name="input81" class="chk-box"><span class="letter">a.</span> Edema</div>
+                                <div class="symptom-item"><input type="checkbox" id="input82" name="input82" class="chk-box"><span class="letter">b.</span> Dyspnea</div>
+                                <div class="symptom-item"><input type="checkbox" id="input83" name="input83" class="chk-box"><span class="letter">c.</span> Cough</div>
+                                <div class="symptom-item"><input type="checkbox" id="input84" name="input84" class="chk-box"><span class="letter">d.</span>Triggering of asthma</div>
+                            </div>
+      <!-- ... KEEP ALL ITEMS 3 to 24 SAME AS YOURS (no table) ... -->
+
+      <!-- ✅ Bottom section keep together -->
+      <div class="avoid-break" style="margin-top: 20px;">
+        <p>
+          If you have found any symptoms kindly contact our clinic at +91 9727801390
+          or in case of unavoidable emergency please contact near by hospital.
+        </p>
+
+        <p style="margin:0;">
+          I have been informed about the allergic reaction of dental materials which used during procedures
+          along with preventive measures by doctor in a language I understand.
+        </p>
+
+        <table style="width:100%; border-collapse:collapse; margin-top:25px;">
+          <tr>
+            <td style="text-align:left;">
+              Name of Consultant doctor:
+              <input type="text" id="doctor_name" name="doctor_name" class="line-input" style="width:200px;">
+            </td>
+            <td style="text-align:right;">
+              Sign:
+              <input type="text" id="input85" name="input85" class="line-input" style="width:150px;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="text-align:left; padding-top:15px;">
+              Name of Patient / Relative:
+              <input type="text" id="patient_name_2" name="patient_name_2" class="line-input" style="width:200px;">
+            </td>
+            <td style="text-align:right; padding-top:15px;">
+              Sign:
+              <input type="text" id="input86" name="input86" class="line-input" style="width:150px;">
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

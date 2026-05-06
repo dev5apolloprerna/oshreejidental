@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Satisfaction Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        /* Container to mimic A4 Page */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10px auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        h2,
+        h3 {
+            text-align: center;
+            margin-bottom: 5px;
+            text-decoration: underline;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .input-box {
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9f9f9;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        .question-section {
+            margin-top: 10px;
+        }
+
+        .question {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .footer-line {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        /* Print Specific Styles */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+        <h2>PATIENT SATISFACTION FORM</h2>
+        <h3 style="text-decoration: none;">OPD patient Feedback</h3>
+
+        <div class="header-section">
+            <div class="input-box" style="width: 60%;">
+                Name of the Patient: _________________________________________
+            </div>
+            <div class="input-box" style="width: 25%;">
+                OPD No: ____________
+            </div>
+        </div>
+
+        <div class="intro-text">
+            Dear Client,<br>
+            You have spent your valuable time in the hospital in connection with your / relative’s/ friend’s treatment.
+            You are requested to share your opinion about the quality of services, which you experienced, while visiting
+            the hospital. The information provided by you would be kept confidential and would only be used for
+            improving the services.
+            <br>
+            <strong>Please tick the appropriate box and drop the questionnaire in the Suggestion box</strong>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">Sl No</th>
+                    <th style="width: 45%;">Attributes</th>
+                    <th class="center-text">Poor<br>1</th>
+                    <th class="center-text">Fair<br>2</th>
+                    <th class="center-text">Good<br>3</th>
+                    <th class="center-text">Very Good<br>4</th>
+                    <th class="center-text">Excellent<br>5</th>
+                    <th class="center-text">No comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="center-text">1</td>
+                    <td>Availability of sufficient information in Hospital (Directional & location signages,
+                        Registration counter, Laboratory, Radiology Department, Dispensary, etc)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">2</td>
+                    <td>Waiting time at the registration counter</td>
+                    <td style="font-size: 9px;">more than 30 mins</td>
+                    <td style="font-size: 9px;">10-30 mins</td>
+                    <td style="font-size: 9px;">5-10 mins</td>
+                    <td style="font-size: 9px;">Within 5 mins</td>
+                    <td style="font-size: 9px;">Immediate</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">3</td>
+                    <td>Behaviour and attitude of Hospital Staff</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">4</td>
+                    <td>Amenities in waiting area (chairs, fans, drinking water and cleanliness of bathrooms & toilets)
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">5</td>
+                    <td>Attitude & communication of Doctors</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">6</td>
+                    <td>Time spent on consulting, examination and counselling</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">7</td>
+                    <td>Availability of Lab and radiology investigation facilities within the hospital</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">8</td>
+                    <td>Promptness at Medicine distribution counter</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">9</td>
+                    <td>Availability of prescribed drugs at the hospital dispensary</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">10</td>
+                    <td>Your overall satisfaction during the visit to the hospital</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="question-section">
+            <div class="question">1. What improvement would you like to see in the hospital</div>
+            <div class="question">2. What made you come to this hospital for treatment?</div>
+            <div class="question">3. Would you like to return to this hospital next time for treatment</div>
+            <div class="question">4. Your valuable suggestions</div>
+        </div>
+
+        <div class="footer-line">
+            <span>Date________________</span>
+            <span>Clinic________________</span>
+            <span>Age________________</span>
+            <span>Sex________________</span>
+        </div>
+    </div>
+    <div class="page">
+        <div class="hospital-name-box">Name of the Hospital</div>
+
+        <h2>PATIENT SATISFACTION FORM</h2>
+        <h3 style="text-decoration: none;">OPD patient Feedback</h3>
+
+        <div class="header-section">
+            <div class="input-box" style="width: 60%;">
+                Name of the Patient: _________________________________________
+            </div>
+            <div class="input-box" style="width: 25%;">
+                OPD No: ____________
+            </div>
+        </div>
+
+        <div class="intro-text">
+            તમે તમારા મૂલ્યવાન સમયને તમારા સાથી / મિત્રના ઉપચારના સંબંધમાં હોસ્પિટલમાં વિતાવ્યા છે. તમને વિનંતી કરવામાં
+            આવે છે કે તમે જે દર્દીઓની મુલાકાત લીધી છે, તેઓની ગુણવત્તા વિશે તમારા અભિપ્રાય જણાવો. તમારા દ્વારા પ્રદાન
+            કરવામાં આવેલી માહિતી ગોપનીય રાખવામાં આવશે અને સેવાઓનો ઉપયોગ ફક્ત તેના ઉપયોગ કરવામાં આવશે.
+            <br>
+            <strong>મહેરબાની કરીને યોગ્ય બોક્સ પર ટીક કરો અને સૂચન બોક્સમાં પ્રશ્નાવલિ છોડો.</strong>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">ક્રમાંક નં.</th>
+                    <th style="width: 45%;">માપદંડ</th>
+                    <th class="center-text">ખરાબ<br>1</th>
+                    <th class="center-text">ઠીક<br>2</th>
+                    <th class="center-text">સારી<br>3</th>
+                    <th class="center-text">ખૂબ સારી<br>4</th>
+                    <th class="center-text">ઉત્તમ<br>5</th>
+                    <th class="center-text">કોઈ ટીપ્પણીઓ નહિ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="center-text">1</td>
+                    <td>હોસ્પિટલમાં પૂરતી માહિતી ઉપલબ્ધ (દિશાસૂચક અને સ્થાન સંકેતો, નોંધણી કાઉન્ટર, દવા, વગેરે)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">2</td>
+                    <td>નોંધણી કાઉન્ટર પર રાહ જોવી</td>
+                    <td style="font-size: 10px;">૩૦ મિનિટથી વધારે</td>
+                    <td style="font-size: 10px;">૧૦ થી ૩૦ મિનિટ</td>
+                    <td style="font-size: 10px;">૫ થી ૧૦ મિનિટ</td>
+                    <td style="font-size: 10px;">૫ મિનિટની અંદર</td>
+                    <td style="font-size: 10px;">તરત જ</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">3</td>
+                    <td>વર્તણૂક અને હોસ્પિટલ સ્ટાફનો વલણ</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">4</td>
+                    <td>રાહ જોવાના વિસ્તારમાં સુવિધાઓ (ખુરશીઓ, પંખો, પીવાનું પાણી અને શૌચાલયની સ્વચ્છતા)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">5</td>
+                    <td>ડોક્ટર્સનું વલણ અને સંચાર</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">6</td>
+                    <td>સલાહ, પરીક્ષા અને પરામર્શ પર સમય પસાર કર્યો</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">7</td>
+                    <td>મેડિસિન વિતરણ કાઉન્ટર પર શીઘ્રતા</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">8</td>
+                    <td>હોસ્પિટલ દવાખાનામાં સૂચિત દવાઓની ઉપલબ્ધતા</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="center-text">9</td>
+                    <td>હોસ્પિટલની મુલાકાત દરમિયાન તમારો સંપૂર્ણ સંતોષ</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="question-section">
+            <div class="question">1. તમે હોસ્પિટલમાં શું સુધારણા જોવા માંગો છો ?</div>
+            <div class="question">2. તમે સારવાર માટે આ હોસ્પિટલમાં કેમ આવ્યા છો ?</div>
+            <div class="question">3. શું તમે સારવાર માટે આગલી વખતે આ હોસ્પિટલમાં પાછા આવવા માંગો છો ?</div>
+            <div class="question">4. તમારા મૂલ્યવાન સૂચનો</div>
+        </div>
+
+        <div class="footer-line">
+            <span>Date: ________________</span>
+            <span>Age: ________________</span>
+            <span>Sex: ________________</span>
+        </div>
+    </div>
+</body>
+
+</html>

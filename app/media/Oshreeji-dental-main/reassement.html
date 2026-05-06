@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Re assessment Sheet</title>
+
+    <style>
+        /* ===== PRINT PERFECT (A4) ===== */
+        @page {
+            size: A4;
+            margin: 12mm;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #000;
+            /* background: #f0f0f0; */
+            /* screen only */
+        }
+
+        /* screen preview container */
+        .sheet {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 12px auto;
+            background: #fff;
+            box-sizing: border-box;
+            padding: 0;
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, .12); */
+            /* screen only */
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            .sheet {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .outer-pad {
+            padding: 10mm 10mm 8mm 10mm;
+        }
+
+        /* main grid */
+        .grid th,
+        .grid td {
+            border: 1px solid #444;
+            font-size: 13px;
+            padding: 6px 6px;
+            vertical-align: top;
+        }
+
+        .grid th {
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .grid .rowh td {
+            height: 55px;
+        }
+
+        /* adjust if you want more/less rows */
+        .title {
+            text-align: center;
+            font-weight: 700;
+            font-size: 24px;
+            padding: 18px 0 10px 0;
+        }
+
+        .topline {
+            width: 100%;
+            font-size: 15px;
+            margin: 2px 0 10px 0;
+        }
+
+        .line {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            min-width: 260px;
+            height: 18px;
+            vertical-align: bottom;
+            margin-left: 6px;
+        }
+
+        .line.small {
+            min-width: 160px;
+        }
+
+        /* pain scale image block */
+        .pain-wrap {
+            padding: 8mm 10mm 10mm 10mm;
+            page-break-inside: avoid;
+        }
+
+        .pain-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sheet">
+        <div class="outer-pad">
+            <div class="title">Re assessment Sheet</div>
+
+            <div class="topline">
+                <span style="display:inline-block; width:70%;">
+                    Name of the patient:<span class="line"></span>
+                </span>
+
+                <span style="display:inline-block; width:29%; text-align:right;">
+                    UHID :<span class="line small"></span>
+                </span>
+            </div>
+
+            <table class="grid">
+                <colgroup>
+                    <col style="width:8%">
+                    <col style="width:16%">
+                    <col style="width:9%">
+                    <col style="width:8%">
+                    <col style="width:8%">
+                    <col style="width:8%">
+                    <col style="width:8%">
+                    <col style="width:8%">
+                    <col style="width:8%">
+                    <col style="width:19%">
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>Name of the procedure</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Pulse</th>
+                        <th>BP</th>
+                        <th>R/R</th>
+                        sedation-consent<th>Spo2</th>
+                        <th>Pain score</th>
+                        <th>Clinical note</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!-- 10 rows (same look as your image). Increase/decrease as needed -->
+                    <tr class="rowh">
+                        <td></td>
+                        sedation-consent<td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="rowh">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bottom pain scale (embedded as image so print looks same) -->
+        <div class="pain-wrap">
+            <!-- <img class="pain-img" alt="Pain scale" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABNAAA...
+(VERY LONG BASE64 REMOVED HERE FOR CHAT)
+...AAAAAElFTkSuQmCC"> -->
+        </div>
+    </div>
+
+    <!--
+    ✅ IMPORTANT:
+    I removed the middle part of the base64 here because it’s extremely long.
+    If you want, tell me “send full base64” and I will paste the complete working code in one shot.
+    OR
+    Replace the <img src="data:..."> with:
+      <img class="pain-img" src="pain-scale.png">
+    and keep pain-scale.png in same folder.
+  -->
+</body>
+
+</html>

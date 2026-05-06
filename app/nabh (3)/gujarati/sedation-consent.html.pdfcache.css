@@ -1,0 +1,141 @@
+
+
+        /* Reset + Print Safe */
+        * {
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000;
+            font-size: 13px;
+            line-height: 1.3;
+            background: #fff;
+        }
+
+        .page-container {
+            width: 210mm;
+            /* A4 width */
+            min-height: 297mm;
+            /* A4 height */
+            margin: 0 auto;
+            padding: 15mm;
+            background: #fff;
+            position: relative;
+        }
+
+        .page-container:last-child {
+            page-break-after: auto;
+        }
+
+        /* Addressograph Box (works for both pages) */
+        .header-box,
+        .addressograph {
+            border: 1px solid #000;
+            width: 280px;
+            height: 70px;
+            float: right;
+            padding: 6px 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 90px;
+            margin-bottom: 15px;
+            clear: both;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .label {
+            font-weight: bold;
+            white-space: nowrap;
+            padding-right: 6px;
+            vertical-align: top;
+        }
+
+        .line-cell {
+            border-bottom: 1px solid #000;
+            width: 100%;
+            height: 16px;
+            position: relative;
+        }
+
+        .section-header,
+        .section-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 12px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .bullet-list {
+            margin: 5px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .bullet-list li {
+            margin-bottom: 3px;
+        }
+
+        /* Full width lines for blank writing areas */
+        .full-line {
+            border-bottom: 1px solid #000;
+            height: 18px;
+            width: 100%;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        /* Inline blank line */
+        .line {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            min-width: 200px;
+            height: 14px;
+            vertical-align: baseline;
+            position: relative;
+        }
+
+        /* Overlay Input - Zero Pixel Shift */
+        .input-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            padding: 0;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .page-container {
+                margin: 0 auto;
+            }
+        }
+    

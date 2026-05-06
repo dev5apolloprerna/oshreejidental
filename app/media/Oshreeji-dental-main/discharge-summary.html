@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Forms Collection</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 20px;
+            /* background-color: #f0f0f0; */
+        }
+
+        /* Page setup for A4 */
+        .page {
+            width: 210mm;
+            /* min-height: 297mm; */
+            padding: 25px;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Border for Discharge Summary Style */
+        .outer-border {
+            border: 1px solid black;
+            height: 100%;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            text-decoration: underline;
+            text-transform: uppercase;
+            font-size: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding: 8px;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .bordered td {
+            border: 1px solid black;
+        }
+
+        /* Fillable Line Logic */
+        .row-line {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .label {
+            white-space: nowrap;
+            padding-right: 5px;
+        }
+
+        .line {
+            flex-grow: 1;
+            border-bottom: 1px solid black;
+            height: 14px;
+            margin-left: 5px;
+        }
+
+        @media print {
+            .page-break { page-break-before: always; }
+        }
+        
+        
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <div class="outer-border">
+            <h2>Discharge Summary</h2>
+            
+            <div class="row-line"><span class="label">Name of patient:</span><div class="line"></div></div>
+            
+            <div style="display: flex;">
+                <div class="row-line" style="flex: 1;"><span class="label">Age/Sex:</span><div class="line"></div></div>
+                <div class="row-line" style="flex: 1; margin-left: 40px;"><span class="label">UHID:</span><div class="line"></div></div>
+            </div>
+
+            <div class="row-line"><span class="label">Name of treating doctor:</span><div class="line"></div></div>
+
+            <div style="display: flex;">
+                <div class="row-line" style="flex: 1;"><span class="label">Date of procedure:</span><div class="line"></div></div>
+                <div class="row-line" style="flex: 1; margin-left: 40px;"><span class="label">Time of Admission:</span><div class="line"></div></div>
+            </div>
+
+            <div class="row-line"><span class="label">Diagnosis:</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+
+            <div class="row-line"><span class="label">Procedure Details:</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+
+            <div class="row-line"><span class="label">H/O Allergy:</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+
+            <div class="row-line"><span class="label">Clinical Notes (Brief details of the procedure):</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+
+            <div class="row-line" style="margin-top: 20px;"><span class="label">Investigations:</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="page">
+        <div class="outer-border">
+            <!-- <h2>Discharge Summary</h2> -->
+
+            <div class="row-line" style="margin-top: 20px;"><span class="label">Medication administered:</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            
+            <div class="row-line"><span class="label">Follow up Advise:</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+
+            <div class="row-line"><span class="label">Medication details:</span><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            <div class="row-line"><div class="line"></div></div>
+            
+            <div class="" style="height: 100px;">
+            <div style="display: flex;">
+                <div class="row-line" style="flex: 1;"><span class="label">When to obtain urgent care:</div>
+            </div>
+            </div>
+
+            <div class="" style="height: 70px;">
+            <div class="row-line"><span class="label">How to obtain urgent care: call on</span><div class="line"></div></div>
+            </div>
+
+            <div class="" style="height: 70px;">
+            <div class="row-line"><span class="label">Name of Consulting Doctor:</span><div class="line"></div></div>
+            </div>
+            
+            
+            <div class="" style="height: 150px;">
+            <div class="row-line"><span class="label">Signature:</span></div>
+            </div>
+            </div>
+
+            
+        </div>
+    </div>
+
+</body>
+</html>
