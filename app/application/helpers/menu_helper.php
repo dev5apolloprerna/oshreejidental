@@ -331,6 +331,15 @@ function app_init_admin_sidebar_menu_items()
             'position' => 20,
             'badge'    => [],
         ]);
+        if (!empty($_COOKIE['branch'])) {
+             $CI->app_menu->add_sidebar_children_item('reports', [
+                'slug'     => 'reports-doctor-treatment',
+                'name'     => 'Doctor Treatment Report',
+                'href'     => admin_url('generalreport?repo_type=doctor_treatment'),
+                'position' => 99,
+                // 'icon'     => 'fa fa-user-md',
+            ]);
+        }
         // $CI->app_menu->add_sidebar_children_item('reports', [
         //     'slug'     => 'knowledge-base-reports',
         //     'name'     => _l('als_kb_articles_submenu'),

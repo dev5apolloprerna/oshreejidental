@@ -8,27 +8,13 @@
                 <div class="panel_s">
                     <div class="panel-body">
                         <?php if (is_admin()) { ?>
-                            <div class="clearfix" style="color: #415165;"><?php echo '<h3 class="no-margin bold">' . _l('General Report') . '</h3>'; ?></div>
+                            <div class="clearfix" style="color: #415165;"><?php echo '<h3 class="no-margin bold">' . _l('Doctor Treatment Report') . '</h3>'; ?></div>
                             <hr class="hr-panel-heading" />
                         <?php } ?>
 
-                        <form id="doctor_treatment_report_form" method="get" action="">
+                        <form id="doctor_treatment_report_form" method="get" action="<?php echo admin_url('generalreport'); ?>">
+                            <input type="hidden" name="repo_type" value="doctor_treatment">
                             <div class="row">
-                                <div class="col-md-3">
-                                    <div class="select-placeholder">
-                                        <label><?php echo _l('filter_by_g'); ?></label>
-                                        <select name="repo_type" id="repo_type" class="selectpicker" data-width="100%" data-live-search="true">
-                                            <option value="appointments">Appointments</option>
-                                            <option value="leads">Leads</option>
-                                            <option value="patients">Patients</option>
-                                            <option value="task">Task</option>
-                                            <option value="lab_work">Lab Work</option>
-                                            <option value="payment_receipts">Payment Receipts</option>
-                                            <option value="doctor_treatment" selected>Doctor Treatment Report</option>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <div class="col-md-3">
                                     <?php echo render_date_input('start_date', 'from_date', $this->input->get('start_date')); ?>
                                 </div>
@@ -80,6 +66,11 @@
 <?php init_tail(); ?>
 <script>
     $(function() {
-        initDataTable('.table-service_details', window.location.href, [], [0]);
+        var doctorTreatmentTableUrl = '<?php
+            $doctorTreatmentParams = $this->input->get();
+            $doctorTreatmentParams['repo_type'] = 'doctor_treatment';
+            echo admin_url('generalreport?' . http_build_query($doctorTreatmentParams));
+        ?>';
+        initDataTable('.table-service_details', doctorTreatmentTableUrl, [], [0]);
     });
 </script>
