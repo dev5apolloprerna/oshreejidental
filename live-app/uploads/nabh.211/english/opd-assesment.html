@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Assessment Form</title>
+    <style>
+@page {
+    page:A4;
+    margin: 20px;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 190mm;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+td, th {
+    border: 1px solid black;
+    padding: 8px;
+    vertical-align: top;
+    font-size: 14px;
+}
+
+.header-title {
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+/* IMPORTANT: Use height instead of min-height */
+.input-line {
+    height: 20px;
+}
+
+/* FIX triage box (remove inline-block) */
+.triage-box {
+    width: 30px;
+    height: 15px;
+    border: 1px solid black;
+    display: inline-table;
+    vertical-align: middle;
+}
+
+/* Remove layout-breaking properties from inputs */
+.cell-input,
+.small-input,
+.triage-input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    width: 100%;
+}
+.cell-input,
+.small-input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+
+    display: inline;
+    width: auto;
+}
+
+/* REMOVE ABSOLUTE POSITIONING SUPPORT */
+.advice-signature {
+    margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+    <div class="page-container">
+        <table>
+            <tr>
+                <td colspan="6" class="header-title">PATIENT ASSESSMENT FORM</td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><span class="label">Name:</span> <input type="text" id="patient_name" name="patient_name"
+                        class="small-input" value=""></td>
+                <td colspan="1"><span class="label">Reg. No.:</span> <input type="text" id="input2" name="input2"
+                        class="small-input" value=""></td>
+                <td colspan="1"><span class="label">Date :</span> <input type="text" id="today_date" name="today_date"
+                        class="small-input" value=""></td>
+                <td colspan="1"><span class="label">Time:</span> <input type="text" id="today_time" name="today_time"
+                        class="small-input" value=""></td>
+            </tr>
+
+
+            <tr>
+                <td colspan="3" rowspan="2"><span class="label">Address:</span> <input type="text" id="input5"
+                        name="input5" class="small-input" value=""></td>
+                <td colspan="1"><span class="label">Age :</span> <input type="text" id="input6" name="input6"
+                        class="small-input" value=""></td>
+                <td colspan="2"><span class="label">Sex :</span> <input type="text" id="input7" name="input7"
+                        class="small-input" value=""></td>
+            </tr>
+            <tr>
+                <td colspan="1" style="border-top: none;"><input type="text" id="input8" name="input8"
+                        class="cell-input" value=""></td>
+                <td colspan="2" style="border-top: none;"><input type="text" id="input9" name="input9"
+                        class="cell-input" value=""></td>
+            </tr>
+
+
+            <tr>
+                <td colspan="3"><span class="label">Allergies:</span> <input type="text" id="input10" name="input10"
+                        class="small-input" value=""></td>
+                <td colspan="3">
+                    <span class="label">Triage Priority : 1</span>
+                    <div class="triage-box"><input type="text" id="input11" name="input11" class="triage-input"
+                            value=""></div>
+
+                    <span class="label">2</span>
+                    <div class="triage-box"><input type="text" id="input12" name="input12" class="triage-input"
+                            value=""></div>
+
+                    <span class="label">3</span>
+                    <div class="triage-box"><input type="text" id="input13" name="input13" class="triage-input"
+                            value=""></div>
+
+                    <span class="label">4</span>
+                    <div class="triage-box"><input type="text" id="input14" name="input14" class="triage-input"
+                            value=""></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" style="height: 40px;">
+                    <span class="label">Chief Complain/ODP :</span>
+                    <input type="text" id="input15" name="input15" class="cell-input" value="">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" style="height: 40px;">
+                    <span class="label">Past Medical History:</span>
+                    <input type="text" id="input16" name="input16" class="cell-input" value="">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" style="background-color: #ffffff;">
+                    <span class="label">Medicine reconciliation:</span>
+                    <input type="text" id="input17" name="input17" class="cell-input" value="">
+                </td>
+            </tr>
+
+            <tr style="text-align: center; font-weight: bold;">
+                <td colspan="1" style="width: 20%;">List only those medications currently being taken</td>
+                <td colspan="1" style="width: 15%;">(Units)<br>Dosage</td>
+                <td colspan="1">Frequency</td>
+                <td colspan="1">Route</td>
+                <td colspan="2">Home medications continued at discharge?</td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input18" name="input18" class="cell-input" value=""></td>
+                <td><input type="text" id="input19" name="input19" class="cell-input" value=""></td>
+                <td><input type="text" id="input20" name="input20" class="cell-input" value=""></td>
+                <td><input type="text" id="input21" name="input21" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input22" name="input22" class="cell-input" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input23" name="input23" class="cell-input" value=""></td>
+                <td><input type="text" id="input24" name="input24" class="cell-input" value=""></td>
+                <td><input type="text" id="input25" name="input25" class="cell-input" value=""></td>
+                <td><input type="text" id="input26" name="input26" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input27" name="input27" class="cell-input" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input28" name="input28" class="cell-input" value=""></td>
+                <td><input type="text" id="input29" name="input29" class="cell-input" value=""></td>
+                <td><input type="text" id="input30" name="input30" class="cell-input" value=""></td>
+                <td><input type="text" id="input31" name="input31" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input32" name="input32" class="cell-input" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input33" name="input33" class="cell-input" value=""></td>
+                <td><input type="text" id="input34" name="input34" class="cell-input" value=""></td>
+                <td><input type="text" id="input35" name="input35" class="cell-input" value=""></td>
+                <td><input type="text" id="input36" name="input36" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input37" name="input37" class="cell-input" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input38" name="input38" class="cell-input" value=""></td>
+                <td><input type="text" id="input39" name="input39" class="cell-input" value=""></td>
+                <td><input type="text" id="input40" name="input40" class="cell-input" value=""></td>
+                <td><input type="text" id="input41" name="input41" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input42" name="input42" class="cell-input" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input43" name="input43" class="cell-input" value=""></td>
+                <td><input type="text" id="input44" name="input44" class="cell-input" value=""></td>
+                <td><input type="text" id="input45" name="input45" class="cell-input" value=""></td>
+                <td><input type="text" id="input46" name="input46" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input47" name="input47" class="cell-input" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input48" name="input48" class="cell-input" value=""></td>
+                <td><input type="text" id="input49" name="input49" class="cell-input" value=""></td>
+                <td><input type="text" id="input50" name="input50" class="cell-input" value=""></td>
+                <td><input type="text" id="input51" name="input51" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input52" name="input52" class="cell-input" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="input53" name="input53" class="cell-input" value=""></td>
+                <td><input type="text" id="input54" name="input54" class="cell-input" value=""></td>
+                <td><input type="text" id="input55" name="input55" class="cell-input" value=""></td>
+                <td><input type="text" id="input56" name="input56" class="cell-input" value=""></td>
+                <td colspan="2"><input type="text" id="input57" name="input57" class="cell-input" value=""></td>
+            </tr>
+
+
+
+
+            <tr>
+                <td colspan="6" style="height: 60px;">
+                    <span class="label">Past Hospitalization / Surgery:</span>
+                    <input type="text" id="input58" name="input58" class="cell-input" value="">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" style="height: 60px;">
+                    <span class="label">Family History:</span>
+                    <input type="text" id="input59" name="input59" class="cell-input" value="">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="height: 90px;">
+                    <span class="label">Medicines:</span>
+                    <input type="text" id="input60" name="input60" class="cell-input" value="">
+                </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="6">
+                    <span class="label">General Examination:</span>
+                    <table style="border: none; margin-top: 10px;">
+                        <tr style="border: none;">
+                            <td style="border: none; width: 25%;">BP : <input type="text" id="input61" name="input61"
+                                    class="small-input" value=""></td>
+                            <td style="border: none; width: 25%;">Pulse: <input type="text" id="input62" name="input62"
+                                    class="small-input" value=""></td>
+                            <td style="border: none; width: 25%;">RR : <input type="text" id="input63" name="input63"
+                                    class="small-input" value=""></td>
+                            <td style="border: none; width: 25%;">Temp : <input type="text" id="input64" name="input64"
+                                    class="small-input" value=""></td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">Height: <input type="text" id="input65" name="input65"
+                                    class="small-input" value=""></td>
+                            <td style="border: none;">Weight: <input type="text" id="input66" name="input66"
+                                    class="small-input" value=""></td>
+                            <td style="border: none;"></td>
+                            <td style="border: none;"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td style="height: 100px;">
+                    <span class="label">Investigations :</span>
+                    <input type="text" id="input67" name="input67" class="cell-input" value="">
+                </td>
+            </tr>
+
+            <tr>
+                <td style="height: 100px;">
+                    <span class="label">Diagnosis :</span>
+                    <input type="text" id="input68" name="input68" class="cell-input" value="">
+                </td>
+            </tr>
+
+            <tr>
+                <td style="height: 300px; position: relative;">
+                    <span class="label">Advice:</span>
+                    <input type="text" id="input69" name="input69" class="cell-input" value="">
+
+                    <div style="position: absolute; bottom: 15px; left: 10px;">
+                        <span class="label">Doctor Name</span><br>
+                        <span class="label">and Signature:</span>
+                        <br>
+                        <input type="text" id="input70" name="input70" class="small-input" value="">
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+    </div>
+    
+    
+
+</body>
+
+</html>
