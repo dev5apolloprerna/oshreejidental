@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Endodontic Consent Form</title>
+    <style>
+    /* DOMPDF page setup */
+@page {
+    size: A4;
+    margin: 15mm 15mm 15mm 15mm;
+}
+        /* Reset and Base Styles */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            font-family: "Times New Roman", Times, serif;
+            color: #000;
+        }
+
+        /* Container for everything */
+        /* Container for everything - FIXED for A4 paper */
+.wrapper {
+    width: 100%;
+    max-width: 190mm; /* A4 page width is 210mm, leave margins */
+    margin: 0 auto;
+    /*padding: 15mm 20mm; */
+    page-break-after: always;
+    box-sizing: border-box;
+}
+
+        /* Main structure using tables for exact alignment */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .title-main {
+            font-size: 24pt;
+            font-weight: bold;
+            padding-bottom: 25px; 
+            padding-top: 25px !important;
+        }
+
+        .section-header {
+            font-weight: bold;
+            font-size: 14pt;
+            padding: 15px 0 5px 0;
+        }
+
+        .text-block {
+            font-size: 12pt;
+            line-height: 1.5;
+            text-align: justify;
+            padding-bottom: 12px;
+        }
+
+        /* Input Lines (your original underline) */
+        .input-line {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            min-width: 250px;
+            height: 18px;
+            vertical-align: bottom;
+        }
+
+        /* ✅ Input that matches .input-line EXACTLY (no pixel shift) */
+        .input-line-input {
+            border: 0;
+            border-bottom: 1px solid #000;
+            background: transparent;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            height: 18px;
+            line-height: 18px;
+            display: inline-block;
+            vertical-align: bottom;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
+            min-width: 250px;
+        }
+
+        /* The Endorsement Table Styling */
+        .endorsement-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14pt;
+            margin-bottom: 20px;
+            /* Forces this section to start on a new page when printing */
+            page-break-before: always;
+            padding-top: 20px;
+        }
+
+        .endorsement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .endorsement-table th,
+        .endorsement-table td {
+            border: 1px solid #000;
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 11pt;
+        }
+
+        .endorsement-table th {
+            font-weight: bold;
+        }
+
+        /* Vertical spacing for rows */
+        .row-height {
+            height: 35px;
+        }
+
+        @media print {
+            .wrapper {
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======================= ENGLISH PAGE ======================= -->
+    <div class="wrapper">
+        <table class="content-table">
+            <tr>
+                <td class="title-main">Endodontic Consent and Information form</td>
+            </tr>
+            <tr>
+                <td class="text-block">
+                    We would like our patients to be informed about the various procedures involved in endodontics
+                    therapy and have their consent before starting treatment. Conservative root canal therapy or
+                    endodontic surgery might be required for complete treatment of the tooth. The following discusses
+                    possible risks that may occur from endodontic treatment and other treatment choices.
+                </td>
+            </tr>
+            <tr>
+                <td class="section-header">Risks Specific to Endodontic Therapy</td>
+            </tr>
+            <tr>
+                <td class="text-block">The risks include:</td>
+            </tr>
+            <tr>
+                <td class="text-block">The possibility of instruments breakage within the root canals: extra openings of
+                    the crown or root of the tooth.</td>
+            </tr>
+            <tr>
+                <td class="text-block">Damaged bridges, existing fillings, crowns or porcelain veneers.</td>
+            </tr>
+            <tr>
+                <td class="text-block">Loss of tooth structure in gaining access to canals.</td>
+            </tr>
+            <tr>
+                <td class="text-block">Cracked teeth.</td>
+            </tr>
+            <tr>
+                <td class="text-block">During treatment, complications may occur which make treatment impossible or
+                    which may require dental surgery.</td>
+            </tr>
+
+            <tr>
+                <td class="section-header">Other Treatment Choices</td>
+            </tr>
+            <tr>
+                <td class="text-block">These include no treatment, waiting for more definite development of symptoms or
+                    tooth extraction. Risks involved in these choices might include pain, infection, swelling, loss of
+                    teeth and infection to other areas.</td>
+            </tr>
+
+            <tr>
+                <td class="section-header">Consent</td>
+            </tr>
+            <tr>
+                <td class="text-block">
+                    I, the undersigned, being the patient (parents or guardian of minor patient) consent to the
+                    performing of procedures decided upon to be necessary or advisable in the opinion of the doctor. I
+                    understand that root canal treatment is an attempt to save a tooth that might otherwise required
+                    extraction. Although root canal therapy has a very high degree of success, it cannot be guaranteed.
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-top: 30px;">
+                    <div style="margin-bottom: 15px;">
+                        Signature:
+                        <!-- ✅ first special fields -->
+                        <input class="input-line-input" type="text" id="input1" name="input1" />
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        Date:
+                        <input class="input-line-input" type="text" id="today_date" name="today_date" />
+                    </div>
+
+                    <div>
+                        Place:
+                        <input class="input-line-input" style="min-width: 150px;" type="text" id="input2"
+                            name="input2" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="endorsement-title">CONSENT ENDORSEMENT FOR EACH CYCLE</div>
+
+        <table class="endorsement-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">Sr. No.</th>
+                    <th style="width: 25%;">Date and time</th>
+                    <th style="width: 37%;">Signature of patient/patients relative</th>
+                    <th style="width: 30%;">Signature of doctor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows 1-15 with inputs (keeps same cell size) -->
+                <tr class="row-height">
+                    <td>1.</td>
+                    <td><input class="input-line-input" style="min-width: 100%; width: 100%;border: none;" type="text" id="input3"
+                            name="input3"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input4"
+                            name="input4"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text"
+                            id="doctor_name" name="doctor_name"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>2.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input5"
+                            name="input5"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input6"
+                            name="input6"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input7"
+                            name="input7"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>3.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input8"
+                            name="input8"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input9"
+                            name="input9"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input10"
+                            name="input10"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>4.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input11"
+                            name="input11"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input12"
+                            name="input12"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input13"
+                            name="input13"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>5.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input14"
+                            name="input14"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input15"
+                            name="input15"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input16"
+                            name="input16"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>6.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input17"
+                            name="input17"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input18"
+                            name="input18"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input19"
+                            name="input19"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>7.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input20"
+                            name="input20"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input21"
+                            name="input21"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input22"
+                            name="input22"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>8.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input23"
+                            name="input23"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input24"
+                            name="input24"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input25"
+                            name="input25"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>9.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input26"
+                            name="input26"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input27"
+                            name="input27"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input28"
+                            name="input28"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>10.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input29"
+                            name="input29"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input30"
+                            name="input30"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input31"
+                            name="input31"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>11.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input32"
+                            name="input32"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input33"
+                            name="input33"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input34"
+                            name="input34"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>12.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input35"
+                            name="input35"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input36"
+                            name="input36"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input37"
+                            name="input37"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>13.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input38"
+                            name="input38"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input39"
+                            name="input39"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input40"
+                            name="input40"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>14.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input41"
+                            name="input41"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input42"
+                            name="input42"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input43"
+                            name="input43"></td>
+                </tr>
+                <tr class="row-height">
+                    <td>15.</td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input44"
+                            name="input44"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input45"
+                            name="input45"></td>
+                    <td><input class="input-line-input"  style="min-width: 100%; width: 100%;border: none;" type="text" id="input46"
+                            name="input46"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+    </div>
+    <!-- ====================== SUBMIT SECTION ====================== -->
+  
+
+
+</body>
+
+</html>

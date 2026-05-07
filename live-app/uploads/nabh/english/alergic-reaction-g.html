@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="gu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ડેન્ટલ એલર્જી ફોર્મ</title>
+    <style>
+        @media print {
+            @page {
+                margin: 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #fff;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 21cm;
+            margin: 0 auto;
+            min-height: 29.7cm;
+        }
+
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .header-cell {
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 0;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-decoration: underline;
+            width: 100%;
+        }
+
+        .patient-info-cell {
+            padding: 0;
+            vertical-align: top;
+        }
+
+        .patient-info {
+            font-size: 14px;
+        }
+
+        .content-cell {
+            padding: 0;
+        }
+
+        .content {
+            margin-left: 20px;
+        }
+
+        .item-number {
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        /* Horizontal Layout for options */
+        .item-content {
+            margin-left: 20px;
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .symptom-item {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .letter {
+            margin-right: 3px;
+        }
+
+        /* Pixel-perfect input and checkbox styling */
+        .line-input {
+            border: none;
+            border-bottom: 1px solid black;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
+            margin: 0;
+        }
+
+        .chk-box {
+            width: 15px;
+            height: 15px;
+            border: 1px solid black;
+            appearance: none;
+            -webkit-appearance: none;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+            position: relative;
+            background: transparent;
+            margin-right: 5px;
+            padding: 0;
+        }
+
+        .chk-box:checked:after {
+            content: '\2713';
+            font-size: 13px;
+            color: #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <table class="main-table">
+            <tr>
+                <td class="header-cell" colspan="2">
+                    <div class="header">
+                        <div class="title">ડેન્ટલ મટેરીયલ દ્વારા થતી એલર્જી ની જાણકારી</div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="patient-info-cell" style="text-align: left;">
+                    <div class="patient-info">
+                        પેશન્ટ નું નામ : <input type="text" id="patient_name" name="patient_name" class="line-input" style="width: 250px;">
+                    </div>
+                </td>
+                <td class="patient-info-cell" style="text-align: right;">
+                    <div class="patient-info">
+                        યુ.એચ.આઈ.ડી.: <input type="text" id="input1" name="input1" class="line-input" style="width: 150px;">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="content-cell" colspan="2">
+                    <div class="content">
+                        <div class="item-number">1. ગટ્ટા પરયા</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input2" name="input2" class="chk-box"><span class="letter">a.</span> ખંજવાળ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input3" name="input3" class="chk-box"><span class="letter">b.</span> શિળસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input4" name="input4" class="chk-box"><span class="letter">c.</span> એનાફિલેક્સિસ</div>
+                        </div>
+
+                        <div class="item-number">2. ઝીંક ઓક્સાઈડ મલમ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input5" name="input5" class="chk-box"><span class="letter">a.</span> ત્વચામાં બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input6" name="input6" class="chk-box"><span class="letter">b.</span> ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input7" name="input7" class="chk-box"><span class="letter">c.</span> ખંજવાળ/સોજો</div>
+                            <div class="symptom-item"><input type="checkbox" id="input8" name="input8" class="chk-box"><span class="letter">d.</span> શ્વાસમાં તકલીફ</div>
+                        </div>
+
+                        <div class="item-number">3. રૂટ કેનાલ સીલર</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input9" name="input9" class="chk-box"><span class="letter">a.</span> જડબામાં તીવ્ર દુખાવો</div>
+                            <div class="symptom-item"><input type="checkbox" id="input10" name="input10" class="chk-box"><span class="letter">b.</span> મોં કે હોઠનો સોજો</div>
+                            <div class="symptom-item"><input type="checkbox" id="input11" name="input11" class="chk-box"><span class="letter">c.</span> ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input12" name="input12" class="chk-box"><span class="letter">d.</span> શ્વાસમાં તકલીફ</div>
+                        </div>
+
+                        <div class="item-number">4. CA[OH]2 / આયોડોફોમ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input13" name="input13" class="chk-box"><span class="letter">a.</span> તીવ્ર પીડા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input14" name="input14" class="chk-box"><span class="letter">b.</span> જડબામાં સોજો</div>
+                            <div class="symptom-item"><input type="checkbox" id="input15" name="input15" class="chk-box"><span class="letter">c.</span> ત્વચા પર ચકામા</div>
+                        </div>
+
+                        <div class="item-number">5. ઈડીટીએ (EDTA)</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input16" name="input16" class="chk-box"><span class="letter">a.</span> શિળસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input17" name="input17" class="chk-box"><span class="letter">b.</span> શ્વાસમાં તકલીફ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input18" name="input18" class="chk-box"><span class="letter">c.</span> તમારા ચહેરા, હોઠ, જીમ અથવા ગળામાં
+                                સોબો</div>
+                        </div>
+
+                        <div class="item-number">6. ફોરમોક્રેસોલ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input19" name="input19" class="chk-box"><span class="letter">a.</span> શ્વાસની તકલીફ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input20" name="input20" class="chk-box"><span class="letter">b.</span> ઉધરસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input21" name="input21" class="chk-box"><span class="letter">c.</span> અસ્થમાની શરૂઆત</div>
+                        </div>
+
+                        <div class="item-number">7. રબર બેઝ ઇમ્પ્રેશન મટિરિયલ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input22" name="input22" class="chk-box"><span class="letter">a.</span> ગેગ રિફ્લેક્સ કરે છે</div>
+                            <div class="symptom-item"><input type="checkbox" id="input23" name="input23" class="chk-box"><span class="letter">b.</span> ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input24" name="input24" class="chk-box"><span class="letter">c.</span> ખંજવાળ</div>
+                        </div>
+
+                        <div class="item-number">8. અલ્જીનેટ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input25" name="input25" class="chk-box"><span class="letter">a.</span> ગેગ રિફ્લેક્સ કરે છે</div>
+                            <div class="symptom-item"><input type="checkbox" id="input26" name="input26" class="chk-box"><span class="letter">b.</span> ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input27" name="input27" class="chk-box"><span class="letter">c.</span> ખંજવાળ</div>
+                        </div>
+
+                        <div class="item-number">9. વેક્સ શીટ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input28" name="input28" class="chk-box"><span class="letter">a.</span> શિળસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input29" name="input29" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input30" name="input30" class="chk-box"><span class="letter">c.</span> અલ્સર</div>
+                        </div>
+
+                        <div class="item-number">10. ઝિંક ફોસ્ફેટ સિમેન્ટ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input31" name="input31" class="chk-box"><span class="letter">a.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input32" name="input32" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                        </div>
+
+                        <div class="item-number">11. પોલીકાર્બોક્સીલેટ સિમેન્ટ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input33" name="input33" class="chk-box"><span class="letter">a.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input34" name="input34" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                        </div>
+
+                        <div class="item-number">12. જીઆઈસી (GIC)</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input35" name="input35" class="chk-box"><span class="letter">a.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input36" name="input36" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                        </div>
+
+                        <div class="item-number">13. કમ્પોઝિટ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input37" name="input37" class="chk-box"><span class="letter">a.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input38" name="input38" class="chk-box"><span class="letter">b.</span> સોજો</div>
+                            <div class="symptom-item"><input type="checkbox" id="input39" name="input39" class="chk-box"><span class="letter">c.</span> અિટકૅરીયા</div>
+                        </div>
+
+                        <div class="item-number">14. પોસ્ટ અને કોર મટિરિયલ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input40" name="input40" class="chk-box"><span class="letter">a.</span> અિટકૅરીયા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input41" name="input41" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input42" name="input42" class="chk-box"><span class="letter">c.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input43" name="input43" class="chk-box"><span class="letter">d.</span> સોજો</div>
+                        </div>
+
+                        <div class="item-number">15. ડ્યુઅલ કોર સિમેન્ટ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input44" name="input44" class="chk-box"><span class="letter">a.</span> અિટકૅરીયા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input45" name="input45" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input46" name="input46" class="chk-box"><span class="letter">c.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input47" name="input47" class="chk-box"><span class="letter">d.</span> સોજો</div>
+                        </div>
+
+                        <div class="item-number">16. બ્લીચિંગ મટિરિયલ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input48" name="input48" class="chk-box"><span class="letter">a.</span> શિળસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input49" name="input49" class="chk-box"><span class="letter">b.</span> ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input50" name="input50" class="chk-box"><span class="letter">c.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input51" name="input51" class="chk-box"><span class="letter">d.</span> અલ્સર</div>
+                            <div class="symptom-item"><input type="checkbox" id="input52" name="input52" class="chk-box"><span class="letter">e.</span> શ્વાસની તકલીફ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input53" name="input53" class="chk-box"><span class="letter">f.</span>દાંતની અતિસંવેદનશીલતા</div>
+                        </div>
+
+                        <div class="item-number">17. નોર્મલ સલાઈન</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input54" name="input54" class="chk-box"><span class="letter">a.</span> ત્વચા પર ચકામા</div>
+                        </div>
+
+                        <div class="item-number">18. સોડિયમ હાઇપોક્લોરાઇડ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input55" name="input55" class="chk-box"><span class="letter">a.</span> શિળસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input56" name="input56" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input57" name="input57" class="chk-box"><span class="letter">c.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input58" name="input58" class="chk-box"><span class="letter">d.</span> અલ્સર</div>
+                            <div class="symptom-item"><input type="checkbox" id="input59" name="input59" class="chk-box"><span class="letter">e.</span> શ્વાસની તકલીફ</div>
+                        </div>
+
+                        <div class="item-number">19. H2O2</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input60" name="input60" class="chk-box"><span class="letter">a.</span> શિળસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input61" name="input61" class="chk-box"><span class="letter">b.</span> ત્વચા પર ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input62" name="input62" class="chk-box"><span class="letter">c.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input63" name="input63" class="chk-box"><span class="letter">d.</span> અલ્સર</div>
+                            <div class="symptom-item"><input type="checkbox" id="input64" name="input64" class="chk-box"><span class="letter">e.</span> શ્વાસની તકલીફ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input65" name="input65" class="chk-box"><span class="letter">f.</span>દાંતની અતિસંવેદનશીલતા</div>
+                        </div>
+
+                        <div class="item-number">20. બીટાડીન</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input66" name="input66" class="chk-box"><span class="letter">a.</span> ત્વચા પર ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input67" name="input67" class="chk-box"><span class="letter">b.</span> બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input68" name="input68" class="chk-box"><span class="letter">c.</span> સોજો</div>
+                        </div>
+
+                        <div class="item-number">21. ઇમ્પ્રેશન કમ્પાઉન્ડ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input69" name="input69" class="chk-box"><span class="letter">a.</span> લાલાશ (Redness)</div>
+                            <div class="symptom-item"><input type="checkbox" id="input70" name="input70" class="chk-box"><span class="letter">b.</span> તીવ્ર પીડા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input71" name="input71" class="chk-box"><span class="letter">c.</span> મોંમાં બળતરા</div>
+                        </div>
+
+                        <div class="item-number">22. ગ્રીન સ્ટીક, ઝો ઇમ્પ્રેશન પેસ્ટ</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input72" name="input72" class="chk-box"><span class="letter">a.</span> ત્વચામાં બળતરા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input73" name="input73" class="chk-box"><span class="letter">b.</span> ચકામા</div>
+                            <div class="symptom-item"><input type="checkbox" id="input74" name="input74" class="chk-box"><span class="letter">c.</span> ખંજવાળ/સોજો</div>
+                            <div class="symptom-item"><input type="checkbox" id="input75" name="input75" class="chk-box"><span class="letter">d.</span> શ્વાસમાં તકલીફ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input76" name="input76" class="chk-box"><span class="letter">e.</span> શિળસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input77" name="input77" class="chk-box"><span class="letter">f.</span> અલ્સર</div>
+                        </div>
+
+                        <div class="item-number">23. બેઝ પ્લેટ / 24. એક્રેલિક રેઝિન</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input78" name="input78" class="chk-box"><span class="letter">a.</span> એડીમા (સોજો)</div>
+                            <div class="symptom-item"><input type="checkbox" id="input79" name="input79" class="chk-box"><span class="letter">b.</span> શ્વાસની તકલીફ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input80" name="input80" class="chk-box"><span class="letter">c.</span> ઉધરસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input81" name="input81" class="chk-box"><span class="letter">d.</span>અસ્થમાની શરૂઆત</div>
+                        </div>
+
+                        <div class="item-number">23. બેઝ પ્લેટ / 24. એક્રેલિક રેઝિન</div>
+                        <div class="item-content">
+                            <div class="symptom-item"><input type="checkbox" id="input82" name="input82" class="chk-box"><span class="letter">a.</span> એડીમા (સોજો)</div>
+                            <div class="symptom-item"><input type="checkbox" id="input83" name="input83" class="chk-box"><span class="letter">b.</span> શ્વાસની તકલીફ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input84" name="input84" class="chk-box"><span class="letter">c.</span> ઉધરસ</div>
+                            <div class="symptom-item"><input type="checkbox" id="input85" name="input85" class="chk-box"><span class="letter">d.</span>અસ્થમાની શરૂઆત</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="padding-top: 30px;">
+                    <p>જો તમને કોઈ લક્ષણો જણાય તો કૃપા કરીને અમારા ક્લિનિકનો +91 9727801390 પર સંપર્ક કરો. મને ડૉક્ટર દ્વારા એલર્જીક પ્રતિક્રિયા વિશે જાણ હું જે ભાષામાં સમજી શકું તે ભાષા માં કરવામાં આવી છે.</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="patient-info-cell" style="text-align: left !important; padding-top: 25px;">
+                    <div class="patient-info">
+                        ડોક્ટર નું નામ : <input type="text" id="doctor_name" name="doctor_name" class="line-input" style="width: 200px;">
+                    </div>
+                </td>
+                <td class="patient-info-cell" style="text-align: right; padding-top: 25px;">
+                    <div class="patient-info">
+                        ડૉક્ટર ની સહી : <input type="text" id="input86" name="input86" class="line-input" style="width: 150px;">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="patient-info-cell" style="text-align: left !important; padding-top: 15px;">
+                    <div class="patient-info">
+                        પેશન્ટ નું નામ : <input type="text" id="patient_name" name="patient_name" class="line-input" style="width: 200px;">
+                    </div>
+                </td>
+                <td class="patient-info-cell" style="text-align: right; padding-top: 15px;">
+                    <div class="patient-info">
+                        પેશન્ટ ની સહી : <input type="text" id="input87" name="input87" class="line-input" style="width: 150px;">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consent for Anesthesia Form</title>
+    <style>
+    body {
+        font-family: DejaVu Sans, sans-serif;
+        line-height: 1.5;
+        margin: 20px;
+        color: #000;
+        font-size: 13px;
+    }
+
+    .container {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    h1 {
+        text-align: center;
+        text-decoration: underline;
+        text-transform: uppercase;
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+
+    .consent-line {
+        margin-bottom: 15px;
+        text-align: justify;
+    }
+
+    /* Important: Avoid inline-block + min-width combo */
+    .dotted-line {
+        border-bottom: 1px solid #000;
+        display: inline;
+        padding: 0 60px 2px 60px;
+    }
+
+    ol {
+        padding-left: 20px;
+    }
+
+    ol li {
+        margin-bottom: 8px;
+    }
+
+    /* REMOVE FLEX — DOMPDF DOES NOT SUPPORT */
+    .checkbox-section {
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Simple checkbox for PDF */
+    .box-input {
+        width: 12px;
+        height: 12px;
+        border: 1px solid #000;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    /* Hide real HTML inputs in PDF */
+    input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 13px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    td {
+        padding: 5px 0;
+        vertical-align: bottom;
+    }
+
+    .label {
+        white-space: nowrap;
+        padding-right: 5px;
+    }
+
+    .colon {
+        width: 5px;
+    }
+
+    .line {
+        border-bottom: 1px solid #000;
+        height: 18px;
+    }
+
+    .spacer {
+        width: 20px;
+    }
+
+    /* REMOVE SUBMIT BAR FROM PDF */
+    .submit-bar {
+        /*display: none;*/
+    }
+</style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Consent for Anesthesia</h1>
+
+        <div class="consent-line">
+            I <span class="dotted-line" style="min-width: 350px;"><input type="text" id="patient_name" name="patient_name" class="line-input"></span> give my consent to Dr.
+            <span class="dotted-line" style="min-width: 250px;"><input type="text" id="doctor_name" name="doctor_name" class="line-input"></span> for my relative Mr./Mrs.
+            <span class="dotted-line" style="min-width: 250px;"><input type="text" id="input1" name="input1" class="line-input"></span> for local anaesthesia.
+        </div>
+
+        <ol>
+            <li>The anaesthesia outcome, possible side effects (complications) has been thoroughly explained to me by
+                Anaesthetist/ staff.</li>
+            <li>I have been explained that anaesthesia may not be completely safe and may be risky to any healthy person
+                too.</li>
+            <li>I give the permission to do any required changes or give medications as necessary during anaesthesia.
+            </li>
+            <li>I have been informed that during anaesthesia there may be a possibility of any complication. eg.:
+                cardiac arrest, severe haemorrhage, infection, hypertension, pulmonary embolism etc. I trust fully if it
+                happens anaesthetist Dr. <span class="dotted-line" style="min-width: 350px;"><input type="text" id="doctor_name" name="doctor_name" class="line-input"></span> or any other doctor
+                appointed through them me accordingly. I agree with their decisions. I have read this form/ this form
+                has been read out to me.</li>
+            <li>Alternatives: <span class="dotted-line" style="width: 80%;"><input type="text" id="input2" name="input2" class="line-input"></span><br>
+                <span class="dotted-line" style="width: 100%; margin-top: 10px;"></span>
+            </li>
+            <li>Benefits: <span class="dotted-line" style="width: 85%;"><input type="text" id="input3" name="input3" class="line-input"></span><br>
+                <span class="dotted-line" style="width: 100%; margin-top: 10px;"></span>
+            </li>
+            <li>I understand the above written instructions and I give the permission in fully conscious status; without
+                any pressure.</li>
+        </ol>
+
+        <div class="checkbox-section">
+            <input type="checkbox" id="input4" name="input4" class="box-input">
+            We will do patch test for precaution of the allergic complication.
+        </div>
+
+        <table>
+            <tr>
+                <td class="label">Date</td>
+                <td class="colon">:</td>
+                <td class="line" style="width: 25%;"><input type="text" id="today_date" name="today_date" class="line-input"></td>
+                <td class="spacer"></td>
+                <td class="label">Name of the Patient</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="patient_name" name="patient_name" class="line-input"></td>
+            </tr>
+            <tr>
+                <td class="label">Time</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input6" name="input6" class="line-input"></td>
+                <td class="spacer"></td>
+                <td class="label">Sign. Of the Patient</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input7" name="input7" class="line-input"></td>
+            </tr>
+            <tr>
+                <td class="label">Name of the Unit Nurse</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input8" name="input8" class="line-input"></td>
+                <td class="spacer"></td>
+                <td class="label">Name of the Relative</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input9" name="input9" class="line-input"></td>
+            </tr>
+            <tr>
+                <td class="label">Name of the Medical Officer</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input10" name="input10" class="line-input"></td>
+                <td class="spacer"></td>
+                <td class="label">Relation with Patient</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input11" name="input11" class="line-input"></td>
+            </tr>
+            <tr>
+                <td class="label">Name of the Anaesthetist</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input12" name="input12" class="line-input"></td>
+                <td class="spacer"></td>
+                <td class="label">Sign. Of the Relative</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input13" name="input13" class="line-input"></td>
+            </tr>
+            <tr>
+                <td class="label">Sign. Of Anaesthetist</td>
+                <td class="colon">:</td>
+                <td class="line"><input type="text" id="input14" name="input14" class="line-input"></td>
+                <td colspan="4"></td>
+            </tr>
+        </table>
+    </div>
+    <!-- ====================== SUBMIT SECTION ====================== -->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+
+</body>
+
+</html>

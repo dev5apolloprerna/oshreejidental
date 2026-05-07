@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Notes + Post Operative Orders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            /*background: #f0f0f0;*/
+            line-height: 1.3;
+        }
+        
+        @page {
+            size: A4;
+            margin: 15mm 15mm;
+        }
+        
+        .page {
+            width: 100%;
+            max-width: 190mm;
+            background: white;
+            margin: 0 auto 20px;
+            padding: 20px;
+            position: relative;
+            
+        }
+        
+        .page-break {
+            page-break-after: always;
+            
+        }
+        
+        /* Main container for first page content */
+        .content {
+            width: 100%;
+        }
+        
+        /* Header with OPERATION NOTES and ADDRESSOGRAPH */
+        .header-section {
+            display: table;
+            width: 100%;
+            margin-bottom: 15px;
+            border-collapse: collapse;
+        }
+        
+        .header-left {
+            display: table-cell;
+            width: 120px;
+        }
+        
+        .header-center {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .header-right {
+            display: table-cell;
+            width: 120px;
+            height: 70px;
+            border: 2px solid #000;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        /* Tables styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        
+        td, th {
+            border: 1px solid #999;
+            padding: 6px 8px;
+            font-size: 13px;
+            vertical-align: top;
+        }
+        
+        .no-border {
+            border: none;
+        }
+        
+        .no-border td {
+            border: none;
+            padding: 4px 0;
+        }
+        
+        .border-top {
+            border-top: 3px solid #ccc;
+        }
+        
+        .border-bottom {
+            border-bottom: 1px solid #999;
+        }
+        
+        /* Checkbox styling - FIXED to actual checkboxes */
+        .checkbox-group {
+            white-space: nowrap;
+        }
+        
+        .checkbox-item {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        
+        /* Input fields */
+        input[type="text"], 
+        input[type="time"], 
+        input[type="date"], 
+        textarea {
+            border: none;
+            /*border-bottom: 1px solid #777;*/
+            background: transparent;
+            font-family: inherit;
+            font-size: 13px;
+            padding: 2px 4px;
+            width: 100%;
+            outline: none;
+        }
+        
+        textarea {
+            /*border: 1px solid #777;*/
+            resize: none;
+            width: 100%;
+        }
+        
+        .inline-input {
+            display: inline-block;
+            border-bottom: 1px solid #777;
+            min-width: 100px;
+        }
+        
+        /* Section headers */
+        .section-header {
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 16px;
+            padding: 8px 0;
+            border-top: 3px solid #ccc;
+            border-bottom: 1px solid #999;
+            margin: 15px 0 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subsection-header {
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            padding: 5px 0;
+            border-top: 3px solid #ccc;
+            border-bottom: 1px solid #999;
+            margin: 10px 0;
+        }
+        
+        /* Operation findings box */
+        .findings-box {
+            height: 200px;
+            border: 1px solid #999;
+            padding: 8px;
+        }
+        
+        /* Big box for Important Steps */
+        .important-steps-box {
+            border: 1px solid #999;
+            height: 400px;
+            position: relative;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        
+        .important-steps-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .steps-textarea {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #999;
+            margin-bottom: 10px;
+        }
+        
+        .bottom-details {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+        }
+        
+        .bottom-details p {
+            margin: 8px 0;
+        }
+        
+        /* Signature lines */
+        .signature-line {
+            display: inline-block;
+            border-bottom: 1px solid #777;
+            min-width: 200px;
+            margin-left: 5px;
+        }
+        
+        /* Third page specific */
+        .third-page {
+            position: relative;
+            min-height: 27cm;
+        }
+        
+        .page-border {
+            border: 1px solid #777;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            pointer-events: none;
+        }
+        
+        .third-page-content {
+            padding: 30px 25px;
+            position: relative;
+        }
+        
+        .continue-text {
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        
+        .surgeon-signature-top {
+            text-align: center;
+            margin: 40px 0 60px;
+            font-size: 14px;
+        }
+        
+        .post-op-header {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            border-top: 2px solid #777;
+            border-bottom: 2px solid #777;
+            padding: 15px 0;
+            margin: 30px 0 20px;
+            letter-spacing: 2px;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 40px;
+        }
+        
+        .orders-table td {
+            border: none;
+            border-bottom: 1px solid #777;
+            padding: 8px 0;
+        }
+        
+        .surgeon-signature-bottom {
+            margin-top: 50px;
+            font-size: 14px;
+        }
+        
+        /* Width specifications */
+        .w-10 { width: 10%; }
+        .w-15 { width: 15%; }
+        .w-20 { width: 20%; }
+        .w-25 { width: 25%; }
+        .w-30 { width: 30%; }
+        .w-40 { width: 40%; }
+        .w-50 { width: 50%; }
+        .w-60 { width: 60%; }
+        .w-70 { width: 70%; }
+        
+        /* Fix for dompdf */
+        .keep-together {
+            page-break-inside: avoid;
+        }
+        
+        .inline-block {
+            display: inline-block;
+        }
+        
+        .mt-10 { margin-top: 10px; }
+        .mt-20 { margin-top: 20px; }
+        .mb-10 { margin-bottom: 10px; }
+        .mb-20 { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-left"></div>
+            <div class="header-center">OPERATION NOTES</div>
+            <div class="header-right">ADDRESSOGRAPH</div>
+        </div>
+        
+        <!-- Main table -->
+        <table>
+            <tr>
+                <td class="w-20">Date:</td>
+                <td class="w-30"><input type="text" name="today_date" id="today_date" placeholder=""></td>
+                <td class="w-15">Time:</td>
+                <td class="w-35"><input type="text" name="input2" id="input2" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Operating Surgeon:</td>
+                <td><input type="text" name="input3" id="input3" placeholder=""></td>
+                <td>Speciality:</td>
+                <td><input type="text" name="input4" id="input4" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Operating Surgeon:</td>
+                <td><input type="text" name="input5" id="input5" placeholder=""></td>
+                <td>Speciality:</td>
+                <td><input type="text" name="input6" id="input6" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Asst. Surgeon:</td>
+                <td><input type="text" name="input7" id="input7" placeholder=""></td>
+                <td>Speciality:</td>
+                <td><input type="text" name="input8" id="input8" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Anesthetist</td>
+                <td colspan="3"><input type="text" name="input9" id="input9" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Dentist/Dental assistant:</td>
+                <td colspan="3"><input type="text" name="input10" id="input10" placeholder=""></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="padding: 10px 8px;">
+                    Pre operative diagnosis: <input type="text" name="input11" id="input11" style="width: 70%; margin-left: 10px;" placeholder="">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="padding: 10px 8px;">
+                    Post operative diagnosis: <input type="text" name="input12" id="input12" style="width: 70%; margin-left: 10px;" placeholder="">
+                </td>
+            </tr>
+        </table>
+        
+        <!-- Surgery type -->
+        <table>
+            <tr>
+                <td colspan="4" style="border-top: none;">
+                    <span style="font-weight: bold;">Surgery type:</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input13" id="input13"> Clean</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input14" id="input14"> Clean contaminated</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input15" id="input15"> Dirty</span>
+                </td>
+            </tr>
+        </table>
+        
+        <!-- Type of surgery / Name of operation -->
+        <table>
+            <tr>
+                <td class="w-30" style="font-weight: bold;">Type of surgery</td>
+                <td colspan="3" style="font-weight: bold;">Name of operation</td>
+            </tr>
+            <tr>
+                <td>
+                    <div><input type="checkbox" name="input16" id="input16" style="margin-left: 0;"> Emergency</div>
+                    <div style="margin-top: 10px;"><input type="checkbox" name="input17" id="input17" style="margin-left: 0;"> Elective</div>
+                </td>
+                <td colspan="3"><textarea name="input18" id="input18" rows="2" style="height: 60px;"></textarea></td>
+            </tr>
+        </table>
+        
+        <!-- Date and time -->
+        <table>
+            <tr>
+                <td class="w-15">Date:</td>
+                <td colspan="3">
+                    Start Time: <input type="text" name="input19" id="input19" style="width: 70px;"> M,
+                    End Time: <input type="text" name="input20" id="input20" style="width: 70px;"> M,
+                    Total Hrs: <input type="text" name="input21" id="input21" style="width: 70px;">
+                </td>
+            </tr>
+        </table>
+        
+        <!-- Anaesthesia -->
+        <table>
+            <tr>
+                <td colspan="4">
+                    <span style="font-weight: bold;">Type of anaesthesia</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input22" id="input22"> GA</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input23" id="input23"> LA</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input24" id="input24"> SPINAL</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input25" id="input25"> EPIDURAL</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input26" id="input26"> REGIONAL</span>
+                </td>
+            </tr>
+        </table>
+        
+        <!-- OPERATIVE STEPS header -->
+        <div class="section-header">OPERATIVE STEPS</div>
+        
+        <!-- Operative steps table -->
+        <table>
+            <tr>
+                <td>Position: <input type="text" name="input27" id="input27" style="width: 80%; margin-left: 10px;" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Identification of operating part: <input type="text" name="input28" id="input28" style="width: 60%; margin-left: 10px;" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Incision: <input type="text" name="input29" id="input29" style="width: 80%; margin-left: 10px;" placeholder=""></td>
+            </tr>
+            <tr>
+                <td style="height: 200px; vertical-align: top;">
+                    Operation findings<br>
+                    <textarea name="input30" id="input30" style="width: 100%; height: 170px; margin-top: 5px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- PAGE 2 -->
+    <div class="page">
+        <div class="section-header" style="margin-top: 0;">OPERATIVE STEPS</div>
+        
+        <!-- Important Steps Box -->
+        <div class="important-steps-box">
+            <div class="important-steps-label">Important Steps</div>
+            <textarea name="input31" id="input31" style="width: 100%; height: 200px; border: 1px solid #999;"></textarea>
+            
+            <div class="bottom-details">
+                <p>Drain: <input type="text" name="input32" id="input32" style="width: 80%; margin-left: 10px;"></p>
+                <p>Sponge & gauze count done: <input type="text" name="input33" id="input33" style="width: 60%; margin-left: 10px;"></p>
+                <p>Instrument count done: <input type="text" name="input34" id="input34" style="width: 65%; margin-left: 10px;"></p>
+                <p>Closure: <input type="text" name="input35" id="input35" style="width: 80%; margin-left: 10px;"></p>
+                <p>Skin closure with: <input type="text" name="input36" id="input36" style="width: 75%; margin-left: 10px;"></p>
+                <p>Sterile dressings kept.</p>
+            </div>
+        </div>
+        
+        <!-- INTRAOPERATIVE EVENTS -->
+        <div class="subsection-header">INTRAOPERATIVE EVENTS / COMPLICATIONS:</div>
+        
+        <!-- Blood loss table -->
+        <table>
+            <tr>
+                <td class="w-50">Blood loss: <input type="text" name="input37" id="input37" style="width: 60%;"></td>
+                <td class="w-50">Blood products used: <input type="text" name="input38" id="input38" style="width: 50%;"></td>
+            </tr>
+            <tr>
+                <td style="height: 50px; vertical-align: top;">Implants used: <textarea name="input39" id="input39" style="height: 30px;"></textarea></td>
+                <td style="height: 50px;"><textarea name="input40" id="input40" style="height: 40px;"></textarea></td>
+            </tr>
+            <tr>
+                <td>Specimen send for HPE</td>
+                <td><input type="text" name="input41" id="input41" placeholder=""></td>
+            </tr>
+            <tr>
+                <td>Immediate post op. recovery</td>
+                <td>
+                    Patient transferred to:
+                    <span class="checkbox-item"><input type="checkbox" name="input42" id="input42"> Room</span>
+                    <span class="checkbox-item"><input type="checkbox" name="input43" id="input43"> ICU care</span>
+                </td>
+            </tr>
+        </table>
+        
+        <!-- POST OPERATIVE CARE -->
+        <div class="subsection-header" style="margin-top: 20px;">POST OPERATIVE CARE SEE POST OPERATIVE ORDERS</div>
+        
+        <!-- Signatures -->
+        <div style="margin-top: 20px;">
+            <div style="margin-bottom: 15px;">
+                Name of surgeon: <span class="signature-line" style="width: 70%;"><input type="text" name="input44" id="input44" style="border: none; width: 100%;"></span>
+            </div>
+            <div>
+                Sign: <span class="signature-line" style="width: 40%;"><input type="text" name="input45" id="input45" style="border: none; width: 100%;"></span>
+                <span style="display: inline-block; width: 50px;"></span>
+                Date / Time: <span class="signature-line" style="width: 20%;"><input type="text" name="input46" id="input46" style="border: none; width: 100%;"></span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PAGE 3 -->
+    <div class="page third-page">
+        <div class="page-border"></div>
+        <div class="third-page-content">
+            <!--<div class="continue-text">Continue...</div>-->
+            
+            <div class="surgeon-signature-top">
+                Surgeon's Signature : <span class="signature-line" style="width: 60%;"><input type="text" name="input47" id="input47" style="border: none; width: 100%;"></span>
+            </div>
+            
+            <div class="post-op-header">POST OPERATIVE ORDERS</div>
+            
+            <table class="orders-table">
+                <tr><td><input type="text" name="input48" id="input48" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input49" id="input49" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input50" id="input50" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input51" id="input51" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input52" id="input52" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input53" id="input53" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input54" id="input54" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input55" id="input55" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input56" id="input56" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input57" id="input57" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input58" id="input58" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input59" id="input59" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input60" id="input60" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input61" id="input61" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input62" id="input62" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input63" id="input63" style="border: none; width: 100%;"></td></tr>
+                <tr><td><input type="text" name="input64" id="input64" style="border: none; width: 100%;"></td></tr>
+            </table>
+            
+            <div class="surgeon-signature-bottom">
+                Surgeon's Signature : <span class="signature-line" style="width: 62%;"><input type="text" name="input65" id="input65" style="border: none; width: 100%;"></span>
+            </div>
+        </div>
+    </div>
+    
+    <!--SUBMIT_START-->
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-size:12px; color:#444;" id="status">
+        <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+      </div>
+      <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+        Submit
+      </button>
+    </div>
+  </div>
+</body>
+</html>
