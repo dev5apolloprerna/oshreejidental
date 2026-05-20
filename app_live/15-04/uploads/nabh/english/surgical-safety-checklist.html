@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Surgical Safety Checklist</title>
+  <style>
+    @page { size: A4; margin: 12mm; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #000;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Header */
+    .header-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    .header-table td { vertical-align: top; }
+    .title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      padding-top: 4px;
+    }
+    .addressograph {
+      border: 1px solid #000;
+      width: 150px;
+      height: 70px;
+      text-align: center;
+      vertical-align: middle;
+      font-weight: bold;
+      font-size: 10px;
+    }
+
+    /* Name of surgery + Date row */
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .meta-table td { padding: 4px 0; vertical-align: bottom; }
+
+    .line {
+      display: inline-block;
+      border-bottom: 1px solid #000;
+      height: 16px;
+      vertical-align: bottom;
+    }
+    .w250 { width: 250px; }
+    .w100 { width: 100px; }
+    .w60 { width: 60px; }
+
+    /* Input styling (Dompdf friendly) */
+    input[type="text"]{
+      border: none;
+      outline: none;
+      width: 100%;
+      height: 16px;
+      font-size: 11px;
+      background: transparent;
+    }
+
+    /* 3 columns */
+    .cols {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .col {
+      border: 1px solid #333;
+      vertical-align: top;
+      padding: 0;
+    }
+    .col-header {
+      background: #f2f2f2;
+      border-bottom: 1px solid #333;
+      padding: 6px 8px;
+      font-weight: bold;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+    .col-body {
+      padding: 8px 10px;
+      line-height: 1.35;
+    }
+
+    /* Items */
+    .item {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6px;
+    }
+    .item td { vertical-align: top; }
+    .cb {
+      width: 18px;
+      padding-top: 1px;
+    }
+    input[type="checkbox"]{
+      width: 12px;
+      height: 12px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nested { padding-left: 16px; }
+
+    .divider {
+      border-top: 1px solid #ccc;
+      margin: 8px 0;
+      height: 1px;
+      font-size: 0;
+      line-height: 0;
+    }
+
+    /* Yes/No rows */
+    .yn-table{
+      width: 100%;
+      border-collapse: collapse;
+      margin: 3px 0 6px;
+    }
+    .yn-table td{ vertical-align: top; }
+
+    /* Signatures */
+    .sig-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+      font-weight: bold;
+      font-size: 12px;
+      table-layout: fixed;
+    }
+    .sig-table td {
+      text-align: center;
+      vertical-align: bottom;
+      padding: 0 6px;
+    }
+    .sig-line {
+      border-top: 1px solid #000;
+      height: 22px;
+      position: relative;
+      margin-top: 18px;
+    }
+    .sig-name {
+      position: relative;
+      top: -18px;
+      display: block;
+      font-weight: normal;
+      font-size: 11px;
+      height: 14px;
+    }
+
+    /* Hide submit bar in PDF */
+    .no-print { display: none; }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- HEADER -->
+    <table class="header-table">
+      <tr>
+        <td style="width:150px;"></td>
+        <td class="title">SURGICAL / PROCEDURE SAFETY CHECK LIST</td>
+        <td style="width:160px;">
+          <table style="width:150px; border-collapse:collapse;">
+            <tr>
+              <td class="addressograph">ADDRESSOGRAPH</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- META -->
+    <table class="meta-table">
+      <tr>
+        <td style="width:70%;">
+          Name of surgery:&nbsp;
+          <span class="line w250"><input type="text" id="input1" name="input1"></span>
+        </td>
+        <td style="width:30%; text-align:right;">
+          Date:&nbsp;
+          <span class="line w100"><input type="text" id="today_date" name="today_date"></span>
+        </td>
+      </tr>
+    </table>
+
+    <!-- 3 COLUMNS -->
+    <table class="cols">
+      <tr>
+        <!-- COL 1 -->
+        <td class="col">
+          <div class="col-header">
+            Before induction of anaesthesia<br>
+            Sign in (Time: <span class="line w60"><input type="text" id="input3" name="input3"></span>)
+          </div>
+          <div class="col-body">
+
+            <table class="item">
+              <tr>
+                <td class="cb"><input type="checkbox" id="input4" name="input4"></td>
+                <td>
+                  Patient has confirmed:<br>
+                  <div class="nested">Identity</div>
+                  <div class="nested">Site</div>
+                  <div class="nested">Procedure</div>
+                  <div class="nested">Consent</div>
+                </td>
+              </tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input5" name="input5"></td><td>Site marked / Not applicable</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input6" name="input6"></td><td>Anaesthesia safety check completed</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input7" name="input7"></td><td>Pulse oximeter on patient & functioning</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input8" name="input8"></td><td>Perfusion safety check completed</td></tr>
+            </table>
+
+            <div class="divider"></div>
+
+            <div style="margin-bottom:4px;">Does patient have a known allergy?</div>
+            <table class="yn-table">
+              <tr>
+                <td style="width:22px;"><input type="checkbox" id="input9" name="input9"></td><td style="width:40px;">No</td>
+                <td style="width:22px;"><input type="checkbox" id="input10" name="input10"></td><td>Yes</td>
+              </tr>
+            </table>
+
+            <div style="margin-bottom:4px;">Difficult airway / aspiration risk?</div>
+            <table class="yn-table">
+              <tr>
+                <td style="width:22px;"><input type="checkbox" id="input11" name="input11"></td><td style="width:40px;">No</td>
+                <td style="width:22px;"><input type="checkbox" id="input12" name="input12"></td>
+                <td>Yes, and equipment / assistance available.</td>
+              </tr>
+            </table>
+
+            <div style="margin-bottom:4px;">
+              Risk of &gt; 500 ml blood loss<br>(7 ml / kg in children)?
+            </div>
+            <table class="yn-table">
+              <tr>
+                <td style="width:22px;"><input type="checkbox" id="input13" name="input13"></td><td style="width:40px;">No</td>
+                <td style="width:22px;"><input type="checkbox" id="input14" name="input14"></td>
+                <td>Yes, and adequate intravenous access and fluids planned</td>
+              </tr>
+            </table>
+
+            <table class="item">
+              <tr>
+                <td class="cb"><input type="checkbox" id="input15" name="input15"></td>
+                <td>I, as a transplant surgeon done double check for organ transplant, cross match of donor - recipient & ABO compatibility.</td>
+              </tr>
+            </table>
+
+          </div>
+        </td>
+
+        <!-- COL 2 -->
+        <td class="col">
+          <div class="col-header">
+            Before skin incision / Onset of procedure<br>
+            (Time: <span class="line w60"><input type="text" id="input16" name="input16"></span>)
+          </div>
+          <div class="col-body">
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input17" name="input17"></td><td>Confirm all team members have introduced themselves by name and role</td></tr>
+            </table>
+
+            <table class="item">
+              <tr>
+                <td class="cb"><input type="checkbox" id="input18" name="input18"></td>
+                <td>
+                  Surgeon, anesthesiologist, dentist/assistant verbally confirm:<br>
+                  <div class="nested">Patient</div>
+                  <div class="nested">Site</div>
+                  <div class="nested">Procedure</div>
+                </td>
+              </tr>
+            </table>
+
+            <div class="divider"></div>
+            <div style="font-weight:bold; margin-bottom:6px;">Anticipated critical events</div>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input19" name="input19"></td><td>Surgeon reviews: what are the critical or unexpected steps, operative duration, anticipated blood loss?</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input20" name="input20"></td><td>Anaesthesia team reviews: Are there any patient-specific concerns?</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input21" name="input21"></td><td>Perfusion team reviews: Are there any patient-specific concerns?</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input22" name="input22"></td><td>Nursing team reviews: has sterility (Including indicator results) been confirmed? are there equipment issues or any concerns?</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input23" name="input23"></td><td><b>Ready for all above</b></td></tr>
+            </table>
+
+            <div class="divider"></div>
+
+            <div style="margin-bottom:4px;">Has antibiotic prophylaxis been given within the last 60 minutes?</div>
+            <table class="yn-table">
+              <tr>
+                <td style="width:22px;"><input type="checkbox" id="input24" name="input24"></td><td style="width:60px;">Yes</td>
+                <td style="width:22px;"><input type="checkbox" id="input25" name="input25"></td><td>Not applicable</td>
+              </tr>
+            </table>
+
+            <div style="margin-bottom:4px;">Is essential imaging displayed?</div>
+            <table class="yn-table">
+              <tr>
+                <td style="width:22px;"><input type="checkbox" id="input26" name="input26"></td><td style="width:60px;">Yes</td>
+                <td style="width:22px;"><input type="checkbox" id="input27" name="input27"></td><td>Not applicable</td>
+              </tr>
+            </table>
+
+          </div>
+        </td>
+
+        <!-- COL 3 -->
+        <td class="col">
+          <div class="col-header">
+            Before patient leaves the dental chair<br>
+            Sign Out (Time: <span class="line w60"><input type="text" id="input28" name="input28"></span>)
+          </div>
+          <div class="col-body">
+
+            <div style="margin-bottom:6px;">dentist/assistant verbally confirms with the team:</div>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input29" name="input29"></td><td>The name of the procedure recorded</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input30" name="input30"></td><td>The instrument, sponge, gauze and needle counts are correct (or not applicable)</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input31" name="input31"></td><td>How the specimen is labeled (Including patient name, specimen type, test and container)</td></tr>
+            </table>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input32" name="input32"></td><td>Whether there any equipment problems to be addressed</td></tr>
+            </table>
+
+            <div class="divider"></div>
+
+            <table class="item">
+              <tr><td class="cb"><input type="checkbox" id="input33" name="input33"></td><td>Surgeon, anaesthesiologist and assistant review the key concerns for recovery and management of this patient</td></tr>
+            </table>
+
+          </div>
+        </td>
+
+      </tr>
+    </table>
+
+    <!-- SIGNATURES -->
+    <table class="sig-table">
+      <tr>
+        <td>
+          <div class="sig-line">
+            <span class="sig-name">
+          <img name="doctor_signature_image" id="doctor_signature_image" alt="Doctor Signature" style="width:180px;height:70px;" class="line-input w-50" />
+
+              <input type="text" id="input34" name="input34" style="text-align:center;">
+
+            </span>
+          </div>
+          Consultant
+        </td>
+        <td>
+          <div class="sig-line">
+            <span class="sig-name"><input type="text" id="input35" name="input35" style="text-align:center;"></span>
+          </div>
+          Anaesthetist
+        </td>
+        <td>
+          <div class="sig-line">
+            <span class="sig-name"><input type="text" id="input36" name="input36" style="text-align:center;"></span>
+          </div>
+          Dental assistant
+        </td>
+        <td>
+          <div class="sig-line">
+            <span class="sig-name"><input type="text" id="input37" name="input37" style="text-align:center;"></span>
+          </div>
+          Dentist
+        </td>
+      </tr>
+    </table>
+
+  </div>
+  <div class="submit-bar" style="margin:20px auto 0; max-width: 210mm; background:#fff; padding: 12px 15mm; border-top: 1px solid #ddd; box-sizing:border-box;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div style="font-size:12px; color:#444;">
+            <strong>Status:</strong> <span id="saveStatus">Not saved</span>
+          </div>
+          <button id="submitBtn" type="button" style="background:#2563eb; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">
+            Submit
+          </button>
+        </div>
+      </div>
+</body>
+</html>
