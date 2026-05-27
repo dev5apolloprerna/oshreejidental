@@ -206,10 +206,22 @@ class Clients_model extends App_Model
         $MAIN_DB->where('name','next_file_number');
         $fileNo = $MAIN_DB->get(db_prefix().'options')->row();
 
-        $currentBranch = $this->input->cookie('branch');
-
-        $query = $MAIN_DB->get_where(db_prefix().'branch', array('branch_db' => $currentBranch));
-        $prefix = $query->row();
+        $prefix = null;
+        $branchId = 0;
+        $currentBranch = (string) $this->input->cookie('branch');
+        if ($currentBranch !== '') {
+            $query = $MAIN_DB->get_where(db_prefix().'branch', array('branch_db' => $currentBranch));
+            $prefix = $query->row();
+        }
+        if ($prefix && isset($prefix->branchid)) {
+            $branchId = (int) $prefix->branchid;
+        } elseif (is_staff_logged_in()) {
+            $staff = $MAIN_DB->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+            if ($staff && isset($staff->branch_id)) {
+                $branchId = (int) $staff->branch_id;
+                $prefix = $MAIN_DB->get_where(db_prefix().'branch', ['branchid' => $branchId])->row();
+            }
+        }
         
 
         $company_data = [];
@@ -248,24 +260,28 @@ class Clients_model extends App_Model
                 'firstname' => $data['firstname'],
                 'lastname' => $data['lastname'],
                
-               'gender' => $data['gender'] != '' ? $data['gender'] : '',
-                'dob' => $data['dob'] != '' ? $data['dob'] : '0000-00-00',
+               'gender' => isset($data['gender']) && $data['gender'] != '' ? $data['gender'] : '',
+                'dob' => isset($data['dob']) && $data['dob'] != '' ? $data['dob'] : '0000-00-00',
                 // 'uid' => $data['uid'],
-                'blood_group' => $data['blood_group'] != '' ? $data['blood_group'] : '',
-                'email' => $data['email'] != '' ? $data['email'] : '',
+                'blood_group' => isset($data['blood_group']) && $data['blood_group'] != '' ? $data['blood_group'] : '',
+                'email' => isset($data['email']) && $data['email'] != '' ? $data['email'] : '',
                 'phonenumber' => $data['phonenumber'],
                  'reference_from' => isset($data['reference_from']) ? $data['reference_from'] : '',
-                'rx_str_date' => $data['rx_str_date'] != '' ? $data['rx_str_date'] : '0000-00-00',
-                'rx_end_date' => $data['rx_end_date'] != '' ? $data['rx_end_date'] : '0000-00-00',
-                 'otp' => $data['otp'] != '' ? $data['otp'] : '0',
+                'rx_str_date' => isset($data['rx_str_date']) && $data['rx_str_date'] != '' ? $data['rx_str_date'] : '0000-00-00',
+                'rx_end_date' => isset($data['rx_end_date']) && $data['rx_end_date'] != '' ? $data['rx_end_date'] : '0000-00-00',
+                 'otp' => isset($data['otp']) && $data['otp'] != '' ? $data['otp'] : '0',
                 // 'profile_image' => $data['profile_image'],
             ];
             
             if (!$this->db->field_exists('reference_from', db_prefix() . 'contacts')) {
                 unset($contact_data['reference_from']);
             }
+             if (!$this->db->field_exists('otp', db_prefix() . 'contacts')) {
+                unset($contact_data['otp']);
+            }
 
-            $contact_data['uid'] = $this->patient_number_format($prefix->branch_code, $uid->value, $fileNo->value);       
+            $branchCode = ($prefix && isset($prefix->branch_code) && $prefix->branch_code !== '') ? $prefix->branch_code : 'MAIN';
+            $contact_data['uid'] = $this->patient_number_format($branchCode, $uid->value, $fileNo->value);
         }
 
         $data = hooks()->apply_filters('before_client_added', $data);
@@ -293,33 +309,57 @@ class Clients_model extends App_Model
             unset($data['contact_phonenumber']);
         }
         
-        $MAIN_DB->insert(db_prefix() . 'clients', array_merge($company_data, [
+        $mainClientInsertData = array_merge($company_data, [
             'datecreated' => date('Y-m-d H:i:s'),
             'addedfrom'   => is_staff_logged_in() ? get_staff_user_id() : 0,
-        ]));
+            'branch_id'   => $branchId,
+        ]);
+        if ($MAIN_DB->field_exists('branch_id', db_prefix() . 'clients')) {
+            $mainClientInsertData['branch_id'] = $branchId;
+        }
+        $MAIN_DB->insert(db_prefix() . 'clients', $mainClientInsertData);
+
 
         $clientMain_id = $MAIN_DB->insert_id();
         
 
-        $this->db->insert(db_prefix() . 'clients', array_merge($company_data, [
+        $localClientInsertData = array_merge($company_data, [
             'datecreated' => date('Y-m-d H:i:s'),
             'addedfrom'   => is_staff_logged_in() ? get_staff_user_id() : 0,
-        ]));
+            'branch_id'   => $branchId,
+                ]);
+        if ($this->db->field_exists('branch_id', db_prefix() . 'clients')) {
+            $localClientInsertData['branch_id'] = $branchId;
+        }
+        $this->db->insert(db_prefix() . 'clients', $localClientInsertData);
+
 
         $client_id = $this->db->insert_id();
                 
         if ($withContact == false) {
 
-            $MAIN_DB->insert(db_prefix() . 'contacts', array_merge($contact_data, [
+            $mainContactInsertData = array_merge($contact_data, [
                 'datecreated' => date('Y-m-d H:i:s'), 
                 'userid'  => $clientMain_id,
-            ]));
+                'branch_id' => $branchId,
+             ]);
+            if ($MAIN_DB->field_exists('branch_id', db_prefix() . 'contacts')) {
+                $mainContactInsertData['branch_id'] = $branchId;
+            }
+            $MAIN_DB->insert(db_prefix() . 'contacts', $mainContactInsertData);
 
 
-            $this->db->insert(db_prefix() . 'contacts', array_merge($contact_data, [
+            $localContactInsertData = array_merge($contact_data, [
                 'datecreated' => date('Y-m-d H:i:s'),
                 'userid' => $client_id,
-            ]));
+                'branch_id' => $branchId,
+             ]);
+            if ($this->db->field_exists('branch_id', db_prefix() . 'contacts')) {
+                $localContactInsertData['branch_id'] = $branchId;
+            }
+            $this->db->insert(db_prefix() . 'contacts', $localContactInsertData);
+
+
             
        
 
@@ -377,15 +417,26 @@ class Clients_model extends App_Model
             $medical_history['treatment_plan'] = '';
         }
 
-        $MAIN_DB->insert(db_prefix() . 'medical_history', array_merge($medical_history, [
+        $mainMedicalHistoryInsertData = array_merge($medical_history, [
             'userid' => $clientMain_id,
             'datecreated' => date('Y-m-d H:i:s'),
-        ]));
+            'branch_id' => $branchId,
+        ]);
+        if ($MAIN_DB->field_exists('branch_id', db_prefix() . 'medical_history')) {
+            $mainMedicalHistoryInsertData['branch_id'] = $branchId;
+        }
+        $MAIN_DB->insert(db_prefix() . 'medical_history', $mainMedicalHistoryInsertData);
+
         
-        $this->db->insert(db_prefix() . 'medical_history', array_merge($medical_history, [
+        $localMedicalHistoryInsertData = array_merge($medical_history, [
             'userid' => $client_id,
             'datecreated' => date('Y-m-d H:i:s'),
-        ]));
+            'branch_id' => $branchId,
+        ]);
+        if ($this->db->field_exists('branch_id', db_prefix() . 'medical_history')) {
+            $localMedicalHistoryInsertData['branch_id'] = $branchId;
+        }
+        $this->db->insert(db_prefix() . 'medical_history', $localMedicalHistoryInsertData);
         
        
        
@@ -417,7 +468,9 @@ class Clients_model extends App_Model
             if ($withContact == true) {
 
 
-            $contact_data['uid'] = $this->patient_number_format($prefix->branch_code, $uid->value, $fileNo->value);
+            $branchCode = ($prefix && isset($prefix->branch_code) && $prefix->branch_code !== '') ? $prefix->branch_code : 'MAIN';
+            $contact_data['uid'] = $this->patient_number_format($branchCode, $uid->value, $fileNo->value);
+
                 
                 $contact_id = $this->add_contact($contact_data, $client_id, $withContact);
                  $this->increment_next_number();
@@ -870,18 +923,26 @@ class Clients_model extends App_Model
             $data['ticket_emails']      = isset($data['ticket_emails']) ? 1 :0;
         }
 
-        $data['email'] = trim($data['email']);
-        
-        $data['gender'] = $data['gender'] != '' ? $data['gender'] : '';
-        $data['dob'] = $data['dob'] != '' ? $data['dob'] : '0000-00-00';
-        $data['uid'] = $data['uid'] != '' ? $data['uid'] : '';
-        $data['blood_group'] = $data['blood_group'] != '' ? $data['blood_group'] : '';
-        
-        $data['rx_str_date'] = $data['rx_str_date'] != '' ? $data['rx_str_date'] : '0000-00-00';
-        
-        $data['rx_end_date'] = $data['rx_end_date'] != '' ? $data['rx_end_date'] : '0000-00-00';
-        
-         $data['otp'] = $data['otp'] != '' ? $data['otp'] : '0';
+        $data['email'] = isset($data['email']) ? trim($data['email']) : '';
+
+        $data['gender'] = isset($data['gender']) && $data['gender'] != '' ? $data['gender'] : '';
+        $data['dob'] = isset($data['dob']) && $data['dob'] != '' ? $data['dob'] : '0000-00-00';
+        $data['uid'] = isset($data['uid']) && $data['uid'] != '' ? $data['uid'] : '';
+        $data['blood_group'] = isset($data['blood_group']) && $data['blood_group'] != '' ? $data['blood_group'] : '';
+
+        $data['rx_str_date'] = isset($data['rx_str_date']) && $data['rx_str_date'] != '' ? $data['rx_str_date'] : '0000-00-00';
+
+        $data['rx_end_date'] = isset($data['rx_end_date']) && $data['rx_end_date'] != '' ? $data['rx_end_date'] : '0000-00-00';
+
+        if ($this->db->field_exists('otp', db_prefix() . 'contacts')) {
+            $data['otp'] = isset($data['otp']) && $data['otp'] != '' ? $data['otp'] : '0';
+        } else {
+            unset($data['otp']);
+        }
+
+        if (!$this->db->field_exists('branch_id', db_prefix() . 'contacts')) {
+            unset($data['branch_id']);
+        }
         
       
         

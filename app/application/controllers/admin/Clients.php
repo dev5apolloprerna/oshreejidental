@@ -146,36 +146,23 @@ class Clients extends AdminController
 
      
         $mainDb   = $this->load->database('default', true);
-        $rows     = [];
-        $branches = $this->get_global_search_branches($mainDb);
-
-        foreach ($branches as $branch) 
-        {
-            if (!isset($branch['branch_db']) || !$this->is_valid_db_identifier($branch['branch_db'])) {
-                continue;
-            }
-
-            $dbName      = $branch['branch_db'];
-            $branchLabel = isset($branch['branch_label']) ? $branch['branch_label'] : $dbName;
+                $rows = [];
+        $branchId = $this->resolve_current_branch_id($mainDb);
+        if ($branchId > 0) {
+            $branchLabel = $this->get_branch_label($mainDb, $branchId);
 
             $sql = 'SELECT c.userid, ct.uid, c.company, CONCAT(IFNULL(ct.firstname, ""), " ", IFNULL(ct.lastname, "")) as fullname, ct.email, c.phonenumber, c.datecreated '
-                . 'FROM `' . $dbName . '`.`' . db_prefix() . 'clients` c '
-                . 'LEFT JOIN `' . $dbName . '`.`' . db_prefix() . 'contacts` ct ON ct.userid = c.userid AND ct.is_primary = 1 '
-                . 'WHERE 1=1';
+                . 'FROM `' . db_prefix() . 'clients` c '
+                . 'LEFT JOIN `' . db_prefix() . 'contacts` ct ON ct.userid = c.userid AND ct.is_primary = 1 '
+                . 'WHERE c.branch_id = ?';
+            $binds = [$branchId];
 
-            $binds = [];
             if ($searchValue !== '') {
                 $sql .= ' AND (ct.uid LIKE ? OR c.phonenumber LIKE ? OR c.company LIKE ? OR ct.firstname LIKE ? OR ct.lastname LIKE ?)';
                 $like = '%' . $searchValue . '%';
-                $binds = [$like, $like, $like, $like, $like];
+                $binds = array_merge($binds, [$like, $like, $like, $like, $like]);
             }
-
-            try {
-                $result = $mainDb->query($sql, $binds)->result_array();
-            } catch (Exception $e) {
-                continue;
-            }
-
+            $result = $mainDb->query($sql, $binds)->result_array();
             foreach ($result as $record) {
                 $rows[] = [
                     'userid'      => isset($record['userid']) ? (string) $record['userid'] : '',
@@ -254,7 +241,7 @@ class Clients extends AdminController
        private function get_global_search_branches($mainDb)
     {
         $branchFields = $mainDb->list_fields(db_prefix() . 'branch');
-        $select = ['branch_db'];
+        $select = ['branch_db', 'branchid as branch_id'];
 
         if (in_array('branch', $branchFields, true)) {
             $select[] = 'branch';
@@ -276,6 +263,7 @@ class Clients extends AdminController
             $branches[] = [
                 'branch_db'    => $defaultDbName,
                 'branch_label' => 'Main Branch',
+                'branch_id'    => 1,
             ];
             $seenDatabases[$defaultDbName] = true;
         }
@@ -302,6 +290,7 @@ class Clients extends AdminController
             $branches[] = [
                 'branch_db'    => $branchDb,
                 'branch_label' => $label,
+                'branch_id'    => isset($item['branch_id']) ? (int) $item['branch_id'] : 0,
             ];
             $seenDatabases[$branchDb] = true;
         }
@@ -313,6 +302,42 @@ class Clients extends AdminController
     private function is_valid_db_identifier($name)
     {
         return (bool) preg_match('/^[A-Za-z0-9_]+$/', (string) $name);
+    }
+    
+        private function resolve_current_branch_id($mainDb)
+    {
+        $branchDb = (string) $this->input->cookie('branch');
+        if ($branchDb !== '') {
+            $row = $mainDb->select('branchid')->where('branch_db', $branchDb)->get(db_prefix() . 'branch')->row();
+            if ($row && isset($row->branchid)) {
+                return (int) $row->branchid;
+            }
+        }
+
+        if (is_staff_logged_in()) {
+            $staffId = get_staff_user_id();
+            $row = $mainDb->select('branch_id')->where('staffid', $staffId)->get(db_prefix() . 'staff')->row();
+            if ($row && isset($row->branch_id) && (int) $row->branch_id > 0) {
+                return (int) $row->branch_id;
+            }
+        }
+
+        return 0;
+    }
+
+    private function get_branch_label($mainDb, $branchId)
+    {
+        $row = $mainDb->select('branch,branch_code')->where('branchid', $branchId)->get(db_prefix() . 'branch')->row();
+        if ($row) {
+            if (!empty($row->branch)) {
+                return (string) $row->branch;
+            }
+            if (!empty($row->branch_code)) {
+                return (string) $row->branch_code;
+            }
+        }
+
+        return 'Branch ' . (int) $branchId;
     }
     
     public function all_contacts()
