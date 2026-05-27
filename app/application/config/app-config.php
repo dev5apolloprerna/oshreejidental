@@ -58,8 +58,7 @@ define('APP_DB_PASSWORD', '');
  * The name of the database you want to connect to
  */
 //define('APP_DB_NAME', 'u614622744_main_db');
-define('APP_DB_NAME', 'oshreejidental_main');
-
+define('APP_DB_NAME', 'u614622744_main_db');
 
 
 

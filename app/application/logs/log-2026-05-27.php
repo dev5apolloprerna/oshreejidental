@@ -43,3 +43,8 @@ ERROR - 2026-05-27 15:42:09 --> Could not find the language line "Personal and S
 ERROR - 2026-05-27 15:42:09 --> Could not find the language line "Allergies, Medical and Surgical History"
 ERROR - 2026-05-27 15:42:09 --> Could not find the language line "Risk Factors"
 ERROR - 2026-05-27 15:42:34 --> Severity: error --> Exception: Unknown column 'branch_id' in 'field list' C:\wamp64\www\oshreejidental\app\system\database\drivers\mysqli\mysqli_driver.php 307
+ERROR - 2026-05-27 15:48:16 --> Severity: error --> Exception: Unknown column 'branch_id' in 'field list' C:\wamp64\www\oshreejidental\app\system\database\drivers\mysqli\mysqli_driver.php 307
+ERROR - 2026-05-27 15:48:20 --> Severity: error --> Exception: Unknown column 'branch_id' in 'field list' C:\wamp64\www\oshreejidental\app\system\database\drivers\mysqli\mysqli_driver.php 307
+ERROR - 2026-05-27 15:48:46 --> Severity: Warning --> Undefined variable $login_class C:\wamp64\www\oshreejidental\app\application\views\admin\includes\head.php 30
+ERROR - 2026-05-27 15:48:46 --> Could not find the language line "Number"
+ERROR - 2026-05-27 17:02:08 --> Severity: error --> Exception: Unknown column 'branch_id' in 'field list' C:\wamp64\www\oshreejidental\app\system\database\drivers\mysqli\mysqli_driver.php 307
