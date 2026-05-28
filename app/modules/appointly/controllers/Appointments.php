@@ -8,7 +8,7 @@ class Appointments extends AdminController
     {
         parent::__construct();
 
-        $this->staff_no_view_permissions = !staff_can('view', 'appointments') && !staff_can('view_own', 'appointments');
+        $this->staff_no_view_permissions = !is_manager_staff() && !staff_can('view', 'appointments') && !staff_can('view_own', 'appointments');
 
         $this->load->model('appointly_model', 'apm');
         $this->load->model('appointly/Appointly_model', 'appointly_model');

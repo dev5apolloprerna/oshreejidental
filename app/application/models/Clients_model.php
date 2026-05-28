@@ -197,29 +197,28 @@ class Clients_model extends App_Model
      
         // $data['prefix'] = get_option('patient_prefix');
 
-        $MAIN_DB = $this->load->database('default', TRUE);
-        $MAIN_DB->select('value');
-        $MAIN_DB->where('name','next_patient_number');
-        $uid = $MAIN_DB->get(db_prefix().'options')->row();
+        $this->db->select('value');
+        $this->db->where('name','next_patient_number');
+        $uid = $this->db->get(db_prefix().'options')->row();
 
-        $MAIN_DB->select('value');
-        $MAIN_DB->where('name','next_file_number');
-        $fileNo = $MAIN_DB->get(db_prefix().'options')->row();
+        $this->db->select('value');
+        $this->db->where('name','next_patient_number');
+        $uid = $this->db->get(db_prefix().'options')->row();
 
         $prefix = null;
         $branchId = 0;
         $currentBranch = (string) $this->input->cookie('branch');
         if ($currentBranch !== '') {
-            $query = $MAIN_DB->get_where(db_prefix().'branch', array('branch_db' => $currentBranch));
+            $query = $this->db->get_where(db_prefix().'branch', array('branch_db' => $currentBranch));
             $prefix = $query->row();
         }
         if ($prefix && isset($prefix->branchid)) {
             $branchId = (int) $prefix->branchid;
         } elseif (is_staff_logged_in()) {
-            $staff = $MAIN_DB->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+            $staff = $this->db->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
             if ($staff && isset($staff->branch_id)) {
                 $branchId = (int) $staff->branch_id;
-                $prefix = $MAIN_DB->get_where(db_prefix().'branch', ['branchid' => $branchId])->row();
+                $prefix = $this->db->get_where(db_prefix().'branch', ['branchid' => $branchId])->row();
             }
         }
         
@@ -314,24 +313,13 @@ class Clients_model extends App_Model
             'addedfrom'   => is_staff_logged_in() ? get_staff_user_id() : 0,
             'branch_id'   => $branchId,
         ]);
-        if ($MAIN_DB->field_exists('branch_id', db_prefix() . 'clients')) {
-            $mainClientInsertData['branch_id'] = $branchId;
-        }
-        $MAIN_DB->insert(db_prefix() . 'clients', $mainClientInsertData);
-
-
-        $clientMain_id = $MAIN_DB->insert_id();
         
-
-        $localClientInsertData = array_merge($company_data, [
-            'datecreated' => date('Y-m-d H:i:s'),
-            'addedfrom'   => is_staff_logged_in() ? get_staff_user_id() : 0,
-            'branch_id'   => $branchId,
-                ]);
         if ($this->db->field_exists('branch_id', db_prefix() . 'clients')) {
-            $localClientInsertData['branch_id'] = $branchId;
+            $mainClientInsertData['branch_id'] = $branchId;
+        } else {
+            unset($mainClientInsertData['branch_id']);
         }
-        $this->db->insert(db_prefix() . 'clients', $localClientInsertData);
+        $this->db->insert(db_prefix() . 'clients', $mainClientInsertData);
 
 
         $client_id = $this->db->insert_id();
@@ -340,27 +328,15 @@ class Clients_model extends App_Model
 
             $mainContactInsertData = array_merge($contact_data, [
                 'datecreated' => date('Y-m-d H:i:s'), 
-                'userid'  => $clientMain_id,
-                'branch_id' => $branchId,
-             ]);
-            if ($MAIN_DB->field_exists('branch_id', db_prefix() . 'contacts')) {
-                $mainContactInsertData['branch_id'] = $branchId;
-            }
-            $MAIN_DB->insert(db_prefix() . 'contacts', $mainContactInsertData);
-
-
-            $localContactInsertData = array_merge($contact_data, [
-                'datecreated' => date('Y-m-d H:i:s'),
-                'userid' => $client_id,
+                'userid'  => $client_id,
                 'branch_id' => $branchId,
              ]);
             if ($this->db->field_exists('branch_id', db_prefix() . 'contacts')) {
-                $localContactInsertData['branch_id'] = $branchId;
+                $mainContactInsertData['branch_id'] = $branchId;
+            } else {
+                unset($mainContactInsertData['branch_id']);
             }
-            $this->db->insert(db_prefix() . 'contacts', $localContactInsertData);
-
-
-            
+            $this->db->insert(db_prefix() . 'contacts', $mainContactInsertData);           
        
 
         $this->increment_next_number(); 
@@ -418,28 +394,17 @@ class Clients_model extends App_Model
         }
 
         $mainMedicalHistoryInsertData = array_merge($medical_history, [
-            'userid' => $clientMain_id,
-            'datecreated' => date('Y-m-d H:i:s'),
-            'branch_id' => $branchId,
-        ]);
-        if ($MAIN_DB->field_exists('branch_id', db_prefix() . 'medical_history')) {
-            $mainMedicalHistoryInsertData['branch_id'] = $branchId;
-        }
-        $MAIN_DB->insert(db_prefix() . 'medical_history', $mainMedicalHistoryInsertData);
-
-        
-        $localMedicalHistoryInsertData = array_merge($medical_history, [
             'userid' => $client_id,
             'datecreated' => date('Y-m-d H:i:s'),
             'branch_id' => $branchId,
         ]);
         if ($this->db->field_exists('branch_id', db_prefix() . 'medical_history')) {
-            $localMedicalHistoryInsertData['branch_id'] = $branchId;
+            $mainMedicalHistoryInsertData['branch_id'] = $branchId;
+        } else {
+            unset($mainMedicalHistoryInsertData['branch_id']);
         }
-        $this->db->insert(db_prefix() . 'medical_history', $localMedicalHistoryInsertData);
-        
-       
-       
+        $this->db->insert(db_prefix() . 'medical_history', $mainMedicalHistoryInsertData);
+    
         
         if ($client_id) {
             if (count($custom_fields) > 0) {

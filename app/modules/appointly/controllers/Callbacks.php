@@ -10,9 +10,9 @@ class Callbacks extends AdminController
      {
           parent::__construct();
 
-          $this->staff_has_no_view_permissions = !staff_can('view', 'appointments') && !staff_can('view_own', 'appointments');
-          $this->staff_has_no_edit_create_permissions = !staff_can('edit', 'appointments') && !staff_can('create', 'appointments');
-          $this->staff_has_no_delete_permissions = !staff_can('delete', 'appointments') && !staff_can('edit', 'appointments');
+          $this->staff_has_no_view_permissions = !is_manager_staff() && !staff_can('view', 'appointments') && !staff_can('view_own', 'appointments');
+          $this->staff_has_no_edit_create_permissions = !is_manager_staff() && !staff_can('edit', 'appointments') && !staff_can('create', 'appointments');
+          $this->staff_has_no_delete_permissions = !is_manager_staff() && !staff_can('delete', 'appointments') && !staff_can('edit', 'appointments');
 
           /**
            * Init callbacks model

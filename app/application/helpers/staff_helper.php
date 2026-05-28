@@ -201,6 +201,31 @@ function get_staff($id = null)
 }
 
 /**
+ * Check if current (or provided) staff user is manager role.
+ * Accept common role name variants, e.g. manager/maninager.
+ *
+ * @param mixed $staff_id
+ * @return bool
+ */
+function is_manager_staff($staff_id = null)
+{
+    $staff = get_staff($staff_id);
+    if (!$staff || !isset($staff->role) || (int) $staff->role <= 0) {
+        return false;
+    }
+
+    $CI = &get_instance();
+    $role = $CI->db->select('name')->where('roleid', (int) $staff->role)->get(db_prefix() . 'roles')->row();
+    if (!$role || !isset($role->name)) {
+        return false;
+    }
+
+    $roleName = strtolower(trim((string) $role->name));
+
+    return in_array($roleName, ['manager', 'maninager'], true);
+}
+
+/**
  * Return staff profile image url
  * @param  mixed $staff_id
  * @param  string $type
