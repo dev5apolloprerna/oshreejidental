@@ -141,8 +141,9 @@ function appointly_register_permissions()
 function appointly_register_menu_items()
 {
     $CI = &get_instance();
+    $managerAccess = function_exists('is_manager_staff') ? is_manager_staff() : false;
 
-    if (staff_can('view', 'appointments') || staff_can('view_own', 'appointments')) {
+    if ($managerAccess || staff_can('view', 'appointments') || staff_can('view_own', 'appointments')) {
         $CI->app_menu->add_sidebar_menu_item(APPOINTLY_MODULE_NAME, [
             'name'     => 'appointly_module_name',
             'href'     => admin_url('appointly/appointments'),

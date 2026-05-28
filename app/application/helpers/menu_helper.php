@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 function app_init_admin_sidebar_menu_items()
 {
     $CI = &get_instance();
+    $managerAccess = is_manager_staff();
 
     $CI->app_menu->add_sidebar_menu_item('dashboard', [
         'name'     => _l('als_dashboard'),
@@ -14,11 +15,11 @@ function app_init_admin_sidebar_menu_items()
         'badge'    => [],
     ]);
 
-    if (
+    if ($managerAccess || (
         staff_can('view',  'customers')
         || (have_assigned_customers()
             || (!have_assigned_customers() && staff_can('create',  'customers')))
-    ) {
+        )) {
         $CI->app_menu->add_sidebar_menu_item('customers', [
             'name'     => _l('als_clients'),
             'href'     => admin_url('clients'),
@@ -67,7 +68,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-     if ((staff_can('view',  'invoices') || staff_can('view_own',  'invoices'))
+    if ($managerAccess || (staff_can('view',  'invoices') || staff_can('view_own',  'invoices'))
         || (staff_has_assigned_invoices() && get_option('allow_staff_view_invoices_assigned') == 1)
     ) {
         $CI->app_menu->add_sidebar_children_item('sales', [
@@ -79,10 +80,10 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    if (
+    if ($managerAccess || (
         staff_can('view',  'payments') || staff_can('view_own',  'invoices')
         || (get_option('allow_staff_view_invoices_assigned') == 1 && staff_has_assigned_invoices())
-    ) {
+    )) {
         $CI->app_menu->add_sidebar_children_item('sales', [
             'slug'     => 'payments',
             'name'     => _l('payments'),
@@ -281,7 +282,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if (staff_can('view-timesheets', 'reports') || staff_can('view', 'reports')) {
+    if ($managerAccess || staff_can('view-timesheets', 'reports') || staff_can('view', 'reports')) {
         $CI->app_menu->add_sidebar_menu_item('reports', [
             'collapse' => true,
             'name'     => _l('als_reports'),
@@ -302,7 +303,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if (staff_can('view',  'reports')) {
+    if ($managerAccess || staff_can('view',  'reports')) {
         $CI->app_menu->add_sidebar_children_item('reports', [
             'slug'     => 'sales-reports',
             'name'     => _l('als_sales'),
@@ -350,7 +351,7 @@ function app_init_admin_sidebar_menu_items()
     }
 
     // Setup menu
-    if (staff_can('view',  'staff')) {
+     if ($managerAccess || staff_can('view',  'staff')) {
         $CI->app_menu->add_setup_menu_item('staff', [
             'name'     => _l('als_staff'),
             'href'     => admin_url('staff'),
@@ -359,7 +360,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    if (is_admin()) {
+    if (is_admin() || $managerAccess) {
         $CI->app_menu->add_setup_menu_item('customers', [
             'collapse' => true,
             'name'     => _l('clients'),
@@ -554,7 +555,7 @@ function app_init_admin_sidebar_menu_items()
                   ]);*/
     }
 
-    if (staff_can('view',  'settings')) {
+    if ($managerAccess || staff_can('view',  'settings')) {
         $CI->app_menu->add_setup_menu_item('settings', [
             'href'     => admin_url('settings'),
             'name'     => _l('acs_settings'),
