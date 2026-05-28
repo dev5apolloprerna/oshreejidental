@@ -187,6 +187,14 @@ class Appointly_model extends App_Model
 
         $data = $this->validateInsertRecurring($data);
         
+         $branchId = $this->resolveAppointmentBranchId($data);
+
+        if (isset($data['branch'])) {
+            unset($data['branch']);
+        }
+
+        $data['branch_id'] = $branchId;
+
         //$data['custom_recurring'] = $data['custom_recurring'] != '' ? $data['custom_recurring'] : 0;
         $data['repeat_every'] = $data['repeat_every'] != '' ? $data['repeat_every'] : 0;
         $data['reminder_before'] = $data['reminder_before'] != '' ? $data['reminder_before'] : 0;
@@ -220,6 +228,35 @@ class Appointly_model extends App_Model
             pusher_trigger_notification(array_unique([$responsiblePerson]));
         }
         return true;
+    }
+
+    private function resolveAppointmentBranchId($data)
+    {
+        if (isset($data['branch']) && (int) $data['branch'] > 0) {
+            return (int) $data['branch'];
+        }
+
+        if (isset($data['branch_id']) && (int) $data['branch_id'] > 0) {
+            return (int) $data['branch_id'];
+        }
+
+        if (function_exists('get_staff_branch_id') && is_staff_logged_in()) {
+            $staffBranchId = (int) get_staff_branch_id();
+            if ($staffBranchId > 0) {
+                return $staffBranchId;
+            }
+        }
+
+        $currentBranchDb = (string) $this->input->cookie('branch');
+        if ($currentBranchDb !== '') {
+            $mainDb = $this->load->database('default', true);
+            $row = $mainDb->select('branchid')->where('branch_db', $currentBranchDb)->get(db_prefix() . 'branch')->row();
+            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
+                return (int) $row->branchid;
+            }
+        }
+
+        return 0;
     }
 
 
@@ -318,8 +355,10 @@ class Appointly_model extends App_Model
 
         
         $MAIN_DB = $this->load->database('default', TRUE);
+        $branchId = isset($data['branch']) ? (int) $data['branch'] : 0;
+        
         $MAIN_DB->select('branch_db,branch_db_user,branch_db_pass');
-        $MAIN_DB->where('branchid',$data['branch']);
+        $MAIN_DB->where('branchid', $branchId);
         $branch_data = $MAIN_DB->get(db_prefix().'branch')->row();
 
         unset($data['branch']);
@@ -375,9 +414,11 @@ class Appointly_model extends App_Model
         $data['age'] = $data['age'] != '' ? $data['age'] : '';
         $data['gender'] = $data['gender'] != '' ? $data['gender'] : '';
         
-        $this->db->insert(db_prefix() . 'appointly_appointments', array_merge($data,['datecreated' => date('Y-m-d H:i:s'),]));
+        $this->db->insert(db_prefix() . 'appointly_appointments', array_merge($data, [
+            'branch_id'   => $branchId,
+            'datecreated' => date('Y-m-d H:i:s'),
+        ]));
 
-        
         
         $appointment_id = $this->db->insert_id();
         
@@ -1638,9 +1679,10 @@ class Appointly_model extends App_Model
                
 
                 $invoice->items       = $this->get_items_by_id($invoice->id);
-
                 $client          = $this->get_client_data_by_appointment($id);
-
+                 if ($client && isset($client->appointment_branch_id)) {
+                    $client->branch_id = (int) $client->appointment_branch_id;
+                }
                 $invoice->billing_street = $client->billing_street;
                 $invoice->billing_city = $client->billing_street;
                 $invoice->billing_state = $client->billing_street;
@@ -1659,7 +1701,7 @@ class Appointly_model extends App_Model
 
     function get_client_data_by_appointment($id)
     {
-        $this->db->select(db_prefix() . 'clients.*,'.db_prefix() . 'contacts.dob,'.db_prefix() . 'contacts.gender');
+        $this->db->select(db_prefix() . 'clients.*,'.db_prefix() . 'contacts.dob,'.db_prefix() . 'contacts.gender,'.db_prefix() . 'appointly_appointments.branch_id as appointment_branch_id');
         $this->db->from(db_prefix() . 'appointly_appointments');
         $this->db->join(db_prefix().'contacts',db_prefix().'contacts.id = ' . db_prefix() . 'appointly_appointments.contact_id');
         $this->db->join(db_prefix().'clients',db_prefix().'clients.userid = ' . db_prefix() . 'contacts.userid');

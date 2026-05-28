@@ -76,7 +76,8 @@ if (!function_exists('init_appointly_database_tables')) {
                 `custom_recurring` tinyint NOT NULL,
                 `cycles` int NOT NULL DEFAULT '0',
                 `total_cycles` int NOT NULL DEFAULT '0',
-                `last_recurring_date` date DEFAULT NULL,           
+                `last_recurring_date` date DEFAULT NULL,
+                `branch_id` int(11) DEFAULT '0',
                 PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;"
         );
@@ -199,6 +200,11 @@ if (!function_exists('checkForModuleReinstallation')) {
     function checkForModuleReinstallation()
     {
         $CI = &get_instance();
+
+        if (!$CI->db->field_exists('branch_id', db_prefix() . 'appointly_appointments')) {
+            $CI->db->query("ALTER TABLE " . db_prefix() . "appointly_appointments ADD `branch_id` INT(11) DEFAULT '0' AFTER `last_recurring_date`;");
+        }
+
 
         if (!$CI->db->field_exists('notes', db_prefix() . 'appointly_appointments')) {
             $CI->db->query("ALTER TABLE " . db_prefix() . "appointly_appointments ADD `notes` LONGTEXT NULL AFTER `address`;");

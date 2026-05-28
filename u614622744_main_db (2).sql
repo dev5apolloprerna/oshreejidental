@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 27, 2026 at 11:32 AM
+-- Generation Time: May 28, 2026 at 09:23 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.1.13
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `tblactivity_log` (
   `tbl_uniq_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `staffid` (`staffid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3743 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3782 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `tblactivity_log`
@@ -2713,7 +2713,46 @@ INSERT INTO `tblactivity_log` (`id`, `description`, `date`, `staffid`, `branch_i
 (3739, 'Customer Info Updated [ID: 99]', '2026-05-26 16:16:52', 'admin admin', 3, 1055),
 (3740, 'New Client Created [ID: 100, From Staff: 1]', '2026-05-26 17:45:51', 'admin admin', 3, 1056),
 (3741, 'Invoice Status Updated [Invoice Number: INV-000068, From: Unpaid To: Paid]', '2026-05-26 17:46:32', 'admin admin', 3, 1057),
-(3742, 'Payment Recorded [ID:68, Invoice Number: INV-000068, Total: ₹500.00]', '2026-05-26 17:46:32', 'admin admin', 3, 1058);
+(3742, 'Payment Recorded [ID:68, Invoice Number: INV-000068, Total: ₹500.00]', '2026-05-26 17:46:32', 'admin admin', 3, 1058),
+(3743, 'Failed Login Attempt [Email: Maninagar@test.com, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:33:02', NULL, 0, 0),
+(3744, 'Failed Login Attempt [Email: Maninagar@test.com, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:33:42', NULL, 0, 0),
+(3745, 'Failed Login Attempt [Email: Maninagar@test.com, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:33:55', NULL, 0, 0),
+(3746, 'User Successfully Logged In [User Id: 1, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:34:28', 'admin admin', 0, 0),
+(3747, 'New Client Created [ID: 19717, From Staff: 1]', '2026-05-27 17:35:39', 'admin admin', 0, 0),
+(3748, 'Failed Login Attempt [Email: Maninagar@test.com, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:43:48', NULL, 0, 0),
+(3749, 'Failed Login Attempt [Email: Maninagar@test.com, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:44:18', NULL, 0, 0),
+(3750, 'User Successfully Logged In [User Id: 1, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:44:40', 'admin admin', 0, 0),
+(3751, 'Staff Member Updated [ID: 7, Maninagar User]', '2026-05-27 17:46:14', 'admin admin', 0, 0),
+(3752, 'Staff Member Updated [ID: 20, Maninagar Main Branch User]', '2026-05-27 17:46:31', 'admin admin', 0, 0),
+(3753, 'User Successfully Logged In [User Id: 7, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:46:48', 'Maninagar User', 0, 0),
+(3754, 'Tried to access page where don\'t have permission [branch]', '2026-05-27 17:46:55', 'Maninagar User', 0, 0),
+(3755, 'User Successfully Logged In [User Id: 7, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:55:53', 'Maninagar User', 0, 0),
+(3756, 'Failed Login Attempt [Email: satellite@test.com, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:56:24', NULL, 0, 0),
+(3757, 'User Successfully Logged In [User Id: 7, Is Staff Member: Yes, IP: ::1]', '2026-05-27 17:56:33', 'Maninagar User', 0, 0),
+(3758, 'User Successfully Logged In [User Id: 7, Is Staff Member: Yes, IP: ::1]', '2026-05-27 18:17:11', 'Maninagar User', 0, 0),
+(3759, 'User Successfully Logged In [User Id: 1, Is Staff Member: Yes, IP: ::1]', '2026-05-27 18:17:45', 'admin admin', 0, 0),
+(3760, 'Staff Member Updated [ID: 8, Satellite User]', '2026-05-27 18:18:24', 'admin admin', 0, 0),
+(3761, 'Staff Member Updated [ID: 36, Satellite User]', '2026-05-27 18:18:45', 'admin admin', 0, 0),
+(3762, 'User Successfully Logged In [User Id: 36, Is Staff Member: Yes, IP: ::1]', '2026-05-27 18:19:06', 'Satellite User', 0, 0),
+(3763, 'New Client Created [ID: 19718, From Staff: 36]', '2026-05-27 18:19:41', 'Satellite User', 0, 0),
+(3764, 'Email Sent To [Email: dev1.apolloinfotech@gmail.com, Template: Appointment approved (Sent to Contact)]', '2026-05-27 18:21:52', 'Satellite User', 0, 0),
+(3765, 'User Successfully Logged In [User Id: 7, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:10:47', 'Maninagar User', 0, 0),
+(3766, 'Failed Login Attempt [Email: satellite@test.com, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:11:54', NULL, 0, 0),
+(3767, 'User Successfully Logged In [User Id: 36, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:13:02', 'Satellite User', 0, 0),
+(3768, 'Email Sent To [Email: dev5.apolloinfotech@gmail.com, Template: Appointment approved (Sent to Contact)]', '2026-05-28 14:14:27', 'Satellite User', 0, 0),
+(3769, 'Email Sent To [Email: dev1.apolloinfotech@gmail.com, Template: Appointment approved (Sent to Contact)]', '2026-05-28 14:20:40', 'Satellite User', 0, 0),
+(3770, 'Email Sent To [Email: dev1.apolloinfotech@gmail.com, Template: Appointment approved (Sent to Contact)]', '2026-05-28 14:39:46', 'Satellite User', 0, 0),
+(3771, 'Email Sent To [Email: dev1.apolloinfotech@gmail.com, Template: Appointment approved (Sent to Contact)]', '2026-05-28 14:42:04', 'Satellite User', 0, 0),
+(3772, 'User Successfully Logged In [User Id: 1, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:42:49', 'admin admin', 0, 0),
+(3773, 'User Successfully Logged In [User Id: 7, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:43:07', 'Maninagar User', 0, 0),
+(3774, 'Tried to access page where don\'t have permission [Appointments]', '2026-05-28 14:43:11', 'Maninagar User', 0, 0),
+(3775, 'Tried to access page where don\'t have permission [branch]', '2026-05-28 14:43:19', 'Maninagar User', 0, 0),
+(3776, 'Tried to access page where don\'t have permission [Appointments]', '2026-05-28 14:43:33', 'Maninagar User', 0, 0),
+(3777, 'User Successfully Logged In [User Id: 1, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:44:03', 'admin admin', 0, 0),
+(3778, 'Staff Status Changed [StaffID: 12 - Status(Active/Inactive): 1]', '2026-05-28 14:44:49', 'admin admin', 0, 0),
+(3779, 'Staff Member Updated [ID: 12, iskon ambli]', '2026-05-28 14:45:10', 'admin admin', 0, 0),
+(3780, 'User Successfully Logged In [User Id: 12, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:45:24', 'iskon ambli', 0, 0),
+(3781, 'User Successfully Logged In [User Id: 36, Is Staff Member: Yes, IP: ::1]', '2026-05-28 14:52:23', 'Satellite User', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -2793,7 +2832,7 @@ CREATE TABLE IF NOT EXISTS `tblappointly_appointments` (
   `old_contact_id` int NOT NULL DEFAULT '0',
   `old_type_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13072 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=13077 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `tblappointly_appointments`
@@ -5366,7 +5405,8 @@ INSERT INTO `tblappointly_appointments` (`id`, `google_event_id`, `google_calend
 (13068, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'PURNA PANDYA', '', '', 'PURNA PANDYA', '9687708321', '', NULL, 10987, 0, 0, '1fef4a770658180fbccbd82fb12fcf2b', NULL, NULL, '2026-05-25', '13:00', 1, 1, 0, 'minutes', 1, 0, NULL, 'internal', 0, NULL, NULL, 0, NULL, 0, 0, 0, 0, NULL, '', '', NULL, NULL, '0000-00-00 00:00:00', 3, 230, 88, 0),
 (13069, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'mehul shah', '', '', 'mehul shah', '11', 'AURRADENT', NULL, 10995, 0, 0, 'c661a46b8566eeb8b60ca0c1816606f8', NULL, NULL, '2026-05-22', '19:30', 1, 1, 0, 'minutes', 1, 0, NULL, 'internal', 0, NULL, NULL, 0, NULL, 0, 0, 0, 0, NULL, '', '', NULL, NULL, '0000-00-00 00:00:00', 3, 231, 96, 0),
 (13070, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Disimpection for PURNA PANDYA', '', '', 'PURNA PANDYA', '9687708321', 'aurradent', NULL, 10987, 0, 0, '9674a75c48c241d1a0738ce266bb3421', NULL, NULL, '2026-05-26', '11:30', 1, 1, 0, 'minutes', 1, 0, NULL, 'internal', 71, NULL, NULL, 0, NULL, 0, 0, 0, 0, NULL, '', '', NULL, NULL, '0000-00-00 00:00:00', 3, 232, 88, 29),
-(13071, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Shailesh Arvindbhai  Chauhan', '', 'Shail779@gmail.com', 'Shailesh Arvindbhai  Chauhan', '7046777772', 'AURADENT', NULL, 10998, 0, 0, '06337534a6520a475667aa97618c2d1e', NULL, NULL, '2026-05-26', '11:00', 1, 1, 0, 'minutes', 0, 0, NULL, 'internal', 0, NULL, NULL, 0, NULL, 0, 0, 0, 0, NULL, '', '', NULL, NULL, '0000-00-00 00:00:00', 3, 233, 99, 0);
+(13071, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Shailesh Arvindbhai  Chauhan', '', 'Shail779@gmail.com', 'Shailesh Arvindbhai  Chauhan', '7046777772', 'AURADENT', NULL, 10998, 0, 0, '06337534a6520a475667aa97618c2d1e', NULL, NULL, '2026-05-26', '11:00', 1, 1, 0, 'minutes', 0, 0, NULL, 'internal', 0, NULL, NULL, 0, NULL, 0, 0, 0, 0, NULL, '', '', NULL, NULL, '0000-00-00 00:00:00', 3, 233, 99, 0),
+(13076, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Root canal treatment for prerna parekh', 'test', 'dev1.apolloinfotech@gmail.com', 'prerna parekh', '09987654321', '1, anurag flat,', NULL, 11000, 0, 0, '850f2b59aec42e594e135eab5e63210f', NULL, NULL, '2026-05-29', '09:00', 1, 36, 0, 'minutes', 0, 0, NULL, 'internal', 4, NULL, NULL, 1, 'month', 1, 0, 0, 0, NULL, '', '', NULL, NULL, '0000-00-00 00:00:00', 2, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -10524,7 +10564,8 @@ INSERT INTO `tblappointly_attendees` (`staff_id`, `appointment_id`, `branch_id`,
 (7, 13064, 3, 225),
 (5, 13069, 3, 231),
 (7, 13070, 3, 232),
-(1, 13071, 3, 233);
+(1, 13071, 3, 233),
+(36, 13076, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -10599,7 +10640,7 @@ CREATE TABLE IF NOT EXISTS `tblappointment_assign_log` (
   `old_appointment_id` int NOT NULL DEFAULT '0',
   `old_treatment_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4366 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4372 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblappointment_assign_log`
@@ -14909,7 +14950,13 @@ INSERT INTO `tblappointment_assign_log` (`id`, `appointment_id`, `staff_id`, `tr
 (4362, 13070, 7, 1297, '2026-05-26 16:28:56', '2026-05-26 16:28:57', '0000-00-00 00:00:00', 3, 443, 232, 189),
 (4363, 13048, 7, 1298, '2026-05-26 16:32:08', '2026-05-26 16:32:10', '0000-00-00 00:00:00', 3, 444, 208, 190),
 (4364, 13048, 3, 1299, '2026-05-26 16:32:12', '2026-05-26 16:32:14', '0000-00-00 00:00:00', 3, 445, 208, 191),
-(4365, 13071, 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-26 17:52:24', 3, 446, 233, 0);
+(4365, 13071, 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-26 17:52:24', 3, 446, 233, 0),
+(4366, 13072, 36, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-27 18:21:48', 0, 0, 0, 0),
+(4367, 13073, 36, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-28 14:14:18', 0, 0, 0, 0),
+(4368, 13074, 36, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-28 14:20:35', 0, 0, 0, 0),
+(4369, 13075, 36, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-28 14:39:40', 0, 0, 0, 0),
+(4370, 13075, 36, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-28 14:40:38', 0, 0, 0, 0),
+(4371, 13076, 36, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2026-05-28 14:41:57', 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -16780,7 +16827,7 @@ CREATE TABLE IF NOT EXISTS `tblclients` (
   KEY `leadid` (`leadid`),
   KEY `company` (`company`),
   KEY `active` (`active`)
-) ENGINE=InnoDB AUTO_INCREMENT=19714 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19719 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `tblclients`
@@ -27803,8 +27850,8 @@ INSERT INTO `tblclients` (`userid`, `company`, `vat`, `phonenumber`, `country`, 
 (19709, 'Jagruti shailesh  Chauhan', NULL, '7046777773', 0, '', '', '', '', NULL, NULL, '2026-05-26 16:16:44', 1, NULL, '', '', '', '', 102, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 0, NULL, 1, 1, 3, 98),
 (19710, 'Shailesh Arvindbhai  Chauhan', NULL, '7046777772', 0, '', '', '', '', NULL, NULL, '2026-05-26 16:16:52', 1, NULL, '', '', '', '', 102, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 0, NULL, 1, 1, 3, 99),
 (19711, 'hemaben  shukla', NULL, '123', 0, '', '', '', '', NULL, NULL, '2026-05-26 17:45:51', 1, NULL, '', '', '', '', 102, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 0, NULL, 1, 1, 3, 100),
-(19712, 'prerna parekh', NULL, '09987654321', 0, '', '', '', '', NULL, NULL, '2026-05-27 17:01:59', 1, NULL, '', '', '', '', 102, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 0, NULL, 1, 1, 0, 0),
-(19713, 'prerna parekh', NULL, '09987654321', 0, '', '', '', '', NULL, NULL, '2026-05-27 17:02:08', 1, NULL, '', '', '', '', 102, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 0, NULL, 1, 1, 0, 0);
+(19717, 'prerna parekh', NULL, '09987654321', 0, '', '', '', '', NULL, NULL, '2026-05-27 17:35:39', 1, NULL, '', '', '', '', 102, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 0, NULL, 1, 1, 0, 0),
+(19718, 'gianna parekh', NULL, '09987654321', 0, '', '', '', '', NULL, NULL, '2026-05-27 18:19:41', 1, NULL, '', '', '', '', 102, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 0, NULL, 1, 36, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -27899,7 +27946,7 @@ CREATE TABLE IF NOT EXISTS `tblcontacts` (
   KEY `lastname` (`lastname`),
   KEY `email` (`email`),
   KEY `is_primary` (`is_primary`)
-) ENGINE=InnoDB AUTO_INCREMENT=11000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11002 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `tblcontacts`
@@ -38927,7 +38974,9 @@ INSERT INTO `tblcontacts` (`id`, `userid`, `is_primary`, `firstname`, `lastname`
 (10996, 19708, 1, 'baldev ', 'shukla', '', '9879498798', NULL, '2026-05-25 20:04:19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 'Male', '1970-02-06', '44/069/26/A', '', '', '0000-00-00', '0000-00-00', 0, 3, 97, 97),
 (10997, 19709, 1, 'Jagruti shailesh ', 'Chauhan', 'Shail779@gmail.com', '7046777773', NULL, '2026-05-26 16:16:44', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 'Female', '1982-08-04', '44/070/26/A', 'O Negative', 'Dr.Vidhi Rathod', '2026-05-26', '0000-00-00', 0, 3, 98, 98),
 (10998, 19710, 1, 'Shailesh Arvindbhai ', 'Chauhan', 'Shail779@gmail.com', '7046777772', NULL, '2026-05-26 16:16:52', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 'Male', '1978-08-11', '44/071/26/A', 'A Positive', 'Dr.Vidhi Rathod', '0000-00-00', '0000-00-00', 0, 3, 99, 99),
-(10999, 19711, 1, 'hemaben ', 'shukla', '', '123', NULL, '2026-05-26 17:45:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 'Female', '0011-03-12', '44/074/26/A', '', '', '0000-00-00', '0000-00-00', 0, 3, 100, 100);
+(10999, 19711, 1, 'hemaben ', 'shukla', '', '123', NULL, '2026-05-26 17:45:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 'Female', '0011-03-12', '44/074/26/A', '', '', '0000-00-00', '0000-00-00', 0, 3, 100, 100),
+(11000, 19717, 1, 'prerna', 'parekh', 'dev1.apolloinfotech@gmail.com', '09987654321', NULL, '2026-05-27 17:35:39', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 'Female', '1994-06-09', '/055/26/MAIN', 'B Positive', '', '0000-00-00', '0000-00-00', 0, 0, 0, 0),
+(11001, 19718, 1, 'gianna', 'parekh', 'dev1.apolloinfotech@gmail.com', '09987654321', NULL, '2026-05-27 18:19:41', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 'Female', '2023-03-04', '/056/26/S', 'AB Positive', '', '0000-00-00', '0000-00-00', 0, 2, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -38940,8 +38989,23 @@ CREATE TABLE IF NOT EXISTS `tblcontact_permissions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `permission_id` int NOT NULL,
   `userid` int NOT NULL,
+  `branch_id` int NOT NULL DEFAULT '0',
+  `tbl_uniq_id` int NOT NULL DEFAULT '0',
+  `old_userid` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tblcontact_permissions`
+--
+
+INSERT INTO `tblcontact_permissions` (`id`, `permission_id`, `userid`, `branch_id`, `tbl_uniq_id`, `old_userid`) VALUES
+(7, 1, 26, 1, 49, 26),
+(8, 2, 26, 1, 50, 26),
+(9, 3, 26, 1, 51, 26),
+(10, 4, 26, 1, 52, 26),
+(11, 5, 26, 1, 53, 26),
+(12, 6, 26, 1, 54, 26);
 
 -- --------------------------------------------------------
 
@@ -43018,7 +43082,7 @@ CREATE TABLE IF NOT EXISTS `tblmedical_history` (
   `tbl_uniq_id` int NOT NULL DEFAULT '0',
   `old_userid` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11001 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11003 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmedical_history`
@@ -54057,7 +54121,9 @@ INSERT INTO `tblmedical_history` (`id`, `userid`, `occupation`, `allergies`, `me
 (10997, 19708, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2026-05-25 20:04:19', 3, 98, 97),
 (10998, 19709, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2026-05-26 16:16:44', 3, 99, 98),
 (10999, 19710, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2026-05-26 16:16:52', 3, 100, 99),
-(11000, 19711, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2026-05-26 17:45:51', 3, 101, 100);
+(11000, 19711, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2026-05-26 17:45:51', 3, 101, 100),
+(11001, 19717, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2026-05-27 17:35:39', 0, 0, 0),
+(11002, 19718, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2026-05-27 18:19:41', 2, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -54862,7 +54928,7 @@ INSERT INTO `tbloptions` (`id`, `name`, `value`, `autoload`) VALUES
 (477, 'theme_style_custom_clients_and_admin_area', '', 1),
 (478, 'patient_prefix', 'PT-', 1),
 (479, 'patient_number_format', '1', 1),
-(480, 'next_patient_number', '52', 1),
+(480, 'next_patient_number', '57', 1),
 (481, 'next_file_number', '44', 1);
 
 -- --------------------------------------------------------
@@ -55315,18 +55381,23 @@ CREATE TABLE IF NOT EXISTS `tblroles` (
   `roleid` int NOT NULL AUTO_INCREMENT,
   `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `permissions` longtext COLLATE utf8mb4_unicode_ci,
+  `branch_id` int NOT NULL DEFAULT '0',
+  `tbl_uniq_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`roleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `tblroles`
 --
 
-INSERT INTO `tblroles` (`roleid`, `name`, `permissions`) VALUES
-(1, 'Employee', 'a:0:{}'),
-(2, 'Dr. Assistance', 'a:4:{s:9:\"customers\";a:2:{i:0;s:4:\"view\";i:1;s:6:\"create\";}s:5:\"items\";a:1:{i:0;s:4:\"view\";}s:5:\"leads\";a:1:{i:0;s:4:\"view\";}s:12:\"appointments\";a:2:{i:0;s:4:\"view\";i:1;s:6:\"create\";}}'),
-(3, 'Receptionist', 'a:5:{s:9:\"contracts\";a:4:{i:0;s:4:\"view\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}s:9:\"customers\";a:4:{i:0;s:4:\"view\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}s:5:\"items\";a:1:{i:0;s:4:\"view\";}s:5:\"leads\";a:1:{i:0;s:4:\"view\";}s:12:\"appointments\";a:4:{i:0;s:4:\"view\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}}'),
-(4, 'Lab Assistant', 'a:0:{}');
+INSERT INTO `tblroles` (`roleid`, `name`, `permissions`, `branch_id`, `tbl_uniq_id`) VALUES
+(1, 'Employee', 'a:0:{}', 0, 0),
+(2, 'Dr. Assistance', 'a:4:{s:9:\"customers\";a:2:{i:0;s:4:\"view\";i:1;s:6:\"create\";}s:5:\"items\";a:1:{i:0;s:4:\"view\";}s:5:\"leads\";a:1:{i:0;s:4:\"view\";}s:12:\"appointments\";a:2:{i:0;s:4:\"view\";i:1;s:6:\"create\";}}', 0, 0),
+(3, 'Receptionist', 'a:5:{s:9:\"contracts\";a:4:{i:0;s:4:\"view\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}s:9:\"customers\";a:4:{i:0;s:4:\"view\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}s:5:\"items\";a:1:{i:0;s:4:\"view\";}s:5:\"leads\";a:1:{i:0;s:4:\"view\";}s:12:\"appointments\";a:4:{i:0;s:4:\"view\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}}', 0, 0),
+(4, 'Lab Assistant', 'a:0:{}', 0, 0),
+(5, 'Doctor', 'a:5:{s:9:\"customers\";a:1:{i:0;s:4:\"view\";}s:8:\"invoices\";a:4:{i:0;s:8:\"view_own\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}s:5:\"items\";a:2:{i:0;s:4:\"view\";i:1;s:6:\"delete\";}s:8:\"payments\";a:3:{i:0;s:6:\"create\";i:1;s:4:\"edit\";i:2;s:6:\"delete\";}s:12:\"appointments\";a:4:{i:0;s:8:\"view_own\";i:1;s:6:\"create\";i:2;s:4:\"edit\";i:3;s:6:\"delete\";}}', 1, 1),
+(6, 'Lab Assistant', 'a:0:{}', 1, 2),
+(7, 'Staff', 'a:0:{}', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -55871,6 +55942,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('7cqtdu5vuqep5guacrjkbujqhtaa8ohb', '2a02:4780:11:1592:0:24a2:6618:1', 1779308882, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330383838323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('7dh7u43ohco12v1odo47s1gqtu09mai6', '2a02:4780:11:1592:0:24a2:6618:1', 1779273784, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237333738343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('7dmtj3vrakfvrvcigb8p6u2g08bge9u5', '2a02:4780:11:1592:0:24a2:6618:1', 1779330063, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333303036333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('7e4faa9sm5urrsgh6f53j5p63g94ml94', '::1', 1779884017, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393838343031373b5f707265765f75726c7c733a35303a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e2f73657474696e6773223b73746166665f757365725f69647c733a313a2231223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c623a313b),
 ('7e4jgji82s29e09edusf6r6r1oep5p35', '2a02:4780:11:1592:0:24a2:6618:1', 1779299103, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239393130333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('7fdfbam2n7f3prjas2fcif8ptnldib94', '2a02:4780:11:1592:0:24a2:6618:1', 1779326104, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332363130343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('7g32do44catv1l8dbm1nfebfadc4fbqk', '2a02:4780:11:1592:0:24a2:6618:1', 1779291242, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239313234323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -55946,10 +56018,10 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('8ml2qem5vqdlf8692j6rhq1jb8jj7l2k', '2a02:4780:11:1592:0:24a2:6618:1', 1779299702, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239393730323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('8mlr9i1824efb9eemot65nbnfcutb7v1', '2a02:4780:11:1592:0:24a2:6618:1', 1779304562, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330343536323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('8nlajj7h5ar3tmhqqp6diq2sjfrmivcd', '2a02:4780:11:1592:0:24a2:6618:1', 1779341882, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334313838323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('8npbuok3ccq4imni9qcidrm7l5tcfh9f', '2a02:4780:11:1592:0:24a2:6618:1', 1779305883, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330353838333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('8o3jg82kdebjjnqtidl43cdua11tk92s', '2a02:4780:11:1592:0:24a2:6618:1', 1779295143, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239353134333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('8od13k0nc3ootfkfma23tibe8gmqaqpm', '2a02:4780:11:1592:0:24a2:6618:1', 1779318578, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331383537383b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+('8npbuok3ccq4imni9qcidrm7l5tcfh9f', '2a02:4780:11:1592:0:24a2:6618:1', 1779305883, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330353838333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
 INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('8o3jg82kdebjjnqtidl43cdua11tk92s', '2a02:4780:11:1592:0:24a2:6618:1', 1779295143, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239353134333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('8od13k0nc3ootfkfma23tibe8gmqaqpm', '2a02:4780:11:1592:0:24a2:6618:1', 1779318578, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331383537383b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('8ohff33526pv5cos7hae0pg76uddsad7', '2a02:4780:11:1592:0:24a2:6618:1', 1779292563, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239323536333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('8omt15b0scj8c5qub4ck5g8inq4tm1di', '2a02:4780:11:1592:0:24a2:6618:1', 1779324782, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332343738323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('8q98ggnqdm4g2ldaactlfubf0t3popbu', '2a02:4780:11:1592:0:24a2:6618:1', 1779250863, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235303836333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -55978,6 +56050,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('95re7mfglerpspdljg6t16aiv3ln9hv8', '2a02:4780:11:1592:0:24a2:6618:1', 1779259084, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235393038343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('95tgfhcg47rlqg5a07vlb14527ir1vcp', '2a02:4780:11:1592:0:24a2:6618:1', 1779275283, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237353238333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('965m52rr2sbuevo3r0pfg0l7lm4npptk', '2a02:4780:11:1592:0:24a2:6618:1', 1779300364, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330303336343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('97cl2sdes607njks45q4ogb1reop4u52', '::1', 1779959335, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393935393333353b5f707265765f75726c7c733a36343a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e2f6170706f696e746c792f6170706f696e746d656e7473223b73746166665f757365725f69647c733a323a223336223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c733a303a22223b),
 ('97qrkt8nj5qp3ddfptopgnaigi6lflib', '2a02:4780:11:1592:0:24a2:6618:1', 1779315604, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331353630343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('986mo17261qk6sg2qct8e8hh86m4gsvc', '2a02:4780:11:1592:0:24a2:6618:1', 1779292862, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239323836323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('99avn976b26muk3osfnkeaicflf2lrun', '2a02:4780:11:1592:0:24a2:6618:1', 1779361743, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336313734333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56049,6 +56122,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('a95jqvlsjtggov5dm8p275bu27kho18k', '2a02:4780:11:1592:0:24a2:6618:1', 1779286803, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238363830333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('a96pkg4o7l310q69df1qqe4d4326qhmn', '2a02:4780:11:1592:0:24a2:6618:1', 1779290163, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239303136333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('a9r691dna7hei6libar6phcch7a1oufo', '2a02:4780:11:1592:0:24a2:6618:1', 1779281522, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238313532323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('aabospcpru4r8k9qjh28cjca6u942op5', '::1', 1779960144, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393936303132323b5f707265765f75726c7c733a34313a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e223b73746166665f757365725f69647c733a323a223336223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c733a303a22223b),
 ('aah1j687660l61cikdkc1170e3o5562c', '2a02:4780:11:1592:0:24a2:6618:1', 1779310322, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331303332323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ac41503v8489p1m4t15vqq06erod1qp2', '2a02:4780:11:1592:0:24a2:6618:1', 1779261304, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236313330343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ac7qlj7h74b8tm40ld5fsd8j8iq7lpr8', '2a02:4780:11:1592:0:24a2:6618:1', 1779321362, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332313336323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56126,13 +56200,13 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('bhr0ka1lp0mlltquuri46eo08b17estj', '2a02:4780:11:1592:0:24a2:6618:1', 1779329822, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332393832323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('bie4o2vcr9pr8tiriug6mi70tp1ggr82', '2a02:4780:11:1592:0:24a2:6618:1', 1779355922, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335353932323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('bifao17tscfvosi1j0fgc17g4q26ut6j', '2a02:4780:11:1592:0:24a2:6618:1', 1779272942, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237323934323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('bjno7ogb7c42e3a7j283m37oovqrug6j', '2a02:4780:11:1592:0:24a2:6618:1', 1779344403, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334343430333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('bjno7ogb7c42e3a7j283m37oovqrug6j', '2a02:4780:11:1592:0:24a2:6618:1', 1779344403, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334343430333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('bjo4dp2h6557v0p5hlsu2ldgrrfpo1i0', '2a02:4780:11:1592:0:24a2:6618:1', 1779310083, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331303038333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('bjps0f7htvo20po9iesmo9pho8cnkk4e', '2a02:4780:11:1592:0:24a2:6618:1', 1779288183, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238383138323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('bk712sif2funostltujmcvlnqect00i0', '2a02:4780:11:1592:0:24a2:6618:1', 1779288782, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238383738323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('bl4ue45q5dq4qcpv7lj6h8mjlf9pcp7k', '2a02:4780:11:1592:0:24a2:6618:1', 1779331923, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333313932323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('bl9ea8tvi57daqeb4g45bdg8stpest11', '2a02:4780:11:1592:0:24a2:6618:1', 1779268863, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236383836333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('bl9ea8tvi57daqeb4g45bdg8stpest11', '2a02:4780:11:1592:0:24a2:6618:1', 1779268863, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236383836333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('blgukaj1604lddusso4ntam082g5csor', '2a02:4780:11:1592:0:24a2:6618:1', 1779258362, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235383336323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('bm9g26mpnh0ovuo4a5r4lr2t9v9h0t6q', '2a02:4780:11:1592:0:24a2:6618:1', 1779319083, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331393038333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('bmroh03tcrlo3j2t7vkrri690c82eu59', '2a02:4780:11:1592:0:24a2:6618:1', 1779328083, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332383038333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56308,13 +56382,13 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('e8dbsf5hjusl5pobmamfhhco6pafsols', '2a02:4780:11:1592:0:24a2:6618:1', 1779333242, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333333234323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('e8k3e6g32rg112majefvngn9rqifrovp', '2a02:4780:11:1592:0:24a2:6618:1', 1779364083, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336343038333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('eaebb0antri2itkbv23g43flateun17n', '2a02:4780:11:1592:0:24a2:6618:1', 1779273543, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237333534333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('ebpqiqvva8c8e6uktuin2ittiik2s8fd', '2a02:4780:11:1592:0:24a2:6618:1', 1779254763, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235343736323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('ebpqiqvva8c8e6uktuin2ittiik2s8fd', '2a02:4780:11:1592:0:24a2:6618:1', 1779254763, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235343736323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('ed2bb3d8lsgjfi4qg4qs8i5iigfrsbvd', '2a02:4780:11:1592:0:24a2:6618:1', 1779255302, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235353330323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ede42k38dm9vhsjuneqts30imc54tn2t', '2a02:4780:11:1592:0:24a2:6618:1', 1779359043, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335393034323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('edou85kvjrjs9eut7abt51sb91sqnkg4', '2a02:4780:11:1592:0:24a2:6618:1', 1779257822, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235373832323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('eefhf4uoj11g4h4ptjke95foq9ofounn', '2a02:4780:11:1592:0:24a2:6618:1', 1779297062, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239373036323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('eel5b7nut1639t2vcut7nv8vk0u2ub1t', '2a02:4780:11:1592:0:24a2:6618:1', 1779292322, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239323332323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('eel5b7nut1639t2vcut7nv8vk0u2ub1t', '2a02:4780:11:1592:0:24a2:6618:1', 1779292322, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239323332323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ef70ujdimeumq0umffdbfqa2vmsmf2rb', '2a02:4780:11:1592:0:24a2:6618:1', 1779293222, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239333232323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('efq7v9glpko2o1nb2phgj0hg6b65l76j', '2a02:4780:11:1592:0:24a2:6618:1', 1779296283, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239363238333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('eg1g9gvpemc07lsmoatuv5pv61537166', '2a02:4780:11:1592:0:24a2:6618:1', 1779260642, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236303634323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56325,6 +56399,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('ehgrq5gubo0k5fob58jgr92l8o0dqnld', '2a02:4780:11:1592:0:24a2:6618:1', 1779348903, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334383930333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('eht2tepnofhirceioq1ghqhd8uta0i03', '2a02:4780:11:1592:0:24a2:6618:1', 1779325383, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332353338333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ei30fl4mm4sr8bomjct813v0g92hbafl', '2a02:4780:11:1592:0:24a2:6618:1', 1779295803, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239353830333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('eifs2d4mdssrbm8seopg061d8demdsq0', '::1', 1779886314, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393838363133333b5f707265765f75726c7c733a36343a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e2f6170706f696e746c792f6170706f696e746d656e7473223b73746166665f757365725f69647c733a323a223336223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c733a303a22223b),
 ('ejcbn3894853mp626fmtpmv8e2o8l3q8', '2a02:4780:11:1592:0:24a2:6618:1', 1779246962, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393234363936323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ejkj80m2ab2uqcll8gmq92ob6jcv6fjt', '2a02:4780:11:1592:0:24a2:6618:1', 1779308762, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330383736323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ejpft22o67gkv1t065bfbfpqrk6qd0ld', '2a02:4780:11:1592:0:24a2:6618:1', 1779291004, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239313030343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56489,15 +56564,15 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('h2hacka6cc68nn77boag620ov37p6mmo', '2a02:4780:11:1592:0:24a2:6618:1', 1779268982, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236383938323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h2it8s1odea0av4fck15bqdb1u96ma46', '2a02:4780:11:1592:0:24a2:6618:1', 1779343382, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334333338323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h337qim82cubkkht6de1rkgarhcta0o5', '2a02:4780:11:1592:0:24a2:6618:1', 1779296403, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239363430333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('h37iglebi27i3j27fjqh9mrjt2p4pf9q', '2a02:4780:11:1592:0:24a2:6618:1', 1779337142, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333373134323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('h37iglebi27i3j27fjqh9mrjt2p4pf9q', '2a02:4780:11:1592:0:24a2:6618:1', 1779337142, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333373134323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('h3pqr6a90la9t1ea0tifq3f79cj2jqis', '2a02:4780:11:1592:0:24a2:6618:1', 1779279003, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237393030333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h3s9depb1ceuq6bpm2f33q81ptaqj84p', '2a02:4780:11:1592:0:24a2:6618:1', 1779258842, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235383834323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h3sa1is6bd39ov243hphaunoar6jrcc8', '2a02:4780:11:1592:0:24a2:6618:1', 1779268262, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236383236323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h4itv602figtsqvbnssp2sg7id1pt8k6', '2a02:4780:11:1592:0:24a2:6618:1', 1779335283, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333353238333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h53dbalrlp6u8butlclhufcjvgpf4l8s', '2a02:4780:11:1592:0:24a2:6618:1', 1779350903, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335303930333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h54jdl5ncimacnfvrcfcn9l8rlkjbjge', '2a02:4780:11:1592:0:24a2:6618:1', 1779264662, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236343636323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('h5cl8o4aqjku3vvetcggh7dmmkonlc77', '2a02:4780:11:1592:0:24a2:6618:1', 1779338462, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333383436323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('h5cl8o4aqjku3vvetcggh7dmmkonlc77', '2a02:4780:11:1592:0:24a2:6618:1', 1779338462, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333383436323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h5sjji7nfbp300embt65ttv3lbfp54cg', '2a02:4780:11:1592:0:24a2:6618:1', 1779337922, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333373932323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h6c3k30bfbn5fl735vdns1ir73705ako', '2a02:4780:11:1592:0:24a2:6618:1', 1779357542, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335373534323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('h6e7067cm4pe0n1ttijdogpg05uv2288', '2a02:4780:11:1592:0:24a2:6618:1', 1779253803, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235333830333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56512,6 +56587,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('hadpak0esf6jm3eeo4pqdc34t7om4a2u', '2a02:4780:11:1592:0:24a2:6618:1', 1779318004, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331383030343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('hahoeirvok3ucvj279o2enff6ml35g9j', '2a02:4780:11:1592:0:24a2:6618:1', 1779328862, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332383836323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('hba9dljvrq9jl3f7h00nnbloivjh50in', '2a02:4780:11:1592:0:24a2:6618:1', 1779324542, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332343534323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('hbq4u8lq5gl0739vid9357cub77g4fal', '::1', 1779958201, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393935383230313b5f707265765f75726c7c733a36343a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e2f6170706f696e746c792f6170706f696e746d656e7473223b73746166665f757365725f69647c733a323a223336223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c733a303a22223b),
 ('hcihjnbmk3cbe9lqkh6tts6q5vsc6na6', '2a02:4780:11:1592:0:24a2:6618:1', 1779289383, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238393338333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('hcmrcqb36n3r9r82c7rav9eeve511kb0', '2a02:4780:11:1592:0:24a2:6618:1', 1779316923, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331363932333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('hcnu33ffpr5q6qk5mm3srh3allih8c6b', '2a02:4780:11:1592:0:24a2:6618:1', 1779276662, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237363636323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56671,7 +56747,8 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('k1uv1nss303ldinusbqg6n85oksfh5so', '2a02:4780:11:1592:0:24a2:6618:1', 1779281702, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238313730323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('k386kt5ss5qu51603a08k88tg6estrd8', '2a02:4780:11:1592:0:24a2:6618:1', 1779328142, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332383134323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('k416gpf9619a0ejgkfgub721vuqe19u1', '223.236.17.91', 1779339003, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333383939383b5f707265765f75726c7c733a35313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f61646d696e2f61757468656e7469636174696f6e223b),
-('k58eq0njvsuad2pc8ndd85jqvohjlphm', '2a02:4780:11:1592:0:24a2:6618:1', 1779362762, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336323736323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('k58eq0njvsuad2pc8ndd85jqvohjlphm', '2a02:4780:11:1592:0:24a2:6618:1', 1779362762, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336323736323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('k5a0api59q6pda1t3m3eash5r2mqg93v', '2a02:4780:11:1592:0:24a2:6618:1', 1779323943, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332333934333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('k66ca7ua9afcec193f3bgjthodtkfo47', '2a02:4780:11:1592:0:24a2:6618:1', 1779254642, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235343634323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('k84knf5rfjn3jh2abqeb1fivaempmkjb', '2a02:4780:11:1592:0:24a2:6618:1', 1779347523, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334373532333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56679,8 +56756,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('k95oi3k0mg33hif8ec0salh20oeijd5s', '2a02:4780:11:1592:0:24a2:6618:1', 1779321782, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332313738323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('k9i45gcd944c4qgga2ef6k54d6t695o0', '2a02:4780:11:1592:0:24a2:6618:1', 1779293342, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239333334323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('k9m6ed6p8trpchsikud0g1fs933ade9l', '2a02:4780:11:1592:0:24a2:6618:1', 1779304982, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330343938323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('k9p2s4rkhtteq4q3k5fj1uepfhna5pei', '2a02:4780:11:1592:0:24a2:6618:1', 1779261903, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236313930333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('k9p2s4rkhtteq4q3k5fj1uepfhna5pei', '2a02:4780:11:1592:0:24a2:6618:1', 1779261903, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236313930333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('kae4mc9ubo7t8407ff276donc8f327ik', '2a02:4780:11:1592:0:24a2:6618:1', 1779256382, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235363338323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('kb16uldk7tqc7ekrbm9qbfqj43ca5b5a', '2a02:4780:11:1592:0:24a2:6618:1', 1779293283, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239333238333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('kb8eiuflv51t1kui23sl7g6gpjhpad61', '2a02:4780:11:1592:0:24a2:6618:1', 1779349142, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334393134323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56753,6 +56829,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('lagucdgogo9t8gha9t88vo333smojlgk', '2a02:4780:11:1592:0:24a2:6618:1', 1779364863, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336343836333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('laj3a8fnr9ndan634fh1e6tng3rjlvv1', '2a02:4780:11:1592:0:24a2:6618:1', 1779316262, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331363236323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('lakegcu26epagkdsm1vdl7odlsu7kdto', '2a02:4780:11:1592:0:24a2:6618:1', 1779280803, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238303830333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('lbfmv40helvfd79rq2deql0mf4imldo7', '::1', 1779960122, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393936303132323b5f707265765f75726c7c733a34313a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e223b73746166665f757365725f69647c733a323a223132223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c733a303a22223b),
 ('lc383134r01ls3uf65tlnd1bieci8urm', '2a02:4780:11:1592:0:24a2:6618:1', 1779282723, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238323732333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('lcpnfqlfdk9kofj0j4j76e1p22mn3kf6', '2a02:4780:11:1592:0:24a2:6618:1', 1779333842, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333333834323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('lebni4g5fh1rml44mmvgct039amblq0s', '2a02:4780:11:1592:0:24a2:6618:1', 1779286862, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238363836323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56853,7 +56930,8 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('mve99b4kkdcme6dftm5cndtbbocg4uls', '2a02:4780:11:1592:0:24a2:6618:1', 1779292445, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239323434353b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('mvkmi0cdjqqfcnt3rlu6shors8u2i2u0', '2a02:4780:11:1592:0:24a2:6618:1', 1779355142, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335353134323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n0rt6qmkn6ol1dm0alk24db0luvcvcfr', '2a02:4780:11:1592:0:24a2:6618:1', 1779359644, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335393634343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('n13ei19okjljj0i705hcno1pjg1paf0s', '2a02:4780:11:1592:0:24a2:6618:1', 1779332282, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333323238323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('n13ei19okjljj0i705hcno1pjg1paf0s', '2a02:4780:11:1592:0:24a2:6618:1', 1779332282, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333323238323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('n1k2tul5km2h04ohh992273kimdl6ae3', '2a02:4780:11:1592:0:24a2:6618:1', 1779305043, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330353034333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n2catd2ghb7k42ebd5cvfdbs7mla9275', '2a02:4780:11:1592:0:24a2:6618:1', 1779256442, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235363434323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n2rcki3fo3rj7evp45eesrg61ebth1k6', '2a02:4780:11:1592:0:24a2:6618:1', 1779332522, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333323532323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -56862,8 +56940,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('n3tcmvs4vvpstfthp95ol9rqffs45sra', '2a02:4780:11:1592:0:24a2:6618:1', 1779339782, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333393738323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n534p7kdpb2i1f774u16cve3eg4bpogr', '2a02:4780:11:1592:0:24a2:6618:1', 1779341162, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334313136323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n5lum86gcg5u7gs41ifss52o7dis2lkm', '2a02:4780:11:1592:0:24a2:6618:1', 1779308042, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330383034323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('n5rsavd4ud3or96bkrv2seok72jbjl2d', '2a02:4780:11:1592:0:24a2:6618:1', 1779280624, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238303632343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('n5rsavd4ud3or96bkrv2seok72jbjl2d', '2a02:4780:11:1592:0:24a2:6618:1', 1779280624, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238303632343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n6mnadv88p21s5fgrlhvui78mqtul49p', '2a02:4780:11:1592:0:24a2:6618:1', 1779359162, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335393136323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n7q46ue0rveiq12mi0sjdgr4k06qo8tf', '2a02:4780:11:1592:0:24a2:6618:1', 1779322203, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332323230333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('n8dacdadf7t20us6066r98sbhd91h58k', '2a02:4780:11:1592:0:24a2:6618:1', 1779289622, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238393632323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57036,7 +57113,8 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('plmsn2la70pntg9u8omgd8p6992cl2h1', '2a02:4780:11:1592:0:24a2:6618:1', 1779268442, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236383434323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('pm45loicn5qlf7ivhkroh87dn5hpbite', '2a02:4780:11:1592:0:24a2:6618:1', 1779303482, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330333438323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('pmhi8dlnpm6pp5ftgvq7g8h54sn3ebds', '2a02:4780:11:1592:0:24a2:6618:1', 1779279963, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237393936333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('pmidlhtui7h7hp8go3vqm6mc3vj331e1', '2a02:4780:11:1592:0:24a2:6618:1', 1779247142, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393234373134323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('pmidlhtui7h7hp8go3vqm6mc3vj331e1', '2a02:4780:11:1592:0:24a2:6618:1', 1779247142, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393234373134323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('po3k71eh8ghrjntiodubflbk5of7t4em', '2a02:4780:11:1592:0:24a2:6618:1', 1779362103, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336323130333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('pol5418jutb4smj4l962koqjahe40fo5', '2a02:4780:11:1592:0:24a2:6618:1', 1779308942, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330383934323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('pp7v3dqjtprul0b11u5cbfnmhi1m8p49', '2a02:4780:11:1592:0:24a2:6618:1', 1779356703, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335363730333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57045,8 +57123,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('pqptclosvt1fq0jm3pdj8f1rukdfoft9', '2a02:4780:11:1592:0:24a2:6618:1', 1779357722, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335373732323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('pr9olu7hiqg8pi2qsrukr63s99eu4m80', '2a02:4780:11:1592:0:24a2:6618:1', 1779331443, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333313434333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('prjcqhqq85gor65soj9glrgeq0m6cvdi', '2a02:4780:11:1592:0:24a2:6618:1', 1779248703, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393234383730333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('ps5fbtnbjubifn8u7f58uo2r4rfil2lu', '2a02:4780:11:1592:0:24a2:6618:1', 1779284822, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238343832323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('ps5fbtnbjubifn8u7f58uo2r4rfil2lu', '2a02:4780:11:1592:0:24a2:6618:1', 1779284822, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238343832323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('psn8bfoa9u5ln7c1akbl19v5obfvrlfh', '2a02:4780:11:1592:0:24a2:6618:1', 1779298563, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239383536333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('pt4m9et8qbkbrkqmo3q5buuk7b1jb912', '2a02:4780:11:1592:0:24a2:6618:1', 1779303723, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330333732333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('ptl0ridab2tr9tkll93kpnn6t87kc9td', '2a02:4780:11:1592:0:24a2:6618:1', 1779343802, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334333830323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57161,6 +57238,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('rrnf22vu00hn6a11aqp753tag3mum137', '2a02:4780:11:1592:0:24a2:6618:1', 1779247022, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393234373032323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('rrrd1s8ojc5k5ee8l09icunagcfvp8ss', '2a02:4780:11:1592:0:24a2:6618:1', 1779333903, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333333930333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('rrsr3dgk7akco0132t11hf7iditf7l96', '2a02:4780:11:1592:0:24a2:6618:1', 1779287825, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393238373832343b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('rs7651fujkgsnlt9ue36ci7e4p0of5hf', '::1', 1779884699, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393838343639393b5f707265765f75726c7c733a34373a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e2f6c65616473223b73746166665f757365725f69647c733a313a2237223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c733a303a22223b),
 ('rs95rdo3u6lga0qj1vf27vbdfiqqnill', '2a02:4780:11:1592:0:24a2:6618:1', 1779291903, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239313930333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('runkiqm3krai6j6grv9qel1fnahi4a2o', '2a02:4780:11:1592:0:24a2:6618:1', 1779322742, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332323734323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('s0t7gndn65qpvd4bq7lrle0t21ck1avr', '2a02:4780:11:1592:0:24a2:6618:1', 1779250143, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235303134333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57196,6 +57274,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('sjd0ospktkkhq60o39q8i20vs1as64br', '2a02:4780:11:1592:0:24a2:6618:1', 1779365582, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336353538323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('skoobs7d5rp1j62kbv2om62cq61q8d33', '2a02:4780:11:1592:0:24a2:6618:1', 1779292922, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239323932323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('skqdnghvimb9kadccatms4noe5k9r0pi', '2a02:4780:11:1592:0:24a2:6618:1', 1779251162, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235313136323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('skqtaq2u5eajue9dm24v6ii0ench361d', '::1', 1779885881, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393838353838313b5f707265765f75726c7c733a34313a22687474703a2f2f6c6f63616c686f73742f6f73687265656a6964656e74616c2f6170702f61646d696e223b73746166665f757365725f69647c733a313a2237223b73746166665f6c6f676765645f696e7c623a313b73657475702d6d656e752d6f70656e7c733a303a22223b),
 ('slm93svie1984u4q12as52e699uoiks8', '2a02:4780:11:1592:0:24a2:6618:1', 1779305163, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393330353136333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('slu51oi2107ufqahm8hgc5ig53htdofd', '2a02:4780:11:1592:0:24a2:6618:1', 1779354482, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335343438323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('sm69te3bkub7lf4u9af1dfdfsdbuioj2', '2a02:4780:11:1592:0:24a2:6618:1', 1779318903, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331383930333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57216,7 +57295,8 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('ss91l253sq7ml38jq1379l438bujvah5', '2a02:4780:11:1592:0:24a2:6618:1', 1779260582, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236303538323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('st0b02pnts9jbc5tcvovo1pi7m41ucga', '2a02:4780:11:1592:0:24a2:6618:1', 1779318603, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331383630333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('staj2c44s9kgj9l82ds7m6e3fe82jhn9', '2a02:4780:11:1592:0:24a2:6618:1', 1779271262, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237313236323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('su2khsd2dimfnaucasa4cto6q5m02qk9', '2a02:4780:11:1592:0:24a2:6618:1', 1779269404, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236393430333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('su2khsd2dimfnaucasa4cto6q5m02qk9', '2a02:4780:11:1592:0:24a2:6618:1', 1779269404, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236393430333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('su3gd007dufohp8kvce5n79t5is3j0th', '2a02:4780:11:1592:0:24a2:6618:1', 1779257162, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235373136323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('su8skt5pqrrc1p8dvet0sso1744dio40', '2a02:4780:11:1592:0:24a2:6618:1', 1779321963, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332313936333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('sujmpgcfafvvt7dk28g45ph359m8bjid', '2a02:4780:11:1592:0:24a2:6618:1', 1779276303, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237363330333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57228,8 +57308,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('t3qeu2a2vekb4ovd2df4skfl3d14v5qc', '2a02:4780:11:1592:0:24a2:6618:1', 1779298143, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239383134333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('t597b4e5b66uhggtams0obkrmldtnhtj', '2a02:4780:11:1592:0:24a2:6618:1', 1779365463, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393336353436333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('t5a8h7r3670clffa9kfok0mvenjkc9nt', '2a02:4780:11:1592:0:24a2:6618:1', 1779269522, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236393532323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('t5mse7v5p9n66rdv1iqd8qtqjlo7v4eq', '2a02:4780:11:1592:0:24a2:6618:1', 1779353403, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335333430333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('t5mse7v5p9n66rdv1iqd8qtqjlo7v4eq', '2a02:4780:11:1592:0:24a2:6618:1', 1779353403, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335333430333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('t75mi3ogjb2a7hghs48jrjepommkksnf', '2a02:4780:11:1592:0:24a2:6618:1', 1779310503, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393331303530333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('t7cfce7qlahommvgqijr740im66j0tir', '2a02:4780:11:1592:0:24a2:6618:1', 1779276423, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237363432333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('t7ola6qpo03frlfs1mmr6e928g5rs937', '2a02:4780:11:1592:0:24a2:6618:1', 1779271982, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237313938323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57399,7 +57478,8 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('vjtk6drd8p5pn3r3u9mhicdfkrda7lra', '2a02:4780:11:1592:0:24a2:6618:1', 1779265323, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236353332333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vka19t7crh5ghj91b77pev0ssm9spn5t', '2a02:4780:11:1592:0:24a2:6618:1', 1779339122, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333393132323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vkndl4h5lichhb73eoc9hc1q38etjp33', '2a02:4780:11:1592:0:24a2:6618:1', 1779263942, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236333934323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('vnl6d7ceeil3c5n0q062f133gs288v46', '2a02:4780:11:1592:0:24a2:6618:1', 1779323522, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332333532323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
+('vnl6d7ceeil3c5n0q062f133gs288v46', '2a02:4780:11:1592:0:24a2:6618:1', 1779323522, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393332333532323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
+INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('vnli6j39uhra9264fb36garrp75r5vmh', '2a02:4780:11:1592:0:24a2:6618:1', 1779268323, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393236383332333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vnqsqead1bnvtkibtc0mv6sa7883lvi4', '2a02:4780:11:1592:0:24a2:6618:1', 1779334082, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333343038323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vp89nuole5gtubhf8415d9jo972fol6u', '2a02:4780:11:1592:0:24a2:6618:1', 1779352923, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335323932333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57411,8 +57491,7 @@ INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('vqlks50vjhrh5gfm58s6i62f6cr0aqpe', '2a02:4780:11:1592:0:24a2:6618:1', 1779257942, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393235373934323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vrd962lcfn6lj4vm824roujj2r0qo7k8', '2a02:4780:11:1592:0:24a2:6618:1', 1779349982, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393334393938323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vt44enecbl27sgmq5otbmvpt6dp27dpq', '2a02:4780:11:1592:0:24a2:6618:1', 1779352262, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335323236323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
-('vteg60rpjdc0f8qt261b22qdrsp8265f', '2a02:4780:11:1592:0:24a2:6618:1', 1779332162, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333323136323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b);
-INSERT INTO `tblsessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('vteg60rpjdc0f8qt261b22qdrsp8265f', '2a02:4780:11:1592:0:24a2:6618:1', 1779332162, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393333323136323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vti7hckqclsi677vplj3elcdg531jm2a', '2a02:4780:11:1592:0:24a2:6618:1', 1779293942, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393239333934323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vuce2rqdu5gcscjne5s46lc7l3022l0j', '2a02:4780:11:1592:0:24a2:6618:1', 1779350222, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393335303232323b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
 ('vus11t34ehc609nn3da2vvcpkirdk26q', '2a02:4780:11:1592:0:24a2:6618:1', 1779279723, 0x5f5f63695f6c6173745f726567656e65726174657c693a313737393237393732333b5f707265765f75726c7c733a34313a2268747470733a2f2f6f73687265656a6964656e74616c2e636f6d2f6170702f63726f6e2f696e646578223b),
@@ -57497,22 +57576,22 @@ CREATE TABLE IF NOT EXISTS `tblstaff` (
 --
 
 INSERT INTO `tblstaff` (`staffid`, `email`, `firstname`, `lastname`, `facebook`, `linkedin`, `phonenumber`, `skype`, `password`, `datecreated`, `profile_image`, `doctor_sign`, `last_ip`, `last_login`, `last_activity`, `last_password_change`, `new_pass_key`, `new_pass_key_requested`, `admin`, `role`, `active`, `default_language`, `direction`, `media_path_slug`, `is_not_staff`, `hourly_rate`, `two_factor_auth_enabled`, `two_factor_auth_code`, `two_factor_auth_code_requested`, `email_signature`, `google_auth_secret`, `branch_id`, `tbl_uniq_id`) VALUES
-(1, 'admin@gmail.com', 'admin', 'admin', NULL, NULL, NULL, NULL, '$2a$08$WRU6TZl15K5H6nLQaidZxeqRdbwLhenQbkQ3gt7ELmwK3yrmGuN6i', '2024-03-18 12:59:43', NULL, NULL, '2405:201:2025:6873:4da4:9588:56c7:763a', '2026-05-05 15:50:57', '2026-05-05 15:51:21', '2026-01-27 16:10:01', NULL, NULL, 1, NULL, 1, 'english', NULL, NULL, 0, '0.00', 0, NULL, NULL, NULL, NULL, 0, 0),
-(7, 'maninagar@test.com', 'Maninagar', 'User', '', '', '', '', '$2a$08$872o3JZWqARWwwX7IHnmeO30sMnwxS5VvpCiz2KOIJYviUMw.CvL6', '2024-04-03 20:25:14', NULL, NULL, '2402:a00:404:5fca:2561:9d3a:9a7c:8f7b', '2025-09-08 18:50:47', '2025-09-08 19:56:28', '2024-06-03 20:16:10', '4213d53f0f4c9c2957a4527a07186cb4', '2025-05-21 20:02:18', 0, 1, 1, '', '', NULL, 0, '0.00', 0, NULL, NULL, '', NULL, 0, 0),
-(8, 'satelite@test.com', 'Satellite', 'User', '', '', '', '', '$2a$08$872o3JZWqARWwwX7IHnmeO30sMnwxS5VvpCiz2KOIJYviUMw.CvL6', '2024-04-12 19:39:40', NULL, NULL, '2405:201:2003:d00f:ac9f:52e3:6fff:919a', '2026-02-18 12:44:28', '2026-02-18 20:36:53', '2026-03-27 22:19:06', NULL, NULL, 0, 1, 1, '', '', 'rajan-patel', 0, '0.00', 0, NULL, NULL, '', NULL, 0, 0),
+(1, 'admin@gmail.com', 'admin', 'admin', NULL, NULL, NULL, NULL, '$2a$08$WRU6TZl15K5H6nLQaidZxeqRdbwLhenQbkQ3gt7ELmwK3yrmGuN6i', '2024-03-18 12:59:43', NULL, NULL, '::1', '2026-05-28 14:44:03', '2026-05-28 14:45:10', '2026-01-27 16:10:01', NULL, NULL, 1, NULL, 1, 'english', NULL, NULL, 0, '0.00', 0, NULL, NULL, NULL, NULL, 0, 0),
+(7, 'maninagar@test.com', 'Maninagar', 'User', '', '', '', '', '$2a$08$jnfPMNteqVW7h35fdtoocex1FWtTStaBqcaP72LJuNKMj3jT7924W', '2024-04-03 20:25:14', NULL, NULL, '::1', '2026-05-28 14:43:07', '2026-05-28 14:43:34', '2026-05-27 17:46:13', '4213d53f0f4c9c2957a4527a07186cb4', '2025-05-21 20:02:18', 0, 1, 1, '', '', NULL, 0, '0.00', 0, NULL, NULL, '', NULL, 0, 0),
+(8, 'satelite@test.com', 'Satellite', 'User', '', '', '', '', '$2a$08$.cN99TgfS41aVuBYmsAWIuFyxRc.kocZ8M6VWtpzVoy8mnzq9iiNm', '2024-04-12 19:39:40', NULL, NULL, '2405:201:2003:d00f:ac9f:52e3:6fff:919a', '2026-02-18 12:44:28', '2026-02-18 20:36:53', '2026-05-27 18:18:24', NULL, NULL, 0, 1, 1, '', '', 'rajan-patel', 0, '0.00', 0, NULL, NULL, '', NULL, 0, 0),
 (11, 'test@test.com', 'Bhavesh', 'Donga', '', '', '', '', '$2a$08$uoEJ.qMoi7t2mG0T8/MqOe/qzEuzPNolbcl5re4GdChUxSKenLe8i', '2025-03-22 11:38:29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 4, 0, '', '', 'bhavesh-donga', 0, '0.00', 0, NULL, NULL, '', NULL, 0, 0),
-(12, 'iskon@test.com', 'iskon', 'ambli', '', '', '', '', '$2a$08$872o3JZWqARWwwX7IHnmeO30sMnwxS5VvpCiz2KOIJYviUMw.CvL6', '2025-03-22 11:38:29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 4, 0, '', '', 'iskon-ambli', 0, '0.00', 0, NULL, NULL, '', NULL, 0, 0),
-(20, 'maninagar@test.com', 'Maninagar Main Branch', 'User', '', '', '', '', '$2a$08$dhjlm0pcKyqIuvSeywKcF.alRTWPGv/SIxjS3UaEW73mfsN8a0La2', '2024-04-03 20:25:14', '', NULL, '103.161.98.129', '2026-05-21 10:37:40', '2026-05-21 17:40:52', '2026-04-15 16:29:18', '31a14aa9da504b27cb7d6e4cef1d47f6', '2025-06-26 14:06:18', 1, 0, 1, 'english', '', NULL, 0, '0.00', 0, NULL, NULL, '', NULL, 1, 1),
-(21, 'oshreeji.riddhi@gmail.com', 'Riddhi.J.', 'Jaspuriya', '', '', '9426863675', '', '$2a$08$dhUXGPxE8Ab0c.f/YN/kGe00noRUoAsKQqGWDjpez4/MF8Moz2P/u', '2024-08-08 12:20:23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 3, 1, '', '', 'riddhi-j-jaspuriya', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 5),
-(22, 'oshreeji.rita@gmail.com', 'Ritaben', 'Shah', '', '', '9426863675', '', '$2a$08$Ayad2roMtz7.44wpD2stLuYgXV30Yz08J1Ea9RUp1pKzT6g0vuDLi', '2024-08-08 12:26:33', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 3, 1, '', '', 'ritaben-shah', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 10),
-(23, 'oshreeji.sunny@gmail.com', 'Sunnybhai', 'Rabari', '', '', '9426863675', '', '$2a$08$Ql/OqRRfAVWKYbq0SJmtb.wrzH1C3N7QTwXIdc7utfvwTyBVslsje', '2024-08-08 12:28:17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 3, 1, '', '', 'sunnybhai-rabari', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 12),
-(24, 'oshreeji.hemal@gmail.com', 'Dr Hemal', 'Shah', '', '', '9426863675', '', '$2a$08$WujVL/k53yhgna6.XX12De5Ct0yCafA3I5W5jyZYmVeTLA9Rn95OK', '2024-08-09 09:56:04', '577f37a0-5246-48d4-beb9-dbef2218f076.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, '', '', 'dr-hemal-shah', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 14),
-(25, 'oshreeji.juhi@gmail.com', 'DR JUHI', 'SONI', '', '', '9426863675', '', '$2a$08$CkUkU.JgZgaWl3wyRZvqW.5dRav.RTfsUdAT9P9kVH5YAT/v7U9/O', '2025-04-25 15:54:26', 'JUHIDD.png', 'image.jpg', '2409:40c1:100e:3f36:75bc:8e7f:b226:9bc7', '2026-01-31 15:35:13', '2026-01-31 15:36:09', '2026-01-03 15:21:09', NULL, NULL, 0, 1, 1, '', '', 'dr-juhi-soni', 0, '1.00', 0, NULL, NULL, '', NULL, 1, 17),
-(26, 'oshreeji.mihir@gmail.com', 'DR MIHIR ', 'CHAUHAN', '', '', '9316460206', '', '$2a$08$UR1c65wiCTeUEcMZ9ue1XOKdl..u6K3ghY2TbivrQ3a.OlmgfFdqS', '2025-05-24 10:25:59', 'Capture.png', 'image.jpg', '103.81.94.1', '2026-04-10 10:29:34', '2026-04-10 15:23:30', '2026-01-03 14:49:59', NULL, NULL, 0, 1, 1, '', '', 'dr-mihir-chauhan', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 19),
-(27, 'vishalmdoshi@gmail.com', 'VISHAL ', 'DOSHI', '', '', '9427129775', '', '$2a$08$7XEqGVS.rB3X1b1v6In/6OZyksuC0qEKSW/vxD8NV7ulPkP4KXv0W', '2025-07-01 11:25:15', NULL, NULL, '2402:a00:404:5fca:850b:35a5:7de8:d706', '2025-07-09 16:48:02', '2025-07-09 18:53:42', '2025-07-09 16:47:07', NULL, NULL, 0, 1, 1, '', '', 'vishal-doshi', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 21),
-(28, 'oshreeji.komal@gmail.com', 'DR KOMAL ', 'MAKWANA', '', '', '9426863675', '', '$2a$08$6Jpdg4U5vmlhZYxMZ.5bg.0NYlkGJZtTrrOPuH1vTJEbVXoPhM0BG', '2025-08-22 19:48:06', NULL, NULL, '103.85.8.104', '2026-03-28 19:26:14', '2026-03-28 19:32:21', '2026-01-03 15:20:47', NULL, NULL, 0, 1, 1, '', '', 'dr-komal-makwana', 0, '1.00', 0, NULL, NULL, '', NULL, 1, 22),
+(12, 'iskon@test.com', 'iskon', 'ambli', '', '', '', '', '$2a$08$jv.qidOfmzyD4EKL/ltKI.iPkpxW0rHV2fKTYyu1GhQQAMZPGJLNm', '2025-03-22 11:38:29', NULL, NULL, '::1', '2026-05-28 14:45:24', '2026-05-28 14:45:25', '2026-05-28 14:45:10', NULL, NULL, 0, 4, 1, '', '', 'iskon-ambli', 0, '0.00', 0, NULL, NULL, '', NULL, 0, 0),
+(20, 'maninagar@test.com', 'Maninagar Main Branch', 'User', '', '', '', '', '$2a$08$mmzrszcic1QzmZsTcbfbHu7TSJEKW7A9N79zIToyxaW3DjpAcygnu', '2024-04-03 20:25:14', '', NULL, '103.161.98.129', '2026-05-21 10:37:40', '2026-05-21 17:40:52', '2026-05-27 17:46:31', '31a14aa9da504b27cb7d6e4cef1d47f6', '2025-06-26 14:06:18', 1, 0, 1, 'english', '', NULL, 0, '0.00', 0, NULL, NULL, '', NULL, 1, 1),
+(21, 'oshreeji.riddhi@gmail.com', 'Riddhi.J.', 'Jaspuriya', '', '', '9426863675', '', '$2a$08$dhUXGPxE8Ab0c.f/YN/kGe00noRUoAsKQqGWDjpez4/MF8Moz2P/u', '2024-08-08 12:20:23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 7, 1, '', '', 'riddhi-j-jaspuriya', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 5),
+(22, 'oshreeji.rita@gmail.com', 'Ritaben', 'Shah', '', '', '9426863675', '', '$2a$08$Ayad2roMtz7.44wpD2stLuYgXV30Yz08J1Ea9RUp1pKzT6g0vuDLi', '2024-08-08 12:26:33', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 7, 1, '', '', 'ritaben-shah', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 10),
+(23, 'oshreeji.sunny@gmail.com', 'Sunnybhai', 'Rabari', '', '', '9426863675', '', '$2a$08$Ql/OqRRfAVWKYbq0SJmtb.wrzH1C3N7QTwXIdc7utfvwTyBVslsje', '2024-08-08 12:28:17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 7, 1, '', '', 'sunnybhai-rabari', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 12),
+(24, 'oshreeji.hemal@gmail.com', 'Dr Hemal', 'Shah', '', '', '9426863675', '', '$2a$08$WujVL/k53yhgna6.XX12De5Ct0yCafA3I5W5jyZYmVeTLA9Rn95OK', '2024-08-09 09:56:04', '577f37a0-5246-48d4-beb9-dbef2218f076.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 5, 1, '', '', 'dr-hemal-shah', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 14),
+(25, 'oshreeji.juhi@gmail.com', 'DR JUHI', 'SONI', '', '', '9426863675', '', '$2a$08$CkUkU.JgZgaWl3wyRZvqW.5dRav.RTfsUdAT9P9kVH5YAT/v7U9/O', '2025-04-25 15:54:26', 'JUHIDD.png', 'image.jpg', '2409:40c1:100e:3f36:75bc:8e7f:b226:9bc7', '2026-01-31 15:35:13', '2026-01-31 15:36:09', '2026-01-03 15:21:09', NULL, NULL, 0, 5, 1, '', '', 'dr-juhi-soni', 0, '1.00', 0, NULL, NULL, '', NULL, 1, 17),
+(26, 'oshreeji.mihir@gmail.com', 'DR MIHIR ', 'CHAUHAN', '', '', '9316460206', '', '$2a$08$UR1c65wiCTeUEcMZ9ue1XOKdl..u6K3ghY2TbivrQ3a.OlmgfFdqS', '2025-05-24 10:25:59', 'Capture.png', 'image.jpg', '103.81.94.1', '2026-04-10 10:29:34', '2026-04-10 15:23:30', '2026-01-03 14:49:59', NULL, NULL, 0, 5, 1, '', '', 'dr-mihir-chauhan', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 19),
+(27, 'vishalmdoshi@gmail.com', 'VISHAL ', 'DOSHI', '', '', '9427129775', '', '$2a$08$7XEqGVS.rB3X1b1v6In/6OZyksuC0qEKSW/vxD8NV7ulPkP4KXv0W', '2025-07-01 11:25:15', NULL, NULL, '2402:a00:404:5fca:850b:35a5:7de8:d706', '2025-07-09 16:48:02', '2025-07-09 18:53:42', '2025-07-09 16:47:07', NULL, NULL, 0, 5, 1, '', '', 'vishal-doshi', 0, '0.00', 0, NULL, NULL, '', NULL, 1, 21),
+(28, 'oshreeji.komal@gmail.com', 'DR KOMAL ', 'MAKWANA', '', '', '9426863675', '', '$2a$08$6Jpdg4U5vmlhZYxMZ.5bg.0NYlkGJZtTrrOPuH1vTJEbVXoPhM0BG', '2025-08-22 19:48:06', NULL, NULL, '103.85.8.104', '2026-03-28 19:26:14', '2026-03-28 19:32:21', '2026-01-03 15:20:47', NULL, NULL, 0, 5, 1, '', '', 'dr-komal-makwana', 0, '1.00', 0, NULL, NULL, '', NULL, 1, 22),
 (35, 'admin@gmail.com', 'admin', 'admin', NULL, NULL, NULL, NULL, '$2a$08$3rHeaNv68mD5UzwH/34Zpe9b5blf8IifV0eFy7TZf8aOa3LnGH5sG', '2024-03-18 12:59:43', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, NULL, NULL, 0, '0.00', 0, NULL, NULL, NULL, NULL, 2, 1),
-(36, 'satellite@test.com', 'Satellite', 'User', '', '', '', '', '$2a$08$SrEGe83fY3/tqxITnY0gsuqXr.CsWb2qhN27VjmsxLKNNgTdsdoiG', '2024-04-12 19:39:40', '', NULL, '122.170.60.101', '2026-05-23 18:03:16', '2026-05-23 19:35:59', '2024-06-03 20:21:38', '170176f6423a14be312949eafe3679f1', '2024-06-13 10:49:53', 1, NULL, 1, '', '', NULL, 0, '0.00', 0, NULL, NULL, '', NULL, 2, 2),
+(36, 'satellite@test.com', 'Satellite', 'User', '', '', '', '', '$2a$08$5brZSYVy6hZ5o1JS4nBNne3J6u0FWN6BKeZ2h0Mz4S2KZLKZXiHm6', '2024-04-12 19:39:40', '', NULL, '::1', '2026-05-28 14:52:23', '2026-05-28 14:52:24', '2026-05-27 18:18:45', '170176f6423a14be312949eafe3679f1', '2024-06-13 10:49:53', 1, 0, 1, '', '', NULL, 0, '0.00', 0, NULL, NULL, '', NULL, 2, 2),
 (37, 'd.barot127935@gmail.com', 'Dr. Devanshi', 'Barot', '', '', '7045263009', '', '$2a$08$JDUA1gXmxSEPTBDfMUiy6OYoyJhAZcTQanJCh..o828Toysk8SAAK', '2024-10-04 13:36:44', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, '', '', 'dr-devanshi-barot', 0, '0.00', 0, NULL, NULL, '', NULL, 2, 6),
 (38, 'dineshmeena@gmail.com', 'Dinesh', 'Meena', '', '', '9662909593', '', '$2a$08$TUjghzztn6r0WICihOqsQO.Lz4hysTSGWdlANS23OkFO2S2.QNpQC', '2025-03-29 11:42:01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, '', '', 'dinesh-meena', 0, '0.00', 0, NULL, NULL, '', NULL, 2, 7),
 (39, 'vishalmdoshi@gmail.com', 'Vishal', 'Doshi', '', '', '9427129775', '', '$2a$08$S2WC7ImWJy2I76rii4Qow.vuyCdK3V7bUZWHRH8uM5Ee.rw9gvwu6', '2025-05-10 17:51:41', NULL, NULL, '2402:a00:404:5fca:d996:d6c8:2bb7:b3f1', '2025-07-09 17:56:43', '2025-07-09 17:57:31', '2025-06-07 16:01:12', NULL, NULL, 0, 1, 1, '', '', 'vishal-doshi', 0, '0.00', 0, NULL, NULL, '', NULL, 2, 8),
@@ -57554,9 +57633,77 @@ CREATE TABLE IF NOT EXISTS `tblstaff_departments` (
 DROP TABLE IF EXISTS `tblstaff_permissions`;
 CREATE TABLE IF NOT EXISTS `tblstaff_permissions` (
   `staff_id` int NOT NULL,
-  `feature` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `capability` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `feature` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `capability` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `branch_id` int NOT NULL DEFAULT '0',
+  `old_staff_id` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tblstaff_permissions`
+--
+
+INSERT INTO `tblstaff_permissions` (`staff_id`, `feature`, `capability`, `branch_id`, `old_staff_id`) VALUES
+(27, 'invoices', 'view_own', 1, 21),
+(27, 'payments', 'create', 1, 21),
+(27, 'payments', 'edit', 1, 21),
+(27, 'payments', 'delete', 1, 21),
+(24, 'customers', 'view', 1, 14),
+(24, 'invoices', 'view_own', 1, 14),
+(24, 'invoices', 'create', 1, 14),
+(24, 'invoices', 'edit', 1, 14),
+(24, 'invoices', 'delete', 1, 14),
+(24, 'items', 'view', 1, 14),
+(24, 'items', 'delete', 1, 14),
+(24, 'payments', 'create', 1, 14),
+(24, 'payments', 'edit', 1, 14),
+(24, 'payments', 'delete', 1, 14),
+(24, 'appointments', 'view_own', 1, 14),
+(24, 'appointments', 'create', 1, 14),
+(24, 'appointments', 'edit', 1, 14),
+(24, 'appointments', 'delete', 1, 14),
+(25, 'customers', 'view', 1, 17),
+(25, 'invoices', 'view_own', 1, 17),
+(25, 'invoices', 'create', 1, 17),
+(25, 'invoices', 'edit', 1, 17),
+(25, 'invoices', 'delete', 1, 17),
+(25, 'items', 'view', 1, 17),
+(25, 'items', 'delete', 1, 17),
+(25, 'payments', 'create', 1, 17),
+(25, 'payments', 'edit', 1, 17),
+(25, 'payments', 'delete', 1, 17),
+(25, 'appointments', 'view_own', 1, 17),
+(25, 'appointments', 'create', 1, 17),
+(25, 'appointments', 'edit', 1, 17),
+(25, 'appointments', 'delete', 1, 17),
+(28, 'customers', 'view', 1, 22),
+(28, 'invoices', 'view_own', 1, 22),
+(28, 'invoices', 'create', 1, 22),
+(28, 'invoices', 'edit', 1, 22),
+(28, 'invoices', 'delete', 1, 22),
+(28, 'items', 'view', 1, 22),
+(28, 'items', 'delete', 1, 22),
+(28, 'payments', 'create', 1, 22),
+(28, 'payments', 'edit', 1, 22),
+(28, 'payments', 'delete', 1, 22),
+(28, 'appointments', 'view_own', 1, 22),
+(28, 'appointments', 'create', 1, 22),
+(28, 'appointments', 'edit', 1, 22),
+(28, 'appointments', 'delete', 1, 22),
+(26, 'customers', 'view', 1, 19),
+(26, 'invoices', 'view_own', 1, 19),
+(26, 'invoices', 'create', 1, 19),
+(26, 'invoices', 'edit', 1, 19),
+(26, 'invoices', 'delete', 1, 19),
+(26, 'items', 'view', 1, 19),
+(26, 'items', 'delete', 1, 19),
+(26, 'payments', 'create', 1, 19),
+(26, 'payments', 'edit', 1, 19),
+(26, 'payments', 'delete', 1, 19),
+(26, 'appointments', 'view_own', 1, 19),
+(26, 'appointments', 'create', 1, 19),
+(26, 'appointments', 'edit', 1, 19),
+(26, 'appointments', 'delete', 1, 19);
 
 -- --------------------------------------------------------
 
@@ -58051,7 +58198,18 @@ CREATE TABLE IF NOT EXISTS `tbltracked_mails` (
   `date_opened` datetime DEFAULT NULL,
   `subject` longtext COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tbltracked_mails`
+--
+
+INSERT INTO `tbltracked_mails` (`id`, `uid`, `rel_id`, `rel_type`, `date`, `email`, `opened`, `date_opened`, `subject`) VALUES
+(1, 'c9686f5e04ed371b37e4e8c46eb1a022', 13072, 'appointment', '2026-05-27 18:21:52', 'dev1.apolloinfotech@gmail.com', 0, NULL, 'Your appointment has been approved!'),
+(2, 'd29cefe764dcb6cfa573aee611ee8f19', 13073, 'appointment', '2026-05-28 14:14:27', 'dev5.apolloinfotech@gmail.com', 0, NULL, 'Your appointment has been approved!'),
+(3, 'ea038cb68b89a6410088444d93bf016b', 13074, 'appointment', '2026-05-28 14:20:40', 'dev1.apolloinfotech@gmail.com', 0, NULL, 'Your appointment has been approved!'),
+(4, '147eaedad171dbc7435cb3c2f0c76b4e', 13075, 'appointment', '2026-05-28 14:39:46', 'dev1.apolloinfotech@gmail.com', 0, NULL, 'Your appointment has been approved!'),
+(5, '4150846f3437db59baa55cd14bd3bd99', 13076, 'appointment', '2026-05-28 14:42:04', 'dev1.apolloinfotech@gmail.com', 0, NULL, 'Your appointment has been approved!');
 
 -- --------------------------------------------------------
 
