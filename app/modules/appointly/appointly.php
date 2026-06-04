@@ -142,8 +142,9 @@ function appointly_register_menu_items()
 {
     $CI = &get_instance();
     $managerAccess = function_exists('is_manager_staff') ? is_manager_staff() : false;
-
-    if ($managerAccess || staff_can('view', 'appointments') || staff_can('view_own', 'appointments')) {
+    $branchMenuAccess = function_exists('app_staff_has_branch_menu_access') ? app_staff_has_branch_menu_access() : $managerAccess;
+    
+    if ($branchMenuAccess || staff_can('view', 'appointments') || staff_can('view_own', 'appointments')) {
         $CI->app_menu->add_sidebar_menu_item(APPOINTLY_MODULE_NAME, [
             'name'     => 'appointly_module_name',
             'href'     => admin_url('appointly/appointments'),
