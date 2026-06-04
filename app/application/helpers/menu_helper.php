@@ -1,11 +1,75 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
+if (!function_exists('app_has_branch_context')) {
+    /**
+     * Determine whether the current staff session is working inside a branch database.
+     * Branch logins set the branch cookie, while the main admin area leaves it empty.
+     */
+    function app_has_branch_context()
+    {
+        $CI = &get_instance();
+        $branch = isset($CI->input) ? (string) $CI->input->cookie('branch') : '';
+
+        if ($branch === '' && isset($_COOKIE['branch'])) {
+            $branch = (string) $_COOKIE['branch'];
+        }
+
+        return trim($branch) !== '';
+    }
+}
+
+if (!function_exists('app_staff_has_branch_menu_access')) {
+    /**
+     * Branch staff should see the same main sidebar as admins/managers.
+     */
+    function app_staff_has_branch_menu_access($staff_id = null)
+    {
+        $isCurrentStaff = empty($staff_id) || (string) $staff_id === (string) get_staff_user_id();
+
+        return is_admin($staff_id) || is_manager_staff($staff_id) || ($isCurrentStaff && is_staff_logged_in() && app_has_branch_context());
+    }
+}
+
+if (!function_exists('app_branch_staff_can')) {
+    /**
+     * Keep branch sidebar visibility and controller access checks in sync.
+     */
+    function app_branch_staff_can($can, $capability, $feature, $staff_id)
+    {
+        if ($can || !app_staff_has_branch_menu_access($staff_id)) {
+            return $can;
+        }
+
+        $allowedFeatures = [
+            'appointments',
+            'branch',
+            'customers',
+            'invoices',
+            'leads',
+            'payments',
+            'reports',
+            'settings',
+            'staff',
+        ];
+
+        $allowedCapabilities = [
+            'view',
+            'view_own',
+            'view-timesheets',
+        ];
+
+        return in_array($feature, $allowedFeatures, true) && in_array($capability, $allowedCapabilities, true);
+    }
+}
+
+hooks()->add_filter('staff_can', 'app_branch_staff_can', 10, 4);
+
 
 function app_init_admin_sidebar_menu_items()
 {
     $CI = &get_instance();
-    $managerAccess = is_manager_staff();
+    $branchMenuAccess = app_staff_has_branch_menu_access();
 
     $CI->app_menu->add_sidebar_menu_item('dashboard', [
         'name'     => _l('als_dashboard'),
@@ -15,7 +79,7 @@ function app_init_admin_sidebar_menu_items()
         'badge'    => [],
     ]);
 
-    if ($managerAccess || (
+    if ($branchMenuAccess || (
         staff_can('view',  'customers')
         || (have_assigned_customers()
             || (!have_assigned_customers() && staff_can('create',  'customers')))
@@ -38,8 +102,8 @@ function app_init_admin_sidebar_menu_items()
 
     $CI->app_menu->add_sidebar_menu_item('sales', [
         'collapse' => true,
-        'name'     => _l('als_sales'),
-        'position' => 20,
+        'name'     => _l('payments'),
+        'position' => 25,
         'icon'     => 'fa-solid fa-receipt',
         'badge'    => [],
     ]);
@@ -68,7 +132,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if ($managerAccess || (staff_can('view',  'invoices') || staff_can('view_own',  'invoices'))
+    if ($branchMenuAccess || (staff_can('view',  'invoices') || staff_can('view_own',  'invoices'))
         || (staff_has_assigned_invoices() && get_option('allow_staff_view_invoices_assigned') == 1)
     ) {
         $CI->app_menu->add_sidebar_children_item('sales', [
@@ -80,7 +144,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    if ($managerAccess || (
+    if ($branchMenuAccess || (
         staff_can('view',  'payments') || staff_can('view_own',  'invoices')
         || (get_option('allow_staff_view_invoices_assigned') == 1 && staff_has_assigned_invoices())
     )) {
@@ -282,7 +346,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if ($managerAccess || staff_can('view-timesheets', 'reports') || staff_can('view', 'reports')) {
+    if ($branchMenuAccess || staff_can('view-timesheets', 'reports') || staff_can('view', 'reports')) {
         $CI->app_menu->add_sidebar_menu_item('reports', [
             'collapse' => true,
             'name'     => _l('als_reports'),
@@ -303,7 +367,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if ($managerAccess || staff_can('view',  'reports')) {
+    if ($branchMenuAccess || staff_can('view',  'reports')) {
         $CI->app_menu->add_sidebar_children_item('reports', [
             'slug'     => 'sales-reports',
             'name'     => _l('als_sales'),
@@ -351,7 +415,7 @@ function app_init_admin_sidebar_menu_items()
     }
 
     // Setup menu
-     if ($managerAccess || staff_can('view',  'staff')) {
+     if ($branchMenuAccess || staff_can('view',  'staff')) {
         $CI->app_menu->add_setup_menu_item('staff', [
             'name'     => _l('als_staff'),
             'href'     => admin_url('staff'),
@@ -360,7 +424,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    if (is_admin() || $managerAccess) {
+    if ($branchMenuAccess) {
         $CI->app_menu->add_setup_menu_item('customers', [
             'collapse' => true,
             'name'     => _l('clients'),
@@ -555,7 +619,7 @@ function app_init_admin_sidebar_menu_items()
                   ]);*/
     }
 
-    if ($managerAccess || staff_can('view',  'settings')) {
+    if ($branchMenuAccess || staff_can('view',  'settings')) {
         $CI->app_menu->add_setup_menu_item('settings', [
             'href'     => admin_url('settings'),
             'name'     => _l('acs_settings'),

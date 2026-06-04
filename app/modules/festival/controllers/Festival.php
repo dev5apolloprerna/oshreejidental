@@ -13,7 +13,7 @@ class Festival extends AdminController
     public function index()
     {
         
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('festival');
         }
         if ($this->input->is_ajax_request()) {

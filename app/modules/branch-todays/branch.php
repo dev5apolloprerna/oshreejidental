@@ -40,7 +40,10 @@ function branch_module_init_menu_items()
 {
     $CI = &get_instance();
 
-    if (is_admin()) {
+    $branchMenuAccess = function_exists('app_staff_has_branch_menu_access') ? app_staff_has_branch_menu_access() : is_admin();
+
+    if ($branchMenuAccess) {
+    	
 	    $CI->app_menu->add_sidebar_menu_item('branch', [
 	        'name'     => _l('branch'),
 	        'href'     => admin_url('branch'),
