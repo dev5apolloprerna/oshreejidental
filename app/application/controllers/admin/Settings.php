@@ -87,7 +87,7 @@ class Settings extends AdminController
 
         $data['admin_tabs'] = ['update', 'info'];
 
-        if (!$tab || (in_array($tab, $data['admin_tabs']) && !is_admin())) {
+        if (!$tab || (in_array($tab, $data['admin_tabs']) && !app_staff_has_branch_menu_access())) {
             $tab = 'general';
         }
 

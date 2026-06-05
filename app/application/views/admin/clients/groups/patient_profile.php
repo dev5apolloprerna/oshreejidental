@@ -37,7 +37,7 @@ if (!$contact) {
     return;
 }
  // new code end
-$CI->db->select(db_prefix() . 'appointly_appointments.*,');
+$CI->db->select(db_prefix() . 'appointly_appointments.*', false);
 $CI->db->from(db_prefix() . 'appointly_appointments');
 
 $CI->db->where('contact_id', $contact->id);

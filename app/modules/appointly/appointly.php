@@ -491,12 +491,15 @@ function appointly_register_sms_triggers($triggers)
 /*
  * Check if can have permissions then apply new tab in settings
  */
-if (staff_can('view', 'settings')) {
-    hooks()->add_action('admin_init', 'appointly_add_settings_tab');
-}
+hooks()->add_action('admin_init', 'appointly_add_settings_tab');
 
 function appointly_add_settings_tab()
 {
+
+     if (staff_cant('view', 'settings') && (!function_exists('app_staff_has_branch_menu_access') || !app_staff_has_branch_menu_access())) {
+        return;
+    }
+
     $CI = &get_instance();
     $CI->app_tabs->add_settings_tab('appointly-settings', [
         'name'     => _l('appointment_appointments'),
@@ -511,6 +514,90 @@ function appointly_add_settings_tab()
  * @return array
  */
 hooks()->add_filter('before_settings_updated', 'modify_settings_form_post');
+hooks()->add_filter('get_option', 'appointly_get_branch_option', 10, 2);
+
+/**
+ * Appointly settings are shown from the common settings screen, but each
+ * branch login must be able to keep its own appointment configuration.
+ */
+function appointly_branch_scoped_settings()
+{
+    return [
+        'appointly_responsible_person',
+        'callbacks_responsible_person',
+        'appointly_show_clients_schedule_button',
+        'appointly_tab_on_clients_page',
+        'appointly_also_delete_in_google_calendar',
+        'appointments_show_past_times',
+        'appointments_disable_weekends',
+        'appointly_client_meeting_approved_default',
+        'appointly_google_client_secret',
+        'appointly_outlook_client_id',
+        'appointly_view_all_in_calendar',
+        'appointly_available_hours',
+        'appointly_default_feedbacks',
+        'appointly_busy_times_enabled',
+        'callbacks_mode_enabled',
+        'appointly_appointments_recaptcha',
+        'google_client_id',
+    ];
+}
+
+function appointly_current_branch_option_suffix()
+{
+    $CI = &get_instance();
+    $branchDb = '';
+
+    if (isset($CI->input)) {
+        $branchDb = (string) $CI->input->cookie('branch');
+    }
+
+    if ($branchDb === '' && isset($CI->db) && isset($CI->db->database)) {
+        $branchDb = (string) $CI->db->database;
+    }
+
+    $branchDb = trim($branchDb);
+
+    if ($branchDb === '') {
+        return '';
+    }
+
+    return preg_match('/^[A-Za-z0-9_]+$/', $branchDb) ? $branchDb : '';
+}
+
+function appointly_branch_option_name($name)
+{
+    $suffix = appointly_current_branch_option_suffix();
+
+    if ($suffix === '' || !in_array($name, appointly_branch_scoped_settings(), true)) {
+        return $name;
+    }
+
+    return $name . '_' . $suffix;
+}
+
+function appointly_get_branch_option($value, $name)
+{
+    static $branchOptions = [];
+
+    $branchOption = appointly_branch_option_name($name);
+
+    if ($branchOption === $name) {
+        return $value;
+    }
+
+    if (!array_key_exists($branchOption, $branchOptions)) {
+        $CI = &get_instance();
+        $row = $CI->db->query(
+            'SELECT `value` FROM `' . db_prefix() . 'options` WHERE `name` = ? LIMIT 1',
+            [$branchOption]
+        )->row();
+
+        $branchOptions[$branchOption] = $row ? $row->value : null;
+    }
+
+    return $branchOptions[$branchOption] !== null ? $branchOptions[$branchOption] : $value;
+}
 
 function modify_settings_form_post($form)
 {
@@ -527,6 +614,22 @@ function modify_settings_form_post($form)
         }
     }
 
+ if (isset($form['settings']) && is_array($form['settings'])) {
+        foreach (appointly_branch_scoped_settings() as $name) {
+            if (!array_key_exists($name, $form['settings'])) {
+                continue;
+            }
+
+            $branchOption = appointly_branch_option_name($name);
+            if ($branchOption === $name) {
+                continue;
+            }
+
+            $form['settings'][$branchOption] = $form['settings'][$name];
+            unset($form['settings'][$name]);
+        }
+    }
+    
     return $form;
 }
 

@@ -14,7 +14,7 @@ class Generalreport extends AdminController
     /* List all visittype */
     public function index($id='')
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('generalreport');
         }
 

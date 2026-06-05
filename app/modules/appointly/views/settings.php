@@ -2,6 +2,7 @@
 $appointly_show_clients_schedule_button = get_option('appointly_show_clients_schedule_button');
 $appointly_tab_on_clients_page = get_option('appointly_tab_on_clients_page');
 $appointly_show_summary = get_option('appointly_show_summary');
+$appointlyCanManageSettings = function_exists('app_staff_has_branch_menu_access') ? app_staff_has_branch_menu_access() : is_admin();
 ?>
 <div class="horizontal-scrollable-tabs">
     <div class="horizontal-tabs">
@@ -9,16 +10,18 @@ $appointly_show_summary = get_option('appointly_show_summary');
             <li role="presentation" class="active">
                 <a href="#general" aria-controls="general" role="tab" data-toggle="tab" aria-expanded="true"><?= ucfirst(_l('general')); ?></a>
             </li>
+                        <?php if ($appointlyCanManageSettings) { ?>
             <li role="presentation" class="">
                 <a href="#form" aria-controls="form" role="tab" data-toggle="tab" aria-expanded="false"><?= ucfirst(_l('form')); ?></a>
             </li>
+                        <?php } ?>
         </ul>
     </div>
 </div>
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="general">
         <!-- Only shown for system admins -->
-        <?php if (is_admin()) {
+        <?php if ($appointlyCanManageSettings) {
 
             $google_client_id = get_option('google_client_id');
             $appointly_outlook_client_id = get_option('appointly_outlook_client_id');
@@ -294,7 +297,7 @@ $appointly_show_summary = get_option('appointly_show_summary');
             <span class="label label-info"><strong><?= get_appointly_version(); ?></strong></span>
         </div>
     </div>
-    <?php if (is_admin()) { ?>
+    <?php if ($appointlyCanManageSettings) { ?>
     <div role="tabpanel" class="tab-pane" id="form">
         <div class="form-group mtop10">
             <label for="callbacks_mode_enabled" class="control-label clearfix">
@@ -311,7 +314,6 @@ $appointly_show_summary = get_option('appointly_show_summary');
                 </label>
             </div>
             <hr>
-            <?php } ?>
         </div>
         <h4 class="bold">Form Info</h4>
         <p><b>Form url:</b>
@@ -356,4 +358,5 @@ $appointly_show_summary = get_option('appointly_show_summary');
                 </span>
         </p>
     </div>
+        <?php } ?>
 </div>

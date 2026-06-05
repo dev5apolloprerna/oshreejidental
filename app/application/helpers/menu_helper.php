@@ -37,6 +37,9 @@ if (!function_exists('app_branch_staff_can')) {
      */
     function app_branch_staff_can($can, $capability, $feature, $staff_id)
     {
+        if ($feature === 'branch' && app_has_branch_context()) {
+            return false;
+        }
         if ($can || !app_staff_has_branch_menu_access($staff_id)) {
             return $can;
         }
@@ -44,19 +47,31 @@ if (!function_exists('app_branch_staff_can')) {
         $allowedFeatures = [
             'appointments',
             'branch',
+            'currencies',
             'customers',
+            'festival',
+            'generalreport',
+            'items',
             'invoices',
             'leads',
+            'payment',
+            'paymentmodes',
             'payments',
             'reports',
+            'roles',
             'settings',
             'staff',
+            'taxes',
         ];
 
         $allowedCapabilities = [
             'view',
             'view_own',
             'view-timesheets',
+            'create',
+            'edit',
+            'delete',
+            'view_all_templates',
         ];
 
         return in_array($feature, $allowedFeatures, true) && in_array($capability, $allowedCapabilities, true);
@@ -167,7 +182,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if (staff_can('view',  'items')) {
+    if ($branchMenuAccess || staff_can('view',  'items')) {
         $CI->app_menu->add_sidebar_children_item('sales', [
             'slug'     => 'items',
             'name'     => _l('items'),

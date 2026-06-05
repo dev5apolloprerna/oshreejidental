@@ -27,7 +27,7 @@ class Festival extends AdminController
    public function add($id='')
     {
         
-        if (!is_admin()) 
+        if (!app_staff_has_branch_menu_access())
         {
             access_denied('festival');
         }
@@ -77,7 +77,7 @@ class Festival extends AdminController
     /* Delete visittype from database */
     public function delete($id)
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('festival');
         }
         if (!$id) {

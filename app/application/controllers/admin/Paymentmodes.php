@@ -8,7 +8,7 @@ class Paymentmodes extends AdminController
     {
         parent::__construct();
         $this->load->model('payment_modes_model');
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Payment Modes');
         }
     }
