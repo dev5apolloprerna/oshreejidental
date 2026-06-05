@@ -60,7 +60,7 @@ foreach ($tabs as $group) { ?>
 
                     <?php echo _l('settings_update'); ?>
                 </a>
-                <?php if (is_admin()) {
+                <?php if (app_staff_has_branch_menu_access()) {
         ?>
                 <a href="<?php echo admin_url('settings?group=info'); ?>"
                     class="tw-flex tw-items-center tw-ml-3 settings-group-system-info<?php echo $this->input->get('group') == 'info' ? 'bold' : ''; ?>">

@@ -274,7 +274,7 @@ function branch_module_init_menu_items()
     $CI->db->where('active', 1);
     $module_exists_in_database = $CI->db->get(db_prefix() . 'modules')->row();
     
-    if(!empty($module_exists_in_database)){
+    if(!empty($module_exists_in_database) && (!function_exists('app_has_branch_context') || !app_has_branch_context())){
 
         $CI->app_menu->add_sidebar_menu_item('branch', [
             'name'     => _l('branch'),
