@@ -214,6 +214,16 @@ if (!function_exists('checkForModuleReinstallation')) {
             $CI->db->query("ALTER TABLE " . db_prefix() . "appointly_appointments ADD `type_id` INT(11) NOT NULL DEFAULT '0' AFTER `source`;");
         }
 
+
+        if ($CI->db->table_exists(db_prefix() . 'appointly_appointment_types') && !$CI->db->field_exists('branch_id', db_prefix() . 'appointly_appointment_types')) {
+            $CI->db->query("ALTER TABLE " . db_prefix() . "appointly_appointment_types ADD `branch_id` INT(11) NOT NULL DEFAULT '0' AFTER `color`;");
+        }
+
+        if ($CI->db->table_exists(db_prefix() . 'appointment_type_pdf_master') && !$CI->db->field_exists('branch_id', db_prefix() . 'appointment_type_pdf_master')) {
+            $CI->db->query("ALTER TABLE " . db_prefix() . "appointment_type_pdf_master ADD `branch_id` INT(11) NOT NULL DEFAULT '0' AFTER `appointment_pdf_id`;");
+        }
+
+
         if (!$CI->db->field_exists('google_event_id', db_prefix() . 'appointly_appointments')) {
             $CI->db->query("ALTER TABLE " . db_prefix() . "appointly_appointments ADD `google_event_id` VARCHAR(191) NULL DEFAULT NULL AFTER `id`;");
         }

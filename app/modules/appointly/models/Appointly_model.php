@@ -2064,6 +2064,61 @@ class Appointly_model extends App_Model
         return db_prefix() . 'appointment_type_pdf_master';
     }
 
+private function ensureAppointmentTypeBranchColumns()
+    {
+        $types = $this->types_table();
+        $map = $this->map_table();
+
+        if ($this->db->table_exists($types) && !$this->db->field_exists('branch_id', $types)) {
+            $this->db->query("ALTER TABLE " . $types . " ADD `branch_id` INT(11) NOT NULL DEFAULT '0' AFTER `color`");
+        }
+
+        if ($this->db->table_exists($map) && !$this->db->field_exists('branch_id', $map)) {
+            $this->db->query("ALTER TABLE " . $map . " ADD `branch_id` INT(11) NOT NULL DEFAULT '0' AFTER `appointment_pdf_id`");
+        }
+    }
+
+    private function table_has_field($table, $field)
+    {
+        static $cache = [];
+        $key = $table . '.' . $field;
+
+        if (!array_key_exists($key, $cache)) {
+            $cache[$key] = $this->db->field_exists($field, $table);
+        }
+
+        return $cache[$key];
+    }
+
+    private function resolveCurrentBranchId()
+    {
+        if (function_exists('get_staff_branch_id') && is_staff_logged_in()) {
+            $staffBranchId = (int) get_staff_branch_id();
+            if ($staffBranchId > 0) {
+                return $staffBranchId;
+            }
+        }
+
+        $currentBranchDb = (string) $this->input->cookie('branch');
+        if ($currentBranchDb !== '') {
+            $mainDb = $this->load->database('default', true);
+            $row = $mainDb->select('branchid')->where('branch_db', $currentBranchDb)->get(db_prefix() . 'branch')->row();
+            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
+                return (int) $row->branchid;
+            }
+        }
+
+        if (is_staff_logged_in()) {
+            $mainDb = isset($mainDb) ? $mainDb : $this->load->database('default', true);
+            $row = $mainDb->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+            if ($row && isset($row->branch_id) && (int) $row->branch_id > 0) {
+                return (int) $row->branch_id;
+            }
+        }
+
+        return 0;
+    }
+
     // ✅ All PDFs list
     public function get_all_pdfs()
     {
@@ -2078,16 +2133,32 @@ class Appointly_model extends App_Model
     // ✅ Types table list + pdf names (comma separated)
     public function get_types_with_pdfs()
     {
+        $this->ensureAppointmentTypeBranchColumns();
         $types = $this->types_table();
         $map   = $this->map_table();
         $pdf   = $this->pdf_table();
+        $branchId = $this->resolveCurrentBranchId();
+        $typesHasBranch = $this->table_has_field($types, 'branch_id');
+        $mapHasBranch = $this->table_has_field($map, 'branch_id');
 
         $this->db->select("t.id, t.type, t.color,
             GROUP_CONCAT(p.pdf_name ORDER BY p.pdf_name SEPARATOR ', ') AS pdf_names", false);
 
         $this->db->from($types . ' t');
-        $this->db->join($map . ' m', 'm.appointment_type_id = t.id', 'left');
+        $mapJoin = 'm.appointment_type_id = t.id';
+        if ($mapHasBranch && $branchId > 0) {
+            $mapJoin .= ' AND (m.branch_id = ' . (int) $branchId . ' OR m.branch_id = 0)';
+        }
+        $this->db->join($map . ' m', $mapJoin, 'left');
+
         $this->db->join($pdf . ' p', 'p.pdf_id = m.appointment_pdf_id', 'left');
+
+        if ($typesHasBranch && $branchId > 0) {
+            $this->db->group_start();
+            $this->db->where('t.branch_id', $branchId);
+            $this->db->or_where('t.branch_id', 0);
+            $this->db->group_end();
+        }
 
         $this->db->group_by('t.id');
         $this->db->order_by('t.id', 'DESC');
@@ -2104,10 +2175,22 @@ class Appointly_model extends App_Model
     // ✅ Selected pdf ids for a type (for edit modal)
     public function get_type_pdf_ids($type_id)
     {
-        $rows = $this->db->select('appointment_pdf_id')
-            ->where('appointment_type_id', (int)$type_id)
-            ->get($this->map_table())
-            ->result_array();
+         $this->ensureAppointmentTypeBranchColumns();
+        $map = $this->map_table();
+        $branchId = $this->resolveCurrentBranchId();
+
+        $this->db->select('appointment_pdf_id')
+            ->where('appointment_type_id', (int)$type_id);
+
+        if ($this->table_has_field($map, 'branch_id') && $branchId > 0) {
+            $this->db->group_start();
+            $this->db->where('branch_id', $branchId);
+            $this->db->or_where('branch_id', 0);
+            $this->db->group_end();
+        }
+
+        $rows = $this->db->get($map)->result_array();
+
 
         return array_map(function ($r) { return (int)$r['appointment_pdf_id']; }, $rows);
     }
@@ -2115,6 +2198,8 @@ class Appointly_model extends App_Model
     // ✅ Insert/Update type + update mapping
     public function save_type_with_pdfs($data)
     {
+        $this->ensureAppointmentTypeBranchColumns();
+
         $type_id = isset($data['id']) ? (int)$data['id'] : 0;
 
         $type_name = trim($data['type'] ?? '');
@@ -2123,43 +2208,70 @@ class Appointly_model extends App_Model
         $pdf_ids   = $data['pdf_ids'] ?? [];
         if (!is_array($pdf_ids)) $pdf_ids = [];
 
+        $types = $this->types_table();
+        $map = $this->map_table();
+        $branchId = $this->resolveCurrentBranchId();
+        $typesHasBranch = $this->table_has_field($types, 'branch_id');
+        $mapHasBranch = $this->table_has_field($map, 'branch_id');
+
+
         if ($type_name === '') {
             return ['success' => false, 'message' => 'Type name is required'];
         }
 
         // ✅ Save type
         if ($type_id > 0) {
-            $this->db->where('id', $type_id)->update($this->types_table(), [
+            $typeData = [
                 'type'  => $type_name,
                 'color' => $color,
-            ]);
+            ];
+            if ($typesHasBranch && $branchId > 0) {
+                $typeData['branch_id'] = $branchId;
+            }
+
+            $this->db->where('id', $type_id)->update($types, $typeData);
         } else {
-            $this->db->insert($this->types_table(), [
+            $typeData = [
                 'type'  => $type_name,
                 'color' => $color,
-            ]);
+            ];
+            if ($typesHasBranch && $branchId > 0) {
+                $typeData['branch_id'] = $branchId;
+            }
+
+            $this->db->insert($types, $typeData);
             $type_id = (int)$this->db->insert_id();
         }
 
         // ✅ Refresh mapping rows
-        $this->db->where('appointment_type_id', $type_id)->delete($this->map_table());
+        $this->db->where('appointment_type_id', $type_id);
+        if ($mapHasBranch && $branchId > 0) {
+            $this->db->where('branch_id', $branchId);
+        }
+        $this->db->delete($map);
+
 
         $batch = [];
         foreach ($pdf_ids as $pid) {
             $pid = (int)$pid;
             if ($pid <= 0) continue;
 
-            $batch[] = [
+            $row = [
                 'appointment_type_id' => $type_id,
                 'appointment_pdf_id'  => $pid
             ];
+            if ($mapHasBranch && $branchId > 0) {
+                $row['branch_id'] = $branchId;
+            }
+
+            $batch[] = $row;
         }
 
         if (!empty($batch)) {
-            $this->db->insert_batch($this->map_table(), $batch);
+            $this->db->insert_batch($map, $batch);
         }
 
-        return ['success' => true, 'type_id' => $type_id];
+        return ['success' => true, 'type_id' => $type_id, 'branch_id' => $branchId];
     }
 
     // ✅ Delete type + mapping

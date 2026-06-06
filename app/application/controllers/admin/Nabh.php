@@ -7,6 +7,28 @@ class Nabh extends AdminController
         parent::__construct();
     }
 
+     private function resolve_current_branch_id()
+    {
+        $branchDb = (string) $this->input->cookie('branch');
+        $mainDb = $this->load->database('default', true);
+
+        if ($branchDb !== '') {
+            $row = $mainDb->select('branchid')->where('branch_db', $branchDb)->get(db_prefix() . 'branch')->row();
+            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
+                return (int) $row->branchid;
+            }
+        }
+
+        if (is_staff_logged_in()) {
+            $row = $mainDb->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+            if ($row && isset($row->branch_id) && (int) $row->branch_id > 0) {
+                return (int) $row->branch_id;
+            }
+        }
+
+        return 0;
+    }
+
     /* =========================================================
        1) LIST FORMS FOR APPOINTMENT TYPE
     ==========================================================*/
@@ -18,8 +40,18 @@ class Nabh extends AdminController
             echo json_encode(['status'=>false,'data'=>[]]); exit;
         }
 
+        $mapTable = db_prefix() . 'appointment_type_pdf_master';
+        $branchId = $this->resolve_current_branch_id();
+
         $this->db->where('appointment_type_id', $appointment_type_id);
-        $rows = $this->db->get(db_prefix().'appointment_type_pdf_master')->result_array();
+        if ($branchId > 0 && $this->db->field_exists('branch_id', $mapTable)) {
+            $this->db->group_start();
+            $this->db->where('branch_id', $branchId);
+            $this->db->or_where('branch_id', 0);
+            $this->db->group_end();
+        }
+        $rows = $this->db->get($mapTable)->result_array();
+        
 
         $data = [];
 
