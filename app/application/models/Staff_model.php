@@ -339,6 +339,8 @@ class Staff_model extends App_Model
      */
     public function get($id = '', $where = [])
     {
+        $this->db->reset_query();
+
         $select_str = '*,CONCAT(firstname,\' \',lastname) as full_name';
 
         // Used to prevent multiple queries on logged in staff to check the total unread notifications in core/AdminController.php

@@ -230,24 +230,27 @@ class CustomerProfileBadges
 
     public function tasks()
     {
+        $customerId = $this->CI->db->escape($this->customerId);
+        $tasksTable = db_prefix() . 'tasks';
+
         $where = '(';
-        $where .= '(rel_id IN (SELECT id FROM ' . db_prefix() . 'invoices WHERE clientid=' . $this->customerId . ') AND rel_type="invoice")';
-        $where .= ' OR (rel_id IN (SELECT id FROM ' . db_prefix() . 'estimates WHERE clientid=' . $this->customerId . ') AND rel_type="estimate")';
-        $where .= ' OR (rel_id IN (SELECT id FROM ' . db_prefix() . 'contracts WHERE client=' . $this->customerId . ') AND rel_type="contract")';
-        $where .= ' OR (rel_id IN (SELECT ticketid FROM ' . db_prefix() . 'tickets WHERE userid=' . $this->customerId . ') AND rel_type="ticket")';
-        $where .= ' OR (rel_id IN (SELECT id FROM ' . db_prefix() . 'expenses WHERE clientid=' . $this->customerId . ') AND rel_type="expense")';
-        $where .= ' OR (rel_id IN (SELECT id FROM ' . db_prefix() . 'proposals WHERE rel_id=' . $this->customerId . ' AND rel_type="proposal") AND rel_type="proposal")';
-        $where .= ' OR (rel_id IN (SELECT userid FROM ' . db_prefix() . 'clients WHERE userid=' . $this->customerId . ') AND rel_type="customer")';
-        $where .= ' OR (rel_id IN (SELECT id FROM ' . db_prefix() . 'projects WHERE clientid=' . $this->customerId . ') AND rel_type="project")';
+        $where .= '(' . $tasksTable . '.rel_id IN (SELECT id FROM ' . db_prefix() . 'invoices WHERE clientid=' . $customerId . ') AND ' . $tasksTable . '.rel_type="invoice")';
+        $where .= ' OR (' . $tasksTable . '.rel_id IN (SELECT id FROM ' . db_prefix() . 'estimates WHERE clientid=' . $customerId . ') AND ' . $tasksTable . '.rel_type="estimate")';
+        $where .= ' OR (' . $tasksTable . '.rel_id IN (SELECT id FROM ' . db_prefix() . 'contracts WHERE client=' . $customerId . ') AND ' . $tasksTable . '.rel_type="contract")';
+        $where .= ' OR (' . $tasksTable . '.rel_id IN (SELECT ticketid FROM ' . db_prefix() . 'tickets WHERE userid=' . $customerId . ') AND ' . $tasksTable . '.rel_type="ticket")';
+        $where .= ' OR (' . $tasksTable . '.rel_id IN (SELECT id FROM ' . db_prefix() . 'expenses WHERE clientid=' . $customerId . ') AND ' . $tasksTable . '.rel_type="expense")';
+        $where .= ' OR (' . $tasksTable . '.rel_id IN (SELECT id FROM ' . db_prefix() . 'proposals WHERE rel_id=' . $customerId . ' AND rel_type="customer") AND ' . $tasksTable . '.rel_type="proposal")';
+        $where .= ' OR (' . $tasksTable . '.rel_id IN (SELECT userid FROM ' . db_prefix() . 'clients WHERE userid=' . $customerId . ') AND ' . $tasksTable . '.rel_type="customer")';
+        $where .= ' OR (' . $tasksTable . '.rel_id IN (SELECT id FROM ' . db_prefix() . 'projects WHERE clientid=' . $customerId . ') AND ' . $tasksTable . '.rel_type="project")';
         $where .= ')';
 
         $this->CI->db->where($where);
-        $this->CI->db->where('datefinished is NULL');
+        $this->CI->db->where($tasksTable . '.datefinished is NULL');
 
         if (staff_cant('view', 'tasks')) {
             $this->CI->db->where(get_tasks_where_string(false));
         }
 
-        return $this->CI->db->count_all_results('tasks');
+        return $this->CI->db->count_all_results($tasksTable);
     }
 }
