@@ -43,6 +43,16 @@ $rules = [
             'label' => $source['name'],
         ]);
     }),
+    App_table_filter::new('branch_id', 'MultiSelectRule')->label('Branch')->options(function ($ci) {
+        return collect($ci->leads_model->get_branches_for_select())->map(fn ($branch) => [
+            'value' => $branch['branchid'],
+            'label' => $branch['branch'],
+        ]);
+    })->raw(function ($value, $operator, $sqlOperator) {
+        $value = array_map('intval', $value);
+
+        return db_prefix() . 'leads.branch_id ' . $sqlOperator['operator'] . ' (' . implode(', ', $value) . ')';
+    }),
 ];
 
 $rules[] = App_table_filter::new('assigned', 'SelectRule')->label(_l('leads_dt_assigned'))
@@ -92,16 +102,17 @@ return App_table::find('leads')
             $aColumns[] = '1';
         }
         $aColumns = array_merge($aColumns, [
-            'company',
+            db_prefix() . 'leads.company as company',
             db_prefix() . 'leads.email as email',
             db_prefix() . 'leads.phonenumber as phonenumber',
-            'lead_value',
+            db_prefix() . 'leads.lead_value as lead_value',
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC LIMIT 1) as tags',
             'firstname as assigned_firstname',
             db_prefix() . 'leads_status.name as status_name',
             db_prefix() . 'leads_sources.name as source_name',
-            'lastcontact',
-            'dateadded',
+            db_prefix() . 'branch.branch as branch_name',
+            db_prefix() . 'leads.lastcontact as lastcontact',
+            db_prefix() . 'leads.dateadded as dateadded',
         ]);
 
         $sIndexColumn = 'id';
@@ -111,6 +122,7 @@ return App_table::find('leads')
             'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'leads.assigned',
             'LEFT JOIN ' . db_prefix() . 'leads_status ON ' . db_prefix() . 'leads_status.id = ' . db_prefix() . 'leads.status',
             'JOIN ' . db_prefix() . 'leads_sources ON ' . db_prefix() . 'leads_sources.id = ' . db_prefix() . 'leads.source',
+            'LEFT JOIN ' . db_prefix() . 'branch ON ' . db_prefix() . 'branch.branchid = ' . db_prefix() . 'leads.branch_id',
         ];
 
         foreach ($custom_fields as $key => $field) {
@@ -138,15 +150,16 @@ return App_table::find('leads')
         }
 
         $additionalColumns = hooks()->apply_filters('leads_table_additional_columns_sql', [
-            'junk',
-            'lost',
-            'color',
-            'status',
-            'assigned',
+            db_prefix() . 'leads.junk as junk',
+            db_prefix() . 'leads.lost as lost',
+            db_prefix() . 'leads_status.color as color',
+            db_prefix() . 'leads.status as status',
+            db_prefix() . 'leads.assigned as assigned',
             'lastname as assigned_lastname',
             db_prefix() . 'leads.addedfrom as addedfrom',
             '(SELECT count(leadid) FROM ' . db_prefix() . 'clients WHERE ' . db_prefix() . 'clients.leadid=' . db_prefix() . 'leads.id) as is_converted',
             'zip',
+            db_prefix() . 'leads.branch_id as branch_id',
         ]);
 
         $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalColumns);
@@ -254,6 +267,8 @@ return App_table::find('leads')
 
             $row[] = e($aRow['source_name']);
 
+            $row[] = e($aRow['branch_name']);
+            
             $row[] = ($aRow['lastcontact'] == '0000-00-00 00:00:00' || !is_date($aRow['lastcontact']) ? '' : '<span data-toggle="tooltip" data-title="' . e(_dt($aRow['lastcontact'])) . '" class="text-has-action is-date">' . e(time_ago($aRow['lastcontact'])) . '</span>');
 
             $row[] = '<span data-toggle="tooltip" data-title="' . e(_dt($aRow['dateadded'])) . '" class="text-has-action is-date">' . e(time_ago($aRow['dateadded'])) . '</span>';

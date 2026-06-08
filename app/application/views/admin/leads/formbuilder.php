@@ -174,6 +174,8 @@
 
                                   echo render_leads_status_select($statuses, (isset($form) ? $form->lead_status : get_option('leads_default_status')), 'lead_import_status', 'lead_status', [], true);
 
+                                  echo render_select('branch_id', $branches, ['branchid', 'branch'], 'Branch', (isset($form) ? $form->branch_id : ''), ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
+                                  
                                  $selected = '';
                                  foreach ($members as $staff) {
                                      if (isset($form) && $form->responsible == $staff['staffid']) {

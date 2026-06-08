@@ -145,6 +145,9 @@
                                $selected = get_option('leads_default_source');
                            }
                            echo render_leads_source_select($sources, $selected, 'leads_email_integration_default_source', 'lead_source', ['data-ays-ignore' => true]);
+
+                            echo render_select('branch_id', $branches, ['branchid', 'branch'], 'Branch', isset($mail->branch_id) ? $mail->branch_id : '', ['data-ays-ignore' => true, 'data-none-selected-text' => _l('dropdown_non_selected_tex')]);
+
                            $selected = '';
                            foreach ($members as $staff) {
                                if ($mail->responsible == $staff['staffid']) {

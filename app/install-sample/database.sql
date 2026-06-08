@@ -1085,6 +1085,8 @@ CREATE TABLE `tblleads` (
   `default_language` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `client_id` int NOT NULL DEFAULT '0',
   `lead_value` decimal(15,2) DEFAULT NULL
+  `lead_value` decimal(15,2) DEFAULT NULL,
+  `branch_id` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `tblleads_email_integration` (
@@ -1107,7 +1109,9 @@ CREATE TABLE `tblleads_email_integration` (
   `mark_public` int NOT NULL DEFAULT '0',
   `only_loop_on_unseen_emails` tinyint(1) NOT NULL DEFAULT '1',
   `delete_after_import` int NOT NULL DEFAULT '0',
-  `create_task_if_customer` int NOT NULL DEFAULT '0'
+  `create_task_if_customer` int NOT NULL DEFAULT '0',
+  `create_task_if_customer` int NOT NULL DEFAULT '0',
+  `branch_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `tblleads_email_integration` (`id`, `active`, `email`, `imap_server`, `password`, `check_every`, `responsible`, `lead_source`, `lead_status`, `encryption`, `folder`, `last_run`, `notify_lead_imported`, `notify_lead_contact_more_times`, `notify_type`, `notify_ids`, `mark_public`, `only_loop_on_unseen_emails`, `delete_after_import`, `create_task_if_customer`) VALUES
@@ -1141,7 +1145,8 @@ CREATE TABLE `tbllead_activity_log` (
   `date` datetime NOT NULL,
   `staffid` int NOT NULL,
   `full_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_activity` tinyint(1) NOT NULL DEFAULT '0'
+  `custom_activity` tinyint(1) NOT NULL DEFAULT '0',
+  `branch_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `tbllead_integration_emails` (
@@ -1150,7 +1155,8 @@ CREATE TABLE `tbllead_integration_emails` (
   `body` longtext COLLATE utf8mb4_unicode_ci,
   `dateadded` datetime NOT NULL,
   `leadid` int NOT NULL,
-  `emailid` int NOT NULL
+  `emailid` int NOT NULL,
+  `branch_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `tblmail_queue` (
@@ -1218,7 +1224,8 @@ CREATE TABLE `tblnewsfeed_post_comments` (
   `content` mediumtext COLLATE utf8mb4_unicode_ci,
   `userid` int NOT NULL,
   `postid` int NOT NULL,
-  `dateadded` datetime NOT NULL
+  `dateadded` datetime NOT NULL,
+  `branch_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `tblnewsfeed_post_likes` (
@@ -2432,6 +2439,7 @@ ALTER TABLE `tblknowledge_base_groups`
   ADD PRIMARY KEY (`groupid`);
 
 ALTER TABLE `tblleads`
+  ADD KEY `branch_id` (`branch_id`),
   ADD PRIMARY KEY (`id`),
   ADD KEY `name` (`name`),
   ADD KEY `company` (`company`),
@@ -2445,7 +2453,8 @@ ALTER TABLE `tblleads`
   ADD KEY `from_form_id` (`from_form_id`);
 
 ALTER TABLE `tblleads_email_integration`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `branch_id` (`branch_id`);
 
 ALTER TABLE `tblleads_sources`
   ADD PRIMARY KEY (`id`),
@@ -2456,10 +2465,12 @@ ALTER TABLE `tblleads_status`
   ADD KEY `name` (`name`);
 
 ALTER TABLE `tbllead_activity_log`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `branch_id` (`branch_id`);
 
 ALTER TABLE `tbllead_integration_emails`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `branch_id` (`branch_id`);
 
 ALTER TABLE `tblmail_queue`
   ADD PRIMARY KEY (`id`);
@@ -2678,7 +2689,8 @@ ALTER TABLE `tblviews_tracking`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `tblweb_to_lead`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `branch_id` (`branch_id`);
 
 
 ALTER TABLE `tblactivity_log`

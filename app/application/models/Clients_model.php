@@ -206,15 +206,20 @@ class Clients_model extends App_Model
         $uid = $this->db->get(db_prefix().'options')->row();
 
         $prefix = null;
-        $branchId = 0;
+        
+        $branchId = isset($data['branch_id']) && is_numeric($data['branch_id']) ? (int) $data['branch_id'] : 0;
+        if ($branchId > 0) {
+            $prefix = $this->db->get_where(db_prefix().'branch', ['branchid' => $branchId])->row();
+        }
+
         $currentBranch = (string) $this->input->cookie('branch');
-        if ($currentBranch !== '') {
+        if ($branchId === 0 && $currentBranch !== '') {
             $query = $this->db->get_where(db_prefix().'branch', array('branch_db' => $currentBranch));
             $prefix = $query->row();
         }
-        if ($prefix && isset($prefix->branchid)) {
+        if ($branchId === 0 && $prefix && isset($prefix->branchid)) {
             $branchId = (int) $prefix->branchid;
-        } elseif (is_staff_logged_in()) {
+        } elseif ($branchId === 0 && is_staff_logged_in()) {
             $staff = $this->db->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
             if ($staff && isset($staff->branch_id)) {
                 $branchId = (int) $staff->branch_id;

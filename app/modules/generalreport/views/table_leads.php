@@ -12,16 +12,16 @@ $aColumns = [
         }
 
 $aColumns = array_merge($aColumns, [
-            'company',
+            db_prefix() . 'leads.company as company',
             db_prefix() . 'leads.email as email',
             db_prefix() . 'leads.phonenumber as phonenumber',
-            'lead_value',
+            db_prefix() . 'leads.lead_value as lead_value',
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC LIMIT 1) as tags',
             'firstname as assigned_firstname',
             db_prefix() . 'leads_status.name as status_name',
             db_prefix() . 'leads_sources.name as source_name',
-            'lastcontact',
-            'dateadded',
+            db_prefix() . 'leads.lastcontact as lastcontact',
+            db_prefix() . 'leads.dateadded as dateadded',
         ]);
 
         $sIndexColumn = 'id';
@@ -121,15 +121,15 @@ $aColumns = array_merge($aColumns, [
         }
 
         $additionalColumns = hooks()->apply_filters('leads_table_additional_columns_sql', [
-            'junk',
-            'lost',
-            'color',
-            'status',
-            'assigned',
+            db_prefix() . 'leads.junk as junk',
+            db_prefix() . 'leads.lost as lost',
+            db_prefix() . 'leads_status.color as color',
+            db_prefix() . 'leads.status as status',
+            db_prefix() . 'leads.assigned as assigned',
             'lastname as assigned_lastname',
             db_prefix() . 'leads.addedfrom as addedfrom',
             '(SELECT count(leadid) FROM ' . db_prefix() . 'clients WHERE ' . db_prefix() . 'clients.leadid=' . db_prefix() . 'leads.id) as is_converted',
-            'zip',
+            db_prefix() . 'leads.zip as zip',
         ]);
 
         $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalColumns);
