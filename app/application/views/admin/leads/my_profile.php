@@ -327,6 +327,7 @@
         <div class="lead-edit<?php if (isset($lead)) {
                 echo ' hide';
             } ?>">
+            <div class="row lead-edit-row lead-edit-main-selects">
             <div class="col-md-3">
                 <?php
             $selected = '';
@@ -366,6 +367,7 @@
                }
                echo render_select('assigned', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_assigned', $selected, $assigned_attrs); ?>
             </div>
+            <
             <div class="clearfix"></div>
             <hr class="mtop5 mbot10" />
             <div class="col-md-12">
@@ -377,7 +379,9 @@
                         data-role="tagsinput">
                 </div>
             </div>
+        </div>
             <div class="clearfix"></div>
+                        <div class="row lead-edit-row lead-edit-details-row">
             <hr class="no-mtop mbot15" />
             <div class="col-md-6">
                 <?php $value = (isset($lead) ? $lead->name : ''); ?>
@@ -460,6 +464,7 @@
                 </div>
                 <?php } ?> -->
             </div>
+        </div>
             <div class="col-md-12">
                 <?php $value = (isset($lead) ? $lead->description : ''); ?>
                 <?php echo render_textarea('description', 'lead_description', $value); ?>

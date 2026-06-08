@@ -158,7 +158,7 @@ return App_table::find('leads')
             'lastname as assigned_lastname',
             db_prefix() . 'leads.addedfrom as addedfrom',
             '(SELECT count(leadid) FROM ' . db_prefix() . 'clients WHERE ' . db_prefix() . 'clients.leadid=' . db_prefix() . 'leads.id) as is_converted',
-            'zip',
+            db_prefix() . 'leads.zip as zip',
             db_prefix() . 'leads.branch_id as branch_id',
         ]);
 
