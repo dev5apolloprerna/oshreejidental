@@ -831,3 +831,50 @@ body .text-muted.mtop1 {
 body .appointly-secondary {
     height: 200px !important;
 }
+
+.lead-modal .modal-dialog {
+    width: min(1120px, calc(100vw - 48px));
+    max-width: 1120px;
+}
+
+.lead-modal .modal-body {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.lead-modal .lead-edit-row {
+    margin-left: -3px;
+    margin-right: -3px;
+}
+
+.lead-modal .lead-edit-row::before,
+.lead-modal .lead-edit-row::after {
+    content: " ";
+    display: table;
+}
+
+.lead-modal .lead-edit-row::after {
+    clear: both;
+}
+
+.lead-modal .lead-edit .bootstrap-select,
+.lead-modal .lead-edit .input-group-select,
+.lead-modal .lead-edit .input-group,
+.lead-modal .lead-edit .form-control,
+.lead-modal .lead-edit .tagit {
+    width: 100% !important;
+}
+
+.lead-modal .lead-edit-tags-row .tagit {
+    min-height: 40px;
+    overflow-x: auto;
+}
+
+@media (max-width: 991px) {
+    .lead-modal .modal-dialog {
+        width: calc(100vw - 24px);
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
