@@ -41,6 +41,7 @@ class Leads extends AdminController
         $data['summary']  = get_leads_summary();
         $data['statuses'] = $this->leads_model->get_status();
         $data['sources']  = $this->leads_model->get_source();
+        $data['branches'] = $this->leads_model->get_branches_for_select();
         $data['title']    = _l('leads');
         $data['table'] = App_table::find('leads');
         // in case accesed the url leads/index/ directly with id - used in search
@@ -129,6 +130,8 @@ class Leads extends AdminController
         $data['lead_locked']   = false;
         $data['openEdit']      = $this->input->get('edit') ? true : false;
         $data['members']       = $this->staff_model->get('', ['is_not_staff' => 0, 'active' => 1]);
+        $data['branches']      = $this->leads_model->get_branches_for_select();
+        $data['current_branch_id'] = $this->leads_model->get_current_branch_id();
         $data['status_id']     = $this->input->get('status_id') ? $this->input->get('status_id') : get_option('leads_default_status');
         $data['base_currency'] = get_base_currency();
 
@@ -794,6 +797,8 @@ class Leads extends AdminController
         $data['roles']    = $this->roles_model->get();
         $data['sources']  = $this->leads_model->get_source();
         $data['statuses'] = $this->leads_model->get_status();
+        $data['branches'] = $this->leads_model->get_branches_for_select();
+
 
         $data['members'] = $this->staff_model->get('', [
             'active'       => 1,
@@ -1190,7 +1195,8 @@ class Leads extends AdminController
         $data['roles']    = $this->roles_model->get();
         $data['sources']  = $this->leads_model->get_source();
         $data['statuses'] = $this->leads_model->get_status();
-
+        $data['branches'] = $this->leads_model->get_branches_for_select();
+        
         $data['members'] = $this->staff_model->get('', [
             'active'       => 1,
             'is_not_staff' => 0,

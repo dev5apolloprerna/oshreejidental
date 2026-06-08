@@ -1490,13 +1490,18 @@ class Cron_model extends App_Model
                             continue;
                         }
                         // More the one time email from this lead, insert into the lead emails log table
-                        $this->db->insert(db_prefix() . 'lead_integration_emails', [
-                        'leadid'    => $lead->id,
-                        'subject'   => $message->getSubject(),
-                        'body'      => $body,
-                        'dateadded' => date('Y-m-d H:i:s'),
-                        'emailid'   => $message->getNumber(),
-                    ]);
+                        $leadEmailData = [
+                            'leadid'    => $lead->id,
+                            'subject'   => $message->getSubject(),
+                            'body'      => $body,
+                            'dateadded' => date('Y-m-d H:i:s'),
+                            'emailid'   => $message->getNumber(),
+                        ];
+                        if ($this->db->field_exists('branch_id', db_prefix() . 'lead_integration_emails')) {
+                            $leadEmailData['branch_id'] = isset($lead->branch_id) && is_numeric($lead->branch_id) ? (int) $lead->branch_id : 0;
+                        }
+                        $this->db->insert(db_prefix() . 'lead_integration_emails', $leadEmailData);
+
 
                         $inserted_email_id = $this->db->insert_id();
                         if ($mail->delete_after_import == 1) {
@@ -1530,6 +1535,10 @@ class Cron_model extends App_Model
                     'lastcontact'                        => null,
                     'is_public'                          => $mail->mark_public,
                 ];
+
+                    if ($this->db->field_exists('branch_id', db_prefix() . 'leads')) {
+                        $lead_data['branch_id'] = isset($mail->branch_id) && is_numeric($mail->branch_id) ? (int) $mail->branch_id : 0;
+                    }
 
                     $lead_data = hooks()->apply_filters('before_insert_lead_from_email_integration', $lead_data);
 
@@ -1572,13 +1581,18 @@ class Cron_model extends App_Model
                             ]);
                         }
 
-                        $this->db->insert(db_prefix() . 'lead_integration_emails', [
-                        'leadid'    => $insert_id,
-                        'subject'   => $message->getSubject(),
-                        'body'      => $body,
-                        'dateadded' => date('Y-m-d H:i:s'),
-                        'emailid'   => $message->getNumber(),
-                    ]);
+                        $leadEmailData = [
+                            'leadid'    => $insert_id,
+                            'subject'   => $message->getSubject(),
+                            'body'      => $body,
+                            'dateadded' => date('Y-m-d H:i:s'),
+                            'emailid'   => $message->getNumber(),
+                        ];
+                        if ($this->db->field_exists('branch_id', db_prefix() . 'lead_integration_emails')) {
+                            $leadEmailData['branch_id'] = isset($lead_data['branch_id']) ? (int) $lead_data['branch_id'] : 0;
+                        }
+                        $this->db->insert(db_prefix() . 'lead_integration_emails', $leadEmailData);
+                        
 
                         if ($mail->delete_after_import == 1) {
                             $message->delete();

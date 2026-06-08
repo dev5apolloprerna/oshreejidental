@@ -479,6 +479,11 @@ class Forms extends ClientsController
                     $regular_fields['dateadded']    = date('Y-m-d H:i:s');
                     $regular_fields['from_form_id'] = $form->id;
                     $regular_fields['is_public']    = $form->mark_public;
+                    
+                    if ($this->db->field_exists('branch_id', db_prefix() . 'leads')) {
+                        $regular_fields['branch_id'] = isset($form->branch_id) && is_numeric($form->branch_id) ? (int) $form->branch_id : 0;
+                    }
+
                     $this->db->insert(db_prefix() . 'leads', $regular_fields);
                     $lead_id = $this->db->insert_id();
 

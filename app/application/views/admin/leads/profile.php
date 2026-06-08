@@ -230,6 +230,9 @@
                         <?php echo _l('lead_add_edit_source'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
                         <?php echo(isset($lead) && $lead->source_name != '' ? e($lead->source_name) : '-') ?></dd>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">Branch</dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
+                    <?php echo(isset($lead) && !empty($lead->branch_name) ? e($lead->branch_name) : '-') ?></dd>
                     <?php if (!is_language_disabled()) { ?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l('localization_default_language'); ?>
@@ -323,7 +326,7 @@
         <div class="lead-edit<?php if (isset($lead)) {
                 echo ' hide';
             } ?>">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?php
             $selected = '';
             if (isset($lead)) {
@@ -334,13 +337,19 @@
             echo render_leads_status_select($statuses, $selected, 'lead_add_edit_status');
           ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?php
                     $selected = (isset($lead) ? $lead->source : get_option('leads_default_source'));
                     echo render_leads_source_select($sources, $selected, 'lead_add_edit_source');
                 ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <?php
+                    $selected = (isset($lead) ? $lead->branch_id : (isset($current_branch_id) ? $current_branch_id : ''));
+                    echo render_select('branch_id', $branches, ['branchid', 'branch'], 'Branch', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
+                ?>
+            </div>
+            <div class="col-md-3">
                 <?php
                $assigned_attrs = [];
                $selected       = (isset($lead) ? $lead->assigned : get_staff_user_id());
