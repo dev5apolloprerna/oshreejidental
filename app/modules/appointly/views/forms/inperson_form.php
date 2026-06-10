@@ -236,14 +236,34 @@ app_external_form_footer($form);
 
 <script>
 
+function refreshAppointmentTypePicker() {
+        var $appointmentType = $('#appointment_select_type');
+
+        if ($.fn.selectpicker) {
+            $appointmentType.selectpicker('refresh');
+            $appointmentType.selectpicker('render');
+        }
+    }
+
+   function setAppointmentSubject() {
+        var id = $('#appointment_select_type').val();
+
+        if (id == '') {
+            document.getElementById('subject').value = '';
+        } else {
+            var name = document.getElementById("name");
+            var text = $('#appointment_select_type option:selected').text();
+            document.getElementById('subject').value = text + ' for ' + name.value;
+        }
+    }
+
 
    $('#branch').change(function(){
         
-        var select = document.getElementById("appointment_select_type");
-        var length = select.options.length;
-        for (i = length-1; i >= 0; i--) {
-          select.options[i] = null;
-        }
+        var $appointmentType = $('#appointment_select_type');
+        $appointmentType.val('');
+        $appointmentType.html('<option value=""><?= _l('dropdown_non_selected_tex'); ?></option>');
+        refreshAppointmentTypePicker();
 
         document.getElementById('subject').value = '';
 
@@ -272,7 +292,8 @@ app_external_form_footer($form);
             success: function( data ) {
 
                 $('#appointment_select_type').html(data);
-                $('#appointment_select_type').selectpicker('refresh');
+                $('#appointment_select_type').val('');
+                refreshAppointmentTypePicker();
             }
         });
 
@@ -288,18 +309,7 @@ app_external_form_footer($form);
         });
     });
 
-   $('#appointment_select_type').change(function(){
-
-        var id = $(this).val();
-        if(id == ''){
-            document.getElementById('subject').value = '';
-        }else{
-            var name = document.getElementById("name");
-            var e = document.getElementById("appointment_select_type");
-            var text = e.options[e.selectedIndex].text;
-           document.getElementById('subject').value = text + ' for ' + name.value;
-        }
-    });
+      $('#appointment_select_type').on('changed.bs.select change', setAppointmentSubject);
 
    // $('#patient_id').change(function(){
 
