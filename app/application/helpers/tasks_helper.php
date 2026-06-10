@@ -445,9 +445,10 @@ function tasks_summary_data($rel_id = null, $rel_type = null)
             $tasks_where .= ' AND rel_id=' . $CI->db->escape_str($rel_id) . ' AND rel_type="' . $CI->db->escape_str($rel_type) . '"';
             $tasks_my_where .= ' AND rel_id=' . $CI->db->escape_str($rel_id) . ' AND rel_type="' . $CI->db->escape_str($rel_type) . '"';
         } else {
+            $tasksTable = db_prefix() . 'tasks';
             $sqlProjectTasksWhere = ' AND CASE
             WHEN ' . $tasksTable . '.rel_type="project" AND ' . $tasksTable . '.rel_id IN (SELECT project_id FROM ' . db_prefix() . 'project_settings WHERE project_id=' . $tasksTable . '.rel_id AND name="hide_tasks_on_main_tasks_table" AND value=1)
-            THEN ' . $tasksTable . '. rel_type != "project"
+            THEN ' . $tasksTable . '.rel_type != "project"
             ELSE 1=1
             END';
             $tasks_where .= $sqlProjectTasksWhere;
