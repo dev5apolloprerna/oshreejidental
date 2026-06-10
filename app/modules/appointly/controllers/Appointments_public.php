@@ -96,69 +96,72 @@ class Appointments_public extends ClientsController
         $this->load->view('forms/appointments_form', $data);
     }
 
-    public function get_branch_apponmtmenttypes(){
+        public function get_branch_apponmtmenttypes()
+{
+    if ($this->input->post()) {
+        $html = '<option value="">' . _l('dropdown_non_selected_tex') . '</option>';
+        $branch = (int) $this->input->post('branch');
+        $appointment_types = [];
 
-        if($this->input->post()){
-
-            $html = '<option value="">'._l('dropdown_non_selected_tex').'</option>';
-
-            $branch = $this->input->post('branch');
-            $MAIN_DB = $this->load->database('default', TRUE);
+        if ($branch > 0) {
+            $MAIN_DB = $this->load->database('default', true);
             $MAIN_DB->select('branch_db,branch_db_user,branch_db_pass');
-            $MAIN_DB->where('branchid',$branch);
-            $branch_data = $MAIN_DB->get(db_prefix().'branch')->row();
+            $MAIN_DB->where('branchid', $branch);
+            $branch_data = $MAIN_DB->get(db_prefix() . 'branch')->row();
 
-            if(!empty($branch_data)){
-
-                    $database = array(
+            if (!empty($branch_data)) {
+                $database = [
                     'hostname' => APP_DB_HOSTNAME,
                     'username' => $branch_data->branch_db_user,
                     'password' => $branch_data->branch_db_pass,
-                    'database' => $branch_data->branch_db, /* this will be changed "on the fly" in controler */
+                    'database' => $branch_data->branch_db,
                     'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
                     'dbprefix' => db_prefix(),
                     'db_debug' => (ENVIRONMENT !== 'production'),
                     'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
                     'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
-                    'pconnect' => FALSE,
+                    'pconnect' => false,
                     'cache_on' => false,
                     'cachedir' => '',
                     'swap_pre' => '',
-                    'encrypt' => $db_encrypt,
+                    'encrypt' => defined('APP_DB_ENCRYPT') ? APP_DB_ENCRYPT : false,
                     'compress' => false,
                     'failover' => [],
                     'save_queries' => true,
-                );
+                ];
 
-                $BRANCH_DB = $this->load->database($database, TRUE);
-                $appointment_types = $BRANCH_DB->get(db_prefix().'appointly_appointment_types')->result_array();
-
-             
-
-                if(!empty($appointment_types)){
-                        foreach ($appointment_types as $key => $value) {
-
-                        $html .= '<option value="'.$value['id'].'">'.$value['type'].'</option>';
-                    }
-                }
-
-            }else{
-
-                $appointment_types = get_appointment_types();
-                  foreach ($appointment_types as $key => $value) {
-
-                        $html .= '<option value="'.$value['id'].'">'.$value['type'].'</option>';
-                    }
+                $BRANCH_DB = $this->load->database($database, true);
+                $appointment_types = $BRANCH_DB
+                    ->get(db_prefix() . 'appointly_appointment_types')
+                    ->result_array();
             }
 
-            
-            
+            if (empty($appointment_types)) {
+                $MAIN_DB->from(db_prefix() . 'appointly_appointment_types');
 
-            echo $html;exit;
+                if ($MAIN_DB->field_exists('branch_id', db_prefix() . 'appointly_appointment_types')) {
+                    $MAIN_DB->group_start();
+                    $MAIN_DB->where('branch_id', $branch);
+                    $MAIN_DB->or_where('branch_id', 0);
+                    $MAIN_DB->group_end();
+                }
 
+                $appointment_types = $MAIN_DB->get()->result_array();
+            }
         }
 
+        if (empty($appointment_types)) {
+            $appointment_types = get_appointment_types();
+        }
+
+        foreach ($appointment_types as $value) {
+            $html .= '<option value="' . (int) $value['id'] . '">' . html_escape($value['type']) . '</option>';
+        }
+
+        echo $html;
+        exit;
     }
+}
 
 
     public function get_branch_customers(){

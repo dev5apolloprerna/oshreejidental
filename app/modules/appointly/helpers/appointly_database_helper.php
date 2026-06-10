@@ -98,6 +98,7 @@ if (!function_exists('init_appointly_database_tables')) {
                `id` int(11) NOT NULL AUTO_INCREMENT,
                `type` varchar(191) NOT NULL,
                `color` varchar(191) NOT NULL,
+               `branch_id` int(11) NOT NULL DEFAULT '0',
                PRIMARY KEY (`id`)
                ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
         );
