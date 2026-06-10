@@ -96,20 +96,21 @@ if($_SESSION['message-error'] != ''){
                     <?php } ?>
                      <br>
 
-                         <?php $appointment_types = get_appointment_types();
-
-                    if (count($appointment_types) > 0) { ?>
+                         <?php $appointment_types = get_appointment_types(); ?>
                         <div class="form-group appointment_type_holder">
                              <small class="req text-danger">* </small>
                             <label for="appointment_select_type"
                                    class="control-label"><?= _l('appointments_type_heading'); ?></label>
                             <select class="form-control selectpicker" name="type_id" id="appointment_select_type" data-live-search="true">
                               
-                                
+                                <option value=""><?= _l('dropdown_non_selected_tex'); ?></option>
+                                <?php foreach ($appointment_types as $app_type) { ?>
+                                    <option class="form-control" value="<?= (int) $app_type['id']; ?>"><?= html_escape($app_type['type']); ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                         <div class=" clearfix mtop15"></div>
-                    <?php } ?>
+                    
                     <br>
 
                      <div class="form-group appointment_type_holder hidden">
@@ -270,7 +271,7 @@ app_external_form_footer($form);
             data: {branch : id,csrf_token_name:csrf_token_name},
             success: function( data ) {
 
-                $('#appointment_select_type').append(data);
+                $('#appointment_select_type').html(data);
                 $('#appointment_select_type').selectpicker('refresh');
             }
         });

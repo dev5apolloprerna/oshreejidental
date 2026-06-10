@@ -1211,8 +1211,14 @@ class Appointly_model extends App_Model
      */
     public function new_appointment_type($type, $color)
     {
-        return $this->db->insert(db_prefix() . 'appointly_appointment_types', ['type' => $type, 'color' => $color]);
-    }
+        $data = ['type' => $type, 'color' => $color];
+
+        if ($this->db->field_exists('branch_id', db_prefix() . 'appointly_appointment_types')) {
+            $data['branch_id'] = $this->resolveCurrentBranchId();
+        }
+
+        return $this->db->insert(db_prefix() . 'appointly_appointment_types', $data);
+     }
 
 
     /**
