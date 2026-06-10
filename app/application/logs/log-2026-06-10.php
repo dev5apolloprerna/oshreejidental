@@ -33940,3 +33940,12 @@ ERROR - 2026-06-10 17:42:13 --> Severity: error --> Exception: Access denied for
 ERROR - 2026-06-10 17:42:39 --> Severity: error --> Exception: Access denied for user 'u614622744_maninagar_db'@'localhost' (using password: YES) C:\wamp64\www\oshreejidental\app\system\database\drivers\mysqli\mysqli_driver.php 203
 ERROR - 2026-06-10 17:42:47 --> Severity: Warning --> Undefined variable $db_encrypt C:\wamp64\www\oshreejidental\app\modules\appointly\controllers\Appointments_public.php 195
 ERROR - 2026-06-10 17:42:47 --> Severity: error --> Exception: Access denied for user 'u614622744_maninagar_db'@'localhost' (using password: YES) C:\wamp64\www\oshreejidental\app\system\database\drivers\mysqli\mysqli_driver.php 203
+ERROR - 2026-06-10 18:46:16 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 254
+ERROR - 2026-06-10 18:46:42 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 254
+ERROR - 2026-06-10 18:46:47 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 254
+ERROR - 2026-06-10 18:46:53 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 254
+ERROR - 2026-06-10 18:47:01 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 254
+ERROR - 2026-06-10 18:47:06 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 249
+ERROR - 2026-06-10 18:47:12 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 250
+ERROR - 2026-06-10 18:47:33 --> Severity: error --> Exception: syntax error, unexpected token "private", expecting end of file C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 254
+ERROR - 2026-06-10 19:28:40 --> Severity: error --> Exception: syntax error, unexpected token "private" C:\wamp64\www\oshreejidental\app\application\controllers\admin\Clients.php 282

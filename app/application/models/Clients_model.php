@@ -175,12 +175,31 @@ class Clients_model extends App_Model
 
     public function patient_number_format($prefix, $uid, $fileNo) 
     {   
-        $paddingLength = 3 - strlen($uid);
+
         $currentYear = date('y');
         $formattedNumber = $fileNo . '/' . str_pad($uid, 3, '0', STR_PAD_LEFT) . '/' . $currentYear . '/' . $prefix;
     
         return $formattedNumber;
     }
+
+    private function get_next_patient_number_parts()
+    {
+        $MAIN_DB = $this->load->database('default', true);
+
+        $MAIN_DB->select('value');
+        $MAIN_DB->where('name', 'next_patient_number');
+        $uid = $MAIN_DB->get(db_prefix() . 'options')->row();
+
+        $MAIN_DB->select('value');
+        $MAIN_DB->where('name', 'next_file_number');
+        $fileNo = $MAIN_DB->get(db_prefix() . 'options')->row();
+
+        return [
+            'uid' => $uid && $uid->value !== '' ? $uid->value : 1,
+            'file_no' => $fileNo && $fileNo->value !== '' ? $fileNo->value : 1,
+        ];
+    }
+
 
     
     /**
@@ -197,14 +216,8 @@ class Clients_model extends App_Model
      
         // $data['prefix'] = get_option('patient_prefix');
 
-        $this->db->select('value');
-        $this->db->where('name','next_patient_number');
-        $uid = $this->db->get(db_prefix().'options')->row();
-
-        $this->db->select('value');
-        $this->db->where('name','next_patient_number');
-        $uid = $this->db->get(db_prefix().'options')->row();
-
+        $patientNumberParts = $this->get_next_patient_number_parts();
+        
         $prefix = null;
         
         $branchId = isset($data['branch_id']) && is_numeric($data['branch_id']) ? (int) $data['branch_id'] : 0;
@@ -285,7 +298,7 @@ class Clients_model extends App_Model
             }
 
             $branchCode = ($prefix && isset($prefix->branch_code) && $prefix->branch_code !== '') ? $prefix->branch_code : 'MAIN';
-            $contact_data['uid'] = $this->patient_number_format($branchCode, $uid->value, $fileNo->value);
+            $contact_data['uid'] = $this->patient_number_format($branchCode, $patientNumberParts['uid'], $patientNumberParts['file_no']);
         }
 
         $data = hooks()->apply_filters('before_client_added', $data);
@@ -439,7 +452,7 @@ class Clients_model extends App_Model
 
 
             $branchCode = ($prefix && isset($prefix->branch_code) && $prefix->branch_code !== '') ? $prefix->branch_code : 'MAIN';
-            $contact_data['uid'] = $this->patient_number_format($branchCode, $uid->value, $fileNo->value);
+            $contact_data['uid'] = $this->patient_number_format($branchCode, $patientNumberParts['uid'], $patientNumberParts['file_no']);
 
                 
                 $contact_id = $this->add_contact($contact_data, $client_id, $withContact);

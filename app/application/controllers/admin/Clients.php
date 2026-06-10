@@ -140,34 +140,76 @@ class Clients extends AdminController
             if (isset($orderData[0]['dir']) && strtolower((string) $orderData[0]['dir']) === 'asc') {
                 $orderDir = 'asc';
             }
+        }
 
             
         $sortKey = isset($columnMap[$orderIndex]) ? $columnMap[$orderIndex] : 'datecreated';
 
      
         $mainDb   = $this->load->database('default', true);
-                $rows = [];
-        $branchId = $this->resolve_current_branch_id($mainDb);
-        if ($branchId > 0) {
-            $branchLabel = $this->get_branch_label($mainDb, $branchId);
+        $rows     = [];
+        $branches = $this->get_global_search_branches($mainDb);
 
-            $sql = 'SELECT c.userid, ct.uid, c.company, CONCAT(IFNULL(ct.firstname, ""), " ", IFNULL(ct.lastname, "")) as fullname, ct.email, c.phonenumber, c.datecreated '
-                . 'FROM `' . db_prefix() . 'clients` c '
-                . 'LEFT JOIN `' . db_prefix() . 'contacts` ct ON ct.userid = c.userid AND ct.is_primary = 1 '
-                . 'WHERE c.branch_id = ?';
-            $binds = [$branchId];
+        foreach ($branches as $branch) {
+            if (empty($branch['branch_db']) || !$this->is_valid_db_identifier($branch['branch_db'])) {
+                continue;
+            }
+
+            $branchDb = $this->connect_to_branch_database($branch);
+            if (!$branchDb) {
+                continue;
+            }
+
+             $clientFields  = $branchDb->list_fields(db_prefix() . 'clients');
+            $contactFields = $branchDb->list_fields(db_prefix() . 'contacts');
+            $clientBranchSelect = in_array('branch_id', $clientFields, true) ? 'c.branch_id' : 'NULL';
+            $contactBranchSelect = in_array('branch_id', $contactFields, true) ? 'ct.branch_id' : 'NULL';
+
+            $selectColumns = [
+                'c.userid',
+                'ct.uid',
+                'c.company',
+                'CONCAT(IFNULL(ct.firstname, ""), " ", IFNULL(ct.lastname, "")) as fullname',
+                'ct.email',
+                'c.phonenumber',
+                'c.datecreated',
+                $clientBranchSelect . ' as client_branch_id',
+                $contactBranchSelect . ' as contact_branch_id',
+            ];
+
+            $sql = 'SELECT ' . implode(', ', $selectColumns)
+                . ' FROM `' . db_prefix() . 'clients` c'
+                . ' LEFT JOIN `' . db_prefix() . 'contacts` ct ON ct.userid = c.userid AND ct.is_primary = 1';
+            $binds = [];
+
 
             if ($searchValue !== '') {
-                $sql .= ' AND (ct.uid LIKE ? OR c.phonenumber LIKE ? OR c.company LIKE ? OR ct.firstname LIKE ? OR ct.lastname LIKE ?)';
+                $sql .= ' WHERE (ct.uid LIKE ? OR c.phonenumber LIKE ? OR c.company LIKE ? OR ct.firstname LIKE ? OR ct.lastname LIKE ? OR ct.email LIKE ?)';
                 $like = '%' . $searchValue . '%';
-                $binds = array_merge($binds, [$like, $like, $like, $like, $like]);
+                 $binds = [$like, $like, $like, $like, $like, $like];
             }
-            $result = $mainDb->query($sql, $binds)->result_array();
+
+            try {
+                $query = $branchDb->query($sql, $binds);
+            } catch (Throwable $e) {
+                log_message('error', 'Patient search query failed for branch database ' . $branch['branch_db'] . ': ' . $e->getMessage());
+                continue;
+            } catch (Exception $e) {
+                log_message('error', 'Patient search query failed for branch database ' . $branch['branch_db'] . ': ' . $e->getMessage());
+                continue;
+            }
+
+            if (!$query) {
+                continue;
+            }
+            $result = $query->result_array();
             foreach ($result as $record) {
+                $recordBranchId = $this->resolve_patient_record_branch_id($record, $branch);
+
                 $rows[] = [
                     'userid'      => isset($record['userid']) ? (string) $record['userid'] : '',
                     'uid'         => isset($record['uid']) ? (string) $record['uid'] : '',
-                    'branch_name' => (string) $branchLabel,
+                    'branch_name' => $this->get_patient_branch_label($recordBranchId, isset($branch['branch_label']) ? (string) $branch['branch_label'] : (string) $branch['branch_db']),
                     'company'     => isset($record['company']) ? (string) $record['company'] : '',
                     'fullname'    => isset($record['fullname']) ? trim((string) $record['fullname']) : '',
                     'email'       => isset($record['email']) ? (string) $record['email'] : '',
@@ -237,11 +279,20 @@ class Clients extends AdminController
         echo json_encode($output);
         exit;
     }
-}
-       private function get_global_search_branches($mainDb)
+
+    private function get_global_search_branches($mainDb)
     {
         $branchFields = $mainDb->list_fields(db_prefix() . 'branch');
         $select = ['branch_db', 'branchid as branch_id'];
+
+        if (in_array('branch_db_user', $branchFields, true)) {
+            $select[] = 'branch_db_user';
+        }
+
+        if (in_array('branch_db_pass', $branchFields, true)) {
+            $select[] = 'branch_db_pass';
+        }
+
 
         if (in_array('branch', $branchFields, true)) {
             $select[] = 'branch';
@@ -263,7 +314,7 @@ class Clients extends AdminController
             $branches[] = [
                 'branch_db'    => $defaultDbName,
                 'branch_label' => 'Main Branch',
-                'branch_id'    => 1,
+                'branch_id'    => 0,
             ];
             $seenDatabases[$defaultDbName] = true;
         }
@@ -288,9 +339,11 @@ class Clients extends AdminController
             }
 
             $branches[] = [
-                'branch_db'    => $branchDb,
-                'branch_label' => $label,
-                'branch_id'    => isset($item['branch_id']) ? (int) $item['branch_id'] : 0,
+                'branch_db'        => $branchDb,
+                'branch_db_user'   => isset($item['branch_db_user']) ? (string) $item['branch_db_user'] : '',
+                'branch_db_pass'   => isset($item['branch_db_pass']) ? (string) $item['branch_db_pass'] : '',
+                'branch_label'     => $label,
+                'branch_id'        => isset($item['branch_id']) ? (int) $item['branch_id'] : 0,
             ];
             $seenDatabases[$branchDb] = true;
         }
@@ -304,7 +357,117 @@ class Clients extends AdminController
         return (bool) preg_match('/^[A-Za-z0-9_]+$/', (string) $name);
     }
     
-        private function resolve_current_branch_id($mainDb)
+       private function resolve_patient_record_branch_id($record, $branch)
+    {
+        if (isset($record['client_branch_id']) && $record['client_branch_id'] !== '' && $record['client_branch_id'] !== null) {
+            return (int) $record['client_branch_id'];
+        }
+
+        if (isset($record['contact_branch_id']) && $record['contact_branch_id'] !== '' && $record['contact_branch_id'] !== null) {
+            return (int) $record['contact_branch_id'];
+        }
+
+        return isset($branch['branch_id']) ? (int) $branch['branch_id'] : 0;
+    }
+
+    private function get_patient_branch_label($branchId, $fallback = '')
+    {
+        $branchLabels = [
+            0 => 'Main',
+            1 => 'Maninagar',
+            2 => 'Satellite',
+            3 => 'Iskon',
+        ];
+
+        $branchId = (int) $branchId;
+        if (isset($branchLabels[$branchId])) {
+            return $branchLabels[$branchId];
+        }
+
+        return $fallback !== '' ? $fallback : 'Branch ' . $branchId;
+    }
+
+    private function connect_to_branch_database($branch)
+    {
+        if (empty($branch['branch_db']) || !$this->is_valid_db_identifier($branch['branch_db'])) {
+            return false;
+        }
+
+        $config = $this->build_branch_database_config($branch['branch_db']);
+        $defaultUsername = isset($config['username']) ? (string) $config['username'] : '';
+        $defaultPassword = isset($config['password']) ? (string) $config['password'] : '';
+
+        $branchDb = $this->try_connect_to_database($config, $branch['branch_db']);
+        if ($branchDb) {
+            return $branchDb;
+        }
+
+        $branchUsername = isset($branch['branch_db_user']) ? (string) $branch['branch_db_user'] : '';
+        $branchPassword = isset($branch['branch_db_pass']) ? (string) $branch['branch_db_pass'] : '';
+
+        if ($branchUsername === '' || ($branchUsername === $defaultUsername && $branchPassword === $defaultPassword)) {
+            return false;
+        }
+
+        $config['username'] = $branchUsername;
+        $config['password'] = $branchPassword;
+
+        return $this->try_connect_to_database($config, $branch['branch_db']);
+    }
+
+    private function build_branch_database_config($database)
+    {
+        $config = $this->config->item('config_db');
+        if (!is_array($config)) {
+            $config = [];
+        }
+
+        return array_merge($config, [
+            'hostname'     => defined('APP_DB_HOSTNAME') ? APP_DB_HOSTNAME : (isset($config['hostname']) ? $config['hostname'] : 'localhost'),
+            'username'     => defined('APP_DB_USERNAME') ? APP_DB_USERNAME : (isset($config['username']) ? $config['username'] : ''),
+            'password'     => defined('APP_DB_PASSWORD') ? APP_DB_PASSWORD : (isset($config['password']) ? $config['password'] : ''),
+            'database'     => $database,
+            'dbdriver'     => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : (isset($config['dbdriver']) ? $config['dbdriver'] : 'mysqli'),
+            'dbprefix'     => db_prefix(),
+            'pconnect'     => false,
+            'db_debug'     => false,
+            'cache_on'     => false,
+            'cachedir'     => '',
+            'char_set'     => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : (isset($config['char_set']) ? $config['char_set'] : 'utf8'),
+            'dbcollat'     => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : (isset($config['dbcollat']) ? $config['dbcollat'] : 'utf8_general_ci'),
+            'swap_pre'     => '',
+            'encrypt'      => isset($config['encrypt']) ? $config['encrypt'] : false,
+            'compress'     => false,
+            'failover'     => [],
+            'save_queries' => true,
+        ]);
+    }
+
+    private function try_connect_to_database($config, $database)
+    {
+        try {
+            $branchDb = $this->load->database($config, true);
+
+            if (!$branchDb || !$branchDb->conn_id) {
+                return false;
+            }
+
+            if (!$branchDb->table_exists(db_prefix() . 'clients') || !$branchDb->table_exists(db_prefix() . 'contacts')) {
+                return false;
+            }
+
+            return $branchDb;
+        } catch (Throwable $e) {
+            log_message('error', 'Patient search could not connect to branch database ' . $database . ': ' . $e->getMessage());
+        } catch (Exception $e) {
+            log_message('error', 'Patient search could not connect to branch database ' . $database . ': ' . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    private function resolve_current_branch_id($mainDb)
+
     {
         $branchDb = (string) $this->input->cookie('branch');
         if ($branchDb !== '') {
