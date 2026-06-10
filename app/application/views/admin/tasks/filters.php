@@ -1,4 +1,5 @@
-<div id="<?php echo $filters_wrapper_id ?? 'tasksFilters'; ?>" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5">
+<?php $filters_wrapper_id = $filters_wrapper_id ?? 'tasksFilters'; ?>
+<div id="<?php echo e($filters_wrapper_id); ?>" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5" aria-label="<?php echo e(_l('filters')); ?>">
     <app-filters 
         id="<?php echo $tasks_table->id(); ?>" 
         view="<?php echo $tasks_table->viewName(); ?>"
@@ -7,7 +8,7 @@
     </app-filters>
 </div>
 <script>
-    if(typeof(vNewApp) == 'function'){
-        vNewApp('#tasksFilters')
+    if (typeof(vNewApp) == 'function') {
+        vNewApp('#<?php echo e($filters_wrapper_id); ?>')
     }
 </script>

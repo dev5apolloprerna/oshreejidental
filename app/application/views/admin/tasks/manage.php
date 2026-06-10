@@ -4,23 +4,31 @@
     <div class="content">
         <div class="row _buttons tw-mb-2 sm:tw-mb-4">
             <div class="col-md-8">
-                <?php if (staff_can('create',  'tasks')) { ?>
+                <?php $can_create_task = staff_can('create', 'tasks'); ?>
+                <?php if ($can_create_task) { ?>
                 <a href="#" onclick="new_task(<?php if ($this->input->get('project_id')) {
     echo "'" . admin_url('tasks/task?rel_id=' . $this->input->get('project_id') . '&rel_type=project') . "'";
-} ?>); return false;" class="btn btn-primary pull-left new">
-                    <i class="fa-regular fa-plus tw-mr-1"></i>
+} ?>); return false;" class="btn btn-default pull-left new" aria-label="<?php echo e(_l('new_task')); ?>">
+                    <i class="fa-regular fa-plus tw-mr-1" aria-hidden="true"></i>
                     <?php echo _l('new_task'); ?>
                 </a>
+                 <?php } else { ?>
+                <button type="button" class="btn btn-default pull-left new" disabled aria-disabled="true" aria-label="<?php echo e(_l('new_task') . ' - ' . _l('access_denied')); ?>" data-toggle="tooltip" data-placement="top" data-title="<?php echo e(_l('access_denied')); ?>">
+                    <i class="fa-regular fa-plus tw-mr-1" aria-hidden="true"></i>
+                    <?php echo _l('new_task'); ?>
+                </button>
                 <?php } ?>
                 <a 
                     href="<?php echo admin_url(!$this->input->get('project_id') ? ('tasks/switch_kanban/' . $switch_kanban) : ('projects/view/' . $this->input->get('project_id') . '?group=project_tasks')); ?>" class="btn btn-default mleft10 pull-left hidden-xs" data-toggle="tooltip" 
                     data-placement="top"
                     data-title="<?php echo $switch_kanban == 1 ? _l('switch_to_list_view') : _l('leads_switch_to_kanban'); ?>"
-                >
+                    aria-label="<?php echo e($switch_kanban == 1 ? _l('switch_to_list_view') : _l('leads_switch_to_kanban')); ?>"
+                    >
+
                     <?php if ($switch_kanban == 1) { ?>
-                    <i class="fa-solid fa-table-list"></i>
+                    <i class="fa-solid fa-table-list" aria-hidden="true"></i>
                     <?php } else { ?>
-                    <i class="fa-solid fa-grip-vertical"></i>
+                    <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i>
                     <?php }; ?>
                 </a>
             </div>
@@ -32,7 +40,7 @@
                 <?php } else { ?>
                 <?php $this->load->view('admin/tasks/filters',['filters_wrapper_id'=>'vueApp']); ?>
                 <a href="<?php echo admin_url('tasks/detailed_overview'); ?>"
-                    class="btn btn-success pull-right mright5"><?php echo _l('detailed_overview'); ?></a>
+                    class="btn btn-success pull-right mright5" aria-label="<?php echo e(_l('detailed_overview')); ?>"><?php echo _l('detailed_overview'); ?></a>
                 <?php } ?>
             </div>
         </div>
