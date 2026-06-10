@@ -11,6 +11,61 @@ class Appointments_public extends ClientsController
         $this->load->model('staff_model');
          $this->load->library('session');
     }
+    private function get_db_encrypt()
+    {
+        global $app_db_encrypt;
+
+        if (defined('APP_DB_ENCRYPT')) {
+            return APP_DB_ENCRYPT;
+        }
+
+        return isset($app_db_encrypt) && !is_null($app_db_encrypt) ? $app_db_encrypt : false;
+    }
+
+    private function get_branch_database_config($branch_data)
+    {
+        return [
+            'hostname' => APP_DB_HOSTNAME,
+            'username' => !empty($branch_data->branch_db_user) ? $branch_data->branch_db_user : APP_DB_USERNAME,
+            'password' => isset($branch_data->branch_db_pass) && $branch_data->branch_db_pass !== '' ? $branch_data->branch_db_pass : APP_DB_PASSWORD,
+            'database' => $branch_data->branch_db,
+            'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
+            'dbprefix' => db_prefix(),
+            'db_debug' => false,
+            'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
+            'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
+            'pconnect' => false,
+            'cache_on' => false,
+            'cachedir' => '',
+            'swap_pre' => '',
+            'encrypt' => $this->get_db_encrypt(),
+            'compress' => false,
+            'failover' => [],
+            'save_queries' => true,
+        ];
+    }
+
+    private function load_branch_database($branch_data)
+    {
+        if (empty($branch_data) || empty($branch_data->branch_db)) {
+            return false;
+        }
+
+        try {
+            $BRANCH_DB = $this->load->database($this->get_branch_database_config($branch_data), true);
+        } catch (Exception $e) {
+            log_message('error', 'Unable to connect branch database: ' . $e->getMessage());
+            return false;
+        }
+
+        if (empty($BRANCH_DB) || empty($BRANCH_DB->conn_id)) {
+            log_message('error', 'Unable to connect branch database: ' . $branch_data->branch_db);
+            return false;
+        }
+
+        return $BRANCH_DB;
+    }
+
 
     /**
      * Clients hash view.
@@ -110,30 +165,13 @@ class Appointments_public extends ClientsController
             $branch_data = $MAIN_DB->get(db_prefix() . 'branch')->row();
 
             if (!empty($branch_data)) {
-                $database = [
-                    'hostname' => APP_DB_HOSTNAME,
-                    'username' => $branch_data->branch_db_user,
-                    'password' => $branch_data->branch_db_pass,
-                    'database' => $branch_data->branch_db,
-                    'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
-                    'dbprefix' => db_prefix(),
-                    'db_debug' => (ENVIRONMENT !== 'production'),
-                    'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
-                    'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
-                    'pconnect' => false,
-                    'cache_on' => false,
-                    'cachedir' => '',
-                    'swap_pre' => '',
-                    'encrypt' => defined('APP_DB_ENCRYPT') ? APP_DB_ENCRYPT : false,
-                    'compress' => false,
-                    'failover' => [],
-                    'save_queries' => true,
-                ];
+               $BRANCH_DB = $this->load_branch_database($branch_data);
 
-                $BRANCH_DB = $this->load->database($database, true);
-                $appointment_types = $BRANCH_DB
-                    ->get(db_prefix() . 'appointly_appointment_types')
-                    ->result_array();
+                if ($BRANCH_DB) {
+                    $appointment_types = $BRANCH_DB
+                        ->get(db_prefix() . 'appointly_appointment_types')
+                        ->result_array();
+                }
             }
 
             if (empty($appointment_types)) {
@@ -176,29 +214,9 @@ class Appointments_public extends ClientsController
             $MAIN_DB->where('branchid',$branch);
             $branch_data = $MAIN_DB->get(db_prefix().'branch')->row();
 
-            if(!empty($branch_data)){
+            $BRANCH_DB = !empty($branch_data) ? $this->load_branch_database($branch_data) : false;
 
-                    $database = array(
-                    'hostname' => APP_DB_HOSTNAME,
-                    'username' => $branch_data->branch_db_user,
-                    'password' => $branch_data->branch_db_pass,
-                    'database' => $branch_data->branch_db, /* this will be changed "on the fly" in controler */
-                    'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
-                    'dbprefix' => db_prefix(),
-                    'db_debug' => (ENVIRONMENT !== 'production'),
-                    'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
-                    'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
-                    'pconnect' => FALSE,
-                    'cache_on' => false,
-                    'cachedir' => '',
-                    'swap_pre' => '',
-                    'encrypt' => $db_encrypt,
-                    'compress' => false,
-                    'failover' => [],
-                    'save_queries' => true,
-                );
-
-                $BRANCH_DB = $this->load->database($database, TRUE);
+            if($BRANCH_DB){
                 $BRANCH_DB->select('userid');
                 $BRANCH_DB->where('active',1);
                 $clients = $BRANCH_DB->get(db_prefix().'clients')->result_array();
@@ -206,16 +224,18 @@ class Appointments_public extends ClientsController
              
 
                 if(!empty($clients)){
-                        foreach ($clients as $key => $value) {
+                    foreach ($clients as $key => $value) {
 
                         $BRANCH_DB->select('id,firstname,lastname,uid,email,phonenumber,gender');
                         $BRANCH_DB->where('userid',$value['userid']);
                         $BRANCH_DB->where('is_primary',1);
-                        $BRANCH_DB->where('active',1);    
+                        $BRANCH_DB->where('active',1);   
                         $contact = $BRANCH_DB->get(db_prefix().'contacts')->row();
 
 
-                        $html .= '<option value="'.$contact->id.'" data-email="'.$contact->email.'" data-phone="'.$contact->phonenumber.'" data-gender="'.$contact->gender.'">'.$contact->firstname . ' ' . $contact->lastname. ' ('. $contact->uid .') </option>';
+                    if(!empty($contact)){
+                            $html .= '<option value="'.$contact->id.'" data-email="'.$contact->email.'" data-phone="'.$contact->phonenumber.'" data-gender="'.$contact->gender.'">'.$contact->firstname . ' ' . $contact->lastname. ' ('. $contact->uid .') </option>';
+                        }
                     }
                 }
 
@@ -235,7 +255,9 @@ class Appointments_public extends ClientsController
                         $contact = $this->db->get(db_prefix().'contacts')->row();
 
 
-                       $html .= '<option value="'.$contact->id.'" data-email="'.$contact->email.'" data-phone="'.$contact->phonenumber.'" data-gender="'.$contact->gender.'">'.$contact->firstname . ' ' . $contact->lastname. ' ('. $contact->uid .') </option>';
+                       if(!empty($contact)){
+                           $html .= '<option value="'.$contact->id.'" data-email="'.$contact->email.'" data-phone="'.$contact->phonenumber.'" data-gender="'.$contact->gender.'">'.$contact->firstname . ' ' . $contact->lastname. ' ('. $contact->uid .') </option>';
+                       }
                     }
             }
 
@@ -303,29 +325,9 @@ class Appointments_public extends ClientsController
             if($data['patient_id'] != ''){
 
 
-                    if(!empty($branch_data)){
+                $BRANCH_DB = !empty($branch_data) ? $this->load_branch_database($branch_data) : false;
 
-                        $database = array(
-                        'hostname' => APP_DB_HOSTNAME,
-                        'username' => $branch_data->branch_db_user,
-                        'password' => $branch_data->branch_db_pass,
-                        'database' => $branch_data->branch_db, /* this will be changed "on the fly" in controler */
-                        'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
-                        'dbprefix' => db_prefix(),
-                        'db_debug' => (ENVIRONMENT !== 'production'),
-                        'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
-                        'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
-                        'pconnect' => FALSE,
-                        'cache_on' => false,
-                        'cachedir' => '',
-                        'swap_pre' => '',
-                        'encrypt' => $db_encrypt,
-                        'compress' => false,
-                        'failover' => [],
-                        'save_queries' => true,
-                    );
-
-                    $BRANCH_DB = $this->load->database($database, TRUE);
+            if($BRANCH_DB){
                     $BRANCH_DB->where('uid',$data['patient_id']);
                     $BRANCH_DB->where('active',1);
                     $BRANCH_DB->where('is_primary',1);
@@ -459,29 +461,10 @@ class Appointments_public extends ClientsController
 
             
 
-                if(!empty($branch_data)){
+                $BRANCH_DB = !empty($branch_data) ? $this->load_branch_database($branch_data) : false;
 
-                    $database = array(
-                    'hostname' => APP_DB_HOSTNAME,
-                    'username' => $branch_data->branch_db_user,
-                    'password' => $branch_data->branch_db_pass,
-                    'database' => $branch_data->branch_db, /* this will be changed "on the fly" in controler */
-                    'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
-                    'dbprefix' => db_prefix(),
-                    'db_debug' => (ENVIRONMENT !== 'production'),
-                    'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
-                    'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
-                    'pconnect' => FALSE,
-                    'cache_on' => false,
-                    'cachedir' => '',
-                    'swap_pre' => '',
-                    'encrypt' => $db_encrypt,
-                    'compress' => false,
-                    'failover' => [],
-                    'save_queries' => true,
-                );
-
-                $BRANCH_DB = $this->load->database($database, TRUE);
+            if($BRANCH_DB)
+            {
                 $BRANCH_DB->where('uid',$patient_id);
                 $BRANCH_DB->where('otp',$otp);
                 $BRANCH_DB->where('active',1);
