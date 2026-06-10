@@ -10,6 +10,62 @@ class Appointly_model extends App_Model
         $this->load->model('appointly/appointly_attendees_model', 'atm');
     }
 
+    private function get_db_encrypt()
+    {
+        global $app_db_encrypt;
+
+        if (defined('APP_DB_ENCRYPT')) {
+            return APP_DB_ENCRYPT;
+        }
+
+        return isset($app_db_encrypt) && !is_null($app_db_encrypt) ? $app_db_encrypt : false;
+    }
+
+    private function get_branch_database_config($branch_data)
+    {
+        return [
+            'hostname' => APP_DB_HOSTNAME,
+            'username' => !empty($branch_data->branch_db_user) ? $branch_data->branch_db_user : APP_DB_USERNAME,
+            'password' => isset($branch_data->branch_db_pass) && $branch_data->branch_db_pass !== '' ? $branch_data->branch_db_pass : APP_DB_PASSWORD,
+            'database' => $branch_data->branch_db,
+            'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
+            'dbprefix' => db_prefix(),
+            'db_debug' => false,
+            'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
+            'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
+            'pconnect' => false,
+            'cache_on' => false,
+            'cachedir' => '',
+            'swap_pre' => '',
+            'encrypt' => $this->get_db_encrypt(),
+            'compress' => false,
+            'failover' => [],
+            'save_queries' => true,
+        ];
+    }
+
+    private function load_branch_database($branch_data)
+    {
+        if (empty($branch_data) || empty($branch_data->branch_db)) {
+            return false;
+        }
+
+        try {
+            $BRANCH_DB = $this->load->database($this->get_branch_database_config($branch_data), true);
+        } catch (Exception $e) {
+            log_message('error', 'Unable to connect branch database: ' . $e->getMessage());
+            return false;
+        }
+
+        if (empty($BRANCH_DB) || empty($BRANCH_DB->conn_id)) {
+            log_message('error', 'Unable to connect branch database: ' . $branch_data->branch_db);
+            return false;
+        }
+
+        return $BRANCH_DB;
+    }
+
+
 
     /**
      * Insert new appointment
@@ -368,29 +424,10 @@ class Appointly_model extends App_Model
         unset($data['otp']);
 
 
-        if(!empty($branch_data)){
+               $BRANCH_DB = !empty($branch_data) ? $this->load_branch_database($branch_data) : false;
 
-                $database = array(
-                'hostname' => APP_DB_HOSTNAME,
-                'username' => $branch_data->branch_db_user,
-                'password' => $branch_data->branch_db_pass,
-                'database' => $branch_data->branch_db, /* this will be changed "on the fly" in controler */
-                'dbdriver' => defined('APP_DB_DRIVER') ? APP_DB_DRIVER : 'mysqli',
-                'dbprefix' => db_prefix(),
-                'db_debug' => (ENVIRONMENT !== 'production'),
-                'char_set' => defined('APP_DB_CHARSET') ? APP_DB_CHARSET : 'utf8',
-                'dbcollat' => defined('APP_DB_COLLATION') ? APP_DB_COLLATION : 'utf8_general_ci',
-                'pconnect' => FALSE,
-                'cache_on' => false,
-                'cachedir' => '',
-                'swap_pre' => '',
-                'encrypt' => $db_encrypt,
-                'compress' => false,
-                'failover' => [],
-                'save_queries' => true,
-            );
-
-            $this->db = $this->load->database($database, TRUE);
+        if($BRANCH_DB){
+            $this->db = $BRANCH_DB;
         }
 
 
