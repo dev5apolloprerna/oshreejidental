@@ -9,3 +9,11 @@ ERROR - 2026-06-11 00:23:18 --> Severity: error --> Exception: Access denied for
 ERROR - 2026-06-11 00:29:45 --> Severity: Warning --> Undefined variable $login_class C:\wamp64\www\oshreejidental\app\application\views\admin\includes\head.php 30
 ERROR - 2026-06-11 00:46:29 --> Severity: error --> Exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`tblclients` c LEFT JOIN `tblcontacts` ct ON ct.userid = c.userid AND ct.is_prim' at line 1 C:\wamp64\www\oshreejidental\app\system\database\drivers\mysqli\mysqli_driver.php 307
 ERROR - 2026-06-11 00:59:06 --> Severity: Warning --> Undefined variable $login_class C:\wamp64\www\oshreejidental\app\application\views\admin\includes\head.php 30
+ERROR - 2026-06-11 18:05:49 --> Severity: Warning --> Undefined variable $login_class C:\wamp64\www\oshreejidental\app\application\views\admin\includes\head.php 30
+ERROR - 2026-06-11 18:05:49 --> Severity: Warning --> Undefined variable $staff_members C:\wamp64\www\oshreejidental\app\modules\appointly\views\modals\create.php 113
+ERROR - 2026-06-11 18:05:49 --> Severity: Warning --> foreach() argument must be of type array|object, null given C:\wamp64\www\oshreejidental\app\application\helpers\fields_helper.php 335
+ERROR - 2026-06-11 18:05:49 --> Severity: error --> Exception: Using $this when not in object context C:\wamp64\www\oshreejidental\app\modules\appointly\views\modals\create.php 115
+ERROR - 2026-06-11 18:06:28 --> Severity: Warning --> Undefined variable $login_class C:\wamp64\www\oshreejidental\app\application\views\admin\includes\head.php 30
+ERROR - 2026-06-11 18:06:28 --> Severity: Warning --> Undefined variable $staff_members C:\wamp64\www\oshreejidental\app\modules\appointly\views\modals\create.php 113
+ERROR - 2026-06-11 18:06:28 --> Severity: Warning --> foreach() argument must be of type array|object, null given C:\wamp64\www\oshreejidental\app\application\helpers\fields_helper.php 335
+ERROR - 2026-06-11 18:06:28 --> Severity: error --> Exception: Using $this when not in object context C:\wamp64\www\oshreejidental\app\modules\appointly\views\modals\create.php 115
