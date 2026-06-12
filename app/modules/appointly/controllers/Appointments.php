@@ -20,16 +20,22 @@ class Appointments extends AdminController
      *
      * @return void
      */
-    public function index()
+     public function index()
     {
         if ($this->staff_no_view_permissions) {
             access_denied('Appointments');
         }          
 
+        if ($this->is_modal_request()) {
+            $this->render_appointment_modal();
+            return;
+        }
+
         $data['td_appointments'] = $this->getTodaysAppointments();
 
         $this->load->view('index', $data);
     }
+
 
     /**
      * Single appointment view
@@ -118,7 +124,44 @@ class Appointments extends AdminController
      */
     public function modal()
     {
-        if (!$this->input->is_ajax_request()) {
+          $this->render_appointment_modal();
+    
+    }
+
+    /**
+     * Alias for the appointment modal endpoint.
+     *
+     * Some production web servers reserve or block POST requests ending in
+     * `/modal`, even though the default route works in local environments.
+     * The admin appointment page uses this non-reserved alias so the same
+     * modal markup can be loaded reliably on live Linux hosting.
+     *
+     * @return void
+     */
+    public function appointment_modal()
+    {
+        $this->render_appointment_modal();
+    }
+
+    /**
+     * Check whether the current AJAX request is asking for the appointment modal.
+     *
+     * @return bool
+     */
+    private function is_modal_request()
+    {
+        return in_array($this->input->post('slug'), ['create', 'update'], true)
+            && ($this->input->post('_appointly_modal') === '1' || $this->input->is_ajax_request());
+    }
+    /**
+     * Render the create/update appointment modal.
+     *
+     * @return void
+     */
+     private function render_appointment_modal()
+    {
+        if (!$this->is_modal_request()) 
+        {
             show_404();
         }
 
