@@ -81,19 +81,55 @@
                var data = $(form).serialize();
                var url = form.action;
 
-               $.post(url, data).done(function(response) {
-                    if (response.result) {
-                         if (isOutlookLoggedIn()) {
-                              if (isOutlookChecked !== null && isOutlookChecked.checked) {
+               $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    headers: {
+                         "X-Requested-With": "XMLHttpRequest"
+                    },
+                    success: function(response) {
+                         if (response && response.result) {
+                              if (
+                                   typeof isOutlookLoggedIn === "function" &&
+                                   isOutlookLoggedIn() &&
+                                   isOutlookChecked !== null &&
+                                   isOutlookChecked.checked
+                              ) {
                                    outlookAddOrUpdateEvent(formSerializedData);
+                                   return false;
                               }
-                         }
-                         if (response.result && (isOutlookChecked == null || !isOutlookChecked.checked)) {
+
                               alert_float('success', "<?= _l("appointment_created"); ?>");
-                              setTimeout(() => {
+
+                              setTimeout(function() {
                                    window.location.reload();
                               }, 1000);
+
+                              return false;
                          }
+
+                         alert_float('danger', "Appointment not created. Please check required fields.");
+
+                         $('button[type="submit"], button.close_btn').prop('disabled', false);
+                         $('button[type="submit"]').html('Save');
+                         $('#appointment-form .modal-body').removeClass('filterBlur');
+                         $('.modal-title').html("<?= _l('new_appointment'); ?>");
+
+                         return false;
+                    },
+                    error: function(xhr) {
+                         console.error("Create appointment failed:", xhr.status, xhr.responseText);
+
+                         alert_float('danger', "Create appointment failed. Status: " + xhr.status);
+
+                         $('button[type="submit"], button.close_btn').prop('disabled', false);
+                         $('button[type="submit"]').html('Save');
+                         $('#appointment-form .modal-body').removeClass('filterBlur');
+                         $('.modal-title').html("<?= _l('new_appointment'); ?>");
+
+                         return false;
                     }
                });
                return false;
@@ -146,9 +182,17 @@
 
                var url = "<?= admin_url('appointly/appointments/fetch_contact_data'); ?>";
 
-               $.post(url, {
-                    contact_id: contact_id,
-                    lead: ($(this).attr('id') == 'rel_id') ? true : false
+               $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: "json",
+                    headers: {
+                         "X-Requested-With": "XMLHttpRequest"
+                    },
+                    data: {
+                         contact_id: contact_id,
+                         lead: ($(this).attr('id') == 'rel_id') ? true : false
+                    }
                }).done(function(response) {
                     if (response !== null) {
 

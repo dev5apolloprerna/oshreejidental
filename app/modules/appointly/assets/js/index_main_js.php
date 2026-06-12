@@ -42,18 +42,50 @@
             $(this).html("<i class=\"fa fa-refresh fa-spin fa-fw\"></i>");
         });
 
-        $("#createNewAppointment").click(function () {
-            $("#modal_wrapper").load("<?php echo admin_url('appointly/appointments'); ?>", {
-                _appointly_modal: "1",
+        $("body").off("click", "#createNewAppointment").on("click", "#createNewAppointment", function (e) {
+            e.preventDefault();
+
+            $("#modal_wrapper").html(
+                '<div class="text-center p-4"><i class="fa fa-spinner fa-spin"></i> Loading...</div>'
+            );
+
+            var postData = {
                 slug: "create"
-            }, function () {
-                if ($(".modal-backdrop.fade").hasClass("in")) {
-                    $(".modal-backdrop.fade").remove();
-                }
-                if ($("#newAppointmentModal").is(":hidden")) {
-                    $("#newAppointmentModal").modal({
-                        show: true
-                    });
+            };
+
+            if (typeof csrfData !== "undefined") {
+                postData[csrfData.token_name] = csrfData.hash;
+            }
+
+            $.ajax({
+                url: admin_url + "appointly/appointments/modal",
+                type: "POST",
+                data: postData,
+                dataType: "html",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                success: function (html) {
+                    $("#modal_wrapper").html(html);
+
+                    $(".modal-backdrop.fade.in, .modal-backdrop.show").remove();
+
+                    var $modal = $("#newAppointmentModal");
+
+                    if ($modal.length) {
+                        $modal.modal({
+                            show: true,
+                            backdrop: "static"
+                        });
+                    } else {
+                        console.error("newAppointmentModal not found in response");
+                        alert_float("danger", "Appointment modal not found.");
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Appointment modal load failed:", xhr.status, xhr.responseText);
+                    $("#modal_wrapper").html("");
+                    alert_float("danger", "Appointment modal load failed. Status: " + xhr.status);
                 }
             });
         });
@@ -61,8 +93,7 @@
 
     function appointmentUpdateModal(el) {
         var id = $(el).data("id");
-        var modal = $("#modal_wrapper").load("<?php echo admin_url('appointly/appointments'); ?>", {
-            _appointly_modal: "1",
+        var modal = $("#modal_wrapper").load("<?php echo admin_url('appointly/appointments/modal'); ?>", {
             slug: "update",
             appointment_id: id
         }, function () {
@@ -93,19 +124,30 @@
     var currentDate = todaysDate.getFullYear() + "-" + (((todaysDate.getMonth() + 1) < 10) ? "0" : "") + (todaysDate.getMonth() + 1 + "-" + ((todaysDate.getDate() < 10) ? "0" : "") + todaysDate.getDate());
 
     function initAppointmentScheduledDates() {
-        let busyDatesUrl = site_url + "/appointly/appointments_public/busyDates";
+        // Live fix: use admin_url endpoint instead of appointments_public URL.
+        // Old live URL was giving 404: /appointly/appointments_public/busyDates
+        var busyDatesUrl = admin_url + "appointly/appointments/busyDates";
 
-        $.post(busyDatesUrl).done(function (r) {
-            r = JSON.parse(r);
+        function buildAppointmentDatePicker(r) {
+            if (typeof r === "string") {
+                try {
+                    r = JSON.parse(r);
+                } catch (e) {
+                    r = [];
+                }
+            }
+
+            if (!Array.isArray(r)) {
+                r = [];
+            }
+
             var dateFormat = app.options.date_format;
             var appointmentDatePickerOptions = {
                 dayOfWeekStart: app.options.calendar_first_day,
-                // minDate: 0,
                 format: dateFormat,
                 defaultTime: "09:00",
                 allowTimes: allowedHours,
-                 todayHighlight: true,
-
+                todayHighlight: true,
                 closeOnDateSelect: 0,
                 closeOnTimeSelect: 1,
                 validateOnBlur: false,
@@ -117,10 +159,8 @@
                         var selectedGeneratedDate = ct.getFullYear() + "-" + (((ct.getMonth() + 1) < 10) ? "0" : "") + (ct.getMonth() + 1 + "-" + ((ct.getDate() < 10) ? "0" : "") + ct.getDate());
 
                         $(r).each(function (i, el) {
-
                             if (el.date == selectedGeneratedDate) {
-                                var currentTime = $("body")
-                                    .find(".xdsoft_time:contains(\"" + el.start_hour + "\")");
+                                var currentTime = $("body").find(".xdsoft_time:contains(\"" + el.start_hour + "\")");
                                 if (el.source == undefined) {
                                     currentTime.addClass("busy_google_time");
                                 } else {
@@ -131,7 +171,6 @@
                     }
                 },
                 onSelectDate: function (ct) {
-
                     var selectedDate = ct.getFullYear() + "-" + (((ct.getMonth() + 1) < 10) ? "0" : "") + (ct.getMonth() + 1 + "-" + ((ct.getDate() < 10) ? "0" : "") + ct.getDate());
 
                     setTimeout(function () {
@@ -158,6 +197,23 @@
             appointmentDatePickerOptions.format = dateFormat;
 
             $(".appointment-date").datetimepicker(appointmentDatePickerOptions);
+        }
+
+        $.ajax({
+            url: busyDatesUrl,
+            type: "POST",
+            dataType: "json",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            success: function (r) {
+                buildAppointmentDatePicker(r);
+            },
+            error: function (xhr) {
+                console.error("Busy dates load failed:", xhr.status, xhr.responseText);
+                // Do not break date picker if busy dates endpoint fails.
+                buildAppointmentDatePicker([]);
+            }
         });
     }
 

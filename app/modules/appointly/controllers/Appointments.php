@@ -20,22 +20,16 @@ class Appointments extends AdminController
      *
      * @return void
      */
-     public function index()
+    public function index()
     {
         if ($this->staff_no_view_permissions) {
             access_denied('Appointments');
         }          
 
-        if ($this->is_modal_request()) {
-            $this->render_appointment_modal();
-            return;
-        }
-
         $data['td_appointments'] = $this->getTodaysAppointments();
 
         $this->load->view('index', $data);
     }
-
 
     /**
      * Single appointment view
@@ -104,17 +98,22 @@ class Appointments extends AdminController
      */
     public function fetch_contact_data()
     {
-        if (!$this->input->is_ajax_request() || !is_staff_logged_in()) {
+        if (!is_staff_logged_in()) {
             show_404();
         }
 
         $id = $this->input->post('contact_id');
         $is_lead = $this->input->post('lead');
 
+        header('Content-Type: application/json');
+
         if ($id) {
-            header('Content-Type: application/json');
             echo json_encode($this->apm->apply_contact_data($id, $is_lead));
+            return;
         }
+
+        echo json_encode(null);
+        return;
     }
 
     /**
@@ -124,66 +123,41 @@ class Appointments extends AdminController
      */
     public function modal()
     {
-          $this->render_appointment_modal();
-    
-    }
+        // Live server can sometimes fail AJAX header detection.
+        // Validate by POST slug so modal works on both local and live.
+        $slug = $this->input->post('slug', true);
 
-    /**
-     * Alias for the appointment modal endpoint.
-     *
-     * Some production web servers reserve or block POST requests ending in
-     * `/modal`, even though the default route works in local environments.
-     * The admin appointment page uses this non-reserved alias so the same
-     * modal markup can be loaded reliably on live Linux hosting.
-     *
-     * @return void
-     */
-    public function appointment_modal()
-    {
-        $this->render_appointment_modal();
-    }
-
-    /**
-     * Check whether the current AJAX request is asking for the appointment modal.
-     *
-     * @return bool
-     */
-    private function is_modal_request()
-    {
-        return in_array($this->input->post('slug'), ['create', 'update'], true)
-            && ($this->input->post('_appointly_modal') === '1' || $this->input->is_ajax_request());
-    }
-    /**
-     * Render the create/update appointment modal.
-     *
-     * @return void
-     */
-     private function render_appointment_modal()
-    {
-        if (!$this->is_modal_request()) 
-        {
+        if (empty($slug)) {
             show_404();
         }
 
         $data['staff_members'] = $this->staff_model->get('', ['active' => 1]);
-
         $data['contacts'] = appointly_get_staff_customers();
 
-        if ($this->input->post('slug') === 'create') {
-
+        if ($slug === 'create') {
             $this->load->view('modals/create', $data);
-        } else if ($this->input->post('slug') === 'update') {
+            return;
+        }
 
-            $data['appointment_id'] = $this->input->post('appointment_id');
+        if ($slug === 'update') {
+            $appointment_id = $this->input->post('appointment_id', true);
 
-            $data['history'] = fetch_appointment_data($data['appointment_id']);
+            if (empty($appointment_id)) {
+                show_404();
+            }
+
+            $data['appointment_id'] = $appointment_id;
+            $data['history'] = fetch_appointment_data($appointment_id);
 
             if (isset($data['notes'])) {
                 $data['notes'] = htmlentities($data['notes']);
             }
 
             $this->load->view('modals/update', $data);
+            return;
         }
+
+        show_404();
     }
 
     /**
@@ -191,6 +165,47 @@ class Appointments extends AdminController
      *
      * @return void
      */
+
+    /**
+     * Busy dates for appointment date/time picker
+     * Live fix endpoint used by index_main_js.php:
+     * admin_url + "appointly/appointments/busyDates"
+     */
+    public function busyDates()
+    {
+        if (!is_staff_logged_in()) {
+            show_404();
+        }
+
+        header('Content-Type: application/json');
+
+        $busy_dates = [];
+
+        // Try common model method names if your Appointly model has one.
+        $possible_methods = [
+            'busyDates',
+            'get_busy_dates',
+            'fetch_busy_dates',
+            'getBusyDates',
+            'fetch_busy_times',
+            'get_busy_times'
+        ];
+
+        foreach ($possible_methods as $method) {
+            if (method_exists($this->apm, $method)) {
+                $result = $this->apm->{$method}();
+                if (is_array($result)) {
+                    echo json_encode($result);
+                    return;
+                }
+            }
+        }
+
+        // Safe fallback: return empty array so date picker still works.
+        echo json_encode($busy_dates);
+        return;
+    }
+
     public function modal_internal_crm()
     {
         if (!$this->input->is_ajax_request()) {
