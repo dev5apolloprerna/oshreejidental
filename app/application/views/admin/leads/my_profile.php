@@ -328,7 +328,7 @@
                 echo ' hide';
             } ?>">
             <div class="row lead-edit-row lead-edit-main-selects">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?php
             $selected = '';
             if (isset($lead)) {
@@ -339,18 +339,21 @@
             echo render_leads_status_select($statuses, $selected, 'lead_add_edit_status');
           ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?php
                     $selected = (isset($lead) ? $lead->source : get_option('leads_default_source'));
                     echo render_leads_source_select($sources, $selected, 'lead_add_edit_source');
                 ?>
             </div>
 
-            <?php
-                $selected_branch_id = (isset($lead) ? $lead->branch_id : (isset($current_branch_id) ? $current_branch_id : ''));
-            ?>
-            <input type="hidden" name="branch_id" value="<?php echo e($selected_branch_id); ?>">
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <?php
+                    $selected = (isset($lead) ? $lead->branch_id : (isset($current_branch_id) ? $current_branch_id : ''));
+                    echo render_select('branch_id', $branches, ['branchid', 'branch'], 'Branch', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
+                ?>
+            </div>
+            <div class="col-md-3">
+            <div class="col-md-3">
                 <?php
                $assigned_attrs = [];
                $selected       = (isset($lead) ? $lead->assigned : get_staff_user_id());
@@ -364,7 +367,7 @@
                }
                echo render_select('assigned', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_assigned', $selected, $assigned_attrs); ?>
             </div>
-             </div>
+            <
             <div class="clearfix"></div>
             <hr class="mtop5 mbot10" />
             <div class="col-md-12">
@@ -378,8 +381,8 @@
             </div>
         </div>
             <div class="clearfix"></div>
-            <hr class="no-mtop mbot15" />
                         <div class="row lead-edit-row lead-edit-details-row">
+            <hr class="no-mtop mbot15" />
             <div class="col-md-6">
                 <?php $value = (isset($lead) ? $lead->name : ''); ?>
                 <?php echo render_input('name', 'lead_add_edit_name', $value); ?>
