@@ -77,31 +77,41 @@
         $(function() {
             $(form_id).appFormValidator({
 
+
+                errorPlacement: function(error, element) {
+                    if (element.attr('type') == 'radio') {
+                        error.appendTo(element.parent().parent().parent());
+                    } else {
+                        error.insertAfter(element.parent());
+                    }
+                },
+
                 onSubmit: function(form) {
 
-                    $("input[type=file]").each(function() {
-                        if ($(this).val() === "") {
-                            $(this).prop('disabled', true);
-                        }
+                    var $form = $(form);
+                    var disabledFileInputs = $form.find('input[type=file]').filter(function() {
+                        return $(this).val() === '';
                     });
+                    disabledFileInputs.prop('disabled', true);
                     $('#form_submit .fa-spin').removeClass('hide');
 
-                    var formURL = $(form).attr("action");
-                    var formData = new FormData($(form)[0]);
+                    var formURL = $form.attr('action');
+                    var formData = new FormData(form);
 
                     $.ajax({
-                        type: $(form).attr('method'),
+                        type: $form.attr('method'),
                         data: formData,
-                        mimeType: $(form).attr('enctype'),
+                        dataType: 'json',
                         contentType: false,
                         cache: false,
                         processData: false,
                         url: formURL
                     }).always(function() {
+                        disabledFileInputs.prop('disabled', false);
                         $('#form_submit').prop('disabled', false);
                         $('#form_submit .fa-spin').addClass('hide');
                     }).done(function(response) {
-                        response = JSON.parse(response);
+                        //response = JSON.parse(response);
                         if (form_redirect_url !== '0') {
                             if (window.top) {
                                 window.top.location.href = form_redirect_url;
@@ -118,18 +128,22 @@
                             }
                             return;
                         }
-                        if (response.success == false) {
-                            $('#recaptcha_response_field').html(response
-                                .message); // error message
-                        } else if (response.success == true) {
-                            $(form_id).remove();
+                         if (response.success == false || response.success == 'false') {
+                            $('#recaptcha_response_field').html(response.message || <?php echo json_encode(_l('recaptcha_error')); ?>);
+                        } else if (response.success == true || response.success == 'true') {
+                            var scrollTarget = $form.offset() || $('#response').offset();
+
+                            $form.remove();
+
                             $('#response').html('<div class="alert alert-success">' +
                                 response.message + '</div>');
-                            $('html,body').animate({
-                                scrollTop: $("#online_payment_form").offset().top
-                            }, 'slow');
+                                                        if (scrollTarget) {
+                                $('html,body').animate({
+                                    scrollTop: scrollTarget.top
+                                }, 'slow');
+                            }
                         } else {
-                            $('#response').html('Something went wrong...');
+                            $('#response').html('<div class="alert alert-danger">Something went wrong...</div>');
                         }
                         if (typeof(grecaptcha) != 'undefined') {
                             grecaptcha.reset();
@@ -142,8 +156,10 @@
                             $('#response').html(
                                 '<div class="alert alert-danger">Some fields that are required are not filled properly.</div>'
                             );
+                        } else if (data.responseJSON && data.responseJSON.message) {
+                            $('#response').html('<div class="alert alert-danger">' + data.responseJSON.message + '</div>');
                         } else {
-                            $('#response').html(data.responseText);
+                            $('#response').html('<div class="alert alert-danger">Unable to submit the lead. Please check the form and try again.</div>');
                         }
                     });
                     return false;

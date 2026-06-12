@@ -263,7 +263,7 @@ class Forms extends ClientsController
      */
     public function wtl($key)
     {
-        $this->load->model('leads_model');
+        $this->load->model('tasks_model');
         $form = $this->leads_model->get_form([
             'form_key' => $key,
         ]);
@@ -303,12 +303,16 @@ class Forms extends ClientsController
                 }
 
                 if (show_recaptcha() && $form->recaptcha == 1) {
-                    if (!do_recaptcha_validation($post_data['g-recaptcha-response'])) {
-                        echo json_encode([
-                            'success' => false,
-                            'message' => _l('recaptcha_error'),
-                        ]);
-                        die;
+                    $recaptchaResponse = isset($post_data['g-recaptcha-response']) ? $post_data['g-recaptcha-response'] : '';
+
+                    if (!do_recaptcha_validation($recaptchaResponse)) {
+                        $this->output
+                            ->set_content_type('application/json')
+                            ->set_output(json_encode([
+                                'success' => false,
+                                'message' => _l('recaptcha_error'),
+                            ]));
+                        return;
                     }
                 }
 
@@ -479,6 +483,12 @@ class Forms extends ClientsController
                     $regular_fields['dateadded']    = date('Y-m-d H:i:s');
                     $regular_fields['from_form_id'] = $form->id;
                     $regular_fields['is_public']    = $form->mark_public;
+                    $regular_fields['country']      = isset($regular_fields['country']) && $regular_fields['country'] !== '' ? $regular_fields['country'] : 0;
+                    $regular_fields['lead_value']  = isset($regular_fields['lead_value']) && $regular_fields['lead_value'] !== '' ? $regular_fields['lead_value'] : 0;
+
+                    if (isset($regular_fields['email'])) {
+                        $regular_fields['email'] = trim($regular_fields['email']);
+                    }
                     
                     if ($this->db->field_exists('branch_id', db_prefix() . 'leads')) {
                         $regular_fields['branch_id'] = isset($form->branch_id) && is_numeric($form->branch_id) ? (int) $form->branch_id : 0;
@@ -574,8 +584,10 @@ class Forms extends ClientsController
                     $response['message'] = $form->success_submit_msg;
                 }
 
-                echo json_encode($response);
-                die;
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+                return;
             }
         }
 
