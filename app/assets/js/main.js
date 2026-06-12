@@ -1282,6 +1282,12 @@ $(function () {
     init_lead(openLeadID, get_url_param("edit") ? true : false);
   }
 
+// Open a new lead without relying on inline onclick globals.
+  $("body").on("click", "[data-init-lead]", function (e) {
+    e.preventDefault();
+    init_lead();
+  });
+
   // Status color change
   $("body").on("click", ".leads-kan-ban .cpicker", function () {
     var color = $(this).data("color");
@@ -4833,6 +4839,10 @@ function init_lead(id, isEdit) {
   }
 }
 
+// Inline onclick handlers in lead views call this function directly.
+// Attach it explicitly so production/minified assets always expose it on window.
+window.init_lead = init_lead;
+
 // Lead form validation
 function validate_lead_form() {
   var validationObject = {
@@ -4926,10 +4936,26 @@ function lead_profile_form_handler(form) {
   form = $(form);
   var data = form.serialize();
   var leadid = $("#lead-modal").find('input[name="leadid"]').val();
-  $(".lead-save-btn").addClass("disabled");
-  $.post(form.attr("action"), data)
+var $saveButtons = $(".lead-save-btn");
+
+  $saveButtons.addClass("disabled").prop("disabled", true);
+
+  $.ajax({
+    url: form.attr("action"),
+    type: "POST",
+    data: data,
+    dataType: "json",
+  })
     .done(function (response) {
-      response = JSON.parse(response);
+      if (!response || response.success === false || response.success === "false") {
+        alert_float(
+          "danger",
+          response && response.message
+            ? response.message
+            : app.lang.error_occured || "Something went wrong while saving the lead."
+        );
+        return;
+      }
       if (response.message !== "") {
         alert_float("success", response.message);
       }
@@ -4951,7 +4977,17 @@ function lead_profile_form_handler(form) {
       }
     })
     .fail(function (data) {
-      alert_float("danger", data.responseText);
+      var message =
+        data.responseJSON && data.responseJSON.message
+          ? data.responseJSON.message
+          : data.responseText || app.lang.error_occured || "Something went wrong while saving the lead.";
+
+      alert_float("danger", message);
+      return false;
+    })
+    .always(function () {
+      $saveButtons.removeClass("disabled").prop("disabled", false);
+
       return false;
     });
   return false;
@@ -5096,6 +5132,8 @@ function init_lead_modal_data(id, url, isEdit) {
       alert_float("danger", data.responseText);
     });
 }
+
+window.init_lead_modal_data = init_lead_modal_data;
 
 function print_lead_information() {
   var $leadViewWrapper = $("#leadViewWrapper").clone();

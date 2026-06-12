@@ -5,18 +5,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="_buttons tw-mb-2 sm:tw-mb-4">
-                    <a href="#" onclick="init_lead(); return false;"
+                    <a href="#" data-init-lead
                         class="btn btn-primary mright5 pull-left display-block">
                         <i class="fa-regular fa-plus tw-mr-1"></i>
                         <?php echo _l('new_lead'); ?>
                     </a>
-                    <?php if (is_admin() || get_option('allow_non_admin_members_to_import_leads') == '1') { ?>
+                    <?php //if (is_admin() || get_option('allow_non_admin_members_to_import_leads') == '1') { ?>
                     <a href="<?php echo admin_url('leads/import'); ?>"
                         class="btn btn-primary pull-left display-block hidden-xs">
                         <i class="fa-solid fa-upload tw-mr-1"></i>
                         <?php echo _l('import_leads'); ?>
                     </a>
-                    <?php } ?>
+                    <?php //} ?>
                     <div class="row">
                         <div class="col-sm-5 ">
                             <a href="#" class="btn btn-default btn-with-tooltip" data-toggle="tooltip"

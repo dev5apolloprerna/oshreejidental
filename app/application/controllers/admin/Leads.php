@@ -1218,7 +1218,7 @@ class Leads extends AdminController
 
     public function import()
     {
-        if (!is_admin() && get_option('allow_non_admin_members_to_import_leads') != '1') {
+        if (!is_staff_member()) {
             access_denied('Leads Import');
         }
 
