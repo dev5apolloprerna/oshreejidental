@@ -43,7 +43,8 @@
         });
 
         $("#createNewAppointment").click(function () {
-            $("#modal_wrapper").load("<?php echo admin_url('appointly/appointments/modal'); ?>", {
+            $("#modal_wrapper").load("<?php echo admin_url('appointly/appointments'); ?>", {
+                _appointly_modal: "1",
                 slug: "create"
             }, function () {
                 if ($(".modal-backdrop.fade").hasClass("in")) {
@@ -60,7 +61,8 @@
 
     function appointmentUpdateModal(el) {
         var id = $(el).data("id");
-        var modal = $("#modal_wrapper").load("<?php echo admin_url('appointly/appointments/modal'); ?>", {
+        var modal = $("#modal_wrapper").load("<?php echo admin_url('appointly/appointments'); ?>", {
+            _appointly_modal: "1",
             slug: "update",
             appointment_id: id
         }, function () {
