@@ -19,8 +19,12 @@ class Leads_model extends App_Model
 
     public function get_current_branch_id()
     {
+        if (!$this->db->table_exists(db_prefix() . 'branch')) {
+            return 0;
+        }
+
         $branchDb = (string) $this->input->cookie('branch');
-        if ($branchDb !== '') {
+        if ($branchDb !== '' && $this->db->table_exists(db_prefix() . 'branch')) {
             $row = $this->db->select('branchid')
                 ->where('branch_db', $branchDb)
                 ->get(db_prefix() . 'branch')
@@ -31,7 +35,7 @@ class Leads_model extends App_Model
             }
         }
 
-        if (is_staff_logged_in()) {
+        if (is_staff_logged_in() && $this->db->field_exists('branch_id', db_prefix() . 'staff')) {
             $row = $this->db->select('branch_id')
                 ->where('staffid', get_staff_user_id())
                 ->get(db_prefix() . 'staff')
@@ -59,6 +63,11 @@ class Leads_model extends App_Model
             ->get(db_prefix() . 'branch')
             ->result_array();
     }
+     public function has_leads_branch_support()
+    {
+        return $this->db->table_exists(db_prefix() . 'branch')
+            && $this->db->field_exists('branch_id', db_prefix() . 'leads');
+    }
 
     private function normalize_branch_id($branchId)
     {
@@ -68,10 +77,24 @@ class Leads_model extends App_Model
 
     public function get($id = '', $where = [])
     {
-        $this->db->select('*,' . db_prefix() . 'leads.name, ' . db_prefix() . 'leads.id,' . db_prefix() . 'leads_status.name as status_name,' . db_prefix() . 'leads_sources.name as source_name, ' . db_prefix() . 'branch.branch as branch_name, ' . db_prefix() . 'branch.branch_code as branch_code');
+
+         $select = '*,' . db_prefix() . 'leads.name, ' . db_prefix() . 'leads.id,' . db_prefix() . 'leads_status.name as status_name,' . db_prefix() . 'leads_sources.name as source_name';
+
+        if ($this->has_leads_branch_support()) {
+            $select .= ', ' . db_prefix() . 'branch.branch as branch_name, ' . db_prefix() . 'branch.branch_code as branch_code';
+        } else {
+            $select .= ', NULL as branch_name, NULL as branch_code';
+        }
+
+        $this->db->select($select, false);
+
         $this->db->join(db_prefix() . 'leads_status', db_prefix() . 'leads_status.id=' . db_prefix() . 'leads.status', 'left');
         $this->db->join(db_prefix() . 'leads_sources', db_prefix() . 'leads_sources.id=' . db_prefix() . 'leads.source', 'left');
-        $this->db->join(db_prefix() . 'branch', db_prefix() . 'branch.branchid=' . db_prefix() . 'leads.branch_id', 'left');
+
+        if ($this->has_leads_branch_support()) {
+            $this->db->join(db_prefix() . 'branch', db_prefix() . 'branch.branchid=' . db_prefix() . 'leads.branch_id', 'left');
+        }
+
 
         $this->db->where($where);
         if (is_numeric($id)) {
@@ -140,7 +163,7 @@ class Leads_model extends App_Model
             unset($data['custom_contact_date']);
         }
 
-        $data['description'] = nl2br($data['description']);
+        $data['description'] = nl2br($data['description'] ?? '');
         $data['dateadded']   = date('Y-m-d H:i:s');
         $data['addedfrom']   = get_staff_user_id();
 
@@ -157,11 +180,12 @@ class Leads_model extends App_Model
             unset($data['custom_fields']);
         }
 
-        $data['address'] = trim($data['address']);
+        $data['address'] = trim($data['address'] ?? '');
         $data['address'] = nl2br($data['address']);
 
-        $data['email'] = trim($data['email']);
-        $data['lead_value']   = $data['lead_value'] != '' ? $data['lead_value'] : 0;
+        $data['email'] = trim($data['email'] ?? '');
+        $data['lead_value'] = isset($data['lead_value']) && $data['lead_value'] !== '' ? $data['lead_value'] : 0;
+
 
         if ($this->db->field_exists('branch_id', db_prefix() . 'leads')) {
             $data['branch_id'] = isset($data['branch_id']) && $data['branch_id'] !== ''
@@ -184,7 +208,7 @@ class Leads_model extends App_Model
                 handle_custom_fields_post($insert_id, $custom_fields);
             }
 
-            $this->lead_assigned_member_notification($insert_id, $data['assigned']);
+            $this->lead_assigned_member_notification($insert_id, $data['assigned'] ?? 0);
             hooks()->do_action('lead_created', $insert_id);
 
             return $insert_id;
@@ -315,7 +339,7 @@ class Leads_model extends App_Model
         }
 
 
-        if ($this->db->field_exists('branch_id', db_prefix() . 'leads')) {
+        if ($this->has_leads_branch_support()) {
             $data['branch_id'] = isset($data['branch_id']) && $data['branch_id'] !== ''
                 ? $this->normalize_branch_id($data['branch_id'])
                 : 0;
@@ -333,10 +357,14 @@ class Leads_model extends App_Model
             unset($data['remove_attachments']);
         }
 
-        $data['address'] = trim($data['address']);
-        $data['address'] = nl2br($data['address']);
+        if (isset($data['address'])) {
+            $data['address'] = trim($data['address']);
+            $data['address'] = nl2br($data['address']);
+        }
 
-        $data['email'] = trim($data['email']);
+        if (isset($data['email'])) {
+            $data['email'] = trim($data['email']);
+        }
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'leads', $data);
@@ -986,11 +1014,17 @@ class Leads_model extends App_Model
             $log['full_name'] = '[CRON]';
         }
         if ($this->db->field_exists('branch_id', db_prefix() . 'lead_activity_log')) {
-            $lead = $this->db->select('branch_id')
-                ->where('id', $id)
-                ->get(db_prefix() . 'leads')
-                ->row();
-            $log['branch_id'] = $lead && isset($lead->branch_id) ? $this->normalize_branch_id($lead->branch_id) : $this->get_current_branch_id();
+            $leadBranchId = 0;
+
+            if ($this->db->field_exists('branch_id', db_prefix() . 'leads')) {
+                $lead = $this->db->select('branch_id')
+                    ->where('id', $id)
+                    ->get(db_prefix() . 'leads')
+                    ->row();
+                $leadBranchId = $lead && isset($lead->branch_id) ? $this->normalize_branch_id($lead->branch_id) : 0;
+            }
+
+            $log['branch_id'] = $leadBranchId ?: $this->get_current_branch_id();
         }
 
 

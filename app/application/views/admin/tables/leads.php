@@ -6,6 +6,7 @@ $this->ci->load->model('gdpr_model');
 $this->ci->load->model('leads_model');
 $this->ci->load->model('staff_model');
 $statuses = $this->ci->leads_model->get_status();
+$hasLeadBranchSupport = $this->ci->leads_model->has_leads_branch_support();
 
 if (is_gdpr() && get_option('gdpr_enable_consent_for_leads') == '1') {
     $consent_purposes = $this->ci->gdpr_model->get_consent_purposes();
@@ -43,7 +44,10 @@ $rules = [
             'label' => $source['name'],
         ]);
     }),
-     App_table_filter::new('branch_id', 'MultiSelectRule')->label('Branch')->options(function ($ci) {
+];
+
+if ($hasLeadBranchSupport) {
+    $rules[] = App_table_filter::new('branch_id', 'MultiSelectRule')->label('Branch')->options(function ($ci) {
         return collect($ci->leads_model->get_branches_for_select())->map(fn ($branch) => [
             'value' => $branch['branchid'],
             'label' => $branch['branch'],
@@ -52,8 +56,8 @@ $rules = [
         $value = array_map('intval', $value);
 
         return db_prefix() . 'leads.branch_id ' . $sqlOperator['operator'] . ' (' . implode(', ', $value) . ')';
-    }),
-];
+    });
+}
 
 $rules[] = App_table_filter::new('assigned', 'SelectRule')->label(_l('leads_dt_assigned'))
     ->withEmptyOperators()
@@ -85,7 +89,7 @@ if (isset($consent_purposes)) {
 }
 
 return App_table::find('leads')
-    ->outputUsing(function ($params) use ($statuses) {
+    ->outputUsing(function ($params) use ($statuses, $hasLeadBranchSupport) {
         extract($params);
 
         $lockAfterConvert      = get_option('lead_lock_after_convert_to_customer');
@@ -111,7 +115,7 @@ return App_table::find('leads')
             'firstname as assigned_firstname',
             db_prefix() . 'leads_status.name as status_name',
             db_prefix() . 'leads_sources.name as source_name',
-            db_prefix() . 'branch.branch as branch_name',
+            ($hasLeadBranchSupport ? db_prefix() . 'branch.branch' : 'NULL') . ' as branch_name',
             db_prefix() . 'leads.lastcontact as lastcontact',
             db_prefix() . 'leads.dateadded as dateadded',
         ]);
@@ -123,8 +127,11 @@ return App_table::find('leads')
             'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'leads.assigned',
             'LEFT JOIN ' . db_prefix() . 'leads_status ON ' . db_prefix() . 'leads_status.id = ' . db_prefix() . 'leads.status',
             'JOIN ' . db_prefix() . 'leads_sources ON ' . db_prefix() . 'leads_sources.id = ' . db_prefix() . 'leads.source',
-            'LEFT JOIN ' . db_prefix() . 'branch ON ' . db_prefix() . 'branch.branchid = ' . db_prefix() . 'leads.branch_id',
         ];
+                if ($hasLeadBranchSupport) {
+            $join[] = 'LEFT JOIN ' . db_prefix() . 'branch ON ' . db_prefix() . 'branch.branchid = ' . db_prefix() . 'leads.branch_id';
+        }
+
 
         foreach ($custom_fields as $key => $field) {
             $selectAs = (is_cf_date($field) ? 'date_picker_cvalue_' . $key : 'cvalue_' . $key);
@@ -150,7 +157,7 @@ return App_table::find('leads')
             @$this->ci->db->query('SET SQL_BIG_SELECTS=1');
         }
 
-        $additionalColumns = hooks()->apply_filters('leads_table_additional_columns_sql', [
+        $additionalColumns = [
             db_prefix() . 'leads.junk as junk',
             db_prefix() . 'leads.lost as lost',
             db_prefix() . 'leads_status.color as color',
@@ -160,8 +167,10 @@ return App_table::find('leads')
             db_prefix() . 'leads.addedfrom as addedfrom',
             '(SELECT count(leadid) FROM ' . db_prefix() . 'clients WHERE ' . db_prefix() . 'clients.leadid=' . db_prefix() . 'leads.id) as is_converted',
             db_prefix() . 'leads.zip as zip',
-            db_prefix() . 'leads.branch_id as branch_id',
-        ]);
+            ($hasLeadBranchSupport ? db_prefix() . 'leads.branch_id' : '0') . ' as branch_id',
+        ];
+
+        $additionalColumns = hooks()->apply_filters('leads_table_additional_columns_sql', $additionalColumns);
 
         $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalColumns);
 
