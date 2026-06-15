@@ -4,10 +4,6 @@
     <div class="content">
         <?php if (isset($member)) { ?>
         <?php $this->load->view('admin/staff/stats'); ?>
-        <div class="member">
-            <?php echo form_hidden('isedit'); ?>
-            <?php echo form_hidden('memberid', $member->staffid); ?>
-        </div>
         <?php } ?>
         <div class="row">
             <?php if (isset($member)) { ?>
@@ -38,7 +34,11 @@
                 </div>
             </div>
             <?php } ?>
-            <?php echo form_open_multipart($this->uri->uri_string(), ['class' => 'staff-form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart($this->uri->uri_string(), ['class' => 'staff-form', 'autocomplete' => 'off', 'id' => 'staff-form']); ?>
+            <?php if (isset($member)) { ?>
+            <input type="hidden" id="is_edit_mode" value="1">
+            <input type="hidden" id="memberid_for_validation" value="<?php echo e($member->staffid); ?>">
+            <?php } ?>
             <div class="col-md-<?php if (!isset($member)) {
     echo '8 col-md-offset-2';
 } else {
@@ -106,7 +106,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="form-group">
+                                <?php } ?>
+                                <div class="form-group">
                                     <label for="doctor_sign" class="profile-image"><?php echo _l('staff_doctor_sign'); ?></label>
                                     <input type="file" name="doctor_sign" class="form-control" id="doctor_sign" accept="image/*">
                                 </div>
@@ -122,8 +123,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php } ?>
-                                
                                 <?php } ?>
                                 <?php $value = (isset($member) ? $member->firstname : ''); ?>
                                 <?php $attrs = (isset($member) ? [] : ['autofocus' => true]); ?>
@@ -332,7 +331,7 @@
                 </div>
             </div>
             <div class="btn-bottom-toolbar text-right">
-                <button type="submit" class="btn btn-primary"><?php echo _l('submit'); ?></button>
+                <button type="submit" id="staff-save-btn" class="btn btn-primary"><?php echo _l('submit'); ?></button>
             </div>
             <?php echo form_close(); ?>
             <?php if (isset($member)) { ?>
@@ -619,33 +618,56 @@
 
         init_roles_permissions();
 
-        appValidateForm($('.staff-form'), {
-            firstname: 'required',
-            lastname: 'required',
-            username: 'required',
-            password: {
-                required: {
-                    depends: function(element) {
-                        return ($('input[name="isedit"]').length == 0) ? true : false
-                    }
-                }
-            },
-            email: {
-                required: true,
-                email: true,
-                remote: {
-                    url: admin_url + "misc/staff_email_exists",
-                    type: 'post',
-                    data: {
-                        email: function() {
-                            return $('input[name="email"]').val();
-                        },
-                        memberid: function() {
-                            return $('input[name="memberid"]').val();
-                        }
-                    }
-                }
+        // Custom validation: avoids hidden jQuery remote-validation blocking the save button.
+        // Server/controller will still validate duplicate email.
+        $('#staff-form').on('submit', function(e) {
+            var $form = $(this);
+            var errors = [];
+            var isEdit = $('#is_edit_mode').length > 0;
+            var firstname = $.trim($form.find('[name="firstname"]').val());
+            var lastname = $.trim($form.find('[name="lastname"]').val());
+            var email = $.trim($form.find('[name="email"]').val());
+            var password = $.trim($form.find('[name="password"]').val());
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            $('.staff-form-error-box').remove();
+            $form.find('.has-error').removeClass('has-error');
+
+            if (firstname === '') {
+                errors.push('First name is required.');
+                $form.find('[name="firstname"]').closest('.form-group').addClass('has-error');
             }
+
+            if (lastname === '') {
+                errors.push('Last name is required.');
+                $form.find('[name="lastname"]').closest('.form-group').addClass('has-error');
+            }
+
+            if (email === '') {
+                errors.push('Email is required.');
+                $form.find('[name="email"]').closest('.form-group').addClass('has-error');
+            } else if (!emailRegex.test(email)) {
+                errors.push('Please enter a valid email address.');
+                $form.find('[name="email"]').closest('.form-group').addClass('has-error');
+            }
+
+            if (!isEdit && password === '') {
+                errors.push('Password is required for new staff.');
+                $form.find('[name="password"]').closest('.form-group').addClass('has-error');
+            }
+
+            if (errors.length > 0) {
+                e.preventDefault();
+                $('a[href="#tab_staff_profile"]').tab('show');
+
+                var html = '<div class="alert alert-danger staff-form-error-box"><strong>Please fix below error:</strong><br>' + errors.join('<br>') + '</div>';
+                $('#tab_staff_profile').prepend(html);
+                $('html, body').animate({ scrollTop: $('.staff-form-error-box').offset().top - 100 }, 300);
+                return false;
+            }
+
+            $('#staff-save-btn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Saving...');
+            return true;
         });
     });
     </script>

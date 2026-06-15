@@ -1871,6 +1871,7 @@ CREATE TABLE `tblstaff` (
   `password` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
   `datecreated` datetime NOT NULL,
   `profile_image` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `doctor_sign` varchar(300) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_ip` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `last_activity` datetime DEFAULT NULL,
