@@ -382,7 +382,7 @@ class Staff_model extends App_Model
 
         if (!$permissions && !is_array($permissions)) {
             $this->db->where('staff_id', $id);
-            $permissions = $this->db->get('staff_permissions')->result_array();
+            $permissions = $this->db->get(db_prefix() . 'staff_permissions')->result_array();
 
             $this->app_object_cache->add('staff-' . $id . '-permissions', $permissions);
         }
@@ -402,6 +402,10 @@ class Staff_model extends App_Model
         if (isset($data['fakepasswordremembered'])) {
             unset($data['fakepasswordremembered']);
         }
+
+        // These are helper fields for the view/validation only.
+        // They are not columns in tblstaff, so never insert them.
+        unset($data['isedit'], $data['memberid']);
 
         // First check for all cases if the email exists.
         $data = hooks()->apply_filters('before_create_staff_member', $data);
@@ -521,6 +525,10 @@ class Staff_model extends App_Model
         if (isset($data['fakepasswordremembered'])) {
             unset($data['fakepasswordremembered']);
         }
+
+        // These are helper fields for the view/validation only.
+        // They are not columns in tblstaff, so never update them.
+        unset($data['isedit'], $data['memberid']);
 
         $data = hooks()->apply_filters('before_update_staff_member', $data, $id);
 
@@ -662,7 +670,7 @@ class Staff_model extends App_Model
     public function update_permissions($permissions, $id)
     {
         $this->db->where('staff_id', $id);
-        $this->db->delete('staff_permissions');
+        $this->db->delete(db_prefix() . 'staff_permissions');
 
         $is_staff_member = is_staff_member($id);
 
@@ -674,7 +682,7 @@ class Staff_model extends App_Model
                     continue;
                 }
 
-                $this->db->insert('staff_permissions', ['staff_id' => $id, 'feature' => $feature, 'capability' => $capability]);
+                $this->db->insert(db_prefix() . 'staff_permissions', ['staff_id' => $id, 'feature' => $feature, 'capability' => $capability]);
             }
         }
 
