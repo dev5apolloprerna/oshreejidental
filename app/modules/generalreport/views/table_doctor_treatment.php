@@ -2,6 +2,32 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+if (!function_exists('doctor_treatment_report_clean_cell')) {
+    /**
+     * DataTables JSON encoding fails when live data contains malformed UTF-8.
+     * Normalize report values before adding them to the response.
+     */
+    function doctor_treatment_report_clean_cell($value)
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        $value = (string) $value;
+
+        if (function_exists('mb_check_encoding') && !mb_check_encoding($value, 'UTF-8')) {
+            $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+        } elseif (function_exists('iconv')) {
+            $converted = @iconv('UTF-8', 'UTF-8//IGNORE', $value);
+            if ($converted !== false) {
+                $value = $converted;
+            }
+        }
+
+        return $value;
+    }
+}
+
 $aColumns = [
     db_prefix() . 'appointment_treatment.id as id',
     'COALESCE(CONCAT(' . db_prefix() . 'contacts.firstname, " ", ' . db_prefix() . 'contacts.lastname), ' . db_prefix() . 'clients.company) as patient_name',
@@ -29,7 +55,7 @@ $startDate = $this->ci->input->get('start_date');
 $endDate = $this->ci->input->get('end_date');
 
 if ($staffId != '') {
-    $filters[] = 'AND ' . db_prefix() . 'appointment_treatment.staff = ' . $this->ci->db->escape_str($staffId);
+    $filters[] = 'AND ' . db_prefix() . 'appointment_treatment.staff = ' . (int) $staffId;
 }
 
 if ($startDate != '' && $endDate != '') {
@@ -52,11 +78,11 @@ foreach ($rResult as $aRow) {
     $row = [];
 
     $row[] = $aRow['id'];
-    $row[] = e($aRow['patient_name']);
-    $row[] = e($aRow['doctor_name']);
+    $row[] = e(doctor_treatment_report_clean_cell($aRow['patient_name']));
+    $row[] = e(doctor_treatment_report_clean_cell($aRow['doctor_name']));
     $row[] = _dt($aRow['treatment_date']);
-    $row[] = nl2br(e($aRow['treatment_text']));
-    $row[] = nl2br(e($aRow['appointment_comment']));
+    $row[] = nl2br(e(doctor_treatment_report_clean_cell($aRow['treatment_text'])));
+    $row[] = nl2br(e(doctor_treatment_report_clean_cell($aRow['appointment_comment'])));
 
     $output['aaData'][] = $row;
 }
