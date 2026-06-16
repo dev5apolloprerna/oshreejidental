@@ -42,8 +42,9 @@ function festival_module_init_menu_items()
     $CI = &get_instance();
 
     $branchMenuAccess = function_exists('app_staff_has_branch_menu_access') ? app_staff_has_branch_menu_access() : is_admin();
-
-    if ($branchMenuAccess) {
+    $isAdminBranch = function_exists('app_is_admin_branch_context') ? app_is_admin_branch_context() : true;
+    
+    if ($branchMenuAccess && $isAdminBranch) {
 	    $CI->app_menu->add_sidebar_menu_item('festival', [
 	        'name'     => _l('festival'),
 	        'href'     => admin_url('festival/festival'),

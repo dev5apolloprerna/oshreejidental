@@ -19,6 +19,28 @@ if (!function_exists('app_has_branch_context')) {
     }
 }
 
+if (!function_exists('app_is_admin_branch_context')) {
+    /**
+     * The admin branch uses the main database. Other branch logins store their
+     * database name in the branch cookie, so only an empty/main branch cookie
+     * should be treated as the admin branch.
+     */
+    function app_is_admin_branch_context()
+    {
+        $CI = &get_instance();
+        $branch = isset($CI->input) ? (string) $CI->input->cookie('branch') : '';
+
+        if ($branch === '' && isset($_COOKIE['branch'])) {
+            $branch = (string) $_COOKIE['branch'];
+        }
+
+        $branch = trim($branch);
+
+        return $branch === '' || $branch === 'u614622744_main_db';
+    }
+}
+
+
 if (!function_exists('app_staff_has_branch_menu_access')) {
     /**
      * Branch staff should see the same main sidebar as admins/managers.
@@ -40,6 +62,9 @@ if (!function_exists('app_branch_staff_can')) {
         if ($feature === 'branch' && app_has_branch_context()) {
             return false;
         }
+        if ($feature === 'festival' && !app_is_admin_branch_context()) {
+            return false;
+        }
         if ($can || !app_staff_has_branch_menu_access($staff_id)) {
             return $can;
         }
@@ -49,7 +74,6 @@ if (!function_exists('app_branch_staff_can')) {
             'branch',
             'currencies',
             'customers',
-            'festival',
             'generalreport',
             'items',
             'invoices',
