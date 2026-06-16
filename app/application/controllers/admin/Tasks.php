@@ -106,17 +106,17 @@ class Tasks extends AdminController
     public function switch_kanban($set = 0, $manual = false)
     {
         if ($set == 1) {
-            $set = 'false';
+            $set = 'false'; // list view
         } else {
-            $set = 'true';
+            $set = 'true'; // grid / kanban view
         }
 
         $this->session->set_userdata([
             'tasks_kanban_view' => $set,
         ]);
-        
+
         if ($manual == false) {
-            redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
+            redirect(admin_url('tasks'));
         }
     }
 
