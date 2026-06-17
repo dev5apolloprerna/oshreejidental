@@ -28,16 +28,26 @@ if (!function_exists('doctor_treatment_report_clean_cell')) {
     }
 }
 
+// -----------------------------------------------------------------------
+// FIX 1: Removed SQL aliases (AS ...) from $aColumns.
+//         Perfex/Workice data_tables_init uses column expressions as array
+//         keys; aliases break key lookup and can also confuse ORDER BY.
+// FIX 2: $sIndexColumn must match the exact expression used in $aColumns.
+// FIX 3: Filters are pushed directly into $where (not double-wrapped via
+//         prepare_dt_filter inside an extra AND (...) group), which was
+//         producing malformed SQL and a PHP error instead of JSON.
+// -----------------------------------------------------------------------
+
 $aColumns = [
-    db_prefix() . 'appointment_treatment.id as id',
-    'COALESCE(CONCAT(' . db_prefix() . 'contacts.firstname, " ", ' . db_prefix() . 'contacts.lastname), ' . db_prefix() . 'clients.company) as patient_name',
-    'CONCAT(' . db_prefix() . 'staff.firstname, " ", ' . db_prefix() . 'staff.lastname) as doctor_name',
-    db_prefix() . 'appointment_treatment.created_date as treatment_date',
-    db_prefix() . 'appointment_treatment.treatment as treatment_text',
-    db_prefix() . 'appointly_appointments.description as appointment_comment',
+    db_prefix() . 'appointment_treatment.id',
+    'COALESCE(CONCAT(' . db_prefix() . 'contacts.firstname, " ", ' . db_prefix() . 'contacts.lastname), ' . db_prefix() . 'clients.company)',
+    'CONCAT(' . db_prefix() . 'staff.firstname, " ", ' . db_prefix() . 'staff.lastname)',
+    db_prefix() . 'appointment_treatment.created_date',
+    db_prefix() . 'appointment_treatment.treatment',
+    db_prefix() . 'appointly_appointments.description',
 ];
 
-$sIndexColumn = 'id';
+$sIndexColumn = db_prefix() . 'appointment_treatment.id';
 $sTable       = db_prefix() . 'appointment_treatment';
 
 $join = [
@@ -47,27 +57,27 @@ $join = [
     'LEFT JOIN ' . db_prefix() . 'clients ON ' . db_prefix() . 'contacts.userid = ' . db_prefix() . 'clients.userid',
 ];
 
+// Build WHERE clauses directly — no extra wrapping needed.
 $where = [];
-$filters = [];
 
-$staffId = $this->ci->input->get('staff_id');
+$staffId   = $this->ci->input->get('staff_id');
 $startDate = $this->ci->input->get('start_date');
-$endDate = $this->ci->input->get('end_date');
+$endDate   = $this->ci->input->get('end_date');
 
 if ($staffId != '') {
-    $filters[] = 'AND ' . db_prefix() . 'appointment_treatment.staff = ' . (int) $staffId;
+    $where[] = 'AND ' . db_prefix() . 'appointment_treatment.staff = ' . (int) $staffId;
 }
 
 if ($startDate != '' && $endDate != '') {
-    $filters[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) BETWEEN "' . $this->ci->db->escape_str($startDate) . '" AND "' . $this->ci->db->escape_str($endDate) . '"';
+    $where[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) BETWEEN "'
+        . $this->ci->db->escape_str($startDate) . '" AND "'
+        . $this->ci->db->escape_str($endDate) . '"';
 } elseif ($startDate != '') {
-    $filters[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) >= "' . $this->ci->db->escape_str($startDate) . '"';
+    $where[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) >= "'
+        . $this->ci->db->escape_str($startDate) . '"';
 } elseif ($endDate != '') {
-    $filters[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) <= "' . $this->ci->db->escape_str($endDate) . '"';
-}
-
-if (count($filters) > 0) {
-    array_push($where, 'AND (' . prepare_dt_filter($filters) . ')');
+    $where[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) <= "'
+        . $this->ci->db->escape_str($endDate) . '"';
 }
 
 $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where);
@@ -77,12 +87,36 @@ $rResult = $result['rResult'];
 foreach ($rResult as $aRow) {
     $row = [];
 
-    $row[] = $aRow['id'];
-    $row[] = e(doctor_treatment_report_clean_cell($aRow['patient_name']));
-    $row[] = e(doctor_treatment_report_clean_cell($aRow['doctor_name']));
-    $row[] = _dt($aRow['treatment_date']);
-    $row[] = nl2br(e(doctor_treatment_report_clean_cell($aRow['treatment_text'])));
-    $row[] = nl2br(e(doctor_treatment_report_clean_cell($aRow['appointment_comment'])));
+    // Use simple column-name fallback so the view works whether the
+    // framework returns full-expression keys or short column-name keys.
+    $row[] = isset($aRow[db_prefix() . 'appointment_treatment.id'])
+           ? $aRow[db_prefix() . 'appointment_treatment.id']
+           : (isset($aRow['id']) ? $aRow['id'] : '');
+
+    $patientKey = 'COALESCE(CONCAT(' . db_prefix() . 'contacts.firstname, " ", ' . db_prefix() . 'contacts.lastname), ' . db_prefix() . 'clients.company)';
+    $row[] = e(doctor_treatment_report_clean_cell(
+        isset($aRow[$patientKey]) ? $aRow[$patientKey] : (isset($aRow['patient_name']) ? $aRow['patient_name'] : '')
+    ));
+
+    $doctorKey = 'CONCAT(' . db_prefix() . 'staff.firstname, " ", ' . db_prefix() . 'staff.lastname)';
+    $row[] = e(doctor_treatment_report_clean_cell(
+        isset($aRow[$doctorKey]) ? $aRow[$doctorKey] : (isset($aRow['doctor_name']) ? $aRow['doctor_name'] : '')
+    ));
+
+    $dateVal = isset($aRow[db_prefix() . 'appointment_treatment.created_date'])
+             ? $aRow[db_prefix() . 'appointment_treatment.created_date']
+             : (isset($aRow['created_date']) ? $aRow['created_date'] : '');
+    $row[] = _dt($dateVal);
+
+    $treatmentVal = isset($aRow[db_prefix() . 'appointment_treatment.treatment'])
+                  ? $aRow[db_prefix() . 'appointment_treatment.treatment']
+                  : (isset($aRow['treatment']) ? $aRow['treatment'] : '');
+    $row[] = nl2br(e(doctor_treatment_report_clean_cell($treatmentVal)));
+
+    $descVal = isset($aRow[db_prefix() . 'appointly_appointments.description'])
+             ? $aRow[db_prefix() . 'appointly_appointments.description']
+             : (isset($aRow['description']) ? $aRow['description'] : '');
+    $row[] = nl2br(e(doctor_treatment_report_clean_cell($descVal)));
 
     $output['aaData'][] = $row;
 }

@@ -7,6 +7,7 @@ class Clients extends AdminController
     /* List all clients */
     public function index()
     {
+        
         if (staff_cant('view', 'customers')) {
             if (!have_assigned_customers() && staff_cant('create', 'customers')) {
                 access_denied('customers');
@@ -1359,7 +1360,7 @@ class Clients extends AdminController
 
     public function groups()
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Customer Groups');
         }
         if ($this->input->is_ajax_request()) {
