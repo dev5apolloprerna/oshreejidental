@@ -7,7 +7,7 @@ class Clients extends AdminController
     /* List all clients */
     public function index()
     {
-        
+
         if (staff_cant('view', 'customers')) {
             if (!have_assigned_customers() && staff_cant('create', 'customers')) {
                 access_denied('customers');
@@ -1376,31 +1376,34 @@ class Clients extends AdminController
             access_denied('Customer Groups');
         }
 
-        if ($this->input->is_ajax_request()) {
-            $data = $this->input->post();
+        if (!$this->input->post()) {
+            show_404();
+        }
 
             
-            if ($data['id'] == '') {
-                $id      = $this->clients_model->add_group($data);
-                $message = $id ? _l('added_successfully', _l('customer_group')) : '';
-                echo json_encode([
-                    'success' => $id ? true : false,
-                    'message' => $message,
-                    'id'      => $id,
-                    'name'    => $data['name'],
-                ]);
-            } else {
-                $success = $this->clients_model->edit_group($data);
-                $message = '';
-                if ($success == true) {
-                    $message = _l('updated_successfully', _l('customer_group'));
-                }
-                echo json_encode([
-                    'success' => $success,
-                    'message' => $message,
-                ]);
-            }
+           $data = $this->input->post();
+        $data['id'] = isset($data['id']) ? $data['id'] : '';
+
+        if ($data['id'] == '') {
+            $id      = $this->clients_model->add_group($data);
+            $message = $id ? _l('added_successfully', _l('customer_group')) : _l('something_went_wrong');
+            $response = [
+                'success' => $id ? true : false,
+                'message' => $message,
+                'id'      => $id,
+                'name'    => isset($data['name']) ? $data['name'] : '',
+            ];
+        } else {
+            $success = $this->clients_model->edit_group($data);
+            $message = $success ? _l('updated_successfully', _l('customer_group')) : _l('something_went_wrong');
+            $response = [
+                'success' => $success,
+                'message' => $message,
+            ];
         }
+                $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
     }
 
     public function delete_group($id)

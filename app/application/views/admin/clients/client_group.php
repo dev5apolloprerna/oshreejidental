@@ -52,19 +52,30 @@
         var data = $(form).serialize();
         var url = form.action;
         $.post(url, data).done(function(response) {
-            response = JSON.parse(response);
-            if (response.success == true) {
-                if($.fn.DataTable.isDataTable('.table-customer-groups')){
+            if (typeof(response) === 'string') {
+                response = response.length ? JSON.parse(response) : {};
+            }
+
+            if (response.success == true) 
+            {
+                if($.fn.DataTable.isDataTable('.table-customer-groups'))
+                {
                     $('.table-customer-groups').DataTable().ajax.reload();
                 }
-                if($('body').hasClass('dynamic-create-groups') && typeof(response.id) != 'undefined') {
+                if($('body').hasClass('dynamic-create-groups') && typeof(response.id) != 'undefined') 
+                {
                     var groups = $('select[name="groups_in[]"]');
                     groups.prepend('<option value="'+response.id+'">'+response.name+'</option>');
                     groups.selectpicker('refresh');
                 }
-                alert_float('success', response.message);
+                    alert_float('success', response.message);
+            } else if (typeof(response.message) != 'undefined' && response.message.length) {
+                alert_float('warning', response.message);
             }
             $('#customer_group_modal').modal('hide');
+           }).fail(function(response) {
+            var message = response.responseText || 'Something went wrong. Try again';
+            alert_float('danger', message);
         });
         return false;
     }
