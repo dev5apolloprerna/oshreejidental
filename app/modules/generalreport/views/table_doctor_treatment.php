@@ -16,15 +16,19 @@ if (!function_exists('doctor_treatment_report_clean_cell')) {
         $value = (string) $value;
 
         if (function_exists('mb_check_encoding') && !mb_check_encoding($value, 'UTF-8')) {
-            $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
-        } elseif (function_exists('iconv')) {
+         $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8, ISO-8859-1, Windows-1252');
+        }
+
+        if (function_exists('iconv')) {
             $converted = @iconv('UTF-8', 'UTF-8//IGNORE', $value);
             if ($converted !== false) {
                 $value = $converted;
             }
         }
 
-        return $value;
+        $cleaned = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $value);
+
+        return $cleaned === null ? '' : $cleaned;
     }
 }
 
@@ -40,8 +44,8 @@ if (!function_exists('doctor_treatment_report_clean_cell')) {
 
 $aColumns = [
     db_prefix() . 'appointment_treatment.id',
-    'COALESCE(CONCAT(' . db_prefix() . 'contacts.firstname, " ", ' . db_prefix() . 'contacts.lastname), ' . db_prefix() . 'clients.company)',
-    'CONCAT(' . db_prefix() . 'staff.firstname, " ", ' . db_prefix() . 'staff.lastname)',
+    "COALESCE(NULLIF(TRIM(CONCAT(" . db_prefix() . "contacts.firstname, ' ', " . db_prefix() . "contacts.lastname)), ''), " . db_prefix() . "clients.company) as patient_name",
+    "TRIM(CONCAT(" . db_prefix() . "staff.firstname, ' ', " . db_prefix() . "staff.lastname)) as doctor_name",
     db_prefix() . 'appointment_treatment.created_date',
     db_prefix() . 'appointment_treatment.treatment',
     db_prefix() . 'appointly_appointments.description',
@@ -80,7 +84,13 @@ if ($startDate != '' && $endDate != '') {
         . $this->ci->db->escape_str($endDate) . '"';
 }
 
-$result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where);
+$searchAs = [
+    1 => "COALESCE(NULLIF(TRIM(CONCAT(" . db_prefix() . "contacts.firstname, ' ', " . db_prefix() . "contacts.lastname)), ''), " . db_prefix() . "clients.company)",
+    2 => "TRIM(CONCAT(" . db_prefix() . "staff.firstname, ' ', " . db_prefix() . "staff.lastname))",
+];
+
+$result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [], '', $searchAs);
+
 $output = $result['output'];
 $rResult = $result['rResult'];
 
@@ -93,15 +103,9 @@ foreach ($rResult as $aRow) {
            ? $aRow[db_prefix() . 'appointment_treatment.id']
            : (isset($aRow['id']) ? $aRow['id'] : '');
 
-    $patientKey = 'COALESCE(CONCAT(' . db_prefix() . 'contacts.firstname, " ", ' . db_prefix() . 'contacts.lastname), ' . db_prefix() . 'clients.company)';
-    $row[] = e(doctor_treatment_report_clean_cell(
-        isset($aRow[$patientKey]) ? $aRow[$patientKey] : (isset($aRow['patient_name']) ? $aRow['patient_name'] : '')
-    ));
+    $row[] = e(doctor_treatment_report_clean_cell(isset($aRow['patient_name']) ? $aRow['patient_name'] : ''));
 
-    $doctorKey = 'CONCAT(' . db_prefix() . 'staff.firstname, " ", ' . db_prefix() . 'staff.lastname)';
-    $row[] = e(doctor_treatment_report_clean_cell(
-        isset($aRow[$doctorKey]) ? $aRow[$doctorKey] : (isset($aRow['doctor_name']) ? $aRow['doctor_name'] : '')
-    ));
+    $row[] = e(doctor_treatment_report_clean_cell(isset($aRow['doctor_name']) ? $aRow['doctor_name'] : ''));
 
     $dateVal = isset($aRow[db_prefix() . 'appointment_treatment.created_date'])
              ? $aRow[db_prefix() . 'appointment_treatment.created_date']
