@@ -123,7 +123,9 @@ class Generalreport extends AdminController
          else if($request == 'doctor_treatment'){
 
             if ($this->input->is_ajax_request()) {
-                $_POST['order'][0]['column']=3;
+                // FIX: Changed default sort column from 3 (created_date) to 0 (id)
+                // to avoid ORDER BY on a computed/expression column which caused SQL errors.
+                $_POST['order'][0]['column']=0;
                 $_POST['order'][0]['dir']='desc';
                 $this->app->get_table_data(module_views_path('generalreport', 'table_doctor_treatment'));
             }

@@ -17,6 +17,15 @@ class Leads extends AdminController
         $this->load->model('leads_model');
     }
 
+    private function can_manage_leads_setup()
+    {
+        return app_staff_has_branch_menu_access()
+            || staff_can('view', 'leads')
+            || staff_can('create', 'leads')
+            || staff_can('edit', 'leads')
+            || staff_can('delete', 'leads');
+    }
+    
     /* List all leads */
     public function index($id = '')
     {
@@ -759,7 +768,7 @@ class Leads extends AdminController
 
     public function form($id = '')
     {
-        if (!is_admin()) {
+        if (!$this->can_manage_leads_setup()) {
             access_denied('Web To Lead Access');
         }
         if ($this->input->post()) {
@@ -903,7 +912,7 @@ class Leads extends AdminController
 
     public function forms($id = '')
     {
-        if (!is_admin()) {
+        if (!$this->can_manage_leads_setup()) {
             access_denied('Web To Lead Access');
         }
 
@@ -918,7 +927,7 @@ class Leads extends AdminController
 
     public function delete_form($id)
     {
-        if (!is_admin()) {
+        if (!$this->can_manage_leads_setup()) {
             access_denied('Web To Lead Access');
         }
 
@@ -934,7 +943,7 @@ class Leads extends AdminController
     /* Manage leads sources */
     public function sources()
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Leads Sources');
         }
         $data['sources'] = $this->leads_model->get_source();
@@ -945,7 +954,7 @@ class Leads extends AdminController
     /* Add or update leads sources */
     public function source()
     {
-        if (!is_admin() && get_option('staff_members_create_inline_lead_source') == '0') {
+        if (!app_staff_has_branch_menu_access() && get_option('staff_members_create_inline_lead_source') == '0') {
             access_denied('Leads Sources');
         }
         if ($this->input->post()) {
@@ -979,7 +988,7 @@ class Leads extends AdminController
     /* Delete leads source */
     public function delete_source($id)
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Delete Lead Source');
         }
         if (!$id) {
@@ -1000,7 +1009,7 @@ class Leads extends AdminController
     /* View leads statuses */
     public function statuses()
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Leads Statuses');
         }
         $data['statuses'] = $this->leads_model->get_status();
@@ -1011,7 +1020,7 @@ class Leads extends AdminController
     /* Add or update leads status */
     public function status()
     {
-        if (!is_admin() && get_option('staff_members_create_inline_lead_status') == '0') {
+        if (!app_staff_has_branch_menu_access() && get_option('staff_members_create_inline_lead_status') == '0') {
             access_denied('Leads Statuses');
         }
         if ($this->input->post()) {
@@ -1043,7 +1052,7 @@ class Leads extends AdminController
     /* Delete leads status from databae */
     public function delete_status($id)
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Leads Statuses');
         }
         if (!$id) {
@@ -1107,7 +1116,7 @@ class Leads extends AdminController
 
     public function email_integration_folders()
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             ajax_access_denied('Leads Test Email Integration');
         }
 
@@ -1132,7 +1141,7 @@ class Leads extends AdminController
 
     public function test_email_integration()
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Leads Test Email Integration');
         }
 
@@ -1172,7 +1181,7 @@ class Leads extends AdminController
 
     public function email_integration()
     {
-        if (!is_admin()) {
+        if (!app_staff_has_branch_menu_access()) {
             access_denied('Leads Email Intregration');
         }
         if ($this->input->post()) {
@@ -1211,7 +1220,7 @@ class Leads extends AdminController
 
     public function change_status_color()
     {
-        if ($this->input->post() && is_admin()) {
+        if ($this->input->post() && app_staff_has_branch_menu_access()) {
             $this->leads_model->change_status_color($this->input->post());
         }
     }
