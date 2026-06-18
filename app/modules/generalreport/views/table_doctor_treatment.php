@@ -32,95 +32,136 @@ if (!function_exists('doctor_treatment_report_clean_cell')) {
     }
 }
 
-// -----------------------------------------------------------------------
-// FIX 1: Removed SQL aliases (AS ...) from $aColumns.
-//         Perfex/Workice data_tables_init uses column expressions as array
-//         keys; aliases break key lookup and can also confuse ORDER BY.
-// FIX 2: $sIndexColumn must match the exact expression used in $aColumns.
-// FIX 3: Filters are pushed directly into $where (not double-wrapped via
-//         prepare_dt_filter inside an extra AND (...) group), which was
-//         producing malformed SQL and a PHP error instead of JSON.
-// -----------------------------------------------------------------------
+$CI = $this->ci;
 
-$aColumns = [
-    db_prefix() . 'appointment_treatment.id',
-    "COALESCE(NULLIF(TRIM(CONCAT(" . db_prefix() . "contacts.firstname, ' ', " . db_prefix() . "contacts.lastname)), ''), " . db_prefix() . "clients.company) as patient_name",
-    "TRIM(CONCAT(" . db_prefix() . "staff.firstname, ' ', " . db_prefix() . "staff.lastname)) as doctor_name",
-    db_prefix() . 'appointment_treatment.created_date',
-    db_prefix() . 'appointment_treatment.treatment',
-    db_prefix() . 'appointly_appointments.description',
-];
+$draw   = (int) $CI->input->post('draw');
+$start  = max(0, (int) $CI->input->post('start'));
+$length = (int) $CI->input->post('length');
 
-$sIndexColumn = db_prefix() . 'appointment_treatment.id';
-$sTable       = db_prefix() . 'appointment_treatment';
+$appointmentTreatmentTable = db_prefix() . 'appointment_treatment';
+$appointmentsTable        = db_prefix() . 'appointly_appointments';
+$staffTable               = db_prefix() . 'staff';
+$contactsTable            = db_prefix() . 'contacts';
+$clientsTable             = db_prefix() . 'clients';
 
-$join = [
-    'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'appointment_treatment.staff = ' . db_prefix() . 'staff.staffid',
-    'LEFT JOIN ' . db_prefix() . 'appointly_appointments ON ' . db_prefix() . 'appointment_treatment.appointment_id = ' . db_prefix() . 'appointly_appointments.id',
-    'LEFT JOIN ' . db_prefix() . 'contacts ON ' . db_prefix() . 'appointly_appointments.contact_id = ' . db_prefix() . 'contacts.id',
-    'LEFT JOIN ' . db_prefix() . 'clients ON ' . db_prefix() . 'contacts.userid = ' . db_prefix() . 'clients.userid',
-];
+$patientSql = "COALESCE(NULLIF(TRIM(CONCAT({$contactsTable}.firstname, ' ', {$contactsTable}.lastname)), ''), {$clientsTable}.company, {$appointmentsTable}.name, '')";
+$doctorSql  = "TRIM(CONCAT({$staffTable}.firstname, ' ', {$staffTable}.lastname))";
 
-// Build WHERE clauses directly — no extra wrapping needed.
-$where = [];
+$selectSql = "
+    {$appointmentTreatmentTable}.id,
+    {$patientSql} AS patient_name,
+    {$doctorSql} AS doctor_name,
+    {$appointmentTreatmentTable}.created_date,
+    {$appointmentTreatmentTable}.treatment,
+    {$appointmentsTable}.description
+";
 
-$staffId   = $this->ci->input->get('staff_id');
-$startDate = $this->ci->input->get('start_date');
-$endDate   = $this->ci->input->get('end_date');
+$fromJoinSql = "
+    FROM {$appointmentTreatmentTable}
+    LEFT JOIN {$staffTable} ON {$appointmentTreatmentTable}.staff = {$staffTable}.staffid
+    LEFT JOIN {$appointmentsTable} ON {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.id
+    LEFT JOIN {$contactsTable} ON {$appointmentsTable}.contact_id = {$contactsTable}.id
+    LEFT JOIN {$clientsTable} ON {$contactsTable}.userid = {$clientsTable}.userid
+";
 
-if ($staffId != '') {
-    $where[] = 'AND ' . db_prefix() . 'appointment_treatment.staff = ' . (int) $staffId;
+$whereParts = [];
+
+$staffId   = $CI->input->get('staff_id');
+$startDate = $CI->input->get('start_date');
+$endDate   = $CI->input->get('end_date');
+
+if ($staffId !== null && $staffId !== '') {
+    $whereParts[] = $appointmentTreatmentTable . '.staff = ' . (int) $staffId;
 }
 
-if ($startDate != '' && $endDate != '') {
-    $where[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) BETWEEN "'
-        . $this->ci->db->escape_str($startDate) . '" AND "'
-        . $this->ci->db->escape_str($endDate) . '"';
-} elseif ($startDate != '') {
-    $where[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) >= "'
-        . $this->ci->db->escape_str($startDate) . '"';
-} elseif ($endDate != '') {
-    $where[] = 'AND DATE(' . db_prefix() . 'appointment_treatment.created_date) <= "'
-        . $this->ci->db->escape_str($endDate) . '"';
+
+
+if ($startDate !== null && $startDate !== '') {
+    $whereParts[] = 'DATE(' . $appointmentTreatmentTable . '.created_date) >= ' . $CI->db->escape(to_sql_date($startDate));
 }
 
-$searchAs = [
-    1 => "COALESCE(NULLIF(TRIM(CONCAT(" . db_prefix() . "contacts.firstname, ' ', " . db_prefix() . "contacts.lastname)), ''), " . db_prefix() . "clients.company)",
-    2 => "TRIM(CONCAT(" . db_prefix() . "staff.firstname, ' ', " . db_prefix() . "staff.lastname))",
+if ($endDate !== null && $endDate !== '') 
+{
+    $whereParts[] = 'DATE(' . $appointmentTreatmentTable . '.created_date) <= ' . $CI->db->escape(to_sql_date($endDate));
+}
+
+$baseWhereSql = $whereParts ? ' WHERE ' . implode(' AND ', $whereParts) : '';
+
+$searchWhereSql = '';
+$search = $CI->input->post('search');
+if (isset($search['value']) && trim($search['value']) !== '') {
+    $escapedSearch = $CI->db->escape_like_str(trim($search['value']));
+    $searchWhereSql = ($baseWhereSql === '' ? ' WHERE ' : ' AND ') . '(
+        CONVERT(' . $appointmentTreatmentTable . '.id USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
+        CONVERT(" . $patientSql . ' USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
+        CONVERT(" . $doctorSql . ' USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
+        CONVERT(" . $appointmentTreatmentTable . '.created_date USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
+        CONVERT(" . $appointmentTreatmentTable . '.treatment USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
+        CONVERT(" . $appointmentsTable . '.description USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!'
+    )";
+}
+
+$orderColumns = [
+    $appointmentTreatmentTable . '.id',
+    'patient_name',
+    'doctor_name',
+    $appointmentTreatmentTable . '.created_date',
+    $appointmentTreatmentTable . '.treatment',
+    $appointmentsTable . '.description',
 ];
 
-$result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [], '', $searchAs);
+$orderSql = ' ORDER BY ' . $appointmentTreatmentTable . '.id DESC';
+$order = $CI->input->post('order');
+if (isset($order[0]['column'], $order[0]['dir'], $orderColumns[(int) $order[0]['column']])) {
+    $direction = strtoupper($order[0]['dir']) === 'ASC' ? 'ASC' : 'DESC';
+    $orderSql = ' ORDER BY ' . $orderColumns[(int) $order[0]['column']] . ' ' . $direction;
+}
 
-$output = $result['output'];
-$rResult = $result['rResult'];
 
-foreach ($rResult as $aRow) {
-    $row = [];
+$limitSql = '';
+if ($length !== -1) {
+    $limitSql = ' LIMIT ' . $start . ', ' . max(0, $length);
+}
 
     // Use simple column-name fallback so the view works whether the
     // framework returns full-expression keys or short column-name keys.
-    $row[] = isset($aRow[db_prefix() . 'appointment_treatment.id'])
-           ? $aRow[db_prefix() . 'appointment_treatment.id']
-           : (isset($aRow['id']) ? $aRow['id'] : '');
+    
+    $oldDbDebug = $CI->db->db_debug;
+    $CI->db->db_debug = false;
 
-    $row[] = e(doctor_treatment_report_clean_cell(isset($aRow['patient_name']) ? $aRow['patient_name'] : ''));
+    $totalQuery    = $CI->db->query('SELECT COUNT(*) AS total ' . $fromJoinSql . $baseWhereSql);
+    $filteredQuery = $CI->db->query('SELECT COUNT(*) AS total ' . $fromJoinSql . $baseWhereSql . $searchWhereSql);
+    $rowsQuery     = $CI->db->query('SELECT ' . $selectSql . $fromJoinSql . $baseWhereSql . $searchWhereSql . $orderSql . $limitSql);
 
-    $row[] = e(doctor_treatment_report_clean_cell(isset($aRow['doctor_name']) ? $aRow['doctor_name'] : ''));
+   $CI->db->db_debug = $oldDbDebug;
 
-    $dateVal = isset($aRow[db_prefix() . 'appointment_treatment.created_date'])
-             ? $aRow[db_prefix() . 'appointment_treatment.created_date']
-             : (isset($aRow['created_date']) ? $aRow['created_date'] : '');
-    $row[] = _dt($dateVal);
+    if (!$totalQuery || !$filteredQuery || !$rowsQuery) {
+    $output = [
+        'draw'                 => $draw,
+        'iTotalRecords'        => 0,
+        'iTotalDisplayRecords' => 0,
+        'aaData'               => [],
+        'error'                => 'Unable to load doctor treatment report. Please verify the appointment treatment database table and columns.',
+    ];
 
-    $treatmentVal = isset($aRow[db_prefix() . 'appointment_treatment.treatment'])
-                  ? $aRow[db_prefix() . 'appointment_treatment.treatment']
-                  : (isset($aRow['treatment']) ? $aRow['treatment'] : '');
-    $row[] = nl2br(e(doctor_treatment_report_clean_cell($treatmentVal)));
+    return;
+}
 
-    $descVal = isset($aRow[db_prefix() . 'appointly_appointments.description'])
-             ? $aRow[db_prefix() . 'appointly_appointments.description']
-             : (isset($aRow['description']) ? $aRow['description'] : '');
-    $row[] = nl2br(e(doctor_treatment_report_clean_cell($descVal)));
 
-    $output['aaData'][] = $row;
+    $output = [
+        'draw'                 => $draw,
+        'iTotalRecords'        => (int) $totalQuery->row()->total,
+        'iTotalDisplayRecords' => (int) $filteredQuery->row()->total,
+        'aaData'               => [],
+    ];
+
+foreach ($rowsQuery->result_array() as $aRow) {
+    $output['aaData'][] = [
+        (int) $aRow['id'],
+        e(doctor_treatment_report_clean_cell($aRow['patient_name'])),
+        e(doctor_treatment_report_clean_cell($aRow['doctor_name'])),
+        _dt($aRow['created_date']),
+        nl2br(e(doctor_treatment_report_clean_cell($aRow['treatment']))),
+        nl2br(e(doctor_treatment_report_clean_cell($aRow['description']))),
+    ];
 }
