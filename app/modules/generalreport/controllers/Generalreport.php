@@ -125,9 +125,7 @@ class Generalreport extends AdminController
             if ($this->input->is_ajax_request()) {
                 // FIX: Changed default sort column from 3 (created_date) to 0 (id)
                 // to avoid ORDER BY on a computed/expression column which caused SQL errors.
-                $_POST['order'][0]['column']=0;
-                $_POST['order'][0]['dir']='desc';
-                $this->app->get_table_data(module_views_path('generalreport', 'table_doctor_treatment'));
+                $this->doctor_treatment_report_json_response();
             }
 
             $data['staff'] = $this->Generalreport_model->get_staff();
@@ -160,6 +158,49 @@ class Generalreport extends AdminController
         }
 
         
+    }
+        private function doctor_treatment_report_json_response()
+    {
+        if (!isset($_POST['order'][0]['column'])) {
+            $_POST['order'][0]['column'] = 0;
+        }
+
+        if (!isset($_POST['order'][0]['dir'])) {
+            $_POST['order'][0]['dir'] = 'desc';
+        }
+
+        $output = [
+            'draw'                 => (int) $this->input->post('draw'),
+            'iTotalRecords'        => 0,
+            'iTotalDisplayRecords' => 0,
+            'aaData'               => [],
+        ];
+
+        ob_start();
+        include module_views_path('generalreport', 'table_doctor_treatment.php');
+        $unexpectedOutput = ob_get_clean();
+
+        if ($unexpectedOutput !== '') {
+            log_message('error', 'Doctor treatment report unexpected output: ' . strip_tags($unexpectedOutput));
+        }
+
+        $jsonFlags = defined('JSON_INVALID_UTF8_SUBSTITUTE') ? JSON_INVALID_UTF8_SUBSTITUTE : 0;
+        $json = json_encode($output, $jsonFlags);
+        if ($json === false) {
+            $json = json_encode([
+                'draw'                 => (int) $this->input->post('draw'),
+                'iTotalRecords'        => 0,
+                'iTotalDisplayRecords' => 0,
+                'aaData'               => [],
+                'error'                => 'Unable to encode doctor treatment report response.',
+            ]);
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output($json)
+            ->_display();
+        exit;
     }
 
     public function delete($id)
