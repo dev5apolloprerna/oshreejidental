@@ -69,7 +69,8 @@
         var doctorTreatmentTableUrl = '<?php
             $doctorTreatmentParams = $this->input->get();
             $doctorTreatmentParams['repo_type'] = 'doctor_treatment';
-            echo admin_url('generalreport?' . http_build_query($doctorTreatmentParams));
+/*            echo admin_url('generalreport?' . http_build_query($doctorTreatmentParams));*/
+             echo admin_url('generalreport/doctor_treatment_table?' . http_build_query($doctorTreatmentParams));
         ?>';
         initDataTable('.table-service_details', doctorTreatmentTableUrl, [], [0]);
     });
