@@ -32,7 +32,7 @@ if (!function_exists('doctor_treatment_report_clean_cell')) {
     }
 }
 
-$CI = $this->ci;
+$CI = get_instance();
 
 $draw   = (int) $CI->input->post('draw');
 $start  = max(0, (int) $CI->input->post('start'));
@@ -44,8 +44,10 @@ $staffTable               = db_prefix() . 'staff';
 $contactsTable            = db_prefix() . 'contacts';
 $clientsTable             = db_prefix() . 'clients';
 
-$patientSql = "COALESCE(NULLIF(TRIM(CONCAT({$contactsTable}.firstname, ' ', {$contactsTable}.lastname)), ''), {$clientsTable}.company, {$appointmentsTable}.name, '')";
-$doctorSql  = "TRIM(CONCAT({$staffTable}.firstname, ' ', {$staffTable}.lastname))";
+$patientSql = "COALESCE(NULLIF(TRIM(CONCAT(CONVERT({$contactsTable}.firstname USING utf8mb4), ' ', CONVERT({$contactsTable}.lastname USING utf8mb4))), ''), CONVERT({$clientsTable}.company USING utf8mb4), CONVERT({$appointmentsTable}.name USING utf8mb4), '')";
+$doctorSql  = "TRIM(CONCAT(CONVERT({$staffTable}.firstname USING utf8mb4), ' ', CONVERT({$staffTable}.lastname USING utf8mb4)))";
+
+
 
 $selectSql = "
     {$appointmentTreatmentTable}.id,
@@ -138,8 +140,11 @@ if ($length !== -1) {
     if (!$totalQuery || !$filteredQuery || !$rowsQuery) {
     $output = [
         'draw'                 => $draw,
+        'recordsTotal'         => 0,
+        'recordsFiltered'      => 0,
         'iTotalRecords'        => 0,
         'iTotalDisplayRecords' => 0,
+        'data'                 => [],
         'aaData'               => [],
         'error'                => 'Unable to load doctor treatment report. Please verify the appointment treatment database table and columns.',
     ];
@@ -147,16 +152,22 @@ if ($length !== -1) {
     return;
 }
 
+    $totalRecords = (int) $totalQuery->row()->total;
+    $filteredRecords = (int) $filteredQuery->row()->total;
+
 
     $output = [
         'draw'                 => $draw,
-        'iTotalRecords'        => (int) $totalQuery->row()->total,
-        'iTotalDisplayRecords' => (int) $filteredQuery->row()->total,
+        'recordsTotal'         => $totalRecords,
+        'recordsFiltered'      => $filteredRecords,
+        'iTotalRecords'        => $totalRecords,
+        'iTotalDisplayRecords' => $filteredRecords,
+        'data'                 => [],
         'aaData'               => [],
     ];
 
 foreach ($rowsQuery->result_array() as $aRow) {
-    $output['aaData'][] = [
+    $row = [
         (int) $aRow['id'],
         e(doctor_treatment_report_clean_cell($aRow['patient_name'])),
         e(doctor_treatment_report_clean_cell($aRow['doctor_name'])),
@@ -164,4 +175,6 @@ foreach ($rowsQuery->result_array() as $aRow) {
         nl2br(e(doctor_treatment_report_clean_cell($aRow['treatment']))),
         nl2br(e(doctor_treatment_report_clean_cell($aRow['description']))),
     ];
+    $output['data'][] = $row;
+    $output['aaData'][] = $row;
 }

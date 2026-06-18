@@ -159,6 +159,14 @@ class Generalreport extends AdminController
 
         
     }
+    public function doctor_treatment_table()
+    {
+        if (!app_staff_has_branch_menu_access()) {
+            ajax_access_denied();
+        }
+
+        $this->doctor_treatment_report_json_response();
+    }
         private function doctor_treatment_report_json_response()
     {
         if (!isset($_POST['order'][0]['column'])) {
@@ -171,14 +179,44 @@ class Generalreport extends AdminController
 
         $output = [
             'draw'                 => (int) $this->input->post('draw'),
+            'recordsTotal'         => 0,
+            'recordsFiltered'      => 0,
             'iTotalRecords'        => 0,
             'iTotalDisplayRecords' => 0,
+            'data'                 => [],
             'aaData'               => [],
         ];
 
+        set_error_handler(function ($severity, $message, $file, $line) {
+            if (!(error_reporting() & $severity)) {
+                return false;
+            }
+
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        });
+
         ob_start();
-        include module_views_path('generalreport', 'table_doctor_treatment.php');
+
+        try {
+                    include module_views_path('generalreport', 'table_doctor_treatment.php');
+                } catch (Throwable $e) {
+                    log_message('error', 'Doctor treatment report AJAX error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+
+                    $output = [
+                        'draw'                 => (int) $this->input->post('draw'),
+                        'recordsTotal'         => 0,
+                        'recordsFiltered'      => 0,
+                        'iTotalRecords'        => 0,
+                        'iTotalDisplayRecords' => 0,
+                        'data'                 => [],
+                        'aaData'               => [],
+                        'error'                => 'Unable to load doctor treatment report. Please contact support if the issue continues.',
+                    ];
+                }
+
         $unexpectedOutput = ob_get_clean();
+        
+        restore_error_handler();
 
         if ($unexpectedOutput !== '') {
             log_message('error', 'Doctor treatment report unexpected output: ' . strip_tags($unexpectedOutput));
@@ -189,8 +227,11 @@ class Generalreport extends AdminController
         if ($json === false) {
             $json = json_encode([
                 'draw'                 => (int) $this->input->post('draw'),
+                'recordsTotal'         => 0,
+                'recordsFiltered'      => 0,
                 'iTotalRecords'        => 0,
                 'iTotalDisplayRecords' => 0,
+                'data'                 => [],
                 'aaData'               => [],
                 'error'                => 'Unable to encode doctor treatment report response.',
             ]);
