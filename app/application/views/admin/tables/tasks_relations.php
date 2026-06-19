@@ -6,6 +6,20 @@ return App_table::find('related_tasks')
     ->outputUsing(function ($params) {
         extract($params);
 
+        /*
+         * DataTables request for this table is coming as GET in your browser URL.
+         * Perfex/CodeIgniter data_tables_init normally reads server-side params from POST.
+         * Copy GET params to POST so draw/start/length/order/columns/search are available
+         * and PHP notices do not break JSON output.
+         */
+        if (!empty($_GET)) {
+            foreach ($_GET as $dtKey => $dtValue) {
+                if (!isset($_POST[$dtKey])) {
+                    $_POST[$dtKey] = $dtValue;
+                }
+            }
+        }
+
         $hasPermissionEdit   = staff_can('edit',  'tasks');
         $hasPermissionDelete = staff_can('delete',  'tasks');
         $tasksPriorities     = get_tasks_priorities();
@@ -26,7 +40,6 @@ return App_table::find('related_tasks')
         $sIndexColumn = 'id';
         $sTable       = db_prefix() . 'tasks';
         $tasksTable   = $sTable;
-        $customFieldsColumns = [];
         $where = [];
 
         if ($filtersWhere = $this->getWhereFromRules()) {
@@ -37,11 +50,13 @@ return App_table::find('related_tasks')
             $where[] = get_tasks_where_string();
         }
 
-        if (!$this->ci->input->post('tasks_related_to')) {
+        $tasks_related_to_input = $this->ci->input->get('tasks_related_to') ?: $this->ci->input->post('tasks_related_to');
+
+        if (!$tasks_related_to_input) {
             array_push($where, 'AND ' . $tasksTable . '.rel_id="' . $this->ci->db->escape_str($rel_id) . '" AND ' . $tasksTable . '.rel_type="' . $this->ci->db->escape_str($rel_type) . '"');
         } else {
             // Used in the customer profile filters
-            $tasks_related_to = explode(',', $this->ci->input->post('tasks_related_to'));
+            $tasks_related_to = explode(',', $tasks_related_to_input);
             $rel_to_query     = 'AND (';
 
             $lastElement = end($tasks_related_to);
@@ -77,6 +92,7 @@ return App_table::find('related_tasks')
 
         $join = [];
 
+        $customFieldsColumns = [];
         $custom_fields = get_table_custom_fields('tasks');
 
         foreach ($custom_fields as $key => $field) {
@@ -102,8 +118,12 @@ return App_table::find('related_tasks')
             '(SELECT CASE WHEN addedfrom=' . get_staff_user_id() . ' AND is_added_from_contact=0 THEN 1 ELSE 0 END) as current_user_is_creator',
         ]);
 
-        $output  = $result['output'];
-        $rResult = $result['rResult'];
+        $output  = isset($result['output']) ? $result['output'] : [];
+        $rResult = isset($result['rResult']) ? $result['rResult'] : [];
+
+        if (!isset($output['aaData']) || !is_array($output['aaData'])) {
+            $output['aaData'] = [];
+        }
 
         foreach ($rResult as $aRow) {
             $row = [];
@@ -162,9 +182,15 @@ return App_table::find('related_tasks')
             $row[]           = $outputName;
             $canChangeStatus = ($aRow['current_user_is_creator'] != '0' || $aRow['current_user_is_assigned'] || staff_can('edit',  'tasks'));
             $status          = get_task_status_by_id($aRow['status']);
+            if (!$status || !isset($status['color'], $status['name'])) {
+                $status = [
+                    'color' => '#777777',
+                    'name'  => _l('task_status_' . $aRow['status']) ?: $aRow['status'],
+                ];
+            }
             $outputStatus    = '';
 
-            $outputStatus .= '<span class="label" style="color:' . $status['color'] . ';border:1px solid ' . adjust_hex_brightness($status['color'], 0.4) . ';background: ' . adjust_hex_brightness($status['color'], 0.04) . ';" task-status-table="' . e($aRow['status']) . '">';
+            $outputStatus .= '<span class="label" style="color:' . e($status['color']) . ';border:1px solid ' . adjust_hex_brightness($status['color'], 0.4) . ';background: ' . adjust_hex_brightness($status['color'], 0.04) . ';" task-status-table="' . e($aRow['status']) . '">';
 
             $outputStatus .= e($status['name']);
 
@@ -235,7 +261,8 @@ return App_table::find('related_tasks')
 
             // Custom fields add values
             foreach ($customFieldsColumns as $customFieldColumn) {
-                $row[] = (strpos($customFieldColumn, 'date_picker_') !== false ? _d($aRow[$customFieldColumn]) : $aRow[$customFieldColumn]);
+                $customFieldValue = isset($aRow[$customFieldColumn]) ? $aRow[$customFieldColumn] : '';
+                $row[] = (strpos($customFieldColumn, 'date_picker_') !== false ? _d($customFieldValue) : $customFieldValue);
             }
 
 
