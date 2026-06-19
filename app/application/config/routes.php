@@ -194,5 +194,6 @@ $route['admin/nabh/view/(:num)'] = 'admin/nabh/view_pdf/$1';
 $route['admin/nabh/view-html/(:num)'] = 'admin/nabh/view_html/$1';
 $route['admin/nabh/all-forms-json'] = 'admin/nabh/all_forms_json';
 $route['admin/nabh/patient-history-pdf/(:num)'] = 'admin/nabh/patient_history_pdf/$1';
+$route['admin/tasks/init_relation_tasks/(:num)/(:any)'] = 'admin/tasks/init_relation_tasks/$1/$2';
 
 

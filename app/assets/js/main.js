@@ -3241,7 +3241,7 @@ function init_rel_tasks_table(rel_id, rel_type, selector) {
   });
 
   // Related task filter - used in customer profile
-  TasksServerParams['tasks_related_to'] = '[name="tasks_related_to"]'
+  TasksServerParams["tasks_related_to"] = '[name="tasks_related_to"]';
 
   var url = admin_url + "tasks/init_relation_tasks/" + rel_id + "/" + rel_type;
 
@@ -3249,6 +3249,7 @@ function init_rel_tasks_table(rel_id, rel_type, selector) {
     url += "?bulk_actions=true";
   }
 
+  // Keep this as GET. Changing to POST can trigger CSRF/Ajax error on Perfex/CI.
   initDataTable(
     $selector,
     url,

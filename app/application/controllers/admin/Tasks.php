@@ -275,14 +275,19 @@ class Tasks extends AdminController
         $this->load->view('admin/tasks/detailed_overview', $data);
     }
 
-    public function init_relation_tasks($rel_id, $rel_type)
+    public function init_relation_tasks($rel_id = '', $rel_type = '')
     {
-        if ($this->input->is_ajax_request()) {
-           App_table::find('related_tasks')->output([
-                'rel_id'   => $rel_id,
-                'rel_type' => $rel_type,
-           ]);
+        // Used by customer/project related tasks DataTable.
+        // Do not block this behind is_ajax_request(); on some servers/proxies
+        // the ajax header is not detected correctly and the request becomes empty/404-like.
+        if ($rel_id === '' || $rel_type === '') {
+            show_404();
         }
+
+        App_table::find('related_tasks')->output([
+            'rel_id'   => $rel_id,
+            'rel_type' => $rel_type,
+        ]);
     }
 
     /* Add new task or update existing */
