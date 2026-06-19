@@ -3255,7 +3255,8 @@ function init_rel_tasks_table(rel_id, rel_type, selector) {
     tasksRelationTableNotSortable,
     tasksRelationTableNotSortable,
     TasksServerParams,
-    [$selector.find("th.duedate").index(), "asc"]
+    [$selector.find("th.duedate").index(), "asc"],
+    "GET"
   );
 }
 
@@ -3275,7 +3276,8 @@ function initDataTable(
   notsearchable,
   notsortable,
   fnserverparams,
-  defaultorder
+  defaultorder,
+  ajaxType
 ) {
   var table =
     typeof selector == "string" ? $("body").find("table" + selector) : selector;
@@ -3317,6 +3319,8 @@ function initDataTable(
     }
   }
 
+  ajaxType = typeof ajaxType == "undefined" ? "POST" : ajaxType;
+  
   var length_options = [10, 25, 50, 100];
   var length_options_names = [10, 25, 50, 100];
 
@@ -3416,7 +3420,7 @@ function initDataTable(
     order: defaultorder,
     ajax: {
       url: url,
-      type: "POST",
+      type: ajaxType,
       data: function (d) {
         if (Array.isArray(d.order)) {
 

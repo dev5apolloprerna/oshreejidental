@@ -685,10 +685,7 @@ class Clients extends AdminController
                 $this->load->model('projects_model');
                 $data['project_statuses'] = $this->projects_model->get_project_statuses();
             } elseif ($group == 'statement') {
-                if (staff_cant('view', 'invoices') && staff_cant('view', 'payments')) {
-                    set_alert('danger', _l('access_denied'));
-                    redirect(admin_url('clients/client/' . $id));
-                }
+               
 
                 $data = array_merge($data, prepare_mail_preview_data('customer_statement', $id));
             } elseif ($group == 'map') {
