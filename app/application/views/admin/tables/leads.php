@@ -150,6 +150,10 @@ return App_table::find('leads')
             array_push($where, 'AND (assigned =' . get_staff_user_id() . ' OR addedfrom = ' . get_staff_user_id() . ' OR is_public = 1)');
         }
 
+        if ($hasLeadBranchSupport && ($branchScopeWhere = build_staff_branch_scope_where(db_prefix() . 'leads', 'branch_id', 'addedfrom', [db_prefix() . 'leads.assigned = {staff_id}']))) {
+            array_push($where, $branchScopeWhere);
+        }
+        
         $aColumns = hooks()->apply_filters('leads_table_sql_columns', $aColumns);
 
         // Fix for big queries. Some hosting have max_join_limit

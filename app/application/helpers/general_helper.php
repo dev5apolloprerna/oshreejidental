@@ -1017,3 +1017,77 @@ function printrx($args){
     echo"</pre>";
     exit;
 }
+if (!function_exists('get_current_staff_branch_scope_id')) {
+    /**
+     * Resolve the active staff branch id from the staff profile or selected branch cookie.
+     */
+    function get_current_staff_branch_scope_id()
+    {
+        if (!is_staff_logged_in()) {
+            return 0;
+        }
+
+        $CI = &get_instance();
+
+        if ($CI->db->field_exists('branch_id', db_prefix() . 'staff')) {
+            $row = $CI->db->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+            if ($row && isset($row->branch_id) && (int) $row->branch_id > 0) {
+                return (int) $row->branch_id;
+            }
+        }
+
+        $currentBranchDb = (string) $CI->input->cookie('branch');
+        if ($currentBranchDb !== '' && $CI->db->table_exists(db_prefix() . 'branch')) {
+            $row = $CI->db->select('branchid')->where('branch_db', $currentBranchDb)->get(db_prefix() . 'branch')->row();
+            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
+                return (int) $row->branchid;
+            }
+        }
+
+        return 0;
+    }
+}
+
+if (!function_exists('build_staff_branch_scope_where')) {
+    /**
+     * Build a safe datatable WHERE fragment that keeps branch data visible to:
+     * - users in the same branch,
+     * - the staff member who entered/created it,
+     * - explicitly assigned/responsible staff via supplied EXISTS clauses.
+     */
+    function build_staff_branch_scope_where($table, $branchColumn = 'branch_id', $enteredByColumn = '', $assignedExistsClauses = [])
+    {
+        if (!is_staff_logged_in() || is_admin()) {
+            return '';
+        }
+
+        $CI = &get_instance();
+        if (!$CI->db->field_exists($branchColumn, $table)) {
+            return '';
+        }
+
+        $staffId  = (int) get_staff_user_id();
+        $branchId = (int) get_current_staff_branch_scope_id();
+        $rules    = [];
+
+        if ($branchId > 0) {
+            $rules[] = $table . '.' . $branchColumn . ' = ' . $branchId;
+        }
+
+        if ($enteredByColumn !== '' && $CI->db->field_exists($enteredByColumn, $table)) {
+            $rules[] = $table . '.' . $enteredByColumn . ' = ' . $staffId;
+        }
+
+        foreach ((array) $assignedExistsClauses as $clause) {
+            if ($clause !== '') {
+                $rules[] = '(' . str_replace('{staff_id}', $staffId, $clause) . ')';
+            }
+        }
+
+        if (empty($rules)) {
+            return '';
+        }
+
+        return 'AND (' . implode(' OR ', $rules) . ')';
+    }
+}
