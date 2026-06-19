@@ -45,7 +45,13 @@ $contactsTable            = db_prefix() . 'contacts';
 $clientsTable             = db_prefix() . 'clients';
 
 $patientSql = "COALESCE(NULLIF(TRIM(CONCAT(CONVERT({$contactsTable}.firstname USING utf8mb4), ' ', CONVERT({$contactsTable}.lastname USING utf8mb4))), ''), CONVERT({$clientsTable}.company USING utf8mb4), CONVERT({$appointmentsTable}.name USING utf8mb4), '')";
-$doctorSql  = "TRIM(CONCAT(CONVERT({$staffTable}.firstname USING utf8mb4), ' ', CONVERT({$staffTable}.lastname USING utf8mb4)))";
+$singleDoctorSql = "TRIM(CONCAT(CONVERT({$staffTable}.firstname USING utf8mb4), ' ', CONVERT({$staffTable}.lastname USING utf8mb4)))";
+$doctorSql = "COALESCE(NULLIF((
+    SELECT GROUP_CONCAT(DISTINCT TRIM(CONCAT(CONVERT(doctor_staff.firstname USING utf8mb4), ' ', CONVERT(doctor_staff.lastname USING utf8mb4))) ORDER BY doctor_staff.firstname, doctor_staff.lastname SEPARATOR ', ')
+    FROM {$appointmentTreatmentTable} AS related_treatments
+    LEFT JOIN {$staffTable} AS doctor_staff ON related_treatments.staff = doctor_staff.staffid
+    WHERE related_treatments.appointment_id = {$appointmentTreatmentTable}.appointment_id
+), ''), {$singleDoctorSql})";
 
 
 
@@ -61,7 +67,10 @@ $selectSql = "
 $fromJoinSql = "
     FROM {$appointmentTreatmentTable}
     LEFT JOIN {$staffTable} ON {$appointmentTreatmentTable}.staff = {$staffTable}.staffid
-    LEFT JOIN {$appointmentsTable} ON {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.id
+    LEFT JOIN {$appointmentsTable} ON (
+        {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.id
+        OR {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.tbl_uniq_id
+    )
     LEFT JOIN {$contactsTable} ON {$appointmentsTable}.contact_id = {$contactsTable}.id
     LEFT JOIN {$clientsTable} ON {$contactsTable}.userid = {$clientsTable}.userid
 ";
@@ -73,7 +82,7 @@ $startDate = $CI->input->get('start_date');
 $endDate   = $CI->input->get('end_date');
 
 if ($staffId !== null && $staffId !== '') {
-    $whereParts[] = $appointmentTreatmentTable . '.staff = ' . (int) $staffId;
+    $whereParts[] = 'EXISTS (SELECT 1 FROM ' . $appointmentTreatmentTable . ' AS filter_treatments WHERE filter_treatments.appointment_id = ' . $appointmentTreatmentTable . '.appointment_id AND filter_treatments.staff = ' . (int) $staffId . ')';
 }
 
 

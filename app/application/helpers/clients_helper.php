@@ -138,7 +138,8 @@ function filter_client_visible_tabs($tabs, $id = '')
     foreach ($tabs as $key => $tab) {
 
         // Check visibility from settings too
-        if ($key != 'profile' && $key != 'contacts' && $appliedSettings) {
+        $alwaysVisiblePatientTabs = ['profile', 'contacts', 'notes', 'statement', 'invoices', 'payments', 'tasks', 'attachments'];
+        if (!in_array($key, $alwaysVisiblePatientTabs) && $appliedSettings) {
             if (array_key_exists($key, $visible) && $visible[$key] == false) {
                 continue;
             }
@@ -213,7 +214,7 @@ function app_init_customer_profile_tabs()
         'name'     => _l('customer_statement'),
         'icon'     => 'fa fa-area-chart',
         'view'     => 'admin/clients/groups/statement',
-        'visible'  => staff_can('view',  'invoices'),
+        'visible'  => true,
         'position' => 20,
         'badge'    => [],
     ]);
@@ -222,7 +223,7 @@ function app_init_customer_profile_tabs()
         'name'     => _l('client_invoices_tab'),
         'icon'     => 'fa fa-file-text',
         'view'     => 'admin/clients/groups/invoices',
-        'visible'  => (staff_can('view',  'invoices') || staff_can('view_own',  'invoices') || (get_option('allow_staff_view_invoices_assigned') == 1 && staff_has_assigned_invoices())),
+        'visible'  => true,
         'position' => 25,
         'badge'    => [],
     ]);
@@ -231,7 +232,7 @@ function app_init_customer_profile_tabs()
         'name'     => _l('client_payments_tab'),
         'icon'     => 'fa fa-line-chart',
         'view'     => 'admin/clients/groups/payments',
-        'visible'  => (staff_can('view',  'payments') || staff_can('view_own',  'invoices') || (get_option('allow_staff_view_invoices_assigned') == 1 && staff_has_assigned_invoices())),
+        'visible'  => true,
         'position' => 30,
         'badge'    => [],
     ]);
