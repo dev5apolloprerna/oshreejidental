@@ -243,7 +243,7 @@ class Appointly_model extends App_Model
 
         $data = $this->validateInsertRecurring($data);
         
-         $branchId = $this->resolveAppointmentBranchId($data);
+         $branchId = $this->resolveAppointmentBranchId($data, $attendees);
 
         if (isset($data['branch'])) {
             unset($data['branch']);
@@ -286,7 +286,7 @@ class Appointly_model extends App_Model
         return true;
     }
 
-    private function resolveAppointmentBranchId($data)
+    private function resolveAppointmentBranchId($data, $existingBranchId = 0)
     {
         if (isset($data['branch']) && (int) $data['branch'] > 0) {
             return (int) $data['branch'];
@@ -296,12 +296,15 @@ class Appointly_model extends App_Model
             return (int) $data['branch_id'];
         }
 
-        if (function_exists('get_staff_branch_id') && is_staff_logged_in()) {
-            $staffBranchId = (int) get_staff_branch_id();
-            if ($staffBranchId > 0) {
-                return $staffBranchId;
-            }
+        if ((int) $existingBranchId > 0) {
+            return (int) $existingBranchId;
         }
+
+        $staffBranchId = $this->resolveCurrentStaffBranchId();
+        if ($staffBranchId > 0) {
+            return $staffBranchId;
+        }
+
 
         $currentBranchDb = (string) $this->input->cookie('branch');
         if ($currentBranchDb !== '') {
@@ -313,6 +316,62 @@ class Appointly_model extends App_Model
         }
 
         return 0;
+    }
+
+
+     private function resolveCurrentStaffBranchId()
+    {
+        if (function_exists('get_staff_branch_id') && is_staff_logged_in()) {
+            $staffBranchId = (int) get_staff_branch_id();
+            if ($staffBranchId > 0) {
+                return $staffBranchId;
+            }
+        }
+
+        if ($this->db->field_exists('branch_id', db_prefix() . 'staff') && is_staff_logged_in()) {
+            $row = $this->db->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+            if ($row && isset($row->branch_id) && (int) $row->branch_id > 0) {
+                return (int) $row->branch_id;
+            }
+        }
+
+        return 0;
+    }
+
+    private function resolveAppointmentAttendeeBranchId($attendees, $currentStaffBranchId = 0)
+    {
+        if (!$this->db->field_exists('branch_id', db_prefix() . 'staff')) {
+            return 0;
+        }
+
+        $attendeeIds = array_values(array_filter(array_unique(array_map('intval', (array) $attendees))));
+        if (empty($attendeeIds)) {
+            return 0;
+        }
+
+        $rows = $this->db->select('staffid, branch_id')
+            ->where_in('staffid', $attendeeIds)
+            ->where('active', 1)
+            ->get(db_prefix() . 'staff')
+            ->result_array();
+
+        $fallbackBranchId = 0;
+        foreach ($rows as $row) {
+            $branchId = isset($row['branch_id']) ? (int) $row['branch_id'] : 0;
+            if ($branchId <= 0) {
+                continue;
+            }
+
+            if ($fallbackBranchId === 0) {
+                $fallbackBranchId = $branchId;
+            }
+
+            if ($currentStaffBranchId === 0 || $branchId !== (int) $currentStaffBranchId) {
+                return $branchId;
+            }
+        }
+
+        return $fallbackBranchId;
     }
 
 
@@ -612,6 +671,7 @@ class Appointly_model extends App_Model
         
         $data['by_email'] = $data['by_email'] != '' ? (int) $data['by_email'] : 0;
         $data['by_sms'] = $data['by_sms'] != '' ? (int) $data['by_sms'] : 0;
+        $data['branch_id'] = $this->resolveAppointmentBranchId($data, isset($originalAppointment['branch_id']) ? (int) $originalAppointment['branch_id'] : 0);
 
         /** @var array Original Appointment $originalAppointment */
         $data = $this->validateRecurringData($originalAppointment, $data);
@@ -714,6 +774,7 @@ class Appointly_model extends App_Model
         
         $data['by_email'] = $data['by_email'] != '' ? (int) $data['by_email'] : 0;
         $data['by_sms'] = $data['by_sms'] != '' ? (int) $data['by_sms'] : 0;
+        $data['branch_id'] = $this->resolveAppointmentBranchId($data, isset($originalAppointment['branch_id']) ? (int) $originalAppointment['branch_id'] : 0);
 
         /** @var array Original Appointment Data $originalAppointment */
         $data = $this->validateRecurringData($originalAppointment, $data);
@@ -782,10 +843,11 @@ class Appointly_model extends App_Model
         $date = new DateTime();
         $today = $date->format('Y-m-d');
 
-        $staff_has_permissions = ! staff_can('view', 'appointments') || ! staff_can('view_own', 'appointments');
-
-        if ($staff_has_permissions) {
-            $this->db->where('id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . get_staff_user_id() . ')');
+        if (!is_admin()) {
+            $scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+            if ($scopeWhere !== '') {
+                $this->db->where(substr($scopeWhere, 4), null, false);
+            }
         }
 
         $this->db->where('date', $today);
@@ -882,8 +944,11 @@ class Appointly_model extends App_Model
 
 
         if ( ! is_client_logged_in()) {
-            if ( ! staff_appointments_responsible()) {
-                $this->db->where('id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . get_staff_user_id() . ')');
+             if ( ! is_admin()) {
+                $scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+                if ($scopeWhere !== '') {
+                    $this->db->where(substr($scopeWhere, 4), null, false);
+                }
             }
         } else {
             $this->db->where('id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE contact_id=' . get_contact_user_id() . ')');
@@ -1567,149 +1632,136 @@ class Appointly_model extends App_Model
     }
 
 
-    public function create_customer($id){
+    public function create_customer($id)
+    {
+        $MAIN_DB = $this->load->database('default', true);
 
-        $MAIN_DB = $this->load->database('default', TRUE);
+        $this->db->where('id', $id);
+        $appointment = $this->db->get(db_prefix() . 'appointly_appointments')->row();
 
-        $this->db->where('id',$id);
-        $appointment = $this->db->get(db_prefix(). 'appointly_appointments')->row();
+        if (empty($appointment)) {
+            return false;
+        }
 
+        $data = (array) $appointment;
 
-        if(!empty($appointment)){
+        $get = function ($key, $default = '') use ($data) {
+            return (isset($data[$key]) && $data[$key] !== '') ? $data[$key] : $default;
+        };
 
+        $name    = $get('name');
+        $email   = $get('email');
+        $phone   = $get('phone');
+        $gender  = $get('gender');
+        $dob     = $get('dob', '0000-00-00');
+        $address = $get('pt_address');
 
-
-            $name = $appointment->name;
-            $email = $appointment->email;
-            $phone = $appointment->phone;
-            $gender = $appointment->gender;
-            //$age = $appointment->age;
-            $dob = $appointment->dob;
-            $address = $appointment->pt_address ?? '';
-            
-
-            $client_array = array(
-                'company' => $name,
-                'phonenumber' => $phone,
-                'datecreated' => date('Y-m-d H:i:s'),
-                'billing_street' => $address,
-            );
-
-            $MAIN_DB->insert(db_prefix() . 'clients',$client_array);
-            $main_id = $MAIN_DB->insert_id();
-
-            $this->db->insert(db_prefix() . 'clients',$client_array);
-            $insert_id = $this->db->insert_id();
-
-                        
-            $MAIN_DB->select('value');
-            $MAIN_DB->where('name','next_patient_number');
-            $uid = $MAIN_DB->get(db_prefix().'options')->row();
-
-            $MAIN_DB->select('value');
-            $MAIN_DB->where('name','next_file_number');
-            $fileNo = $MAIN_DB->get(db_prefix().'options')->row();
-
-            $currentBranch = $this->input->cookie('branch');
-
-            $query = $MAIN_DB->get_where(db_prefix().'branch', array('branch_db' => $currentBranch));
-            $prefix = $query->row();
-
-
-
-            $contact_array = array(
-                'is_primary' => 1,
-                'firstname' => $name,
-                'lastname' => $data['lastname'] != '' ? $data['lastname'] : '',
-                'email' => !empty($email) ? $email : '',
-                'phonenumber' => $phone,
-                // 'gender' => $data['gender'] != '' ? $data['gender'] : '',
-                'gender' => $gender,
-                // 'dob' => $data['dob'] != '' ? $data['dob'] : '0000-00-00',
-                'dob' => $dob,
-                'blood_group' => $data['blood_group'] != '' ? $data['blood_group'] : '',
-                'datecreated' => date('Y-m-d H:i:s'),
-                'rx_str_date' => $data['rx_str_date'] != '' ? $data['rx_str_date'] : '0000-00-00',
-                'rx_end_date' => $data['rx_end_date'] != '' ? $data['rx_end_date'] : '0000-00-00',
-                'otp' => $data['otp'] != '' ? $data['otp'] : '0',
-            );
-
-
-            $contact_array['uid'] = $this->patient_number_format($prefix->branch_code, $uid->value, $fileNo->value);
-
-
-            $MAIN_DB->insert(db_prefix() . 'contacts', array_merge($contact_array, [
-            'userid' => $main_id,
-            ]));
-
-            $contact_id = $this->db->insert_id();
-
-            
-            $this->db->insert(db_prefix() . 'contacts', array_merge($contact_array, [
-            'userid' => $insert_id, 
-            ])); 
-
-            $contact_id = $this->db->insert_id();
-
-                        
-            $medical_history = [
-            'occupation' => $data['occupation'] != '' ? $data['occupation'] : '',
-            'allergies' => $data['allergies'] != '' ? $data['allergies'] : '',
-            'medication' => $data['medication'] != '' ? $data['medication'] : '',
-            'tobaco_past' => $data['tobaco_past'] != '' ? $data['tobaco_past'] : '',
-            'tobaco_present' => $data['tobaco_present'] != '' ? $data['tobaco_present'] : '',
-            'alcohol_past' => $data['alcohol_past'] != '' ? $data['alcohol_past'] : '',
-            'alcohol_present' => $data['alcohol_present'] != '' ? $data['alcohol_present'] : '',
-            'marital_status' => $data['marital_status'] != '' ? $data['marital_status'] : '',
-            'surgical_history' => $data['surgical_history'] != '' ? $data['surgical_history'] : '',
-            'enviro_factors' =>$data['enviro_factors'] != '' ? $data['enviro_factors'] : '',
-            'risk_factors' => $data['risk_factors'] != '' ? $data['risk_factors'] : '',
-            'history_comment' => $data['history_comment'] != '' ? $data['history_comment'] : '',
-            'chief_complaint' => $data['chief_complaint'] != '' ? $data['chief_complaint'] : '',
-            'dental_history' => $data['dental_history'] != '' ? $data['dental_history'] : '',
-            'diagnosis' => $data['diagnosis'] != '' ? $data['diagnosis'] : '',
-            'disease' => $data['disease'] != '' ? $data['disease'] : '',
-            'clinical_findings' => $data['clinical_findings'] != '' ? $data['clinical_findings'] : '',
-            'current_treatment' => $data['current_treatment'] != '' ? $data['current_treatment'] : '',
-            'current_medication' => $data['current_medication'] != '' ? $data['current_medication'] : '',
-            'previous_medication' => $data['previous_medication'] != '' ? $data['previous_medication'] : '',
+        $client_array = [
+            'company'        => $name,
+            'phonenumber'    => $phone,
+            'datecreated'    => date('Y-m-d H:i:s'),
+            'billing_street' => $address,
         ];
+
+        $MAIN_DB->insert(db_prefix() . 'clients', $client_array);
+        $main_id = $MAIN_DB->insert_id();
+
+        $this->db->insert(db_prefix() . 'clients', $client_array);
+        $insert_id = $this->db->insert_id();
+
+        $MAIN_DB->select('value');
+        $MAIN_DB->where('name', 'next_patient_number');
+        $uid = $MAIN_DB->get(db_prefix() . 'options')->row();
+
+        $MAIN_DB->select('value');
+        $MAIN_DB->where('name', 'next_file_number');
+        $fileNo = $MAIN_DB->get(db_prefix() . 'options')->row();
+
+        $currentBranch = $this->input->cookie('branch');
+
+        $MAIN_DB->where('branch_db', $currentBranch);
+        $prefix = $MAIN_DB->get(db_prefix() . 'branch')->row();
+
+        $branchCode = (!empty($prefix) && isset($prefix->branch_code)) ? $prefix->branch_code : '';
+        $patientNo  = (!empty($uid) && isset($uid->value)) ? $uid->value : 1;
+        $fileNumber = (!empty($fileNo) && isset($fileNo->value)) ? $fileNo->value : 1;
+
+        $contact_array = [
+            'is_primary'   => 1,
+            'firstname'    => $name,
+            'lastname'     => $get('lastname'),
+            'email'        => $email,
+            'phonenumber'  => $phone,
+            'gender'       => $gender,
+            'dob'          => $dob,
+            'blood_group'  => $get('blood_group'),
+            'datecreated'  => date('Y-m-d H:i:s'),
+            'rx_str_date'  => $get('rx_str_date', '0000-00-00'),
+            'rx_end_date'  => $get('rx_end_date', '0000-00-00'),
+            'otp'          => $get('otp', '0'),
+            'uid'          => $this->patient_number_format($branchCode, $patientNo, $fileNumber),
+        ];
+
+        $MAIN_DB->insert(db_prefix() . 'contacts', array_merge($contact_array, [
+            'userid' => $main_id,
+        ]));
+
+        $this->db->insert(db_prefix() . 'contacts', array_merge($contact_array, [
+            'userid' => $insert_id,
+        ]));
+
+        $contact_id = $this->db->insert_id();
+
+        $medical_history = [
+            'occupation'          => $get('occupation'),
+            'allergies'           => $get('allergies'),
+            'medication'          => $get('medication'),
+            'tobaco_past'         => $get('tobaco_past'),
+            'tobaco_present'      => $get('tobaco_present'),
+            'alcohol_past'        => $get('alcohol_past'),
+            'alcohol_present'     => $get('alcohol_present'),
+            'marital_status'      => $get('marital_status'),
+            'surgical_history'    => $get('surgical_history'),
+            'enviro_factors'      => $get('enviro_factors'),
+            'risk_factors'        => $get('risk_factors'),
+            'history_comment'     => $get('history_comment'),
+            'chief_complaint'     => $get('chief_complaint'),
+            'dental_history'      => $get('dental_history'),
+            'diagnosis'           => $get('diagnosis'),
+            'disease'             => $get('disease'),
+            'clinical_findings'   => $get('clinical_findings'),
+            'current_treatment'   => $get('current_treatment'),
+            'current_medication'  => $get('current_medication'),
+            'previous_medication' => $get('previous_medication'),
+            'treatment_plan'      => $get('treatment_plan'),
+        ];
+
         if (isset($data['medical_history']) && is_array($data['medical_history'])) {
             $medical_history['medical_history'] = implode(', ', $data['medical_history']);
-        }else if(isset($data['medical_history']) && !is_array($data['medical_history'])){
+        } elseif (isset($data['medical_history'])) {
             $medical_history['medical_history'] = $data['medical_history'];
-        }
-        else{
+        } else {
             $medical_history['medical_history'] = '';
-        }
-        if (isset($data['treatment_plan'])) {
-            $medical_history['treatment_plan'] = $data['treatment_plan'] != '' ? $data['treatment_plan'] : '';
-        }else{
-            $medical_history['treatment_plan'] = '';
         }
 
         $MAIN_DB->insert(db_prefix() . 'medical_history', array_merge($medical_history, [
-            'userid' => $main_id,
+            'userid'      => $main_id,
             'datecreated' => date('Y-m-d H:i:s'),
         ]));
-        
+
         $this->db->insert(db_prefix() . 'medical_history', array_merge($medical_history, [
-            'userid' => $insert_id,
+            'userid'      => $insert_id,
             'datecreated' => date('Y-m-d H:i:s'),
         ]));
 
-            // Increment the next patient number after data insertion
-            $this->increment_next_number();
-            
+        $this->increment_next_number();
 
-            $this->db->where('id',$id);
-            $this->db->update(db_prefix().'appointly_appointments',['contact_id' => $contact_id]);
+        $this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'appointly_appointments', ['contact_id' => $contact_id]);
 
-            return $insert_id;
-
-        }
+        return $insert_id;
     }
-    
+
     public function get_prescription($id = '', $where = [])
     {
         $this->db->where($where);

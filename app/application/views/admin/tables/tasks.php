@@ -36,6 +36,10 @@ return App_table::find('tasks')
             $where[] = get_tasks_where_string();
         }
 
+        if ($branchScopeWhere = build_staff_branch_scope_where(db_prefix() . 'tasks', 'branch_id', 'addedfrom', [db_prefix() . 'tasks.id IN (SELECT taskid FROM ' . db_prefix() . 'task_assigned WHERE staffid = {staff_id})'])) {
+            $where[] = $branchScopeWhere;
+        }
+        
         // Dashboard my tasks table
         if($this->ci->input->post('my_tasks')) {
             $where[] = 'AND (' . db_prefix() . 'tasks.id IN (SELECT taskid FROM ' . db_prefix() . 'task_assigned WHERE staffid = ' . get_staff_user_id() . ') AND status != '.Tasks_model::STATUS_COMPLETE.')';

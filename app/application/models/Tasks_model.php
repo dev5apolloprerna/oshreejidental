@@ -434,6 +434,14 @@ class Tasks_model extends App_Model
         $data['addedfrom']             = $clientRequest == false ? get_staff_user_id() : get_contact_user_id();
         $data['is_added_from_contact'] = $clientRequest == false ? 0 : 1;
 
+        if ($this->db->field_exists('branch_id', db_prefix() . 'tasks')) {
+            $data['branch_id'] = isset($data['branch_id']) && (int) $data['branch_id'] > 0
+                ? (int) $data['branch_id']
+                : (int) get_current_staff_branch_scope_id();
+        } else {
+            unset($data['branch_id']);
+        }
+        
         $checklistItems = [];
         if (isset($data['checklist_items']) && count($data['checklist_items']) > 0) {
             $checklistItems = $data['checklist_items'];

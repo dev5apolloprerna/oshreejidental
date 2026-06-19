@@ -26,6 +26,12 @@ if ($clientid != '') {
     array_push($where, 'AND ' . db_prefix() . 'clients.userid=' . $this->ci->db->escape_str($clientid));
 }
 
+$paymentBranchId = (int) get_current_staff_branch_scope_id();
+if (!is_admin() && $paymentBranchId > 0 && $this->ci->db->field_exists('branch_id', db_prefix() . 'clients')) {
+    array_push($where, 'AND (' . db_prefix() . 'clients.branch_id = ' . $paymentBranchId . ' OR ' . db_prefix() . 'invoices.addedfrom = ' . get_staff_user_id() . ' OR ' . db_prefix() . 'invoices.sale_agent = ' . get_staff_user_id() . ')');
+}
+
+
 if (staff_cant('view', 'payments')) {
     $whereUser = '';
     $whereUser .= 'AND (invoiceid IN (SELECT id FROM ' . db_prefix() . 'invoices WHERE (addedfrom=' . get_staff_user_id() . ' AND addedfrom IN (SELECT staff_id FROM ' . db_prefix() . 'staff_permissions WHERE feature = "invoices" AND capability="view_own")))';
