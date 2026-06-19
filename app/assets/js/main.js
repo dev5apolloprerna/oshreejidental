@@ -4935,12 +4935,77 @@ function validate_lead_convert_to_client_form() {
   appValidateForm($("#lead_to_client_form"), rules_convert_lead);
 }
 
+// Parse lead save responses defensively. Some servers/plugins can append a
+// duplicated JSON object to the response; in that case use the first complete
+// JSON object instead of showing the raw response as an error.
+function parse_lead_save_response(responseText) {
+  if (typeof responseText !== "string") {
+    return responseText;
+  }
+
+  var text = responseText.trim();
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    var start = text.indexOf("{");
+
+    if (start === -1) {
+      return null;
+    }
+
+    var depth = 0;
+    var inString = false;
+    var escaped = false;
+
+    for (var i = start; i < text.length; i++) {
+      var chr = text.charAt(i);
+
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+        } else if (chr === "\\") {
+          escaped = true;
+        } else if (chr === '"') {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (chr === '"') {
+        inString = true;
+      } else if (chr === "{") {
+        depth++;
+      } else if (chr === "}") {
+        depth--;
+
+        if (depth === 0) {
+          try {
+            return JSON.parse(text.substring(start, i + 1));
+          } catch (e2) {
+            return null;
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
 // Lead profile data function form handler
 function lead_profile_form_handler(form) {
   form = $(form);
-  var data = form.serialize();
+  
+  if (form.data("lead-save-submitting")) {
+    return false;
+  }
+
+  form.data("lead-save-submitting", true);
+
+  data += "&skip_lead_view=1";
   var leadid = $("#lead-modal").find('input[name="leadid"]').val();
-var $saveButtons = $(".lead-save-btn");
+  var $saveButtons = $(".lead-save-btn");
 
   $saveButtons.addClass("disabled").prop("disabled", true);
 
@@ -4948,9 +5013,12 @@ var $saveButtons = $(".lead-save-btn");
     url: form.attr("action"),
     type: "POST",
     data: data,
-    dataType: "json",
+    dataType: "text",
   })
-    .done(function (response) {
+
+    .done(function (responseText) {
+      var response = parse_lead_save_response(responseText);
+
       if (!response || response.success === false || response.success === "false") {
         alert_float(
           "danger",
@@ -4971,8 +5039,10 @@ var $saveButtons = $(".lead-save-btn");
           },
           800
         );
-      } else {
+      } else if (response.leadView) {
         _lead_init_data(response, response.id);
+      } else {
+        $("#lead-modal").modal("hide");
       }
       if ($.fn.DataTable.isDataTable(".table-leads")) {
         table_leads.DataTable().ajax.reload(null, false);
@@ -4981,15 +5051,18 @@ var $saveButtons = $(".lead-save-btn");
       }
     })
     .fail(function (data) {
-      var message =
-        data.responseJSON && data.responseJSON.message
-          ? data.responseJSON.message
-          : data.responseText || app.lang.error_occured || "Something went wrong while saving the lead.";
+
+      var message = app.lang.error_occured || "Something went wrong while saving the lead.";
+
+      if (data.responseJSON && data.responseJSON.message) {
+        message = data.responseJSON.message;
+      }
 
       alert_float("danger", message);
       return false;
     })
     .always(function () {
+      form.data("lead-save-submitting", false);
       $saveButtons.removeClass("disabled").prop("disabled", false);
 
       return false;

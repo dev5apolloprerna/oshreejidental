@@ -26,9 +26,13 @@ if ($clientid != '') {
     array_push($where, 'AND ' . db_prefix() . 'clients.userid=' . $this->ci->db->escape_str($clientid));
 }
 
-$paymentBranchId = (int) get_current_staff_branch_scope_id();
-if (!is_admin() && $paymentBranchId > 0 && $this->ci->db->field_exists('branch_id', db_prefix() . 'clients')) {
-    array_push($where, 'AND (' . db_prefix() . 'clients.branch_id = ' . $paymentBranchId . ' OR ' . db_prefix() . 'invoices.addedfrom = ' . get_staff_user_id() . ' OR ' . db_prefix() . 'invoices.sale_agent = ' . get_staff_user_id() . ')');
+if (function_exists('app_has_branch_context') && app_has_branch_context() && !is_admin()) {
+    array_push($where, 'AND (' . db_prefix() . 'invoices.addedfrom = ' . get_staff_user_id() . ' OR ' . db_prefix() . 'invoices.sale_agent = ' . get_staff_user_id() . ')');
+} else {
+    $paymentBranchId = (int) get_current_staff_branch_scope_id();
+    if (!is_admin() && $paymentBranchId > 0 && $this->ci->db->field_exists('branch_id', db_prefix() . 'clients')) {
+        array_push($where, 'AND (' . db_prefix() . 'clients.branch_id = ' . $paymentBranchId . ' OR ' . db_prefix() . 'invoices.addedfrom = ' . get_staff_user_id() . ' OR ' . db_prefix() . 'invoices.sale_agent = ' . get_staff_user_id() . ')');
+    }
 }
 
 

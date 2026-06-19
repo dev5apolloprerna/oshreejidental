@@ -91,21 +91,39 @@ class Leads extends AdminController
         }
 
         if ($this->input->post()) {
+            $postData     = $this->input->post();
+            $skipLeadView = isset($postData['skip_lead_view']) && $postData['skip_lead_view'] == '1';
+            unset($postData['skip_lead_view']);
+
+
             if ($id == '') {
-                $id      = $this->leads_model->add($this->input->post());
+                $id      = $this->leads_model->add($postData);
                 $message = $id ? _l('added_successfully', _l('lead')) : '';
 
-                echo json_encode([
+                $response = [
                     'success'  => $id ? true : false,
                     'id'       => $id,
                     'message'  => $message,
-                    'leadView' => $id ? $this->_get_lead_data($id) : [],
-                ]);
+                    ];
+
+                if ($id && !$skipLeadView) {
+                    $response['leadView'] = $this->_get_lead_data($id);
+                }
+
+                echo json_encode($response);
             } else {
                 $emailOriginal   = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;
                 $proposalWarning = false;
                 $message         = '';
-                $success         = $this->leads_model->update($this->input->post(), $id);
+                $success         = $this->leads_model->update($postData, $id);
+
+                if (!$success && $skipLeadView) {
+                    // The lead model returns false when the submitted data matches the
+                    // existing row and no database fields are changed. For lightweight
+                    // saves, treat that as a completed save so the UI can show feedback
+                    // and close the modal instead of appearing stuck.
+                    $success = true;
+                }
 
                 if ($success) {
                     $emailNow = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;
@@ -116,13 +134,18 @@ class Leads extends AdminController
 
                     $message = _l('updated_successfully', _l('lead'));
                 }
-                echo json_encode([
+                $response = [
                     'success'          => $success,
                     'message'          => $message,
                     'id'               => $id,
                     'proposal_warning' => $proposalWarning,
-                    'leadView'         => $this->_get_lead_data($id),
-                ]);
+                    ];
+
+                if (!$skipLeadView) {
+                    $response['leadView'] = $this->_get_lead_data($id);
+                }
+
+                echo json_encode($response);
             }
             die;
         }

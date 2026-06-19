@@ -24,8 +24,9 @@ return App_table::find('related_tasks')
         ];
 
         $sIndexColumn = 'id';
-        // $sTable       = db_prefix() . 'tasks';
-        $tasksTable   = db_prefix() . 'tasks';
+        $sTable       = db_prefix() . 'tasks';
+        $tasksTable   = $sTable;
+        $customFieldsColumns = [];
         $where = [];
 
         if ($filtersWhere = $this->getWhereFromRules()) {

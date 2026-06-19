@@ -101,6 +101,10 @@ class Payments extends AdminController
             show_404();
         }
 
+         if (function_exists('staff_can_access_payment_record') && !staff_can_access_payment_record($id)) {
+            access_denied('payments');
+        }
+
         $this->load->model('invoices_model');
         $payment->invoice = $this->invoices_model->get($payment->invoiceid);
         $template_name    = 'invoice_payment_recorded_to_customer';
@@ -137,6 +141,11 @@ class Payments extends AdminController
         }
 
         $payment = $this->payments_model->get($id);
+
+        if (function_exists('staff_can_access_payment_record') && !staff_can_access_payment_record($id)) {
+            access_denied('View Payment');
+        }
+
 
         if (staff_cant('view', 'payments')
             && staff_cant('view_own', 'invoices')
