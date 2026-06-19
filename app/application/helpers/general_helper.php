@@ -1091,3 +1091,65 @@ if (!function_exists('build_staff_branch_scope_where')) {
         return 'AND (' . implode(' OR ', $rules) . ')';
     }
 }
+
+if (!function_exists('build_staff_entered_data_scope_where')) {
+    /**
+     * Build a datatable WHERE fragment for branch logins so they only see
+     * records they entered or records explicitly assigned to them.
+     */
+    function build_staff_entered_data_scope_where($table, $enteredByColumn = '', $assignedExistsClauses = [])
+    {
+        if (!is_staff_logged_in() || is_admin() || !function_exists('app_has_branch_context') || !app_has_branch_context()) {
+            return '';
+        }
+
+        $CI      = &get_instance();
+        $staffId = (int) get_staff_user_id();
+        $rules   = [];
+
+        if ($enteredByColumn !== '' && $CI->db->field_exists($enteredByColumn, $table)) {
+            $rules[] = $table . '.' . $enteredByColumn . ' = ' . $staffId;
+        }
+
+        foreach ((array) $assignedExistsClauses as $clause) {
+            if ($clause !== '') {
+                $rules[] = '(' . str_replace('{staff_id}', $staffId, $clause) . ')';
+            }
+        }
+
+        if (empty($rules)) {
+            return '';
+        }
+
+        return 'AND (' . implode(' OR ', $rules) . ')';
+    }
+}
+
+if (!function_exists('staff_can_access_payment_record')) {
+    /**
+     * Branch logins may only open payments they recorded themselves or payments
+     * for invoices they created/own as sales agent.
+     */
+    function staff_can_access_payment_record($paymentId)
+    {
+        if (!is_staff_logged_in() || is_admin() || !function_exists('app_has_branch_context') || !app_has_branch_context()) {
+            return true;
+        }
+
+        $CI      = &get_instance();
+        $staffId = (int) get_staff_user_id();
+        $payment = $CI->db
+            ->select(db_prefix() . 'invoicepaymentrecords.id')
+            ->from(db_prefix() . 'invoicepaymentrecords')
+            ->join(db_prefix() . 'invoices', db_prefix() . 'invoices.id = ' . db_prefix() . 'invoicepaymentrecords.invoiceid', 'left')
+            ->where(db_prefix() . 'invoicepaymentrecords.id', (int) $paymentId)
+            ->group_start()
+                ->where(db_prefix() . 'invoices.addedfrom', $staffId)
+                ->or_where(db_prefix() . 'invoices.sale_agent', $staffId)
+            ->group_end()
+            ->get()
+            ->row();
+
+        return (bool) $payment;
+    }
+}

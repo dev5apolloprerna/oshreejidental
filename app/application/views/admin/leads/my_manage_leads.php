@@ -10,7 +10,7 @@
                         <i class="fa-regular fa-plus tw-mr-1"></i>
                         <?php echo _l('new_lead'); ?>
                     </a>
-                    <?php// if (is_admin() || get_option('allow_non_admin_members_to_import_leads') == '1') { ?>
+
                     <a href="<?php echo admin_url('leads/import'); ?>"
                         class="btn btn-primary pull-left display-block hidden-xs">
                         <i class="fa-solid fa-upload tw-mr-1"></i>
