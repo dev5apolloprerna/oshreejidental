@@ -205,6 +205,33 @@ class Appointments extends AdminController
         echo json_encode($busy_dates);
         return;
     }
+    public function patient_profile_create()
+    {
+        if (!staff_can('create', 'appointments') && !staff_appointments_responsible()) {
+            access_denied();
+        }
+
+        $contact_id = (int) $this->input->get('contact_id');
+
+        if (!$contact_id) {
+            show_404();
+        }
+
+        $this->load->model('clients_model');
+
+        $contact = $this->clients_model->get_contact($contact_id);
+
+        if (!$contact) {
+            show_404();
+        }
+
+        $data['user']       = $contact;
+        $data['staff']      = $this->staff_model->get('', ['active' => 1]);
+        $data['return_url'] = admin_url('clients/client/' . (int) $contact->userid . '?group=patient_profile');
+        $data['title']      = _l('appointment_create_label') . ' ' . _l('appointment_label');
+
+        $this->load->view('patient_profile_create', $data);
+    }
 
     public function modal_internal_crm()
     {
