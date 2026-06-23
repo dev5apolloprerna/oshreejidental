@@ -21,58 +21,73 @@ init_head();
                         <input type="hidden" name="rel_type" value="internal">
                         <input type="hidden" name="contact_id" value="<?= (int) $user->id; ?>">
 
-                        <?php echo render_input('subject', 'appointment_subject'); ?>
-                        <?php echo render_textarea('description', 'appointment_description', '', ['rows' => 5]); ?>
-
-                        <?php if (isset($staff)) : ?>
-                            <div class="form-group">
-                                <?php echo render_select('attendees[]', $staff, ['staffid', ['firstname', 'lastname']], 'appointment_select_attendees', [get_staff_user_id()], ['multiple' => true], [], '', '', false); ?>
-                            </div>
-                        <?php endif; ?>
+                        
 
                         <div class="row">
                             <div class="col-md-6">
-                                <?php echo render_datetime_input('date', 'appointment_date_and_time', '', ['readonly' => 'readonly'], [], '', 'appointment-date'); ?>
+                                <?php $appointment_types = get_appointment_types(); ?>
+                                <?php if (count($appointment_types) > 0) { ?>
+                                    <div class="form-group appointment_type_holder">
+                                        <label for="appointment_select_type" class="control-label"><?= _l('appointments_type_heading'); ?></label>
+                                        <select class="form-control selectpicker" name="type_id" id="appointment_select_type">
+                                            <option value=""><?= _l('dropdown_non_selected_tex'); ?></option>
+                                            <?php foreach ($appointment_types as $app_type) { ?>
+                                                <option class="form-control" data-color="<?= $app_type['color']; ?>" value="<?= $app_type['id']; ?>"><?= $app_type['type']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <small id="appointment_color_type" class="pull-right appointment_color_type" style="background:#e1e6ec"></small>
+                                    </div>
+                                    <div class="clearfix mtop15"></div>
+                                    <hr>
+                                <?php } ?>
+
+                                <div class="form-group" id="div_name">
+                                    <label for="name"><?= _l('appointment_name'); ?></label>
+                                    <input type="text" value="<?= e($user->firstname . ' ' . $user->lastname); ?>" class="form-control" name="name" id="name" readonly>
+                                </div>
+                                <div class="form-group" id="div_email">
+                                    <label for="email"><?= _l('appointment_email'); ?></label>
+                                    <input type="email" value="<?= e($user->email); ?>" class="form-control" name="email" id="email" readonly>
+                                </div>
+                                <div class="form-group" id="div_phone">
+                                    <label for="phone"><?= _l('appointment_phone'); ?> (Ex: <?= _l('appointment_your_phone_example'); ?>)</label>
+                                    <input type="text" value="<?= e($user->phonenumber); ?>" class="form-control" name="phone" id="phone" readonly>
+                                </div>
+                                <?php echo render_input('subject', 'appointment_subject'); ?>
                             </div>
                             <div class="col-md-6">
+                                                                <?php echo render_textarea('description', 'appointment_description', '', ['rows' => 2]); ?>
+
+                                <div class="col-md-12 no-padding">
+                                    <?php echo render_datetime_input('date', 'appointment_date_and_time', '', ['readonly' => 'readonly'], [], '', 'appointment-date'); ?>
+                                </div>
+                                <div class="available_times_labels appointment_hours" style="width:100%;margin-bottom: 15px;">
+                                    <span class="available_time_info appointment_hours">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <?= _l('appointment_available_hours'); ?>
+                                    <span class="busy_time_info" style="margin-left: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <?= _l('appointment_busy_hours'); ?>
+                                    <?php if (appointlyGoogleAuth()) : ?>
+                                        <span class="busy_time_info_google">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <?= _l('appointments_google_calendar'); ?>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="clearfix"></div>
+
                                 <div class="form-group">
                                     <label for="address"><?= _l('appointment_meeting_location') . ' ' . _l('appointment_optional'); ?></label>
                                     <input type="text" class="form-control" name="address" id="address">
                                 </div>
+                             <?php if (isset($staff)) : ?>
+                                    <div class="form-group">
+                                        <?php echo render_select('attendees[]', $staff, ['staffid', ['firstname', 'lastname']], 'appointment_select_attendees', [get_staff_user_id()], [], [], '', '', false); ?>
+                                    </div>
+                                <?php endif; ?>
+
+                            <?php $this->load->view('view_includes/recurring_wrapper'); ?>
                             </div>
-                        </div>
+                           
 
-                        <div class="form-group" id="div_name">
-                            <label for="name"><?= _l('appointment_name'); ?></label>
-                            <input type="text" value="<?= e($user->firstname . ' ' . $user->lastname); ?>" class="form-control" name="name" id="name" readonly>
-                        </div>
-                        <div class="form-group" id="div_email">
-                            <label for="email"><?= _l('appointment_email'); ?></label>
-                            <input type="email" value="<?= e($user->email); ?>" class="form-control" name="email" id="email" readonly>
-                        </div>
-                        <div class="form-group" id="div_phone">
-                            <label for="phone"><?= _l('appointment_phone'); ?> (Ex: <?= _l('appointment_your_phone_example'); ?>)</label>
-                            <input type="text" value="<?= e($user->phonenumber); ?>" class="form-control" name="phone" id="phone" readonly>
-                        </div>
-
-                        <?php $appointment_types = get_appointment_types(); ?>
-                        <?php if (count($appointment_types) > 0) { ?>
-                            <div class="form-group appointment_type_holder">
-                                <label for="appointment_select_type" class="control-label"><?= _l('appointments_type_heading'); ?></label>
-                                <select class="form-control" name="type_id" id="appointment_select_type">
-                                    <option value=""><?= _l('dropdown_non_selected_tex'); ?></option>
-                                    <?php foreach ($appointment_types as $app_type) { ?>
-                                        <option class="form-control" data-color="<?= $app_type['color']; ?>" value="<?= $app_type['id']; ?>"><?= $app_type['type']; ?></option>
-                                    <?php } ?>
-                                </select>
-                                <small id="appointment_color_type" class="pull-right appointment_color_type" style="background:#e1e6ec"></small>
-                            </div>
-                            <div class="clearfix mtop15"></div>
-                            <hr>
-                        <?php } ?>
-
-                        <?php $this->load->view('view_includes/recurring_wrapper'); ?>
-
+</div>
                         <?php
                         $rel_cf_id = false;
                         echo render_custom_fields('appointly', $rel_cf_id);
@@ -80,7 +95,7 @@ init_head();
 
                         <div class="form-group mtop10">
                             <div class="row">
-                                <div class="col-md-12 mbot5">
+                                <div class="col-md-12 mbot5 appointment_hours">
                                     <?= _l('appointment_modal_notification_info'); ?>
                                 </div>
                                 <div class="col-md-6">
@@ -108,7 +123,7 @@ init_head();
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <select name="reminder_before_type" id="reminder_before_type" class="form-control">
+                                    <select name="reminder_before_type" id="reminder_before_type" class="form-control selectpicker" data-width="100%">
                                         <option value="minutes"><?php echo _l('minutes'); ?></option>
                                         <option value="hours"><?php echo _l('hours'); ?></option>
                                         <option value="days"><?php echo _l('days'); ?></option>
