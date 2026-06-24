@@ -17,11 +17,19 @@ $sTable = db_prefix() . 'appointly_appointments';
 
 $where = [];
 
-if (!is_admin()) {
-    $staffId = (int) get_staff_user_id();
-    $assignedAppointmentsWhere = 'AND ' . db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . $staffId . ')';
+$branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
+$scopeWhere = '';
 
-    array_push($where, $assignedAppointmentsWhere);
+if (!is_admin() && function_exists('build_staff_branch_scope_where')) {
+    $scopeWhere = build_staff_branch_scope_where($sTable, 'branch_id', 'created_by', [$sTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+} elseif ($branchScopeId > 0 && $this->ci->db->field_exists('branch_id', $sTable)) {
+    $scopeWhere = 'AND ' . $sTable . '.branch_id = ' . $branchScopeId;
+}
+if ($scopeWhere !== '') {
+    array_push($where, $scopeWhere);
+} elseif (!is_admin()) {
+    $staffId = (int) get_staff_user_id();
+    array_push($where, 'AND ' . $sTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . $staffId . ')');
 }
 $filters = [];
 if ($this->ci->input->post('approved')) {

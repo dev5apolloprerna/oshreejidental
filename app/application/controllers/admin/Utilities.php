@@ -87,6 +87,12 @@ class Utilities extends AdminController
 
     public function get_calendar_data()
     {
+         $referer = $this->input->server('HTTP_REFERER');
+        $branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
+        if ($referer && rtrim($referer, '/') === rtrim(admin_url(), '/') && is_admin() && $branchScopeId === 0) {
+            $GLOBALS['dashboard_calendar_show_all'] = true;
+        }
+        
         echo json_encode($this->utilities_model->get_calendar_data(
                 date('Y-m-d', strtotime($this->input->get('start'))),
                 date('Y-m-d', strtotime($this->input->get('end'))),

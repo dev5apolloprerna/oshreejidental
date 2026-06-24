@@ -8,6 +8,16 @@ if ( ! $appointly_default_table_filter) {
 
 $filters = ['approved', 'not_approved', 'cancelled', 'finished', 'upcoming', 'missed', 'internal', 'external', 'recurring', 'lead_related', 'internal_staff'];
 
+$status_filter = $this->input->get('status', true);
+if ($status_filter === 'pending') {
+    $status_filter = 'not_approved';
+}
+if ($status_filter === 'all') {
+    $appointly_default_table_filter = 'all';
+} elseif (in_array($status_filter, $filters, true)) {
+    $appointly_default_table_filter = $status_filter;
+}
+
 $appointly_show_summary = get_meta('staff', get_staff_user_id(), 'appointly_show_summary');
 $appointly_outlook_client_id = get_option('appointly_outlook_client_id');
 $edit_appointment_id = ($this->session->userdata('from_view_id')) ? $this->session->userdata('from_view_id') : 0;

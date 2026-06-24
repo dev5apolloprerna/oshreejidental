@@ -843,7 +843,7 @@ class Appointly_model extends App_Model
         $date = new DateTime();
         $today = $date->format('Y-m-d');
 
-        if (!is_admin()) {
+        if (!is_admin() && empty($GLOBALS['dashboard_show_all_appointly'])) {
             $scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
             if ($scopeWhere !== '') {
                 $this->db->where(substr($scopeWhere, 4), null, false);
@@ -938,24 +938,31 @@ class Appointly_model extends App_Model
      */
     public function getCalendarData($start, $end, $data)
     {
-        $this->db->select('subject as title, date, hash, start_hour, id, type_id');
-        $this->db->from(db_prefix() . 'appointly_appointments');
-        $this->db->where('finished = 0 AND cancelled = 0');
+         $appointmentsTable = db_prefix() . 'appointly_appointments';
+        $scopeWhere = '';
+
+        if (!is_client_logged_in() && !is_admin() && empty($GLOBALS['dashboard_show_all_appointly'])) {
+            // Build branch/staff scope before starting the calendar query because the helper
+            // performs its own database metadata lookups on the shared query builder instance.
+            $scopeWhere = build_staff_branch_scope_where($appointmentsTable, 'branch_id', 'created_by', [$appointmentsTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+        }
+
+        $this->db->select($appointmentsTable . '.subject as title, ' . $appointmentsTable . '.date, ' . $appointmentsTable . '.hash, ' . $appointmentsTable . '.start_hour, ' . $appointmentsTable . '.id, ' . $appointmentsTable . '.type_id');
+        $this->db->from($appointmentsTable);
+        $this->db->where($appointmentsTable . '.finished = 0 AND ' . $appointmentsTable . '.cancelled = 0');
 
 
-        if ( ! is_client_logged_in()) {
-             if ( ! is_admin()) {
-                $scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
-                if ($scopeWhere !== '') {
-                    $this->db->where(substr($scopeWhere, 4), null, false);
-                }
+        if (!is_client_logged_in()) 
+        {
+            if ($scopeWhere !== '') {
+                $this->db->where(substr($scopeWhere, 4), null, false);
             }
         } else {
-            $this->db->where('id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE contact_id=' . get_contact_user_id() . ')');
+            $this->db->where($appointmentsTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE contact_id=' . get_contact_user_id() . ')');
         }
 
 
-        $this->db->where('(CONCAT(date, " ", start_hour) BETWEEN "' . $start . '" AND "' . $end . '")');
+        $this->db->where('(CONCAT(' . $appointmentsTable . '.date, " ", ' . $appointmentsTable . '.start_hour) BETWEEN "' . $start . '" AND "' . $end . '")');
 
         $appointments = $this->db->get()->result_array();
 

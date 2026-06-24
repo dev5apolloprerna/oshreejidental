@@ -18,10 +18,10 @@ class Dashboard extends AdminController
         $this->load->model('todo_model');
         $data['departments'] = $this->departments_model->get();
 
-        $data['todos'] = $this->todo_model->get_todo_items(0);
+        $data['todos'] = $this->todo_model->get_todo_items(0, '', false);
         // Only show last 5 finished todo items
         $this->todo_model->setTodosLimit(5);
-        $data['todos_finished']            = $this->todo_model->get_todo_items(1);
+        $data['todos_finished']            = $this->todo_model->get_todo_items(1, '', false);
         $data['upcoming_events_next_week'] = $this->dashboard_model->get_upcoming_events_next_week();
         $data['upcoming_events']           = $this->dashboard_model->get_upcoming_events();
         $data['title']                     = _l('dashboard_string');
