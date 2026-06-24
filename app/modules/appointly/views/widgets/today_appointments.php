@@ -2,7 +2,9 @@
 <?php
 $CI = &get_instance();
 $CI->load->model('appointly/appointly_model', 'apm');
+$GLOBALS['dashboard_show_all_appointly'] = true;
 $appointments = $CI->apm->fetch_todays_appointments();
+unset($GLOBALS['dashboard_show_all_appointly']);
 ?>
 <div class="widget" id="widget-<?php echo basename(__FILE__, ".php"); ?>" data-name="<?= _l('appointment_todays_appointments'); ?>">
     <div class="panel_s todo-panel">

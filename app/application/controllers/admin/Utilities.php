@@ -87,6 +87,11 @@ class Utilities extends AdminController
 
     public function get_calendar_data()
     {
+         $referer = $this->input->server('HTTP_REFERER');
+        if ($referer && rtrim($referer, '/') === rtrim(admin_url(), '/')) {
+            $GLOBALS['dashboard_calendar_show_all'] = true;
+        }
+        
         echo json_encode($this->utilities_model->get_calendar_data(
                 date('Y-m-d', strtotime($this->input->get('start'))),
                 date('Y-m-d', strtotime($this->input->get('end'))),

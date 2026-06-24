@@ -36,13 +36,17 @@ return App_table::find('tasks')
             $where[] = get_tasks_where_string();
         }
 
-        if ($branchScopeWhere = build_staff_branch_scope_where(db_prefix() . 'tasks', 'branch_id', 'addedfrom', [db_prefix() . 'tasks.id IN (SELECT taskid FROM ' . db_prefix() . 'task_assigned WHERE staffid = {staff_id})'])) {
-         $where[] = $branchScopeWhere;
+        if (!$this->ci->input->post('dashboard_all_tasks')) {
+            if ($branchScopeWhere = build_staff_branch_scope_where(db_prefix() . 'tasks', 'branch_id', 'addedfrom', [db_prefix() . 'tasks.id IN (SELECT taskid FROM ' . db_prefix() . 'task_assigned WHERE staffid = {staff_id})'])) {
+                $where[] = $branchScopeWhere;
+            }
         }
 
         // Dashboard my tasks table
         if($this->ci->input->post('my_tasks')) {
             $where[] = 'AND (' . db_prefix() . 'tasks.id IN (SELECT taskid FROM ' . db_prefix() . 'task_assigned WHERE staffid = ' . get_staff_user_id() . ') AND status != '.Tasks_model::STATUS_COMPLETE.')';
+        } elseif ($this->ci->input->post('dashboard_all_tasks')) {
+            $where[] = 'AND status != '.Tasks_model::STATUS_COMPLETE;
         }
 
         array_push($where, 'AND CASE WHEN rel_type="project" AND rel_id IN (SELECT project_id FROM ' . db_prefix() . 'project_settings WHERE project_id=rel_id AND name="hide_tasks_on_main_tasks_table" AND value=1) THEN rel_type != "project" ELSE 1=1 END');

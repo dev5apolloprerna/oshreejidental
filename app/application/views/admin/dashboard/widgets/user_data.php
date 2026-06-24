@@ -75,7 +75,7 @@
                         class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?></a>
                     <div class="clearfix"></div>
                     <div class="_hidden_inputs _filters _tasks_filters">
-                        <?php echo form_hidden('my_tasks', true); ?>
+                        <?php echo form_hidden('dashboard_all_tasks', true); ?>
                     </div>
                     <?php $this->load->view('admin/tasks/_table'); ?>
                 </div>

@@ -41,12 +41,17 @@ class Todo_model extends App_Model
      * @param  mixed $page     pagination limit page
      * @return array
      */
-    public function get_todo_items($finished, $page = '')
+    public function get_todo_items($finished, $page = '', $staff_id = null)
     {
         $this->db->select();
         $this->db->from(db_prefix().'todos');
         $this->db->where('finished', $finished);
-        $this->db->where('staffid', get_staff_user_id());
+        if ($staff_id === null) {
+            $staff_id = get_staff_user_id();
+        }
+        if ($staff_id !== false) {
+            $this->db->where('staffid', $staff_id);
+        }
         $this->db->order_by('item_order', 'asc');
         if ($page != '' && $this->input->post('todo_page')) {
             $position = ($page * $this->todo_limit);

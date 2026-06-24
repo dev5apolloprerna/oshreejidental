@@ -174,9 +174,26 @@ function render_dashboard_widgets($container)
 
     $visibility = get_staff_meta(get_staff_user_id(), 'dashboard_widgets_visibility');
     $visibility = !$visibility ? [] : unserialize($visibility);
+        $alwaysVisibleOnDashboard = [
+        'top_stats',
+        'today_appointments',
+        'calendar',
+        'user_data',
+        'todos',
+        'leads_chart',
+        'payments_chart',
+    ];
+
     foreach ($widgetsHtml as $widgetID => $widgetHTML) {
+         $settingID = strafter($widgetID, 'widget-');
+        if (in_array($settingID, $alwaysVisibleOnDashboard)) {
+            echo $widgetHTML;
+            continue;
+        }
+
+
         foreach ($visibility as $option) {
-            if ($option['id'] == strafter($widgetID, 'widget-') && $option['visible'] == 0) {
+            if ($option['id'] == $settingID && $option['visible'] == 0) {
                 if (strpos($widgetHTML->class, 'hide') !== true && !empty((string) $widgetHTML)) {
                     $widgetHTML->class .= ' hide';
                 }
