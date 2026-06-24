@@ -16,7 +16,7 @@ if (!function_exists('doctor_treatment_report_clean_cell')) {
         $value = (string) $value;
 
         if (function_exists('mb_check_encoding') && !mb_check_encoding($value, 'UTF-8')) {
-         $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8, ISO-8859-1, Windows-1252');
+            $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8, ISO-8859-1, Windows-1252');
         }
 
         if (function_exists('iconv')) {
@@ -44,33 +44,37 @@ $staffTable               = db_prefix() . 'staff';
 $contactsTable            = db_prefix() . 'contacts';
 $clientsTable             = db_prefix() . 'clients';
 
-$fallbackPatientContactSql = "SELECT fallback_contacts.userid
-    FROM {$contactsTable} AS fallback_contacts
-    WHERE (fallback_contacts.id = {$appointmentsTable}.contact_id)
-        OR ({$appointmentsTable}.old_contact_id > 0 AND (fallback_contacts.id = {$appointmentsTable}.old_contact_id OR fallback_contacts.tbl_uniq_id = {$appointmentsTable}.old_contact_id))
-        OR ({$appointmentsTable}.phone <> '' AND fallback_contacts.phonenumber = {$appointmentsTable}.phone)
-        OR ({$appointmentsTable}.email <> '' AND fallback_contacts.email = {$appointmentsTable}.email)
-    ORDER BY fallback_contacts.is_primary DESC, fallback_contacts.id DESC
-    LIMIT 1";
-$patientProfileIdSql = "COALESCE({$clientsTable}.userid, ({$fallbackPatientContactSql}), 0)";
-$patientUniqueIdSql = "COALESCE(NULLIF(CONVERT({$contactsTable}.uid USING utf8mb4), ''), (
-    SELECT NULLIF(CONVERT(fallback_uid_contacts.uid USING utf8mb4), '')
-    FROM {$contactsTable} AS fallback_uid_contacts
-    WHERE fallback_uid_contacts.userid = {$patientProfileIdSql}
-    ORDER BY fallback_uid_contacts.is_primary DESC, fallback_uid_contacts.id DESC
-    LIMIT 1
-), NULLIF(CONVERT({$clientsTable}.tbl_uniq_id USING utf8mb4), '0'), CONVERT({$patientProfileIdSql} USING utf8mb4), '')";
+$doctorsTableSql = "(
+    SELECT appointment_id,
+        GROUP_CONCAT(DISTINCT TRIM(CONCAT(CONVERT(doctor_staff.firstname USING utf8mb4), ' ', CONVERT(doctor_staff.lastname USING utf8mb4))) ORDER BY doctor_staff.firstname, doctor_staff.lastname SEPARATOR ', ') AS doctor_names
+    FROM {$appointmentTreatmentTable} AS grouped_treatments
+    LEFT JOIN {$staffTable} AS doctor_staff ON grouped_treatments.staff = doctor_staff.staffid
+    GROUP BY appointment_id
+) AS treatment_doctors";
 
-$patientSql = "COALESCE(NULLIF(TRIM(CONCAT(CONVERT({$contactsTable}.firstname USING utf8mb4), ' ', CONVERT({$contactsTable}.lastname USING utf8mb4))), ''), CONVERT({$clientsTable}.company USING utf8mb4), CONVERT({$appointmentsTable}.name USING utf8mb4), '')";
+$patientProfileIdSql = 'COALESCE(clients.userid, direct_contacts.userid, old_contacts.userid, phone_contacts.userid, email_contacts.userid, 0)';
+$patientUniqueIdSql = "COALESCE(
+    NULLIF(CONVERT(direct_contacts.uid USING utf8mb4), ''),
+    NULLIF(CONVERT(old_contacts.uid USING utf8mb4), ''),
+    NULLIF(CONVERT(phone_contacts.uid USING utf8mb4), ''),
+    NULLIF(CONVERT(email_contacts.uid USING utf8mb4), ''),
+    NULLIF(CONVERT(primary_contacts.uid USING utf8mb4), ''),
+    NULLIF(CONVERT(clients.tbl_uniq_id USING utf8mb4), '0'),
+    CONVERT({$patientProfileIdSql} USING utf8mb4),
+    ''
+)";
+$patientSql = "COALESCE(
+    NULLIF(TRIM(CONCAT(CONVERT(direct_contacts.firstname USING utf8mb4), ' ', CONVERT(direct_contacts.lastname USING utf8mb4))), ''),
+    NULLIF(TRIM(CONCAT(CONVERT(old_contacts.firstname USING utf8mb4), ' ', CONVERT(old_contacts.lastname USING utf8mb4))), ''),
+    NULLIF(TRIM(CONCAT(CONVERT(phone_contacts.firstname USING utf8mb4), ' ', CONVERT(phone_contacts.lastname USING utf8mb4))), ''),
+    NULLIF(TRIM(CONCAT(CONVERT(email_contacts.firstname USING utf8mb4), ' ', CONVERT(email_contacts.lastname USING utf8mb4))), ''),
+    CONVERT(clients.company USING utf8mb4),
+    CONVERT({$appointmentsTable}.name USING utf8mb4),
+    ''
+)";
+
 $singleDoctorSql = "TRIM(CONCAT(CONVERT({$staffTable}.firstname USING utf8mb4), ' ', CONVERT({$staffTable}.lastname USING utf8mb4)))";
-$doctorSql = "COALESCE(NULLIF((
-    SELECT GROUP_CONCAT(DISTINCT TRIM(CONCAT(CONVERT(doctor_staff.firstname USING utf8mb4), ' ', CONVERT(doctor_staff.lastname USING utf8mb4))) ORDER BY doctor_staff.firstname, doctor_staff.lastname SEPARATOR ', ')
-    FROM {$appointmentTreatmentTable} AS related_treatments
-    LEFT JOIN {$staffTable} AS doctor_staff ON related_treatments.staff = doctor_staff.staffid
-    WHERE related_treatments.appointment_id = {$appointmentTreatmentTable}.appointment_id
-), ''), {$singleDoctorSql})";
-
-
+$doctorSql = "COALESCE(NULLIF(treatment_doctors.doctor_names, ''), {$singleDoctorSql})";
 
 $selectSql = "
     {$appointmentTreatmentTable}.id,
@@ -85,19 +89,21 @@ $selectSql = "
 
 $fromJoinSql = "
     FROM {$appointmentTreatmentTable}
-    LEFT JOIN {$staffTable} ON {$appointmentTreatmentTable}.staff = {$staffTable}.staffid
     LEFT JOIN {$appointmentsTable} ON (
         {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.id
         OR {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.tbl_uniq_id
     )
-LEFT JOIN {$contactsTable} ON (
-        {$appointmentsTable}.contact_id = {$contactsTable}.id
-        OR ({$appointmentsTable}.old_contact_id > 0 AND (
-            {$appointmentsTable}.old_contact_id = {$contactsTable}.id
-            OR {$appointmentsTable}.old_contact_id = {$contactsTable}.tbl_uniq_id
-        ))
-    )
-    LEFT JOIN {$clientsTable} ON {$contactsTable}.userid = {$clientsTable}.userid
+    LEFT JOIN {$staffTable} ON {$appointmentTreatmentTable}.staff = {$staffTable}.staffid
+    LEFT JOIN {$doctorsTableSql} ON treatment_doctors.appointment_id = {$appointmentTreatmentTable}.appointment_id
+    LEFT JOIN {$contactsTable} AS direct_contacts ON {$appointmentsTable}.contact_id = direct_contacts.id
+    LEFT JOIN {$contactsTable} AS old_contacts ON {$appointmentsTable}.old_contact_id > 0
+        AND ({$appointmentsTable}.old_contact_id = old_contacts.id OR {$appointmentsTable}.old_contact_id = old_contacts.tbl_uniq_id)
+    LEFT JOIN {$contactsTable} AS phone_contacts ON {$appointmentsTable}.phone <> ''
+        AND phone_contacts.phonenumber = {$appointmentsTable}.phone
+    LEFT JOIN {$contactsTable} AS email_contacts ON {$appointmentsTable}.email <> ''
+        AND email_contacts.email = {$appointmentsTable}.email
+    LEFT JOIN {$clientsTable} AS clients ON clients.userid = COALESCE(direct_contacts.userid, old_contacts.userid, phone_contacts.userid, email_contacts.userid)
+    LEFT JOIN {$contactsTable} AS primary_contacts ON primary_contacts.userid = clients.userid AND primary_contacts.is_primary = 1
 ";
 
 $whereParts = [];
@@ -116,8 +122,7 @@ if ($startDate !== null && $startDate !== '') {
     $whereParts[] = 'DATE(' . $appointmentTreatmentTable . '.created_date) >= ' . $CI->db->escape(to_sql_date($startDate));
 }
 
-if ($endDate !== null && $endDate !== '') 
-{
+if ($endDate !== null && $endDate !== '') {
     $whereParts[] = 'DATE(' . $appointmentTreatmentTable . '.created_date) <= ' . $CI->db->escape(to_sql_date($endDate));
 }
 
@@ -163,12 +168,12 @@ if ($length !== -1) {
     // Use simple column-name fallback so the view works whether the
     // framework returns full-expression keys or short column-name keys.
     
-    $oldDbDebug = $CI->db->db_debug;
-    $CI->db->db_debug = false;
+$oldDbDebug = $CI->db->db_debug;
+$CI->db->db_debug = false;
 
-    $totalQuery    = $CI->db->query('SELECT COUNT(*) AS total ' . $fromJoinSql . $baseWhereSql);
-    $filteredQuery = $CI->db->query('SELECT COUNT(*) AS total ' . $fromJoinSql . $baseWhereSql . $searchWhereSql);
-    $rowsQuery     = $CI->db->query('SELECT ' . $selectSql . $fromJoinSql . $baseWhereSql . $searchWhereSql . $orderSql . $limitSql);
+    $totalQuery    = $CI->db->query('SELECT COUNT(DISTINCT ' . $appointmentTreatmentTable . '.id) AS total ' . $fromJoinSql . $baseWhereSql);
+$filteredQuery = $CI->db->query('SELECT COUNT(DISTINCT ' . $appointmentTreatmentTable . '.id) AS total ' . $fromJoinSql . $baseWhereSql . $searchWhereSql);
+$rowsQuery     = $CI->db->query('SELECT ' . $selectSql . $fromJoinSql . $baseWhereSql . $searchWhereSql . ' GROUP BY ' . $appointmentTreatmentTable . '.id ' . $orderSql . $limitSql);
 
    $CI->db->db_debug = $oldDbDebug;
 
@@ -188,24 +193,23 @@ if ($length !== -1) {
 }
 
     $totalRecords = (int) $totalQuery->row()->total;
-    $filteredRecords = (int) $filteredQuery->row()->total;
+$filteredRecords = (int) $filteredQuery->row()->total;
 
-
-    $output = [
-        'draw'                 => $draw,
-        'recordsTotal'         => $totalRecords,
-        'recordsFiltered'      => $filteredRecords,
-        'iTotalRecords'        => $totalRecords,
-        'iTotalDisplayRecords' => $filteredRecords,
-        'data'                 => [],
-        'aaData'               => [],
-    ];
+$output = [
+    'draw'                 => $draw,
+    'recordsTotal'         => $totalRecords,
+    'recordsFiltered'      => $filteredRecords,
+    'iTotalRecords'        => $totalRecords,
+    'iTotalDisplayRecords' => $filteredRecords,
+    'data'                 => [],
+    'aaData'               => [],
+];
 
 foreach ($rowsQuery->result_array() as $aRow) {
     $patientId = (int) ($aRow['patient_id'] ?? 0);
     $patientName = doctor_treatment_report_clean_cell($aRow['patient_name']);
     $patientUniqueId = doctor_treatment_report_clean_cell($aRow['patient_unique_id'] ?? '');
-    $patientLabel = ($patientUniqueId !== '' ? $patientUniqueId . ' - ' : '') . $patientName;
+    $patientLabel = $patientName . ($patientUniqueId !== '' ? ' - ' . $patientUniqueId : '');
     $patientCell = e($patientLabel);
 
     if ($patientId > 0) {
