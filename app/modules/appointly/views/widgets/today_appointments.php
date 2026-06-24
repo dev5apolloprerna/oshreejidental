@@ -2,9 +2,16 @@
 <?php
 $CI = &get_instance();
 $CI->load->model('appointly/appointly_model', 'apm');
-$GLOBALS['dashboard_show_all_appointly'] = true;
+$branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
+$showAllDashboardAppointments = is_admin() && $branchScopeId === 0;
+if ($showAllDashboardAppointments) {
+    $GLOBALS['dashboard_show_all_appointly'] = true;
+}
+
 $appointments = $CI->apm->fetch_todays_appointments();
-unset($GLOBALS['dashboard_show_all_appointly']);
+if ($showAllDashboardAppointments) {
+    unset($GLOBALS['dashboard_show_all_appointly']);
+}
 ?>
 <div class="widget" id="widget-<?php echo basename(__FILE__, ".php"); ?>" data-name="<?= _l('appointment_todays_appointments'); ?>">
     <div class="panel_s todo-panel">

@@ -12,7 +12,7 @@ function get_dashboard_widgets()
 {
     $widgets = [
         [
-            'path'      => 'admin/dashboard/widgets/top_stats',
+            'path'      => 'admin/dashboard/widgets/my_top_stats',
             'container' => 'top-12',
         ],
         [
@@ -90,17 +90,26 @@ function render_dashboard_widgets($container)
         $widgetsContainers = [];
         $widgets           = get_dashboard_widgets();
 
-        $first[] = $widgets[0];
-        $first[] = $widgets[13];
-        $first[] = $widgets[4];
-         $first[] = $widgets[2];
+       $priorityWidgetPaths = [
+            'admin/dashboard/widgets/my_top_stats',
+            'appointly/widgets/today_appointments',
+            'admin/dashboard/widgets/calendar',
+            'admin/dashboard/widgets/user_data',
+        ];
 
-        unset($widgets[0]);
-        unset($widgets[4]);
-          unset($widgets[13]);
-           unset($widgets[2]);
+        $priorityWidgets = [];
+        foreach ($priorityWidgetPaths as $priorityWidgetPath) {
+            foreach ($widgets as $key => $widget) {
+                if ($widget['path'] === $priorityWidgetPath) {
+                    $priorityWidgets[] = $widget;
+                    unset($widgets[$key]);
+                    break;
+                }
+            }
+        }
 
-        $widgets =  array_merge($first,$widgets);
+
+        $widgets = array_merge($priorityWidgets, $widgets);
 
        
         foreach ($widgets as $key => $widget) {
@@ -148,7 +157,7 @@ function render_dashboard_widgets($container)
         $widgetsOutputted = [];
         if (isset($staff_dashboard[$container])) {
             foreach ($staff_dashboard[$container] as $widget) {
-                if (isset($widgetsData[$widget])) {
+                if (isset($widgetsData[$widget]) && $widgetsData[$widget]['widgetContainer'] == $container) {
                     array_push($widgetsOutputted, $widget);
                     $widgetsHtml[$widget] = $widgetsData[$widget]['html'];
                 }
@@ -159,8 +168,8 @@ function render_dashboard_widgets($container)
             // Widget exists but not applied in any staff container settings
             $applied = [];
 
-            foreach ($staff_dashboard as $c => $w) {
-                if (in_array($wID, $w)) {
+            foreach ($staff_dashboard as $savedContainer => $savedWidgets) {
+                if ($savedContainer == $widget['widgetContainer'] && in_array($wID, $savedWidgets)) {
                     array_push($applied, $wID);
                 }
             }
