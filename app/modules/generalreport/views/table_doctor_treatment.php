@@ -44,6 +44,23 @@ $staffTable               = db_prefix() . 'staff';
 $contactsTable            = db_prefix() . 'contacts';
 $clientsTable             = db_prefix() . 'clients';
 
+$fallbackPatientContactSql = "SELECT fallback_contacts.userid
+    FROM {$contactsTable} AS fallback_contacts
+    WHERE (fallback_contacts.id = {$appointmentsTable}.contact_id)
+        OR ({$appointmentsTable}.old_contact_id > 0 AND (fallback_contacts.id = {$appointmentsTable}.old_contact_id OR fallback_contacts.tbl_uniq_id = {$appointmentsTable}.old_contact_id))
+        OR ({$appointmentsTable}.phone <> '' AND fallback_contacts.phonenumber = {$appointmentsTable}.phone)
+        OR ({$appointmentsTable}.email <> '' AND fallback_contacts.email = {$appointmentsTable}.email)
+    ORDER BY fallback_contacts.is_primary DESC, fallback_contacts.id DESC
+    LIMIT 1";
+$patientProfileIdSql = "COALESCE({$clientsTable}.userid, ({$fallbackPatientContactSql}), 0)";
+$patientUniqueIdSql = "COALESCE(NULLIF(CONVERT({$contactsTable}.uid USING utf8mb4), ''), (
+    SELECT NULLIF(CONVERT(fallback_uid_contacts.uid USING utf8mb4), '')
+    FROM {$contactsTable} AS fallback_uid_contacts
+    WHERE fallback_uid_contacts.userid = {$patientProfileIdSql}
+    ORDER BY fallback_uid_contacts.is_primary DESC, fallback_uid_contacts.id DESC
+    LIMIT 1
+), NULLIF(CONVERT({$clientsTable}.tbl_uniq_id USING utf8mb4), '0'), CONVERT({$patientProfileIdSql} USING utf8mb4), '')";
+
 $patientSql = "COALESCE(NULLIF(TRIM(CONCAT(CONVERT({$contactsTable}.firstname USING utf8mb4), ' ', CONVERT({$contactsTable}.lastname USING utf8mb4))), ''), CONVERT({$clientsTable}.company USING utf8mb4), CONVERT({$appointmentsTable}.name USING utf8mb4), '')";
 $singleDoctorSql = "TRIM(CONCAT(CONVERT({$staffTable}.firstname USING utf8mb4), ' ', CONVERT({$staffTable}.lastname USING utf8mb4)))";
 $doctorSql = "COALESCE(NULLIF((
@@ -57,6 +74,8 @@ $doctorSql = "COALESCE(NULLIF((
 
 $selectSql = "
     {$appointmentTreatmentTable}.id,
+    {$patientProfileIdSql} AS patient_id,
+    {$patientUniqueIdSql} AS patient_unique_id,
     {$patientSql} AS patient_name,
     {$doctorSql} AS doctor_name,
     {$appointmentTreatmentTable}.created_date,
@@ -71,7 +90,13 @@ $fromJoinSql = "
         {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.id
         OR {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.tbl_uniq_id
     )
-    LEFT JOIN {$contactsTable} ON {$appointmentsTable}.contact_id = {$contactsTable}.id
+LEFT JOIN {$contactsTable} ON (
+        {$appointmentsTable}.contact_id = {$contactsTable}.id
+        OR ({$appointmentsTable}.old_contact_id > 0 AND (
+            {$appointmentsTable}.old_contact_id = {$contactsTable}.id
+            OR {$appointmentsTable}.old_contact_id = {$contactsTable}.tbl_uniq_id
+        ))
+    )
     LEFT JOIN {$clientsTable} ON {$contactsTable}.userid = {$clientsTable}.userid
 ";
 
@@ -105,6 +130,7 @@ if (isset($search['value']) && trim($search['value']) !== '') {
     $searchWhereSql = ($baseWhereSql === '' ? ' WHERE ' : ' AND ') . '(
         CONVERT(' . $appointmentTreatmentTable . '.id USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
         CONVERT(" . $patientSql . ' USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
+        CONVERT(" . $patientUniqueIdSql . ' USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
         CONVERT(" . $doctorSql . ' USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
         CONVERT(" . $appointmentTreatmentTable . '.created_date USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
         CONVERT(" . $appointmentTreatmentTable . '.treatment USING utf8) LIKE ' . $CI->db->escape('%' . $escapedSearch . '%') . " ESCAPE '!' OR
@@ -176,9 +202,19 @@ if ($length !== -1) {
     ];
 
 foreach ($rowsQuery->result_array() as $aRow) {
+    $patientId = (int) ($aRow['patient_id'] ?? 0);
+    $patientName = doctor_treatment_report_clean_cell($aRow['patient_name']);
+    $patientUniqueId = doctor_treatment_report_clean_cell($aRow['patient_unique_id'] ?? '');
+    $patientLabel = ($patientUniqueId !== '' ? $patientUniqueId . ' - ' : '') . $patientName;
+    $patientCell = e($patientLabel);
+
+    if ($patientId > 0) {
+        $patientCell = '<a href="' . admin_url('clients/client/' . $patientId . '?group=patient_profile') . '">' . $patientCell . '</a>';
+    }
+
     $row = [
         (int) $aRow['id'],
-        e(doctor_treatment_report_clean_cell($aRow['patient_name'])),
+        $patientCell,
         e(doctor_treatment_report_clean_cell($aRow['doctor_name'])),
         _dt($aRow['created_date']),
         nl2br(e(doctor_treatment_report_clean_cell($aRow['treatment']))),
