@@ -37,11 +37,36 @@ if (!$contact) {
     return;
 }
  // new code end
-$CI->db->select(db_prefix() . 'appointly_appointments.*', false);
-$CI->db->from(db_prefix() . 'appointly_appointments');
 
-$CI->db->where('contact_id', $contact->id);
-$CI->db->group_by(db_prefix() . 'appointly_appointments.id');
+$appointments_table = db_prefix() . 'appointly_appointments';
+$attendees_table = db_prefix() . 'appointly_attendees';
+$branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
+$scopeWhere = '';
+
+if (!is_admin() && function_exists('build_staff_branch_scope_where')) {
+    $scopeWhere = build_staff_branch_scope_where(
+        $appointments_table,
+        'branch_id',
+        'created_by',
+        [$appointments_table . '.id IN (SELECT appointment_id FROM ' . $attendees_table . ' WHERE staff_id={staff_id})']
+    );
+} elseif ($branchScopeId > 0 && $CI->db->field_exists('branch_id', $appointments_table)) {
+    $scopeWhere = 'AND ' . $appointments_table . '.branch_id = ' . $branchScopeId;
+}
+
+$CI->db->select($appointments_table . '.*', false);
+$CI->db->from($appointments_table);
+
+$CI->db->where($appointments_table . '.contact_id', $contact->id);
+
+if ($scopeWhere !== '') {
+    $CI->db->where(substr($scopeWhere, 4), null, false);
+} elseif (!is_admin()) {
+    $staffId = (int) get_staff_user_id();
+    $CI->db->where($appointments_table . '.id IN (SELECT appointment_id FROM ' . $attendees_table . ' WHERE staff_id=' . $staffId . ')', null, false);
+}
+
+$CI->db->group_by($appointments_table . '.id');
 $appointments = $CI->db->get()->result_array();
 
 $CI->db->where('rel_id', $client->userid);
@@ -1870,6 +1895,9 @@ if (!empty($check_prescription_exists)) { ?>
     
     
     <script>
+if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
+    window.$ = window.jQuery;
+}
 document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('paste', function(event) {
         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -1959,9 +1987,9 @@ function open_patient_appointment_create_modal()
 
 <script>
 
-
-
-
+if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
+  window.$ = window.jQuery;
+}
  // window.openNabhFormsModal = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
   function openNabhFormsModal(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
     if (typeof window.__openNabhFormsModalImpl === 'function') {

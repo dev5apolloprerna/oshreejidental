@@ -43,15 +43,7 @@ class Nabh extends AdminController
         $mapTable = db_prefix() . 'appointment_type_pdf_master';
         $branchId = $this->resolve_current_branch_id();
 
-        $this->db->where('appointment_type_id', $appointment_type_id);
-        if ($branchId > 0 && $this->db->field_exists('branch_id', $mapTable)) {
-            $this->db->group_start();
-            $this->db->where('branch_id', $branchId);
-            $this->db->or_where('branch_id', 0);
-            $this->db->group_end();
-        }
-        $rows = $this->db->get($mapTable)->result_array();
-        
+        $rows = $this->get_mapped_nabh_forms_for_appointment_type($appointment_type_id, $mapTable, $branchId);
 
         $data = [];
 
@@ -74,6 +66,37 @@ class Nabh extends AdminController
 
         echo json_encode(['status'=>true,'data'=>$data]);
         exit;
+    }
+     private function get_mapped_nabh_forms_for_appointment_type($appointment_type_id, $mapTable, $branchId)
+    {
+        $queryMappedRows = function ($field, $withBranchFilter) use ($appointment_type_id, $mapTable, $branchId) {
+            $this->db->where($field, $appointment_type_id);
+
+            if ($withBranchFilter && $branchId > 0 && $this->db->field_exists('branch_id', $mapTable)) {
+                $this->db->group_start();
+                $this->db->where('branch_id', $branchId);
+                $this->db->or_where('branch_id', 0);
+                $this->db->group_end();
+            }
+
+            return $this->db->get($mapTable)->result_array();
+        };
+
+        $rows = $queryMappedRows('appointment_type_id', true);
+
+        if (empty($rows) && $this->db->field_exists('old_appointment_type_id', $mapTable)) {
+            $rows = $queryMappedRows('old_appointment_type_id', true);
+        }
+
+        if (empty($rows)) {
+            $rows = $queryMappedRows('appointment_type_id', false);
+        }
+
+        if (empty($rows) && $this->db->field_exists('old_appointment_type_id', $mapTable)) {
+            $rows = $queryMappedRows('old_appointment_type_id', false);
+        }
+
+        return $rows;
     }
  public function all_forms_json()
     {
