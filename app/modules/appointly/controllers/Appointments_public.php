@@ -143,11 +143,27 @@ class Appointments_public extends ClientsController
             }
             die;
         }
+$requestedColumnClass = trim(preg_replace('/\s+/', ' ', (string) $this->input->get('col')));
+        $allowedColumnClasses = [
+            'col-md-4',
+            'col-md-5',
+            'col-md-8',
+            'col-md-8 col-md-offset-2',
+            'col-md-12',
+        ];
 
         $data['form'] = $form;
         $data['branches'] = $Branches;
         $data['form']->recaptcha = 1;
-
+$requestedColumnClass = trim(preg_replace('/\s+/', ' ', (string) $this->input->get('col')));
+        $allowedColumnClasses = [
+            'col-md-4',
+            'col-md-5',
+            'col-md-8',
+            'col-md-8 col-md-offset-2',
+            'col-md-12',
+        ];
+        
         $this->load->view('forms/appointments_form', $data);
     }
 

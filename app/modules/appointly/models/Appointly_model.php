@@ -458,36 +458,25 @@ class Appointly_model extends App_Model
 
         $data['hash'] = app_generate_hash();
 
-        if ($data['phone']) {
+        if (!empty($data['phone'])) {
             $data['phone'] = preg_replace('/\s+/', '', $data['phone']);
         }
 
-        if($data['email'] != ''){
-
+        if (!empty($data['email'])) {
             $contact_id = $this->get_contact_id($data['email']);
             $data['contact_id'] = $contact_id;    
         }
 
         
-        $MAIN_DB = $this->load->database('default', TRUE);
+        $appointmentDb = $this->load->database('default', true);
         $branchId = isset($data['branch']) ? (int) $data['branch'] : 0;
         
-        $MAIN_DB->select('branch_db,branch_db_user,branch_db_pass');
-        $MAIN_DB->where('branchid', $branchId);
-        $branch_data = $MAIN_DB->get(db_prefix().'branch')->row();
 
         unset($data['branch']);
 
         $data['contact_id'] = isset($data['patient_id']) ? $data['patient_id'] : '';
         unset($data['patient_id']);
         unset($data['otp']);
-
-
-               $BRANCH_DB = !empty($branch_data) ? $this->load_branch_database($branch_data) : false;
-
-        if($BRANCH_DB){
-            $this->db = $BRANCH_DB;
-        }
 
 
         $data = array_merge($data, convertDateForDatabase($data['date']));
@@ -503,21 +492,27 @@ class Appointly_model extends App_Model
             unset($data['custom_fields']);
         }
 
-        //$data['custom_recurring'] = $data['custom_recurring'] != '' ? $data['custom_recurring'] : 0;
-         $data['contact_id'] = $data['contact_id'] != '' ? $data['contact_id'] : 0;
-        $data['repeat_every'] = $data['repeat_every'] != '' ? $data['repeat_every'] : 0;
-        $data['reminder_before'] = $data['reminder_before'] != '' ? $data['reminder_before'] : 0;
-        $data['age'] = $data['age'] != '' ? $data['age'] : '';
-        $data['gender'] = $data['gender'] != '' ? $data['gender'] : '';
+        $data['contact_id'] = !empty($data['contact_id']) ? $data['contact_id'] : 0;
+        $data['repeat_every'] = !empty($data['repeat_every']) ? $data['repeat_every'] : 0;
+        $data['reminder_before'] = !empty($data['reminder_before']) ? $data['reminder_before'] : 0;
+        $data['age'] = !empty($data['age']) ? $data['age'] : '';
+        $data['gender'] = !empty($data['gender']) ? $data['gender'] : '';
         
-        $this->db->insert(db_prefix() . 'appointly_appointments', array_merge($data, [
-            'branch_id'   => $branchId,
-            'datecreated' => date('Y-m-d H:i:s'),
-        ]));
+        $insertData = array_merge($data, [
+                    'datecreated' => date('Y-m-d H:i:s'),
+                ]);
+
+        if ($appointmentDb->field_exists('branch_id', db_prefix() . 'appointly_appointments')) {
+            $insertData['branch_id'] = $branchId;
+        } else {
+            unset($insertData['branch_id']);
+        }
+    
+        $appointmentDb->insert(db_prefix() . 'appointly_appointments', $insertData);
 
         
-        $appointment_id = $this->db->insert_id();
-        
+        $appointment_id = $appointmentDb->insert_id();
+
         if (isset($custom_fields)) handle_custom_fields_post($appointment_id, $custom_fields);
 
         if ($isAppointmentApprovedByDefault) {

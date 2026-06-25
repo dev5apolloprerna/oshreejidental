@@ -27,11 +27,13 @@ if ( ! function_exists('get_appointment_types')) {
 $clientUserData = $this->session->userdata();
 applyAdditionalCssStyles($clientUserData);
 
+$type = 'success';
+
 $message = '';
-if($_SESSION['message-error'] != ''){
+if (!empty($_SESSION['message-error'])) {
     $type = 'danger';
     $message = $_SESSION['message-error'];
-}else if($_SESSION['message-success'] != ''){
+} elseif (!empty($_SESSION['message-success'])) {
     $type = 'success';
     $message = $_SESSION['message-success'];
 }
@@ -51,9 +53,10 @@ if($_SESSION['message-error'] != ''){
 
             <div id="response" style="padding-left: 180px;padding-right: 180px;">
 
-                <div class="alert alert-<?php echo $type;?> text-center" style="margin:0 auto;margin-bottom:15px;"><?php echo $message;?></div></div>
-
-
+            <?php if ($message !== '') { ?>
+                    <div class="alert alert-<?php echo $type; ?> text-center" style="margin:0 auto;margin-bottom:15px;"><?php echo html_escape($message); ?></div>
+                <?php } ?>
+            </div>
 
             <!-- <?php echo form_open('appointly/appointments_public/create_external_appointment', ['id' => 'appointments-form']); ?> -->
                <?php echo form_open('appointly/appointments_public/sendotp', ['id' => 'new_web']); ?>
@@ -68,7 +71,7 @@ if($_SESSION['message-error'] != ''){
 
 
 
-                <div class="main_wrapper mbot20 <?= ($this->input->get('col')) ? $this->input->get('col') : 'col-md-12'; ?>">
+                <div class="main_wrapper mbot20 <?= html_escape(isset($form_col) ? $form_col : 'col-md-12'); ?>">
 
                     <div class="appointment-header"><?php hooks()->do_action('appointly_form_header'); ?></div>
 
