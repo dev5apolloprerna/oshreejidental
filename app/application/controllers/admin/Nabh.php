@@ -146,7 +146,7 @@ class Nabh extends AdminController
 
         $rows = [];
 
-        $latestContext = $this->resolve_latest_patient_appointment_context($patient_id);
+        $patientBranchDoctorContext = $this->resolve_patient_created_branch_doctor_context($patient_id);
 
         foreach ($forms as $form) {
             $form_id = (int) ($form['pdf_id'] ?? 0);
@@ -182,13 +182,19 @@ class Nabh extends AdminController
                 ? (int) $submission['appointment_type_id']
                 : (int) ($latestContext['appointment_type_id'] ?? 0);
 
-            $doctorId = !empty($submission['doctor_id'])
-                ? (int) $submission['doctor_id']
-                : ($appointmentId > 0 ? $this->resolve_doctor_for_appointment($appointmentId) : (int) ($latestContext['doctor_id'] ?? 0));
+                        $doctorId = (int) ($patientBranchDoctorContext['doctor_id'] ?? 0);
+            if ($doctorId <= 0) {
+                $doctorId = !empty($submission['doctor_id'])
+                    ? (int) $submission['doctor_id']
+                    : ($appointmentId > 0 ? $this->resolve_doctor_for_appointment($appointmentId) : (int) ($latestContext['doctor_id'] ?? 0));
+            }
 
-            $doctorName = !empty($submission['doctor_name'])
-                ? trim((string) $submission['doctor_name'])
-                : trim((string) ($latestContext['doctor_name'] ?? ''));
+            $doctorName = trim((string) ($patientBranchDoctorContext['doctor_name'] ?? ''));
+            if ($doctorName === '') {
+                $doctorName = !empty($submission['doctor_name'])
+                    ? trim((string) $submission['doctor_name'])
+                    : trim((string) ($latestContext['doctor_name'] ?? ''));
+            }
 
             if ($doctorName === '' && $doctorId > 0 && function_exists('get_staff_full_name')) {
                 $doctorName = trim((string) get_staff_full_name($doctorId));
@@ -254,7 +260,70 @@ class Nabh extends AdminController
 
         return $this->resolve_default_doctor_id();
     }
+    private function resolve_patient_created_branch_doctor_context(int $patient_id): array
+    {
+        $context = [
+            'doctor_id' => 0,
+            'doctor_name' => '',
+        ];
 
+        if ($patient_id <= 0) {
+            return $context;
+        }
+
+        $branchId = 0;
+        if ($this->db->field_exists('branch_id', db_prefix() . 'clients')) {
+            $clientRow = $this->db
+                ->select('branch_id')
+                ->from(db_prefix() . 'clients')
+                ->where('userid', $patient_id)
+                ->limit(1)
+                ->get()
+                ->row_array();
+
+            $branchId = !empty($clientRow['branch_id']) ? (int) $clientRow['branch_id'] : 0;
+        }
+
+        if ($branchId <= 0 && $this->db->field_exists('branch_id', db_prefix() . 'contacts')) {
+            $contactRow = $this->db
+                ->select('branch_id')
+                ->from(db_prefix() . 'contacts')
+                ->where('userid', $patient_id)
+                ->order_by('is_primary', 'DESC')
+                ->order_by('id', 'ASC')
+                ->limit(1)
+                ->get()
+                ->row_array();
+
+            $branchId = !empty($contactRow['branch_id']) ? (int) $contactRow['branch_id'] : 0;
+        }
+
+        if ($branchId <= 0 || !$this->db->table_exists(db_prefix() . 'branch')) {
+            return $context;
+        }
+
+        $branchRow = $this->db
+            ->select('staff_id')
+            ->from(db_prefix() . 'branch')
+            ->where('branchid', $branchId)
+            ->limit(1)
+            ->get()
+            ->row_array();
+
+        $doctorId = !empty($branchRow['staff_id']) ? (int) $branchRow['staff_id'] : 0;
+        if ($doctorId <= 0) {
+            return $context;
+        }
+
+        $context['doctor_id'] = $doctorId;
+        if (function_exists('get_staff_full_name')) {
+            $context['doctor_name'] = trim((string) get_staff_full_name($doctorId));
+        }
+
+        return $context;
+    }
+
+    
     private function resolve_latest_patient_appointment_context(int $patient_id): array
     {
         $context = [
