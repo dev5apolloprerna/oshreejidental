@@ -2094,11 +2094,9 @@ if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
         if (!appointmentId) {
             return '<button class="btn btn-xs btn-default" disabled="disabled" title="No appointment found for this patient."><i class="fa-regular fa-file-pdf"></i> ' + label + '</button>';
           }
-
-          var pdfUrl = admin_url + 'nabh/print_pdf'
+            var pdfUrl = admin_url + 'nabh/print_pdf'
             + '?nabh_pdf_id=' + encodeURIComponent(row.form_id)
             + '&lang=' + encodeURIComponent(langCode)
-            + '&appointment_id=' + encodeURIComponent(row.appointment_id || 0)
             + '&appointment_id=' + encodeURIComponent(appointmentId)
             + '&patient_id=' + encodeURIComponent(patientId)
             + '&doctor_id=' + encodeURIComponent(doctorId)

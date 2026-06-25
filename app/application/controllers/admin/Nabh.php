@@ -146,6 +146,8 @@ class Nabh extends AdminController
 
         $rows = [];
 
+        $latestContext = $this->resolve_latest_patient_appointment_context($patient_id);
+
         $patientBranchDoctorContext = $this->resolve_patient_created_branch_doctor_context($patient_id);
 
         foreach ($forms as $form) {
