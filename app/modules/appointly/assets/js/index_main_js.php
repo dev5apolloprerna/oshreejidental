@@ -322,18 +322,21 @@
     }
 
     function markAppointmentAsApproved(id) {
-        var url = window.location.search;
-        $.post("appointments/approve", {
-            appointment_id: id,
-            beforeSend: function () {
-                $(".table-appointments").append("<div class=\"dt-loader\"></div>");
-            }
+        $(".table-appointments").append("<div class=\"dt-loader\"></div>");
+
+        $.post(admin_url + "appointly/appointments/approve", {
+            appointment_id: id
+
         }).done(function (r) {
-            r = JSON.parse(r);
+            if (typeof r === "string") {
+                r = JSON.parse(r);
+            }
+
             if (r.result == true) {
                 alert_float("success", appointly_lang_approved);
                 $(".table-appointments").DataTable().ajax.reload();
             }
+                    }).always(function () {
             $(".table-appointments").find(".dt-loader").remove();
         });
     }
