@@ -66,6 +66,80 @@ class Appointments_public extends ClientsController
         return $BRANCH_DB;
     }
 
+    private function get_option_value_from_db($database, $name, $default = '')
+    {
+        $database->select('value');
+        $database->where('name', $name);
+        $row = $database->get(db_prefix() . 'options')->row();
+
+        return !empty($row) ? $row->value : $default;
+    }
+    private function send_patient_otp_email_after_response($database, $contact, $otp)
+    {
+        if (empty($contact->email) || !valid_email($contact->email)) {
+            log_message('error', 'Appointment OTP email not queued because patient email is missing or invalid. Contact ID: ' . $contact->id);
+            return false;
+        }
+
+        register_shutdown_function(function () use ($database, $contact, $otp) {
+            if (function_exists('fastcgi_finish_request')) {
+                fastcgi_finish_request();
+            }
+
+            $this->send_patient_otp_email($database, $contact, $otp);
+        });
+
+        return true;
+    }
+
+    private function send_patient_otp_email($database, $contact, $otp)
+    {
+        if (empty($contact->email) || !valid_email($contact->email)) {
+            log_message('error', 'Appointment OTP email not sent because patient email is missing or invalid. Contact ID: ' . $contact->id);
+            return false;
+        }
+
+        $this->load->library('email');
+
+        $smtp_password = $this->get_option_value_from_db($database, 'smtp_password');
+        $config = [
+            'protocol'    => $this->get_option_value_from_db($database, 'email_protocol', 'mail'),
+            'smtp_host'   => $this->get_option_value_from_db($database, 'smtp_host'),
+            'smtp_user'   => $this->get_option_value_from_db($database, 'smtp_username'),
+            'smtp_pass'   => $smtp_password !== '' ? get_instance()->encryption->decrypt($smtp_password) : '',
+            'smtp_port'   => $this->get_option_value_from_db($database, 'smtp_port'),
+            'smtp_crypto' => $this->get_option_value_from_db($database, 'smtp_encryption'),
+            'charset'     => 'utf-8',
+            'mailtype'    => 'html',
+            'wordwrap'    => true,
+            'newline'     => "\r\n",
+            'crlf'        => "\r\n",
+        ];
+
+        $companyname  = $this->get_option_value_from_db($database, 'companyname', get_option('companyname'));
+        $smtp_email   = $this->get_option_value_from_db($database, 'smtp_email', get_option('smtp_email'));
+        $email_header = $this->get_option_value_from_db($database, 'email_header');
+        $email_footer = str_replace('{companyname}', $companyname, $this->get_option_value_from_db($database, 'email_footer'));
+
+        $this->email->clear(true);
+        $this->email->initialize($config);
+        $this->email->from($smtp_email, $companyname);
+        $this->email->to($contact->email);
+        $this->email->subject('OTP Verification');
+        $this->email->message(
+            $email_header
+            . 'Hello ' . $contact->firstname . ' ' . $contact->lastname . ',<br><br>'
+            . 'Your OTP for verification is: <strong>' . $otp . '</strong>'
+            . $email_footer
+        );
+
+        if ($this->email->send()) {
+            return true;
+        }
+
+        log_message('error', 'Appointment OTP email failed for contact ID ' . $contact->id . ': ' . $this->email->print_debugger(['headers']));
+        return false;
+    }
 
     /**
      * Clients hash view.
@@ -368,74 +442,17 @@ $requestedColumnClass = trim(preg_replace('/\s+/', ' ', (string) $this->input->g
 
                 if(!empty($contact)){
 
-                    $otp = rand(000000,999999);
+                    $otp = sprintf('%06d', mt_rand(0, 999999));
                     $newdb->where('id',$contact->id);
                     $newdb->update(db_prefix() . 'contacts',['otp' => $otp]);
 
                     $this->session->set_userdata('post_appointment',$data);
 
-                    $this->load->library('email');
+                 if (!$this->send_patient_otp_email_after_response($newdb, $contact, $otp)) {
+                        set_alert('error', _l('Unable to send OTP email because the patient email address is missing or invalid.'));
+                        redirect('appointly/appointments_public/form?col=col-md-8+col-md-offset-2');
+                    }
 
-                    $newdb->select('value');
-                    $newdb->where('name','smtp_email');
-                    $smtp_email = $newdb->get(db_prefix().'options')->row();
-
-                    $newdb->select('value');
-                    $newdb->where('name','companyname');
-                    $companyname = $newdb->get(db_prefix().'options')->row();
-
-                    $newdb->select('value');
-                    $newdb->where('name','email_header');
-                    $email_header = $newdb->get(db_prefix().'options')->row();
-
-                    $newdb->select('value');
-                    $newdb->where('name','email_footer');
-                    $email_footer = $newdb->get(db_prefix().'options')->row();
-
-                     $newdb->select('value');
-                    $newdb->where('name','smtp_encryption');
-                    $smtp_encryption = $newdb->get(db_prefix().'options')->row();
-
-                     $newdb->select('value');
-                    $newdb->where('name','smtp_host');
-                    $smtp_host = $newdb->get(db_prefix().'options')->row();
-
-                     $newdb->select('value');
-                    $newdb->where('name','smtp_username');
-                    $smtp_username = $newdb->get(db_prefix().'options')->row();
-
-                     $newdb->select('value');
-                    $newdb->where('name','smtp_password');
-                    $smtp_password = $newdb->get(db_prefix().'options')->row();
-
-                     $newdb->select('value');
-                    $newdb->where('name','email_protocol');
-                    $email_protocol = $newdb->get(db_prefix().'options')->row();
-
-
-                     $newdb->select('value');
-                    $newdb->where('name','smtp_port');
-                    $smtp_port = $newdb->get(db_prefix().'options')->row();
-
-
-
-                    $config['protocol'] = $email_protocol->value;
-                    $config['smtp_host'] = $smtp_host->value;
-                    $config['smtp_user'] = $smtp_username->value;
-                    $config['smtp_pass'] = get_instance()->encryption->decrypt($smtp_password->value);
-                    $config['smtp_port'] = $smtp_port->value;
-                    $config['smtp_crypto'] = $smtp_encryption->value;
-                    $config['charset'] = 'iso-8859-1';
-                    $config['wordwrap'] = TRUE;
-
-                    $this->email->initialize($config);
-
-                    $this->email->from($smtp_email->value, $companyname->value);
-                    $this->email->to($contact->email);
-                    $this->email->subject('OTP Verification');
-                    $this->email->message($email_header->value . 'Hello ' . $contact->firstname . ' ' . $contact->lastname. ',<br><br>Your OTP for verification is : ' . $otp . str_replace("{companyname}",$companyname->value,$email_footer->value));
-
-                    $this->email->send();
 
 
                     set_alert('success', _l('OTP has been sent to your email address'));
