@@ -66,7 +66,66 @@ class Appointments_public extends ClientsController
         return $BRANCH_DB;
     }
 
-    private function get_option_value_from_db($database, $name, $default = '')
+    private function find_patient_contact_by_uid($uid, $preferred_branch_data = null, $otp = null)
+    {
+        $uid = trim((string) $uid);
+        if ($uid === '') {
+            return null;
+        }
+
+        $searchedBranchDbs = [];
+        $searchDatabase = function ($database, $branchData = null) use ($uid, $otp) {
+            if (!$database) {
+                return null;
+            }
+
+            $database->where('uid', $uid);
+            if ($otp !== null) {
+                $database->where('otp', $otp);
+            }
+            $database->where('active', 1);
+            $database->where('is_primary', 1);
+            $contact = $database->get(db_prefix() . 'contacts')->row();
+
+            if (empty($contact)) {
+                return null;
+            }
+
+            return [
+                'contact'     => $contact,
+                'database'    => $database,
+                'branch_data' => $branchData,
+            ];
+        };
+
+        if (!empty($preferred_branch_data) && !empty($preferred_branch_data->branch_db)) {
+            $preferredDb = $this->load_branch_database($preferred_branch_data);
+            $searchedBranchDbs[] = $preferred_branch_data->branch_db;
+            $match = $searchDatabase($preferredDb, $preferred_branch_data);
+            if ($match !== null) {
+                return $match;
+            }
+        }
+
+        $MAIN_DB = $this->load->database('default', true);
+        $MAIN_DB->select('branchid,branch_db,branch_db_user,branch_db_pass');
+        $branches = $MAIN_DB->get(db_prefix() . 'branch')->result();
+
+        foreach ($branches as $branchData) {
+            if (empty($branchData->branch_db) || in_array($branchData->branch_db, $searchedBranchDbs, true)) {
+                continue;
+            }
+
+            $branchDb = $this->load_branch_database($branchData);
+            $match = $searchDatabase($branchDb, $branchData);
+            if ($match !== null) {
+                return $match;
+            }
+        }
+
+        return $searchDatabase($this->db, null);
+    }
+        private function get_option_value_from_db($database, $name, $default = '')
     {
         $database->select('value');
         $database->where('name', $name);
@@ -414,33 +473,11 @@ $requestedColumnClass = trim(preg_replace('/\s+/', ' ', (string) $this->input->g
 
             if($data['patient_id'] != ''){
 
+                $patientMatch = $this->find_patient_contact_by_uid($data['patient_id'], $branch_data);
+                $contact = !empty($patientMatch['contact']) ? $patientMatch['contact'] : null;
+                $newdb = !empty($patientMatch['database']) ? $patientMatch['database'] : null;
 
-                $BRANCH_DB = !empty($branch_data) ? $this->load_branch_database($branch_data) : false;
-
-            if($BRANCH_DB){
-                    $BRANCH_DB->where('uid',$data['patient_id']);
-                    $BRANCH_DB->where('active',1);
-                    $BRANCH_DB->where('is_primary',1);
-                    $contact = $BRANCH_DB->get(db_prefix().'contacts')->row();
-
-                    $newdb = $BRANCH_DB;
-
-                
-
-                }else{
-
-
-                    $this->db->where('uid',$data['patient_id']);
-                    $this->db->where('active',1);
-                    $this->db->where('is_primary',1);
-                    $contact = $this->db->get(db_prefix().'contacts')->row();
-
-                    $newdb = $this->db;
-                }
-
-                
-
-                if(!empty($contact)){
+                if(!empty($contact) && !empty($newdb)){
 
                     $otp = sprintf('%06d', mt_rand(0, 999999));
                     $newdb->where('id',$contact->id);
@@ -492,42 +529,23 @@ $requestedColumnClass = trim(preg_replace('/\s+/', ' ', (string) $this->input->g
             $MAIN_DB->where('branchid',$branch);
             $branch_data = $MAIN_DB->get(db_prefix().'branch')->row();
 
-            
-
-                $BRANCH_DB = !empty($branch_data) ? $this->load_branch_database($branch_data) : false;
-
-            if($BRANCH_DB)
-            {
-                $BRANCH_DB->where('uid',$patient_id);
-                $BRANCH_DB->where('otp',$otp);
-                $BRANCH_DB->where('active',1);
-                $BRANCH_DB->where('is_primary',1);
-                $contact = $BRANCH_DB->get(db_prefix().'contacts')->row();
-
-                $BRANCH_DB->select('type');
-                $BRANCH_DB->where('id',$_SESSION['post_appointment']['type_id']);
-                $appointment_type = $BRANCH_DB->get(db_prefix().'appointly_appointment_types')->row();
-
-            }else{
-
-                $this->db->where('uid',$patient_id);
-                $this->db->where('otp',$otp);
-                $this->db->where('active',1);
-                $this->db->where('is_primary',1);
-                $contact = $this->db->get(db_prefix().'contacts')->row();
-
-                $this->db->select('type');
-                $this->db->where('id',$_SESSION['post_appointment']['type_id']);
-                $appointment_type = $this->db->get(db_prefix().'appointly_appointment_types')->row();
+            $patientMatch = $this->find_patient_contact_by_uid($patient_id, $branch_data, $otp);
+            $contact = !empty($patientMatch['contact']) ? $patientMatch['contact'] : null;
+            $patientDb = !empty($patientMatch['database']) ? $patientMatch['database'] : null;
+                
+            if (!empty($patientDb)) {
+                $patientDb->select('type');
+                $patientDb->where('id', $_SESSION['post_appointment']['type_id']);
+                $appointment_type = $patientDb->get(db_prefix().'appointly_appointment_types')->row();
+            } else {
+                $appointment_type = null;
             }
-
-
 
             if(!empty($contact)){
 
                 $_SESSION['post_appointment']['patient_id'] = $contact->id;
                 $_SESSION['post_appointment']['name'] = $contact->firstname . ' ' . $contact->lastname;
-                $_SESSION['post_appointment']['subject'] = $appointment_type->type . ' for ' . $contact->firstname . ' ' . $contact->lastname;
+                $_SESSION['post_appointment']['subject'] = (!empty($appointment_type) ? $appointment_type->type : 'Appointment') . ' for ' . $contact->firstname . ' ' . $contact->lastname;
                 $_SESSION['post_appointment']['email'] = $contact->email;
                 $_SESSION['post_appointment']['phone'] = $contact->phonenumber;
                 $_SESSION['post_appointment']['gender'] = strtolower($contact->gender);
