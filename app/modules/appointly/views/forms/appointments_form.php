@@ -66,11 +66,6 @@ if (!empty($_SESSION['message-error'])) {
             <input type="text" hidden name="rel_type" value="external">
 
             <div class="row">
-
-
-
-
-
                 <div class="main_wrapper mbot20 <?= html_escape(isset($form_col) ? $form_col : 'col-md-12'); ?>">
 
                     <div class="appointment-header"><?php hooks()->do_action('appointly_form_header'); ?></div>
