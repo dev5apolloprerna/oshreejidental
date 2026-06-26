@@ -407,16 +407,34 @@ class Appointments extends AdminController
      */
     public function approve()
     {
-        if (!is_admin() && !staff_appointments_responsible()) {
+        if (!is_admin() && !staff_appointments_responsible() && !staff_can('view', 'appointments')) {
             access_denied();
         }
 
-        if ($this->input->is_ajax_request()) {
-            echo json_encode(['result' => $this->apm->approve_appointment($this->input->post('appointment_id'))]);
-            die;
+                $is_post = $this->input->method(true) === 'POST';
+        $appointment_id = $is_post
+            ? $this->input->post('appointment_id', true)
+            : $this->input->get('appointment_id', true);
+
+        if (empty($appointment_id)) {
+            if ($is_post || $this->input->is_ajax_request()) {
+                header('Content-Type: application/json');
+                echo json_encode(['result' => false, 'message' => _l('appointment_not_exists')]);
+                return;
+            }
+
+            show_404();
         }
 
-        if ($this->apm->approve_appointment($this->input->get('appointment_id'))) {
+        $result = $this->apm->approve_appointment($appointment_id);
+
+        if ($is_post || $this->input->is_ajax_request()) {
+            header('Content-Type: application/json');
+            echo json_encode(['result' => (bool) $result]);
+            return;
+        }
+
+        if ($result) {
             appointly_redirect_after_event('success', _l('appointment_appointment_approved'));
         }
     }
