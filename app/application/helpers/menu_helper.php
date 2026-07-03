@@ -109,6 +109,7 @@ function app_init_admin_sidebar_menu_items()
 {
     $CI = &get_instance();
     $branchMenuAccess = app_staff_has_branch_menu_access();
+    $isDoctorStaff = function_exists('is_doctor_staff') && is_doctor_staff();
 
     $CI->app_menu->add_sidebar_menu_item('dashboard', [
         'name'     => _l('als_dashboard'),
@@ -385,7 +386,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if ($branchMenuAccess || staff_can('view-timesheets', 'reports') || staff_can('view', 'reports')) {
+            if (!$isDoctorStaff && ($branchMenuAccess || staff_can('view-timesheets', 'reports') || staff_can('view', 'reports'))) {
         $CI->app_menu->add_sidebar_menu_item('reports', [
             'collapse' => true,
             'name'     => _l('als_reports'),
@@ -406,7 +407,7 @@ function app_init_admin_sidebar_menu_items()
     //     ]);
     // }
 
-    if ($branchMenuAccess || staff_can('view',  'reports')) {
+    if (!$isDoctorStaff && ($branchMenuAccess || staff_can('view',  'reports'))) {
         $CI->app_menu->add_sidebar_children_item('reports', [
             'slug'     => 'sales-reports',
             'name'     => _l('als_sales'),
@@ -454,7 +455,7 @@ function app_init_admin_sidebar_menu_items()
     }
 
     // Setup menu
-     if ($branchMenuAccess || staff_can('view',  'staff')) {
+     if (!$isDoctorStaff && ($branchMenuAccess || staff_can('view',  'staff'))) {
         $CI->app_menu->add_setup_menu_item('staff', [
             'name'     => _l('als_staff'),
             'href'     => admin_url('staff'),
@@ -463,7 +464,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    if ($branchMenuAccess) {
+    if (!$isDoctorStaff && $branchMenuAccess) {
         $CI->app_menu->add_setup_menu_item('customers', [
             'collapse' => true,
             'name'     => _l('clients'),
@@ -658,7 +659,7 @@ function app_init_admin_sidebar_menu_items()
                   ]);*/
     }
 
-    if ($branchMenuAccess || staff_can('view',  'settings')) {
+    if (!$isDoctorStaff && ($branchMenuAccess || staff_can('view',  'settings'))) {
         $CI->app_menu->add_setup_menu_item('settings', [
             'href'     => admin_url('settings'),
             'name'     => _l('acs_settings'),

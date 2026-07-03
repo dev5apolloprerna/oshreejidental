@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php $isDoctorStaff = function_exists('is_doctor_staff') && is_doctor_staff(); ?>
 <aside id="menu" class="sidebar sidebar">
     <ul class="nav metis-menu" id="side-menu">
         <li class="tw-mt-[63px] sm:tw-mt-0 -tw-mx-2 tw-overflow-hidden sm:tw-bg-neutral-900/50">
@@ -10,6 +11,9 @@
          hooks()->do_action('before_render_aside_menu');
          ?>
         <?php foreach ($sidebar_menu as $key => $item) {
+             if ($isDoctorStaff && isset($item['slug']) && $item['slug'] === 'reports') {
+                 continue;
+             }
              if ((isset($item['collapse']) && $item['collapse']) && count($item['children']) === 0) {
                  continue;
              } ?>
@@ -63,7 +67,7 @@
         <?php hooks()->do_action('after_render_single_aside_menu', $item); ?>
         <?php
          } ?>
-        <?php if ($this->app->show_setup_menu() == true && (is_staff_member() || is_admin())) { ?>
+        <?php if (!$isDoctorStaff && $this->app->show_setup_menu() == true && (is_staff_member() || is_admin())) { ?>
         <li<?php if (get_option('show_setup_menu_item_only_on_hover') == 1) {
              echo ' style="display:none;"';
          } ?> id="setup-menu-item">
