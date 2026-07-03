@@ -4,7 +4,7 @@
     <div class="content">
         <div class="row _buttons tw-mb-2 sm:tw-mb-4">
             <div class="col-md-8">
-                <?php $can_create_task = staff_can('create', 'tasks'); ?>
+                <?php $can_create_task = staff_can('create', 'tasks') && !(function_exists('is_doctor_staff') && is_doctor_staff()); ?>
                 <?php if ($can_create_task) { ?>
                 <a href="#" onclick="new_task(<?php if ($this->input->get('project_id')) {
     echo "'" . admin_url('tasks/task?rel_id=' . $this->input->get('project_id') . '&rel_type=project') . "'";
@@ -12,7 +12,7 @@
                     <i class="fa-regular fa-plus tw-mr-1" aria-hidden="true"></i>
                     <?php echo _l('new_task'); ?>
                 </a>
-                 <?php } else { ?>
+                 <?php } elseif (!(function_exists('is_doctor_staff') && is_doctor_staff())) { ?>
                 <button type="button" class="btn btn-default pull-left new" disabled aria-disabled="true" aria-label="<?php echo e(_l('new_task') . ' - ' . _l('access_denied')); ?>" data-toggle="tooltip" data-placement="top" data-title="<?php echo e(_l('access_denied')); ?>">
                     <i class="fa-regular fa-plus tw-mr-1" aria-hidden="true"></i>
                     <?php echo _l('new_task'); ?>

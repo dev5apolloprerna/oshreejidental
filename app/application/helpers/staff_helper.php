@@ -224,7 +224,29 @@ function is_manager_staff($staff_id = null)
 
     return in_array($roleName, ['manager', 'maninager'], true);
 }
+if (!function_exists('is_doctor_staff')) {
+    /**
+     * Check if current (or provided) staff user has the Doctor role.
+     *
+     * @param mixed $staff_id
+     * @return bool
+     */
+    function is_doctor_staff($staff_id = null)
+    {
+        $staff = get_staff($staff_id);
+        if (!$staff || !isset($staff->role) || (int) $staff->role <= 0) {
+            return false;
+        }
 
+        $CI = &get_instance();
+        $role = $CI->db->select('name')->where('roleid', (int) $staff->role)->get(db_prefix() . 'roles')->row();
+        if (!$role || !isset($role->name)) {
+            return false;
+        }
+
+        return strtolower(trim((string) $role->name)) === 'doctor';
+    }
+}
 /**
  * Return staff profile image url
  * @param  mixed $staff_id
