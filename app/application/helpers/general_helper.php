@@ -1036,12 +1036,14 @@ if (!function_exists('get_current_staff_branch_scope_id')) {
             }
         }
 
-        $currentBranchDb = (string) $CI->input->cookie('branch');
-        if ($currentBranchDb !== '' && $CI->db->table_exists(db_prefix() . 'branch')) {
-            $row = $CI->db->select('branchid')->where('branch_db', $currentBranchDb)->get(db_prefix() . 'branch')->row();
-            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
-                return (int) $row->branchid;
-            }
+        $selectedBranchId = (int) $CI->session->userdata('branch');
+        if ($selectedBranchId > 0) {
+            return $selectedBranchId;
+        }
+
+        $selectedBranchId = (int) $CI->input->cookie('branch');
+        if ($selectedBranchId > 0) {
+            return $selectedBranchId;
         }
 
         return 0;

@@ -43,10 +43,12 @@ class Branch_model extends App_Model
         // if ($email) {
         //     die('Email already exists');
         // }
-        $send_welcome_email = true;
-        $original_password  = $data['password'];
-
-        $data['password']    = app_hash_password($data['password']);
+        if (isset($data['password']) && $data['password'] !== '') {
+            $data['password'] = app_hash_password($data['password']);
+        } else {
+            unset($data['password']);
+        }
+      //  $data['password']    = app_hash_password($data['password']);
         $data['created_at'] = date("Y-m-d H:i:s");
         $this->db->insert(db_prefix() . 'branch', $data);
         $insert_id = $this->db->insert_id();

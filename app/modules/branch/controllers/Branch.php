@@ -68,7 +68,11 @@ class Branch extends AdminController
           
 
             // Set Timezone
-            $timezone = $timezone;
+            $timezone = get_option('default_timezone');
+            if (empty($timezone)) {
+                $timezone = date_default_timezone_get();
+            }
+            $timezone = $link->real_escape_string($timezone);
             $sql      = "UPDATE ".db_prefix()."options SET value='$timezone' WHERE name='default_timezone'";
             $link->query($sql);
 
@@ -239,81 +243,29 @@ class Branch extends AdminController
                 $data['zip'] = $this->input->post('zip');
 
                 
-                if($data['staff_id'] == '' || $data['branch'] == '' || $data['phonenumber'] == ''){
-                    set_alert('warning', _l('fill_all_required_details', _l('branch_lowercase')));
-                    redirect(admin_url('branch/add/'));
+                $required_fields = ['staff_id', 'branch', 'branch_code', 'phonenumber', 'address', 'city', 'state'];
+                foreach ($required_fields as $field) {
+                    if (trim((string) $data[$field]) === '') {
+                        set_alert('warning', _l('fill_all_required_details', _l('branch_lowercase')));
+                        redirect(admin_url('branch/add/'));
+                    }
                 }
-                $branch_name = str_replace(' ','_',$data['branch']);
-                $randomid = mt_rand(100000,999999); 
-                $db_name_by_branch = 'db_'.$randomid;
-                $data['branch_db'] =$db_name_by_branch;
-
-                $data['image']=$_FILES['image']['name'] ?? '';
+                $data['image'] = $_FILES['image']['name'] ?? '';
                 $id = $this->branch_model->add($data);
-                $image=$this->profile_images($id);
-                $CI = & get_instance();
-                hooks()->do_action('before_remove_branch_icon_image');
-                $CI->db->where('branchid', $id);
-                $CI->db->update(db_prefix() . 'branch', ['image' => $image]);
+
+
+
                 if ($id) {
-                    // Set Configuration Params
-                  
-                    // $data_branch['branch'] = str_replace(' ','_',$data['branch']);
-                    // $data_branch['email'] = $data['email'];
-                    // $data_branch['phonenumber'] = $data['phonenumber'];
-                    // $data_branch['vat'] = $data['vat'];
-                    // $data_branch['password'] = $data['password'];
-                    // $data_branch['staff_id'] = $data['staff_id'];
+                    $image = $this->profile_images($id);
+                    $CI = & get_instance();
+                    hooks()->do_action('before_remove_branch_icon_image');
+                    $CI->db->where('branchid', $id);
+                    $CI->db->update(db_prefix() . 'branch', ['image' => $image]);
 
-
-                    $CI = get_instance();
-                    // get Company Options
-
-                    $CI->db->where('staffid',$data['staff_id']);
-                    $branch_admin = $CI->db->get(db_prefix() . 'staff')->row();
-
-                    $CI->db->select('name,value');
-                    $CI->db->where_in('name',['companyname','company_info_format','default_timezone','smtp_email','smtp_password','smtp_port','smtp_host','smtp_email_charset','invoice_company_name','company_logo']);
-                
-                   
-                    // 'companyname,company_info_format,default_timezone,smtp_email,smtp_password,smtp_port,smtp_host,smtp_email_charset,invoice_company_name,company_logo');
-                    $options = $CI->db->get(db_prefix() . 'options')->result_array();
-
-                    $branch_data_options = [
-                        [
-                            'name' => 'branch',
-                            'value' => $this->input->post('branch')
-                        ], 
-                        [
-                            'name' => 'invoice_company_address',
-                            'value' => $this->input->post('address')
-                        ], 
-                        [
-                            'name' => 'invoice_company_city',
-                            'value' => $this->input->post('city')
-                        ], 
-                        [
-                            'name' => 'invoice_company_postal_code',
-                            'value' => $this->input->post('zip')
-                        ], 
-                        [
-                            'name' => 'invoice_company_phonenumber',
-                            'value' => $this->input->post('phonenumber')
-                        ],
-                        [
-                            'name' => 'invoice_company_country_code',
-                            'value' => '+91'
-                        ], 
-                    ];
-
-                    $merged_options = array_merge($options,$branch_data_options);
-
-
-                    $CI->db->where('admin',1);
-                    $CI->db->order_by('staffid','asc');
-                    $super_admin = $CI->db->get(db_prefix() . 'staff')->row();
-                   
-                    $db =  $this->db_clone($db_name_by_branch, $merged_options,$branch_admin,$super_admin);
+                    if ($CI->db->field_exists('branch_id', db_prefix() . 'staff')) {
+                        $CI->db->where('staffid', $data['staff_id']);
+                        $CI->db->update(db_prefix() . 'staff', ['branch_id' => $id]);
+                    }
 
                     set_alert('success', _l('added_successfully', _l('branch')));
                     redirect(admin_url('branch'));
@@ -322,16 +274,18 @@ class Branch extends AdminController
                 if (staff_cant('edit', 'branch')) {
                     access_denied('branch');
                 }
-                $branch = $this->input->post('branch');
-                $email = $this->input->post('email');
-                $vat = $this->input->post('vat');
-                $phonenumber = $this->input->post('phonenumber');
-
-                if($branch == '' || $email == '' || $vat == '' || $phonenumber == ''){
-                    set_alert('warning', _l('fill_all_required_details', _l('branch_lowercase')));
-                    redirect(admin_url('branch/add/' . $id));
+                $required_fields = ['staff_id', 'branch', 'branch_code', 'phonenumber', 'address', 'city', 'state'];
+                foreach ($required_fields as $field) {
+                    if (trim((string) $this->input->post($field)) === '') {
+                        set_alert('warning', _l('fill_all_required_details', _l('branch_lowercase')));
+                        redirect(admin_url('branch/add/' . $id));
+                    }
                 }
                 $success = $this->branch_model->update($this->input->post(), $id);
+                if ($this->db->field_exists('branch_id', db_prefix() . 'staff')) {
+                    $this->db->where('staffid', (int) $this->input->post('staff_id'));
+                    $this->db->update(db_prefix() . 'staff', ['branch_id' => (int) $id]);
+                }
                 // $image=$this->profile_images($id);
                 // $CI = & get_instance();
                 // hooks()->do_action('before_remove_branch_icon_image');
@@ -382,6 +336,10 @@ class Branch extends AdminController
                     access_denied('branch');
                 }
                 $success = $this->branch_model->update($this->input->post(), $id);
+                if ($this->db->field_exists('branch_id', db_prefix() . 'staff')) {
+                    $this->db->where('staffid', (int) $this->input->post('staff_id'));
+                    $this->db->update(db_prefix() . 'staff', ['branch_id' => (int) $id]);
+                }
                 if ($success) {
                     set_alert('success', _l('updated_successfully', _l('branch')));
                 }

@@ -699,20 +699,10 @@ class Authentication_model extends App_Model
         return $this->encryption->decrypt($string);
     }
 
-    public function check_staff_admin($branchId,$email)
-    {   
-        $this->db->select('staffid,admin');
-        $this->db->where('email',trim($email));
-        $staff = $this->db->get(db_prefix() . 'staff')->row();
-
-        $table = db_prefix() . 'branch';
-        $this->db->where('branchid', $branchId);
-        // if($staff->admin != 1){
-        //     $this->db->where('staff_id', $staff->staffid);    
-        // }
-        $branch = $this->db->get($table)->row();
-        return $branch;
-        
+       public function check_staff_admin($branchId, $email = '')
+    {
+        $this->db->where('branchid', (int) $branchId);
+        return $this->db->get(db_prefix() . 'branch')->row();
   
         
     }

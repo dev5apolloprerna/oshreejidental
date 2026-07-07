@@ -44,11 +44,8 @@ class Authentication extends App_Controller
         }
         if ($this->input->post()) {
 
-            if(isset($_POST['branch']) && !empty($_POST['branch'])){
-                   
-                $branch = $_POST['branch'];   
-                $branch1 = $this->Authentication_model->check_staff_admin($branch,$_POST['email']);
-                $this->session->set_userdata('branch',$branch1->branch_db);
+            if ($this->input->post('branch')) {
+                $this->session->set_userdata('branch', (int) $this->input->post('branch'));
             }
 
             if ($this->form_validation->run() !== false) {
@@ -124,15 +121,15 @@ class Authentication extends App_Controller
         if($this->input->get()){
 
 
-            if(isset($_GET['branch']) && !empty($_GET['branch'])){
-                   
-                $branch = $_GET['branch'];   
-                $branch1 = $this->Authentication_model->check_staff_admin($branch,$_GET['email']);
-
-                $cookie_name = "branch";
-                $cookie_value = $branch1->branch_db;
-                setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1 day
+            if ($this->input->get('branch')) {
+                $branch = $this->Authentication_model->check_staff_admin((int) $this->input->get('branch'));
                 
+                if ($branch) {
+                    $cookie_name = "branch";
+                    $cookie_value = (string) $branch->branchid;
+                    setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1 day
+                    $this->session->set_userdata('branch', (int) $branch->branchid);
+                }
             }
             redirect(admin_url('authentication/admin_login'));
         }
