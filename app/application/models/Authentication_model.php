@@ -30,6 +30,22 @@ class Authentication_model extends App_Model
                 $_id   = 'staffid';
             }
             $this->db->where('email', $email);
+            if ($staff == true) {
+                $selectedBranch = (int) $this->session->userdata('branch');
+                if ($selectedBranch > 0) {
+                    $branchAccessRules = [
+                        db_prefix() . 'staff.admin = 1',
+                        db_prefix() . 'staff.branch_id = ' . $selectedBranch,
+                        db_prefix() . 'staff.staffid IN (SELECT staff_id FROM ' . db_prefix() . 'branch WHERE branchid = ' . $selectedBranch . ')',
+                    ];
+
+                    if ($this->db->table_exists(db_prefix() . 'branch_admins')) {
+                        $branchAccessRules[] = db_prefix() . 'staff.staffid IN (SELECT staff_id FROM ' . db_prefix() . 'branch_admins WHERE branch_id = ' . $selectedBranch . ')';
+                    }
+
+                    $this->db->where('(' . implode(' OR ', $branchAccessRules) . ')', null, false);
+                }
+            }
             $user = $this->db->get($table)->row();
             // printr($user->staffid);
             if ($user) {

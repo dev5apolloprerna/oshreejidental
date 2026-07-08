@@ -91,11 +91,18 @@ if (isset($branch)) { ?>
                         <div class="panel_s">
                             <div class="panel-body">
                                 <h4 class="tw-mt-0">Branch Super Admin Login</h4>
-                                <p class="text-muted">Create a staff login for this branch. This user will be linked to the new branch and can select it on the branch selection screen.</p>
-                                <?php echo render_input('super_admin_firstname', 'first_name', '', 'text', ['required' => true]); ?>
-                                <?php echo render_input('super_admin_lastname', 'last_name', 'Admin', 'text', ['required' => true]); ?>
-                                <?php echo render_input('email', 'staff_add_edit_email', '', 'email', ['required' => true]); ?>
-                                <?php echo render_input('password', 'staff_add_edit_password', '', 'password', ['required' => true]); ?>
+                                <p class="text-muted">Optionally create a staff login for this branch. This user will be linked to the new branch and can select it on the branch selection screen.</p>
+                                <div class="checkbox checkbox-primary">
+                                    <input type="hidden" name="create_super_admin" value="0">
+                                    <input type="checkbox" name="create_super_admin" id="create_super_admin" value="1" checked>
+                                    <label for="create_super_admin">Create staff login for this branch</label>
+                                </div>
+                                <div id="branch-super-admin-fields">
+                                    <?php echo render_input('super_admin_firstname', 'first_name', 'Super', 'text', ['required' => true]); ?>
+                                    <?php echo render_input('super_admin_lastname', 'last_name', 'Admin', 'text', ['required' => true]); ?>
+                                    <?php echo render_input('email', 'staff_add_edit_email', '', 'email', ['required' => true]); ?>
+                                    <?php echo render_input('password', 'staff_add_edit_password', '', 'password', ['required' => true]); ?>
+                                </div>
                             </div>
                         </div>
                         <?php } ?>
@@ -339,7 +346,7 @@ if (isset($branch)) { ?>
 <?php if (staff_can('create',  'customers') || staff_can('edit',  'customers')) { ?>
 <div class="modal fade" id="branch_admins_assign" tabindex="-1" role="dialog">
     <div class="modal-dialog">
-        <?php echo form_open(admin_url('branchesassign_admins/' . $branch->branchid)); ?>
+        <?php echo form_open(admin_url('branches/assign_admins/' . $branch->branchid)); ?>
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -367,4 +374,19 @@ if (isset($branch)) { ?>
 <!-- /.modal -->
 <?php } ?>
 <?php } ?>
+<script>
+$(function() {
+    var $toggle = $('#create_super_admin');
+    var $fields = $('#branch-super-admin-fields');
+
+    function toggleSuperAdminFields() {
+        var enabled = $toggle.prop('checked');
+        $fields.toggle(enabled);
+        $fields.find('input').prop('required', enabled);
+    }
+
+    $toggle.on('change', toggleSuperAdminFields);
+    toggleSuperAdminFields();
+});
+</script>
 <?php $this->load->view('admin/branch/branch_group'); ?>
