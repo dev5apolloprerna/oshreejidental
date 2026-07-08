@@ -49,3 +49,13 @@ if (!$CI->db->table_exists(db_prefix() . 'branch')) {
     $CI->db->query('ALTER TABLE `' . db_prefix() . 'branch`
   MODIFY `branchid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1');
 }
+
+if (!$CI->db->table_exists(db_prefix() . 'branch_admins')) {
+    $CI->db->query('CREATE TABLE `' . db_prefix() . "branch_admins` (
+        `branch_id` int(11) NOT NULL,
+        `staff_id` int(11) NOT NULL,
+        `date_assigned` datetime NOT NULL,
+        PRIMARY KEY (`branch_id`, `staff_id`),
+        KEY `staff_id` (`staff_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+}

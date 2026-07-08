@@ -105,7 +105,8 @@ class Branches extends AdminController
             // Fetch data based on groups
             if ($group == 'profile') {
                 $data['customer_groups'] = $this->branch_model->get_customer_groups($id);
-                $data['customer_admins'] = $this->branch_model->get_admins($id);
+                // $data['customer_admins'] = $this->branch_model->get_admins($id);
+                $data['branch_admins']   = $this->branch_model->get_admins($id);
             } elseif ($group == 'attachments') {
                 $data['attachments'] = get_all_customer_attachments($id);
             } elseif ($group == 'vault') {
@@ -157,6 +158,9 @@ class Branches extends AdminController
             }
 
             $data['staff'] = $this->staff_model->get('', ['active' => 1]);
+            if (!isset($data['branch_admins'])) {
+                $data['branch_admins'] = $this->branch_model->get_admins($id);
+            }
 
             $data['branch'] = $branch;
             $title          = $branch->branch;
@@ -213,5 +217,29 @@ class Branches extends AdminController
         $this->load->view('admin/branch/branch', $data);
 
     }
+        public function assign_admins($id)
+    {
+        if (staff_cant('create', 'customers') && staff_cant('edit', 'customers')) {
+            access_denied('customers');
+        }
+
+        $success = $this->branch_model->assign_admins($this->input->post(), $id);
+        if ($success == true) {
+            set_alert('success', _l('updated_successfully', _l('branch')));
+        }
+
+        redirect(admin_url('branches/branch/' . $id . '?tab=branch_admins'));
+    }
+
+    public function delete_branch_admin($branch_id, $staff_id)
+    {
+        if (staff_cant('create', 'customers') && staff_cant('edit', 'customers')) {
+            access_denied('customers');
+        }
+
+        $this->branch_model->delete_admin($branch_id, $staff_id);
+        redirect(admin_url('branches/branch/' . $branch_id . '?tab=branch_admins'));
+    }
+
 }
 
