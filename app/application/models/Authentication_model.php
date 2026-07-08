@@ -702,8 +702,46 @@ class Authentication_model extends App_Model
        public function check_staff_admin($branchId, $email = '')
     {
         $this->db->where('branchid', (int) $branchId);
-        return $this->db->get(db_prefix() . 'branch')->row();
-  
-        
+        return $this->db->get(db_prefix() . 'branch')->row();   
+    }
+        public function can_staff_login_to_branch($branchId, $staffId)
+    {
+        $branchId = (int) $branchId;
+        $staffId  = (int) $staffId;
+
+        if ($branchId <= 0 || $staffId <= 0) {
+            return false;
+        }
+
+        $staff = $this->db->select('admin, branch_id')
+            ->where('staffid', $staffId)
+            ->get(db_prefix() . 'staff')
+            ->row();
+
+        if (!$staff) {
+            return false;
+        }
+
+        if ((int) $staff->admin === 1 || (int) $staff->branch_id === $branchId) {
+            return true;
+        }
+
+        $branch = $this->db->select('staff_id')
+            ->where('branchid', $branchId)
+            ->get(db_prefix() . 'branch')
+            ->row();
+
+        if ($branch && (int) $branch->staff_id === $staffId) {
+            return true;
+        }
+
+        if ($this->db->table_exists(db_prefix() . 'branch_admins')) {
+            return total_rows(db_prefix() . 'branch_admins', [
+                'branch_id' => $branchId,
+                'staff_id'  => $staffId,
+            ]) > 0;
+        }
+
+        return false;
     }
 }

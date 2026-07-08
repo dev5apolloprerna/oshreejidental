@@ -37,6 +37,16 @@ class Branch_model extends App_Model
      */
     public function add($data)
     {
+        $superAdmin = $this->extract_super_admin_data($data);
+
+        if ($superAdmin) {
+            $this->db->where('email', $superAdmin['email']);
+            if ($this->db->get(db_prefix() . 'staff')->row()) {
+                die('Email already exists');
+            }
+        }
+
+
         // $this->db->where('email', $data['email']);
         // $email = $this->db->get(db_prefix() . 'branch')->row();
 
@@ -51,6 +61,15 @@ class Branch_model extends App_Model
         $this->db->insert(db_prefix() . 'branch', $data);
         $insert_id = $this->db->insert_id();
         if ($insert_id) {
+            
+            if ($superAdmin) {
+                $staffId = $this->create_branch_super_admin($superAdmin, $insert_id);
+                if ($staffId) {
+                    $this->db->where('branchid', $insert_id);
+                    $this->db->update(db_prefix() . 'branch', ['staff_id' => $staffId]);
+                }
+            }
+
             log_activity('New Branch Added [ID:' . $insert_id . ']');
 
             return $insert_id;
@@ -59,6 +78,78 @@ class Branch_model extends App_Model
         return false;
     }
 
+    private function extract_super_admin_data(&$data)
+    {
+        $superAdmin = [
+            'firstname' => trim($data['super_admin_firstname'] ?? ''),
+            'lastname'  => trim($data['super_admin_lastname'] ?? ''),
+            'email'     => trim($data['email'] ?? ''),
+            'password'  => $data['password'] ?? '',
+        ];
+
+        unset($data['super_admin_firstname'], $data['super_admin_lastname']);
+
+        if ($superAdmin['firstname'] === '' && !empty($data['branch'])) {
+            $superAdmin['firstname'] = trim($data['branch']);
+        }
+
+        if ($superAdmin['lastname'] === '') {
+            $superAdmin['lastname'] = 'Admin';
+        }
+
+        if ($superAdmin['email'] === '' || $superAdmin['password'] === '') {
+            return false;
+        }
+
+        return $superAdmin;
+    }
+
+    /**
+     * Create the staff user that can log in as the newly created branch super admin.
+     */
+    private function create_branch_super_admin($superAdmin, $branchId)
+    {
+        $staffData = [
+            'email'       => $superAdmin['email'],
+            'firstname'   => $superAdmin['firstname'],
+            'lastname'    => $superAdmin['lastname'],
+            'password'    => app_hash_password($superAdmin['password']),
+            'datecreated' => date('Y-m-d H:i:s'),
+            'admin'       => 0,
+            'active'      => 1,
+            'is_not_staff'=> 0,
+            'branch_id'   => (int) $branchId,
+        ];
+
+        if ($this->db->field_exists('role', db_prefix() . 'staff')) {
+            $staffData['role'] = null;
+        }
+
+        $this->db->insert(db_prefix() . 'staff', $staffData);
+        $staffId = $this->db->insert_id();
+
+        if (!$staffId) {
+            return false;
+        }
+
+        $this->db->where('staffid', $staffId);
+        $this->db->update(db_prefix() . 'staff', [
+            'media_path_slug' => slug_it($superAdmin['firstname'] . ' ' . $superAdmin['lastname']),
+        ]);
+
+        if ($this->db->table_exists(db_prefix() . 'branch_admins')) {
+            $this->db->insert(db_prefix() . 'branch_admins', [
+                'branch_id'     => (int) $branchId,
+                'staff_id'      => (int) $staffId,
+                'date_assigned' => date('Y-m-d H:i:s'),
+            ]);
+        }
+
+        log_activity('New Branch Super Admin Added [ID: ' . $staffId . ', Branch ID: ' . $branchId . ']');
+
+        return $staffId;
+    }
+    
     /**
      * Update visitorspurpose
      * @param  mixed $data All $_POST data
