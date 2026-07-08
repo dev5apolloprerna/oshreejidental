@@ -123,7 +123,7 @@ class Authentication extends App_Controller
 
             if ($this->input->get('branch')) {
                 $branch = $this->Authentication_model->check_staff_admin((int) $this->input->get('branch'));
-                
+
                 if ($branch) {
                     $cookie_name = "branch";
                     $cookie_value = (string) $branch->branchid;
@@ -187,10 +187,14 @@ class Authentication extends App_Controller
                     redirect(admin_url('authentication'));
                 }
 
-
-                
-              
-              
+              $selectedBranch = (int) $this->session->userdata('branch');
+                if ($selectedBranch > 0 && !$this->Authentication_model->can_staff_login_to_branch($selectedBranch, get_staff_user_id())) {
+                    $this->Authentication_model->logout(true);
+                    setcookie('branch', '', time() - 3600, '/');
+                    set_alert('danger', _l('access_denied'));
+                    redirect(admin_url('authentication'));
+                }
+ 
                
                 $this->load->model('announcements_model');
                 $this->announcements_model->set_announcements_as_read_except_last_one(get_staff_user_id(), true);

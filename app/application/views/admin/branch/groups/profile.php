@@ -87,6 +87,19 @@ if (isset($branch)) { ?>
                         ?>
                         <?php $attrs = (isset($branch) ? [] : ['autofocus' => true]); ?>
                         <?php echo render_input('branch', 'branch', $value, 'text', $attrs); ?>
+                        <?php if (!isset($branch)) { ?>
+                        <div class="panel_s">
+                            <div class="panel-body">
+                                <h4 class="tw-mt-0">Branch Super Admin Login</h4>
+                                <p class="text-muted">Create a staff login for this branch. This user will be linked to the new branch and can select it on the branch selection screen.</p>
+                                <?php echo render_input('super_admin_firstname', 'first_name', '', 'text', ['required' => true]); ?>
+                                <?php echo render_input('super_admin_lastname', 'last_name', 'Admin', 'text', ['required' => true]); ?>
+                                <?php echo render_input('email', 'staff_add_edit_email', '', 'email', ['required' => true]); ?>
+                                <?php echo render_input('password', 'staff_add_edit_password', '', 'password', ['required' => true]); ?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        
                         <div id="branch_exists_info" class="hide"></div>
                         <?php hooks()->do_action('after_branch_profile_branch_field', $branch ?? null); ?>
                         <?php 
