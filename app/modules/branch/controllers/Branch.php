@@ -30,30 +30,58 @@ class Branch extends AdminController
         // $server = isset($server) ? $server : 'localhost';
         // $user = isset($user) ? $branch_data['branch'] : 'root';
         // $password = isset($password) ? $branch_data['password'] : 'root';
-        $database = isset($database) ? $database : '';
+        $database = isset($database) ? trim((string) $database) : '';
 
         $server = APP_DB_HOSTNAME;
         $user = APP_DB_USERNAME;
         $password = APP_DB_PASSWORD;
         // $database = '';
         
-        $link = new mysqli($server, $user, $password,'');
+        if ($database === '' || !preg_match('/^[A-Za-z0-9_]+$/', $database)) {
+            log_message('error', 'Invalid branch database name: ' . $database);
+            set_alert('warning', 'Invalid branch database name. Use only letters, numbers, and underscores.');
+            return false;
+        }
+
+        mysqli_report(MYSQLI_REPORT_OFF);
+        $link = @new mysqli($server, $user, $password, '');
          // Check connection
          if ($link->connect_error) {
-            die("Connection failed: " . $link->connect_error);
+            log_message('error', 'Branch database server connection failed: ' . $link->connect_error);
+            set_alert('warning', 'Unable to connect to the database server. Please check database credentials.');
+            return false;
+        }
+
+        // Database Create if not exists. Some shared hosts do not grant CREATE DATABASE;
+        // in that case, continue only if the selected branch database already exists
+        // and the configured user can access it.
+        $databaseName = '`' . str_replace('`', '``', $database) . '`';
+        $link->sql = "CREATE DATABASE IF NOT EXISTS " . $databaseName;
+        if (!$link->query($link->sql)) {
+            $createError = $link->error;
+            $existingDb = @new mysqli($server, $user, $password, $database);
+
+            if ($existingDb->connect_error) {
+                log_message('error', 'Unable to create or access branch database ' . $database . ': ' . $createError . ' / ' . $existingDb->connect_error);
+                set_alert('warning', 'Unable to create or access the branch database. Please create it in hosting panel and grant this MySQL user access.');
+                $link->close();
+                return false;
+            }
+
+            $link->close();
+            $link = $existingDb;
+        } else {
+            $link->select_db($database);
         }
 
         // Database Create if not exists
-        $link->sql = "CREATE DATABASE IF NOT EXISTS ".$database;
-        if ($link->query($link->sql) === TRUE) {
-            $sqlStatements = $parser->parse(BRANCH_SQL_FOLDER . 'database.sql');
-            // Configuration
-            $h = $server;
-            $u =$user;
-            $p = $password;
-            $d = $database;
+        if ($link->connect_error) {
+            log_message('error', 'Branch database connection failed for ' . $database . ': ' . $link->connect_error);
+            set_alert('warning', 'Unable to connect to the branch database.');
+            return false;
+        }
 
-            $link = new mysqli($h, $u, $p, $d);
+        $sqlStatements = $parser->parse(BRANCH_SQL_FOLDER . 'database.sql');
 
             foreach ($sqlStatements as $statement) {
                 $distilled = $parser->removeComments($statement);
@@ -195,9 +223,7 @@ class Branch extends AdminController
 
             $link->query("UPDATE ".db_prefix()."leads_status SET name='Patient' WHERE id='1'");
            
-        }else{
-            echo "Error creating database: " . $CI->error;
-        }
+                return true;
     }
     public function index()
     {
