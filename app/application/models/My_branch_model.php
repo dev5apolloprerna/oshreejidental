@@ -412,7 +412,8 @@ class My_branch_model extends App_Model
         $email = $this->db->get(db_prefix() . 'staff')->row();
 
         if ($email) {
-            die('Email already exists');
+            set_alert('warning', _l('email_exists'));
+            return false;
         }
 
         $data['admin'] = 0;
