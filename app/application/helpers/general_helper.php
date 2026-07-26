@@ -1059,7 +1059,10 @@ if (!function_exists('build_staff_branch_scope_where')) {
      */
     function build_staff_branch_scope_where($table, $branchColumn = 'branch_id', $enteredByColumn = '', $assignedExistsClauses = [])
     {
-        if (!is_staff_logged_in() || is_admin()) {
+        $isMainAdmin = is_admin()
+            && (!function_exists('app_is_admin_branch_context') || app_is_admin_branch_context());
+
+        if (!is_staff_logged_in() || $isMainAdmin) {
             return '';
         }
 

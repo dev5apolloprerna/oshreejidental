@@ -243,7 +243,8 @@ class Appointly_model extends App_Model
 
         $data = $this->validateInsertRecurring($data);
         
-         $branchId = $this->resolveAppointmentBranchId($data, $attendees);
+         // $branchId = $this->resolveAppointmentBranchId($data, $attendees);
+        $branchId = $this->resolveAppointmentBranchId($data);
 
         if (isset($data['branch'])) {
             unset($data['branch']);
@@ -306,21 +307,25 @@ class Appointly_model extends App_Model
         }
 
 
-        $currentBranchDb = (string) $this->input->cookie('branch');
-        if ($currentBranchDb !== '') {
-            $mainDb = $this->load->database('default', true);
-            $row = $mainDb->select('branchid')->where('branch_db', $currentBranchDb)->get(db_prefix() . 'branch')->row();
-            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
-                return (int) $row->branchid;
-            }
-        }
-
+       
         return 0;
     }
 
 
-     private function resolveCurrentStaffBranchId()
+    private function resolveCurrentStaffBranchId()
     {
+         if (is_staff_logged_in()) {
+            $selectedBranchId = (int) $this->session->userdata('branch');
+            if ($selectedBranchId > 0) {
+                return $selectedBranchId;
+            }
+
+            $selectedBranchId = (int) $this->input->cookie('branch');
+            if ($selectedBranchId > 0) {
+                return $selectedBranchId;
+            }
+        }
+        
         if (function_exists('get_staff_branch_id') && is_staff_logged_in()) {
             $staffBranchId = (int) get_staff_branch_id();
             if ($staffBranchId > 0) {
