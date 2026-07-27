@@ -1036,14 +1036,12 @@ if (!function_exists('get_current_staff_branch_scope_id')) {
             }
         }
 
-        $selectedBranchId = (int) $CI->session->userdata('branch');
-        if ($selectedBranchId > 0) {
-            return $selectedBranchId;
-        }
-
-        $selectedBranchId = (int) $CI->input->cookie('branch');
-        if ($selectedBranchId > 0) {
-            return $selectedBranchId;
+        $currentBranchDb = (string) $CI->input->cookie('branch');
+        if ($currentBranchDb !== '' && $CI->db->table_exists(db_prefix() . 'branch')) {
+            $row = $CI->db->select('branchid')->where('branch_db', $currentBranchDb)->get(db_prefix() . 'branch')->row();
+            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
+                return (int) $row->branchid;
+            }
         }
 
         return 0;
@@ -1059,10 +1057,7 @@ if (!function_exists('build_staff_branch_scope_where')) {
      */
     function build_staff_branch_scope_where($table, $branchColumn = 'branch_id', $enteredByColumn = '', $assignedExistsClauses = [])
     {
-        $isMainAdmin = is_admin()
-            && (!function_exists('app_is_admin_branch_context') || app_is_admin_branch_context());
-
-        if (!is_staff_logged_in() || $isMainAdmin) {
+        if (!is_staff_logged_in() || is_admin()) {
             return '';
         }
 
@@ -1104,7 +1099,7 @@ if (!function_exists('build_staff_entered_data_scope_where')) {
      */
     function build_staff_entered_data_scope_where($table, $enteredByColumn = '', $assignedExistsClauses = [])
     {
-        if (!is_staff_logged_in() || is_admin()) {
+        if (!is_staff_logged_in() || is_admin() || !function_exists('app_has_branch_context') || !app_has_branch_context()) {
             return '';
         }
 
@@ -1146,12 +1141,12 @@ if (!function_exists('staff_can_access_payment_record')) {
         $payment = $CI->db
             ->select(db_prefix() . 'invoicepaymentrecords.id')
             ->from(db_prefix() . 'invoicepaymentrecords')
-/*            ->join(db_prefix() . 'invoices', db_prefix() . 'invoices.id = ' . db_prefix() . 'invoicepaymentrecords.invoiceid', 'left')*/
+            ->join(db_prefix() . 'invoices', db_prefix() . 'invoices.id = ' . db_prefix() . 'invoicepaymentrecords.invoiceid', 'left')
             ->where(db_prefix() . 'invoicepaymentrecords.id', (int) $paymentId)
             ->group_start()
-/*                ->where(db_prefix() . 'invoices.addedfrom', $staffId)
+                ->where(db_prefix() . 'invoices.addedfrom', $staffId)
                 ->or_where(db_prefix() . 'invoices.sale_agent', $staffId)
-            ->group_end()*/
+            ->group_end()
             ->get()
             ->row();
 

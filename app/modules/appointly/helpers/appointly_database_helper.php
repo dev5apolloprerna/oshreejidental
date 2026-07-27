@@ -82,7 +82,7 @@ if (!function_exists('init_appointly_database_tables')) {
                 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;"
         );
 
-        $CI->db->query("ALTER TABLE `" . db_prefix() . "appointly_appointments`
+        $CI->db->query("ALTER TABLE " .db_prefix() ."`appointly_appointments` 
             ADD `gender` ENUM('male','female') NOT NULL AFTER `last_recurring_date`,
             ADD `age` VARCHAR(100) NOT NULL AFTER `gender`;"
         );

@@ -27,11 +27,12 @@ if (!is_admin() && function_exists('build_staff_branch_scope_where')) {
 }
 if ($scopeWhere !== '') {
     array_push($where, $scopeWhere);
-} elseif (!is_admin()) {*/
-    if (!is_admin()) {
+} elseif (!is_admin()) {
     $staffId = (int) get_staff_user_id();
     array_push($where, 'AND ' . $sTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . $staffId . ')');
-}
+}*/
+$staffId = (int) get_staff_user_id();
+array_push($where, 'AND ' . $sTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . $staffId . ')');
 $filters = [];
 if ($this->ci->input->post('approved')) {
     $filters[] = 'AND approved = 1';
