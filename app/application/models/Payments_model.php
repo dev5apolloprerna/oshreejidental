@@ -212,6 +212,7 @@ class Payments_model extends App_Model
         }
 
         $data['daterecorded'] = date('Y-m-d H:i:s');
+        $data['created_by']   = is_staff_logged_in() ? get_staff_user_id() : 0;
         $data                 = hooks()->apply_filters('before_payment_recorded', $data);
 
         unset($data['amount_with_fee']);
@@ -471,6 +472,7 @@ class Payments_model extends App_Model
 
             $data['date']         = to_sql_date($data['date']);
             $data['daterecorded'] = date('Y-m-d H:i:s');
+            $data['created_by']   = get_staff_user_id();
             $data                 = hooks()->apply_filters('before_payment_recorded', $data);
 
             $this->db->insert(db_prefix() . 'invoicepaymentrecords', $data);

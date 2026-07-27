@@ -43,7 +43,7 @@ function appointly_register_appointments_on_calendar($data, $config)
     $CI = &get_instance();
     $CI->load->model('appointly/appointly_model', 'apm');
 
-if (defined('ADMIN_AREA') && !empty($GLOBALS['dashboard_calendar_show_all'])) {
+if (defined('ADMIN_AREA') && is_admin() && !empty($GLOBALS['dashboard_calendar_show_all'])) {
         $GLOBALS['dashboard_show_all_appointly'] = true;
         $data = $CI->apm->getCalendarData($config['start'], $config['end'], $data);
         unset($GLOBALS['dashboard_show_all_appointly']);
