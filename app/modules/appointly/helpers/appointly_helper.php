@@ -634,11 +634,10 @@ if ( ! function_exists('get_appointments_summary')) {
         $CI = &get_instance();
 
         if ( ! is_admin()) {
-           /* $scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+            $scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
             if ($scopeWhere !== '') {
                 $CI->db->where(substr($scopeWhere, 4), null, false);
-            }*/
-            $CI->db->where(db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')', null, false);
+            }
         }
 
         $appointments = $CI->db->get(db_prefix().'appointly_appointments')->result_array();

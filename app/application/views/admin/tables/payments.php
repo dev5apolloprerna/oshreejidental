@@ -22,14 +22,11 @@ $join = [
     ];
 
 $where = [];
-if (!is_admin()) {
-    array_push($where, 'AND ' . db_prefix() . 'invoicepaymentrecords.created_by = ' . (int) get_staff_user_id());
-}
 if ($clientid != '') {
     array_push($where, 'AND ' . db_prefix() . 'clients.userid=' . $this->ci->db->escape_str($clientid));
 }
 
-/*if (function_exists('app_has_branch_context') && app_has_branch_context() && !is_admin()) {
+if (function_exists('app_has_branch_context') && app_has_branch_context() && !is_admin()) {
     array_push($where, 'AND (' . db_prefix() . 'invoices.addedfrom = ' . get_staff_user_id() . ' OR ' . db_prefix() . 'invoices.sale_agent = ' . get_staff_user_id() . ')');
 } else {
     $paymentBranchId = (int) get_current_staff_branch_scope_id();
@@ -48,7 +45,7 @@ if (staff_cant('view', 'payments')) {
     $whereUser .= ')';
     array_push($where, $whereUser);
 }
-*/
+
 $sIndexColumn = 'id';
 $sTable       = db_prefix() . 'invoicepaymentrecords';
 

@@ -843,14 +843,19 @@ class Appointly_model extends App_Model
         $date = new DateTime();
         $today = $date->format('Y-m-d');
 
-        if (!is_admin() && empty($GLOBALS['dashboard_show_all_appointly'])) {
-            /*$scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+       /* if (!is_admin() && empty($GLOBALS['dashboard_show_all_appointly'])) {
+            $scopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
             if ($scopeWhere !== '') {
                 $this->db->where(substr($scopeWhere, 4), null, false);
-            }*/
-                        $this->db->where(db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')', null, false);
-        }
+            }
+        }*/
 
+$this->db->where(
+            'id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')',
+            null,
+            false
+        );
+        
         $this->db->where('date', $today);
         $this->db->where('approved', 1);
 
@@ -942,12 +947,11 @@ class Appointly_model extends App_Model
          $appointmentsTable = db_prefix() . 'appointly_appointments';
         $scopeWhere = '';
 
-        if (!is_client_logged_in() && !is_admin() && empty($GLOBALS['dashboard_show_all_appointly'])) {
+        /*if (!is_client_logged_in() && !is_admin() && empty($GLOBALS['dashboard_show_all_appointly'])) {
             // Build branch/staff scope before starting the calendar query because the helper
             // performs its own database metadata lookups on the shared query builder instance.
-/*            $scopeWhere = build_staff_branch_scope_where($appointmentsTable, 'branch_id', 'created_by', [$appointmentsTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);*/
-            $scopeWhere = 'AND ' . $appointmentsTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')';
-        }
+            $scopeWhere = build_staff_branch_scope_where($appointmentsTable, 'branch_id', 'created_by', [$appointmentsTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+        }*/
 
         $this->db->select($appointmentsTable . '.subject as title, ' . $appointmentsTable . '.date, ' . $appointmentsTable . '.hash, ' . $appointmentsTable . '.start_hour, ' . $appointmentsTable . '.id, ' . $appointmentsTable . '.type_id');
         $this->db->from($appointmentsTable);
@@ -956,9 +960,14 @@ class Appointly_model extends App_Model
 
         if (!is_client_logged_in()) 
         {
-            if ($scopeWhere !== '') {
+            /*if ($scopeWhere !== '') {
                 $this->db->where(substr($scopeWhere, 4), null, false);
-            }
+            }*/
+            $this->db->where(
+                $appointmentsTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')',
+                null,
+                false
+            );
         } else {
             $this->db->where($appointmentsTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE contact_id=' . get_contact_user_id() . ')');
         }

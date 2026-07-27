@@ -51,13 +51,11 @@ class Appointments extends AdminController
          * User will be able to open the url send to mail (But only to view this specific meeting or meetings that the user is assigned to)
          */
 
-        /*if (!in_array(get_staff_user_id(), $attendees)) {
+        if (!in_array(get_staff_user_id(), $attendees)) {
             // Global view permissions required
             if (!staff_can('view', 'appointments')) {
                 access_denied('Appointments');
-            }*/
-        if (!is_admin() && !in_array(get_staff_user_id(), $attendees)) {
-            access_denied('Appointments');
+            }
         }
 
         $data['appointment'] = fetch_appointment_data($appointment_id);

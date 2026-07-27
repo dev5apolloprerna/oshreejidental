@@ -9,6 +9,8 @@
                 <?php $attrs = (isset($branch) ? array() : array('autofocus'=>true)); ?>
                 <div class="panel_s">
                     <div class="panel-body">
+                    <?php $value = (isset($branch) ? $branch->branch_db : '');  ?>
+                    <?php echo render_input('branch_db','',$value,'hidden',$attrs); ?>
                     <?php
                     $selected = (isset($branch) ? $branch->staff_id : '');
                     echo render_select('staff_id', $members, ['staffid', ['firstname', 'lastname']], 'assign_staff_branch', 
@@ -18,8 +20,6 @@
                     <?php $value = (isset($branch) ? $branch->branch : '');  ?>
                         
                         <?php echo render_input('branch','branch',$value,'text',$attrs); ?>
-                        
-                        <?php $value = (isset($branch) ? $branch->branch_code : '');  ?>
 
                         <?php echo render_input('branch_code','Branch Code',$value,'text',$attrs); ?>
 

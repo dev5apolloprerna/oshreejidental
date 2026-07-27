@@ -18,11 +18,10 @@ $sTable = db_prefix() . 'appointly_appointments';
 $where = [];
 
 if (!is_admin()) {
-/*    $branchScopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
+    $branchScopeWhere = build_staff_branch_scope_where(db_prefix() . 'appointly_appointments', 'branch_id', 'created_by', [db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id={staff_id})']);
     if ($branchScopeWhere !== '') {
         array_push($where, $branchScopeWhere);
-    }*/
-        array_push($where, 'AND ' . $sTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')');
+    }
 }
 
 
