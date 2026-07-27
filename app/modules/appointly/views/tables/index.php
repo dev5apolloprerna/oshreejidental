@@ -17,7 +17,7 @@ $sTable = db_prefix() . 'appointly_appointments';
 
 $where = [];
 
-$branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
+/*$branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
 $scopeWhere = '';
 
 if (!is_admin() && function_exists('build_staff_branch_scope_where')) {
@@ -27,7 +27,8 @@ if (!is_admin() && function_exists('build_staff_branch_scope_where')) {
 }
 if ($scopeWhere !== '') {
     array_push($where, $scopeWhere);
-} elseif (!is_admin()) {
+} elseif (!is_admin()) {*/
+    if (!is_admin()) {
     $staffId = (int) get_staff_user_id();
     array_push($where, 'AND ' . $sTable . '.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . $staffId . ')');
 }

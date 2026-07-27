@@ -84,6 +84,10 @@ class Payments extends AdminController
             redirect(admin_url('payments'));
         }
 
+        if (function_exists('staff_can_access_payment_record') && !staff_can_access_payment_record($id)) {
+            access_denied('payments');
+        }
+
         if ($this->input->post()) {
             if (staff_cant('edit', 'payments')) {
                 access_denied('Update Payment');
@@ -101,9 +105,9 @@ class Payments extends AdminController
             show_404();
         }
 
-         if (function_exists('staff_can_access_payment_record') && !staff_can_access_payment_record($id)) {
+        /* if (function_exists('staff_can_access_payment_record') && !staff_can_access_payment_record($id)) {
             access_denied('payments');
-        }
+        }*/
 
         $this->load->model('invoices_model');
         $payment->invoice = $this->invoices_model->get($payment->invoiceid);
@@ -194,6 +198,11 @@ class Payments extends AdminController
             access_denied('Send Payment');
         }
 
+ if (function_exists('staff_can_access_payment_record') && !staff_can_access_payment_record($id)) {
+            access_denied('Send Payment');
+        }
+
+
         $payment = $this->payments_model->get($id);
 
         if (staff_cant('view', 'payments')
@@ -258,6 +267,10 @@ class Payments extends AdminController
     /* Delete payment */
     public function delete($id)
     {
+         if (function_exists('staff_can_access_payment_record') && !staff_can_access_payment_record($id)) {
+            access_denied('Delete Payment');
+        }
+        
         if (staff_cant('delete', 'payments')) {
             access_denied('Delete Payment');
         }

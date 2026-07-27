@@ -917,6 +917,7 @@ CREATE TABLE `tblgdpr_requests` (
 CREATE TABLE `tblinvoicepaymentrecords` (
   `id` int NOT NULL,
   `invoiceid` int NOT NULL,
+  `created_by` int NOT NULL DEFAULT '0',
   `amount` decimal(15,2) NOT NULL,
   `paymentmode` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `paymentmethod` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
