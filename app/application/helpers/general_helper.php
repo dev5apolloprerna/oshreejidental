@@ -1029,6 +1029,11 @@ if (!function_exists('get_current_staff_branch_scope_id')) {
 
         $CI = &get_instance();
 
+        $selectedBranchId = (int) $CI->session->userdata('branch');
+        if ($selectedBranchId > 0) {
+            return $selectedBranchId;
+        }
+
         if ($CI->db->field_exists('branch_id', db_prefix() . 'staff')) {
             $row = $CI->db->select(db_prefix() . 'staff.branch_id')->where(db_prefix() . 'staff.staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
             if ($row && isset($row->branch_id) && (int) $row->branch_id > 0) {

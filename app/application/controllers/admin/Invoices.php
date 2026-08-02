@@ -403,7 +403,7 @@ class Invoices extends AdminController
         $this->load->model('invoice_items_model');
 
         $data['ajaxItems'] = false;
-        if (total_rows(db_prefix() . 'items') <= ajax_on_total_items()) {
+        if ($this->invoice_items_model->count_for_current_branch() <= ajax_on_total_items()) {
             $data['items'] = $this->invoice_items_model->get_grouped();
         } else {
             $data['items']     = [];
