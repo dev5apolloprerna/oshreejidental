@@ -142,9 +142,15 @@ class Invoices extends AdminController
         $isedit          = $this->input->post('isedit');
         $number          = $this->input->post('number');
         $date            = $this->input->post('date');
+        $prefix          = $this->input->post('prefix');
         $original_number = $this->input->post('original_number');
         $number          = trim($number);
         $number          = ltrim($number, '0');
+
+        if ($prefix === null) {
+            $prefix = get_option('invoice_prefix');
+        }
+
 
         if ($isedit == 'true') {
             if ($number == $original_number) {
@@ -153,15 +159,26 @@ class Invoices extends AdminController
             }
         }
 
-        if (total_rows('invoices', [
-            'YEAR(date)' => date('Y', strtotime(to_sql_date($date))),
-            'number' => $number,
-            'status !=' => Invoices_model::STATUS_DRAFT,
-        ]) > 0) {
+        if ($this->invoice_number_exists($number, to_sql_date($date), $prefix)) {
             echo 'false';
         } else {
             echo 'true';
         }
+    }
+        private function invoice_number_exists($number, $date, $prefix, $excludeId = '')
+    {
+        $where = [
+            'YEAR(date)' => (int) date('Y', strtotime($date)),
+            'number'     => ltrim(trim($number), '0'),
+            'prefix'     => $prefix,
+            'status !='  => Invoices_model::STATUS_DRAFT,
+        ];
+
+        if ($excludeId !== '') {
+            $where['id !='] = $excludeId;
+        }
+
+        return total_rows('invoices', $where) > 0;
     }
 
     public function add_note($rel_id)
@@ -316,12 +333,7 @@ class Invoices extends AdminController
 
                 if (hooks()->apply_filters('validate_invoice_number', true)) {
                     $number = ltrim($invoice_data['number'], '0');
-                    if (total_rows('invoices', [
-                        'YEAR(date)' => (int) date('Y', strtotime($invoice_data['date'])),
-                        //'YEAR(date)' => (int) date('Y', strtotime(to_sql_date($invoice_data['date']))),
-                        'number'     => $number,
-                        'status !='  => Invoices_model::STATUS_DRAFT,
-                    ])) {
+                    if ($this->invoice_number_exists($number, $invoice_data['date'], get_option('invoice_prefix'))) {
                         set_alert('warning', _l('invoice_number_exists'));
 
                         redirect(admin_url('invoices/invoice'));
@@ -349,15 +361,11 @@ class Invoices extends AdminController
                 // If number not set, is draft
                 if (hooks()->apply_filters('validate_invoice_number', true) && isset($invoice_data['number'])) {
                     $number = trim(ltrim($invoice_data['number'], '0'));
-                    if (total_rows('invoices', [
-                        //'YEAR(date)' => (int) date('Y', strtotime(to_sql_date($invoice_data['date']))),
-                        'YEAR(date)' => (int) date('Y', strtotime($invoice_data['date'])),
-                        'number'     => $number,
-                        'status !='  => Invoices_model::STATUS_DRAFT,
-                        'id !='      => $id,
-                    ])) {
-                        set_alert('warning', _l('invoice_number_exists'));
+                    $existingInvoice = $this->invoices_model->get($id);
+                    $prefix = $existingInvoice ? $existingInvoice->prefix : get_option('invoice_prefix');
 
+                    if ($this->invoice_number_exists($number, $invoice_data['date'], $prefix, $id)) {
+                        set_alert('warning', _l('invoice_number_exists'));
                         redirect(admin_url('invoices/invoice/' . $id));
                     }
                 }
@@ -403,7 +411,12 @@ class Invoices extends AdminController
         $this->load->model('invoice_items_model');
 
         $data['ajaxItems'] = false;
-        if ($this->invoice_items_model->count_for_current_branch() <= ajax_on_total_items()) {
+        $itemsCount = method_exists($this->invoice_items_model, 'count_for_current_branch')
+            ? $this->invoice_items_model->count_for_current_branch()
+            : total_rows(db_prefix() . 'items');
+
+        if ($itemsCount <= ajax_on_total_items()) {
+            
             $data['items'] = $this->invoice_items_model->get_grouped();
         } else {
             $data['items']     = [];
