@@ -5,7 +5,7 @@ require_once(APPPATH . 'libraries/import/App_import.php');
 
 class Import_items extends App_import
 {
-    protected $notImportableFields = ['id'];
+    protected $notImportableFields = ['id', 'branch_id'];
 
     protected $requiredFields = ['description', 'rate'];
 
@@ -54,6 +54,11 @@ class Import_items extends App_import
                 $id = null;
 
                 if (!$this->isSimulation()) {
+                    
+                    if ($this->ci->db->field_exists('branch_id', db_prefix() . 'items')) {
+                        $insert['branch_id'] = (int) get_current_staff_branch_scope_id();
+                    }
+
                     $this->ci->db->insert(db_prefix().'items', $insert);
                     $id = $this->ci->db->insert_id();
                 } else {

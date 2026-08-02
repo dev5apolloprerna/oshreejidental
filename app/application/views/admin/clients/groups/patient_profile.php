@@ -37,9 +37,23 @@ if (!$contact) {
     return;
 }
  // new code end
+$medicalHistoryDefaults = array_fill_keys([
+    'occupation', 'allergies', 'medication', 'tobaco_past',
+    'tobaco_present', 'alcohol_past', 'alcohol_present', 'marital_status',
+    'medical_history', 'surgical_history', 'enviro_factors', 'risk_factors',
+    'chief_complaint', 'dental_history', 'diagnosis', 'disease',
+    'clinical_findings', 'current_treatment', 'previous_medication',
+    'current_medication', 'treatment_plan', 'history_comment', 'immediate_text',
+    'planned_text',
+], '');
+$medical_history = (object) array_merge(
+    $medicalHistoryDefaults,
+    isset($medical_history) && is_object($medical_history) ? get_object_vars($medical_history) : []
+);
+
 
 $appointments_table = db_prefix() . 'appointly_appointments';
-$attendees_table = db_prefix() . 'appointly_attendees';
+/*$attendees_table = db_prefix() . 'appointly_attendees';
 $branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
 $scopeWhere = '';
 
@@ -52,21 +66,26 @@ if (!is_admin() && function_exists('build_staff_branch_scope_where')) {
     );
 } elseif ($branchScopeId > 0 && $CI->db->field_exists('branch_id', $appointments_table)) {
     $scopeWhere = 'AND ' . $appointments_table . '.branch_id = ' . $branchScopeId;
-}
+}*/
 
 $CI->db->select($appointments_table . '.*', false);
 $CI->db->from($appointments_table);
 
 $CI->db->where($appointments_table . '.contact_id', $contact->id);
 
-if ($scopeWhere !== '') {
+/*if ($scopeWhere !== '') {
     $CI->db->where(substr($scopeWhere, 4), null, false);
 } elseif (!is_admin()) {
     $staffId = (int) get_staff_user_id();
     $CI->db->where($appointments_table . '.id IN (SELECT appointment_id FROM ' . $attendees_table . ' WHERE staff_id=' . $staffId . ')', null, false);
 }
 
-$CI->db->group_by($appointments_table . '.id');
+$CI->db->group_by($appointments_table . '.id');*/
+
+$CI->db->order_by($appointments_table . '.date', 'DESC');
+$CI->db->order_by($appointments_table . '.start_hour', 'DESC');
+$CI->db->order_by($appointments_table . '.id', 'DESC');
+
 $appointments = $CI->db->get()->result_array();
 
 $CI->db->where('rel_id', $client->userid);
@@ -91,6 +110,13 @@ $treatment_rows = [];
 $medicine_rows = [];
 $doctor_rows = [];
 $prescription_table_rows = [];
+$appointment_type_lookup = [];
+
+if (function_exists('get_appointment_types')) {
+    foreach (get_appointment_types() as $appointment_type) {
+        $appointment_type_lookup[(int) $appointment_type['id']] = $appointment_type['type'];
+    }
+}
 
 if (!empty($appointment_ids)) {
     $CI->db->select('appointment_id, treatment, staff');
@@ -1643,6 +1669,7 @@ if (!empty($check_prescription_exists)) { ?>
                                         <th style="width: 60px;">#</th>
                                         <th style="width: 120px;">Date</th>
                                         <th style="width: 120px;">Appointment ID</th>
+                                        <th style="width: 180px;">Appointment Type</th>
                                         <th>Treatments</th>
                                         <th>Medicines</th>
                                         <th style="width: 180px;">Doctor</th>
@@ -1668,6 +1695,12 @@ if (!empty($check_prescription_exists)) { ?>
                                                 <td><?php echo (int) ($index + 1); ?></td>
                                                 <td><?php echo !empty($appointment['date']) ? date('d/m/Y', strtotime($appointment['date'])) : '-'; ?></td>
                                                 <td><?php echo $appointment_id ?: '-'; ?></td>
+                                                <td><?php
+                                                    $appointment_type_id = (int) ($appointment['type_id'] ?? 0);
+                                                    echo !empty($appointment_type_lookup[$appointment_type_id])
+                                                        ? e($appointment_type_lookup[$appointment_type_id])
+                                                        : '-';
+                                                ?></td>
                                                 <td><?php echo !empty($treatments) ? e(implode(', ', $treatments)) : '-'; ?></td>
                                                 <td><?php echo !empty($medicines) ? e(implode(', ', $medicines)) : '-'; ?></td>
                                                 <td><?php echo !empty($doctor_names) ? e(implode(', ', $doctor_names)) : '-'; ?></td>
@@ -1675,7 +1708,7 @@ if (!empty($check_prescription_exists)) { ?>
                                         <?php } ?>
                                     <?php } else { ?>
                                         <tr>
-                                            <td colspan="6" class="text-center">No treatment records available.</td>
+                                            <td colspan="7" class="text-center">No treatment records available.</td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

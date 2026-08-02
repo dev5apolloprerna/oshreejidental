@@ -10,6 +10,22 @@ class Invoice_items_model extends App_Model
     {
         parent::__construct();
     }
+    private function apply_branch_scope($column = '')
+    {
+        if (!$this->db->field_exists('branch_id', db_prefix() . 'items')) {
+            return;
+        }
+
+        $column = $column !== '' ? $column : db_prefix() . 'items.branch_id';
+        $this->db->where($column, (int) get_current_staff_branch_scope_id());
+    }
+
+    public function count_for_current_branch()
+    {
+        $this->apply_branch_scope();
+
+        return $this->db->count_all_results(db_prefix() . 'items');
+    }
 
     /**
      * Copy invoice item
@@ -92,6 +108,7 @@ class Invoice_items_model extends App_Model
         $this->db->join('' . db_prefix() . 'taxes t1', 't1.id = ' . db_prefix() . 'items.tax', 'left');
         $this->db->join('' . db_prefix() . 'taxes t2', 't2.id = ' . db_prefix() . 'items.tax2', 'left');
         $this->db->join(db_prefix() . 'items_groups', '' . db_prefix() . 'items_groups.id = ' . db_prefix() . 'items.group_id', 'left');
+        $this->apply_branch_scope();
         $this->db->order_by('description', 'asc');
         if (is_numeric($id)) {
             $this->db->where(db_prefix() . 'items.id', $id);
@@ -116,6 +133,7 @@ class Invoice_items_model extends App_Model
         foreach ($groups as $group) {
             $this->db->select('*,' . db_prefix() . 'items_groups.name as group_name,' . db_prefix() . 'items.id as id');
             $this->db->where('group_id', $group['id']);
+            $this->apply_branch_scope();
             $this->db->join(db_prefix() . 'items_groups', '' . db_prefix() . 'items_groups.id = ' . db_prefix() . 'items.group_id', 'left');
             $this->db->order_by('description', 'asc');
             $_items = $this->db->get(db_prefix() . 'items')->result_array();
@@ -138,6 +156,10 @@ class Invoice_items_model extends App_Model
     public function add($data)
     {
         unset($data['itemid']);
+        if ($this->db->field_exists('branch_id', db_prefix() . 'items')) {
+            // Never trust a posted/imported branch id.
+            $data['branch_id'] = (int) get_current_staff_branch_scope_id();
+        }
         if (isset($data['tax']) && $data['tax'] == '') {
             unset($data['tax']);
         }
@@ -195,6 +217,7 @@ class Invoice_items_model extends App_Model
     {
         $itemid = $data['itemid'];
         unset($data['itemid']);
+        unset($data['branch_id']);
 
         if (isset($data['group_id']) && $data['group_id'] == '') {
             $data['group_id'] = 0;
@@ -228,6 +251,7 @@ class Invoice_items_model extends App_Model
         $custom_fields = Arr::pull($data, 'custom_fields') ?? [];
 
         $this->db->where('id', $itemid);
+        $this->apply_branch_scope();
         $this->db->update('items', $data);
 
         if ($this->db->affected_rows() > 0) {
@@ -257,8 +281,11 @@ class Invoice_items_model extends App_Model
     public function search($q)
     {
         $this->db->select('rate, id, description as name, long_description as subtext');
+        $this->db->group_start();
         $this->db->like('description', $q);
         $this->db->or_like('long_description', $q);
+        $this->db->group_end();
+        $this->apply_branch_scope();
 
         $items = $this->db->get(db_prefix() . 'items')->result_array();
 
@@ -278,6 +305,7 @@ class Invoice_items_model extends App_Model
     public function delete($id)
     {
         $this->db->where('id', $id);
+        $this->apply_branch_scope();
         $this->db->delete(db_prefix() . 'items');
         if ($this->db->affected_rows() > 0) {
             $this->db->where('relid', $id);

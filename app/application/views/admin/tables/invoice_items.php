@@ -50,7 +50,12 @@ if (count($custom_fields) > 4) {
     @$this->ci->db->query('SET SQL_BIG_SELECTS=1');
 }
 
-$result  = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, [], $additionalSelect);
+$where = [];
+if ($this->ci->db->field_exists('branch_id', $sTable)) {
+    $where[] = 'AND ' . $sTable . '.branch_id = ' . (int) get_current_staff_branch_scope_id();
+}
+
+$result  = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalSelect);
 $output  = $result['output'];
 $rResult = $result['rResult'];
 
