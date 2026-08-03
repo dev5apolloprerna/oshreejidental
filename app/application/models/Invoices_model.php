@@ -45,6 +45,29 @@ class Invoices_model extends App_Model
     {
         return $this->statuses;
     }
+        public function get_next_available_number($date = null, $prefix = null)
+    {
+        $date = $date ?: date('Y-m-d');
+        $prefix = $prefix === null ? get_option('invoice_prefix') : $prefix;
+        $configuredNext = max(1, (int) get_option('next_invoice_number'));
+
+        $this->db->select_max('number', 'highest_number');
+        $this->db->where('YEAR(date)', (int) date('Y', strtotime($date)));
+        $this->db->where('prefix', $prefix);
+        $this->db->where('status !=', self::STATUS_DRAFT);
+        $row = $this->db->get(db_prefix() . 'invoices')->row();
+
+        $highestNumber = $row && isset($row->highest_number) ? (int) $row->highest_number : 0;
+        $nextNumber = max($configuredNext, $highestNumber + 1);
+
+        if ($nextNumber !== $configuredNext) {
+            $this->db->where('name', 'next_invoice_number');
+            $this->db->update(db_prefix() . 'options', ['value' => $nextNumber]);
+        }
+
+        return $nextNumber;
+    }
+
 
     public function get_sale_agents()
     {

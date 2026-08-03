@@ -380,6 +380,7 @@ class Invoices extends AdminController
         if ($id == '') {
             $title                  = _l('create_new_invoice');
             $data['billable_tasks'] = [];
+            $data['next_invoice_number'] = $this->invoices_model->get_next_available_number();
         } else {
             $invoice = $this->invoices_model->get($id);
 
