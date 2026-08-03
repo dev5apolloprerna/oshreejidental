@@ -134,7 +134,9 @@
                     </div> -->
                 </div>
                 <?php
-               $next_invoice_number = get_option('next_invoice_number');
+               $next_invoice_number = isset($next_invoice_number)
+                   ? $next_invoice_number
+                   : get_option('next_invoice_number');
                $format              = get_option('invoice_number_format');
 
                if (isset($invoice)) {

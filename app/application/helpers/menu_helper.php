@@ -15,7 +15,25 @@ if (!function_exists('app_has_branch_context')) {
             $branch = (string) $_COOKIE['branch'];
         }
 
-        return trim($branch) !== '';
+        if (trim($branch) !== '') {
+            return true;
+        }
+
+        // The branch selected on the login screen is stored in the session.  Do
+        // not make menu permissions depend only on a browser cookie: the cookie
+        // may be absent on a new computer or removed by the branch DB bootstrap.
+        if (isset($CI->session) && (int) $CI->session->userdata('branch') > 0) {
+            return true;
+        }
+
+        // A staff account remains a branch account even when its selection
+        // cookie has expired. This keeps the same login consistent on every PC.
+        if (is_staff_logged_in() && function_exists('get_current_staff_branch_scope_id')) {
+            return get_current_staff_branch_scope_id() > 0;
+        }
+
+        return false;
+
     }
 }
 
@@ -36,7 +54,8 @@ if (!function_exists('app_is_admin_branch_context')) {
 
         $branch = trim($branch);
 
-        return $branch === '' || $branch === 'u614622744_main_db';
+        return !app_has_branch_context()
+            || $branch === 'u614622744_main_db';
     }
 }
 
