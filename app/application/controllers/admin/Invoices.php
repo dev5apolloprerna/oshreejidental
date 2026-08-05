@@ -144,8 +144,10 @@ class Invoices extends AdminController
         $date            = $this->input->post('date');
         $prefix          = $this->input->post('prefix');
         $original_number = $this->input->post('original_number');
+        $invoice_id      = $this->input->post('invoiceid');
         $number          = trim($number);
         $number          = ltrim($number, '0');
+        $original_number = ltrim(trim((string) $original_number), '0');
 
         if ($prefix === null) {
             $prefix = get_option('invoice_prefix');
@@ -159,7 +161,8 @@ class Invoices extends AdminController
             }
         }
 
-        if ($this->invoice_number_exists($number, to_sql_date($date), $prefix)) {
+        if ($this->invoice_number_exists($number, to_sql_date($date), $prefix, $isedit == 'true' ? $invoice_id : '')) 
+        {
             echo 'false';
         } else {
             echo 'true';

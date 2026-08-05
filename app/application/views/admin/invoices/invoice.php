@@ -7,7 +7,9 @@
             echo form_open($this->uri->uri_string(), ['id' => 'invoice-form', 'class' => '_transaction_form invoice-form']);
             if (isset($invoice)) {
                 echo form_hidden('isedit');
+                echo form_hidden('invoiceid', $invoice->id);
             }
+
             ?>
             <div class="col-md-12">
                 <h4
