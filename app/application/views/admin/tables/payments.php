@@ -10,6 +10,7 @@ $aColumns = [
     'paymentmode',
     'transactionid',
     get_sql_select_client_company(),
+    'COALESCE(NULLIF(' . db_prefix() . 'clients.company, ""), TRIM(CONCAT(COALESCE(' . db_prefix() . 'contacts.firstname, ""), " ", COALESCE(' . db_prefix() . 'contacts.lastname, "")))) as company',
     'amount',
     db_prefix() . 'invoicepaymentrecords.date as date',
     ];
@@ -17,6 +18,7 @@ $aColumns = [
 $join = [
     'LEFT JOIN ' . db_prefix() . 'invoices ON ' . db_prefix() . 'invoices.id = ' . db_prefix() . 'invoicepaymentrecords.invoiceid',
     'LEFT JOIN ' . db_prefix() . 'clients ON ' . db_prefix() . 'clients.userid = ' . db_prefix() . 'invoices.clientid',
+    'LEFT JOIN ' . db_prefix() . 'contacts ON ' . db_prefix() . 'contacts.userid = ' . db_prefix() . 'clients.userid AND ' . db_prefix() . 'contacts.is_primary = 1',
     'LEFT JOIN ' . db_prefix() . 'currencies ON ' . db_prefix() . 'currencies.id = ' . db_prefix() . 'invoices.currency',
     'LEFT JOIN ' . db_prefix() . 'payment_modes ON ' . db_prefix() . 'payment_modes.id = ' . db_prefix() . 'invoicepaymentrecords.paymentmode',
     ];
@@ -27,7 +29,12 @@ if ($clientid != '') {
 }
 
 if (function_exists('app_has_branch_context') && app_has_branch_context() && !is_admin()) {
-    array_push($where, 'AND (' . db_prefix() . 'invoices.addedfrom = ' . get_staff_user_id() . ' OR ' . db_prefix() . 'invoices.sale_agent = ' . get_staff_user_id() . ')');
+    $paymentBranchId = (int) get_current_staff_branch_scope_id();
+    $branchPatientWhere = '';
+    if ($paymentBranchId > 0 && $this->ci->db->field_exists('branch_id', db_prefix() . 'clients')) {
+        $branchPatientWhere = db_prefix() . 'clients.branch_id = ' . $paymentBranchId . ' OR ';
+    }
+    array_push($where, 'AND (' . $branchPatientWhere . db_prefix() . 'invoices.addedfrom = ' . get_staff_user_id() . ' OR ' . db_prefix() . 'invoices.sale_agent = ' . get_staff_user_id() . ')');
 } else {
     $paymentBranchId = (int) get_current_staff_branch_scope_id();
     if (!is_admin() && $paymentBranchId > 0 && $this->ci->db->field_exists('branch_id', db_prefix() . 'clients')) {
@@ -105,7 +112,8 @@ foreach ($rResult as $aRow) {
 
     $row[] = e($aRow['transactionid']);
 
-    $row[] = '<a href="' . admin_url('clients/client/' . $aRow['clientid']) . '">' . e($aRow['company']) . '</a>';
+    $patientName = trim((string) $aRow['company']);
+    $row[] = $aRow['clientid'] ? '<a href="' . admin_url('clients/client/' . $aRow['clientid']) . '">' . e($patientName !== '' ? $patientName : '-') . '</a>' : e($patientName !== '' ? $patientName : '-');
 
     $row[] = e(app_format_money($aRow['amount'], $aRow['currency_name']));
 
@@ -115,3 +123,4 @@ foreach ($rResult as $aRow) {
 
     $output['aaData'][] = $row;
 }
+

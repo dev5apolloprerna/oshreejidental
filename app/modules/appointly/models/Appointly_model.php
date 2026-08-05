@@ -851,15 +851,26 @@ class Appointly_model extends App_Model
         }*/
 
 $this->db->where(
-            'id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')',
+            db_prefix() . 'appointly_appointments.id IN (SELECT appointment_id FROM ' . db_prefix() . 'appointly_attendees WHERE staff_id=' . (int) get_staff_user_id() . ')',
             null,
             false
         );
         
-        $this->db->where('date', $today);
-        $this->db->where('approved', 1);
+        $appointmentsTable = db_prefix() . 'appointly_appointments';
+        $branchTable = db_prefix() . 'branch';
 
-        return $this->db->get(db_prefix() . 'appointly_appointments')->result_array();
+        if ($this->db->table_exists($branchTable) && $this->db->field_exists('branch_id', $appointmentsTable)) {
+            $this->db->select($appointmentsTable . '.*, ' . $branchTable . '.branch as branch_name');
+            $this->db->join($branchTable, $branchTable . '.branchid = ' . $appointmentsTable . '.branch_id', 'left');
+        } else {
+            $this->db->select($appointmentsTable . '.*');
+        }
+
+        $this->db->where($appointmentsTable . '.date', $today);
+        $this->db->where($appointmentsTable . '.approved', 1);
+
+
+        return $this->db->get($appointmentsTable)->result_array();
     }
 
 

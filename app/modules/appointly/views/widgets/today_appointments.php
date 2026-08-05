@@ -42,6 +42,12 @@ if ($showAllDashboardAppointments) {
                         <span class="text-muted span_limited">
                             <?= _l('appointment_description'); ?> <?= $appointment['description']; ?>
                         </span>
+                        <?php $appointment_branch_name = trim((string) ($appointment['branch_name'] ?? '')); ?>
+                        <?php if ($appointment_branch_name !== '') : ?>
+                            <h5 class="no-margin">
+                                <span class="text-warning">Branch: </span><?= e($appointment_branch_name); ?>
+                            </h5>
+                        <?php endif; ?>
                         <h5 class="no-margin">
                             <span class="text-warning"><?= _l('appointment_scheduled_at'); ?> </span>
                             <?= date("H:i A", strtotime($appointment['start_hour'])); ?>
