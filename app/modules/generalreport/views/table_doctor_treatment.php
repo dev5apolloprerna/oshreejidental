@@ -38,19 +38,20 @@ $draw   = (int) $CI->input->post('draw');
 $start  = max(0, (int) $CI->input->post('start'));
 $length = (int) $CI->input->post('length');
 
+// Always serve the doctor treatment report in fixed 20-record pages.
+// This prevents the browser/server from trying to load the full treatment list at once.
+$doctorTreatmentPageLength = 20;
+if ($length <= 0 || $length > $doctorTreatmentPageLength) {
+    $length = $doctorTreatmentPageLength;
+}
+
 $appointmentTreatmentTable = db_prefix() . 'appointment_treatment';
 $appointmentsTable        = db_prefix() . 'appointly_appointments';
 $staffTable               = db_prefix() . 'staff';
 $contactsTable            = db_prefix() . 'contacts';
 $clientsTable             = db_prefix() . 'clients';
 
-$doctorsTableSql = "(
-    SELECT appointment_id,
-        GROUP_CONCAT(DISTINCT TRIM(CONCAT(CONVERT(doctor_staff.firstname USING utf8mb4), ' ', CONVERT(doctor_staff.lastname USING utf8mb4))) ORDER BY doctor_staff.firstname, doctor_staff.lastname SEPARATOR ', ') AS doctor_names
-    FROM {$appointmentTreatmentTable} AS grouped_treatments
-    LEFT JOIN {$staffTable} AS doctor_staff ON grouped_treatments.staff = doctor_staff.staffid
-    GROUP BY appointment_id
-) AS treatment_doctors";
+
 
 $patientProfileIdSql = 'COALESCE(clients.userid, direct_contacts.userid, old_contacts.userid, phone_contacts.userid, email_contacts.userid, 0)';
 $patientUniqueIdSql = "COALESCE(
@@ -74,7 +75,7 @@ $patientSql = "COALESCE(
 )";
 
 $singleDoctorSql = "TRIM(CONCAT(CONVERT({$staffTable}.firstname USING utf8mb4), ' ', CONVERT({$staffTable}.lastname USING utf8mb4)))";
-$doctorSql = "COALESCE(NULLIF(treatment_doctors.doctor_names, ''), {$singleDoctorSql})";
+$doctorSql = $singleDoctorSql;
 
 $selectSql = "
     {$appointmentTreatmentTable}.id,
@@ -94,7 +95,6 @@ $fromJoinSql = "
         OR {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.tbl_uniq_id
     )
     LEFT JOIN {$staffTable} ON {$appointmentTreatmentTable}.staff = {$staffTable}.staffid
-    LEFT JOIN {$doctorsTableSql} ON treatment_doctors.appointment_id = {$appointmentTreatmentTable}.appointment_id
     LEFT JOIN {$contactsTable} AS direct_contacts ON {$appointmentsTable}.contact_id = direct_contacts.id
     LEFT JOIN {$contactsTable} AS old_contacts ON {$appointmentsTable}.old_contact_id > 0
         AND ({$appointmentsTable}.old_contact_id = old_contacts.id OR {$appointmentsTable}.old_contact_id = old_contacts.tbl_uniq_id)
@@ -106,6 +106,25 @@ $fromJoinSql = "
     LEFT JOIN {$contactsTable} AS primary_contacts ON primary_contacts.userid = clients.userid AND primary_contacts.is_primary = 1
 ";
 
+
+$joinsOnlySql = "
+    LEFT JOIN {$appointmentsTable} ON (
+        {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.id
+        OR {$appointmentTreatmentTable}.appointment_id = {$appointmentsTable}.tbl_uniq_id
+    )
+    LEFT JOIN {$staffTable} ON {$appointmentTreatmentTable}.staff = {$staffTable}.staffid
+    LEFT JOIN {$contactsTable} AS direct_contacts ON {$appointmentsTable}.contact_id = direct_contacts.id
+    LEFT JOIN {$contactsTable} AS old_contacts ON {$appointmentsTable}.old_contact_id > 0
+        AND ({$appointmentsTable}.old_contact_id = old_contacts.id OR {$appointmentsTable}.old_contact_id = old_contacts.tbl_uniq_id)
+    LEFT JOIN {$contactsTable} AS phone_contacts ON {$appointmentsTable}.phone <> ''
+        AND phone_contacts.phonenumber = {$appointmentsTable}.phone
+    LEFT JOIN {$contactsTable} AS email_contacts ON {$appointmentsTable}.email <> ''
+        AND email_contacts.email = {$appointmentsTable}.email
+    LEFT JOIN {$clientsTable} AS clients ON clients.userid = COALESCE(direct_contacts.userid, old_contacts.userid, phone_contacts.userid, email_contacts.userid)
+    LEFT JOIN {$contactsTable} AS primary_contacts ON primary_contacts.userid = clients.userid AND primary_contacts.is_primary = 1
+";
+
+
 $whereParts = [];
 
 $staffId   = $CI->input->get('staff_id');
@@ -113,7 +132,7 @@ $startDate = $CI->input->get('start_date');
 $endDate   = $CI->input->get('end_date');
 
 if ($staffId !== null && $staffId !== '') {
-    $whereParts[] = 'EXISTS (SELECT 1 FROM ' . $appointmentTreatmentTable . ' AS filter_treatments WHERE filter_treatments.appointment_id = ' . $appointmentTreatmentTable . '.appointment_id AND filter_treatments.staff = ' . (int) $staffId . ')';
+    $whereParts[] = $appointmentTreatmentTable . '.staff = ' . (int) $staffId;
 }
 
 
@@ -161,21 +180,42 @@ if (isset($order[0]['column'], $order[0]['dir'], $orderColumns[(int) $order[0]['
 
 
 $limitSql = '';
-if ($length !== -1) {
-    $limitSql = ' LIMIT ' . $start . ', ' . max(0, $length);
+$limitSql = ' LIMIT ' . $start . ', ' . $length;
+$hasSearch = $searchWhereSql !== '';
+$countFromSql = ' FROM ' . $appointmentTreatmentTable;
+
+// Count from appointment_treatment directly when there is no search term. The
+// joined patient/doctor lookup is only needed for searching and for the 20 rows
+// displayed on the current page, not for every count request.
+$totalSql = 'SELECT COUNT(' . $appointmentTreatmentTable . '.id) AS total ' . $countFromSql . $baseWhereSql;
+$filteredSql = $hasSearch
+    ? 'SELECT COUNT(DISTINCT ' . $appointmentTreatmentTable . '.id) AS total ' . $fromJoinSql . $baseWhereSql . $searchWhereSql
+    : $totalSql;
+$orderColumnIndex = isset($order[0]['column']) ? (int) $order[0]['column'] : 0;
+$canPageBeforeJoins = !$hasSearch && in_array($orderColumnIndex, [0, 3, 4], true);
+
+if ($canPageBeforeJoins) {
+    $pagedTreatmentSql = '(
+        SELECT ' . $appointmentTreatmentTable . '.id
+        FROM ' . $appointmentTreatmentTable . $baseWhereSql . $orderSql . $limitSql . '
+    ) AS paged_treatments';
+    $rowsSql = 'SELECT ' . $selectSql . ' FROM ' . $pagedTreatmentSql . '
+        INNER JOIN ' . $appointmentTreatmentTable . ' ON ' . $appointmentTreatmentTable . '.id = paged_treatments.id '
+        . $joinsOnlySql . ' GROUP BY ' . $appointmentTreatmentTable . '.id ' . $orderSql;
+} else {
+    $rowsSql = 'SELECT ' . $selectSql . $fromJoinSql . $baseWhereSql . $searchWhereSql . ' GROUP BY ' . $appointmentTreatmentTable . '.id ' . $orderSql . $limitSql;
 }
 
-    // Use simple column-name fallback so the view works whether the
-    // framework returns full-expression keys or short column-name keys.
     
 $oldDbDebug = $CI->db->db_debug;
 $CI->db->db_debug = false;
 
-    $totalQuery    = $CI->db->query('SELECT COUNT(DISTINCT ' . $appointmentTreatmentTable . '.id) AS total ' . $fromJoinSql . $baseWhereSql);
-$filteredQuery = $CI->db->query('SELECT COUNT(DISTINCT ' . $appointmentTreatmentTable . '.id) AS total ' . $fromJoinSql . $baseWhereSql . $searchWhereSql);
-$rowsQuery     = $CI->db->query('SELECT ' . $selectSql . $fromJoinSql . $baseWhereSql . $searchWhereSql . ' GROUP BY ' . $appointmentTreatmentTable . '.id ' . $orderSql . $limitSql);
+$totalQuery    = $CI->db->query($totalSql);
+$filteredQuery = $CI->db->query($filteredSql);
+$rowsQuery     = $CI->db->query($rowsSql);
 
-   $CI->db->db_debug = $oldDbDebug;
+
+$CI->db->db_debug = $oldDbDebug;
 
     if (!$totalQuery || !$filteredQuery || !$rowsQuery) {
     $output = [

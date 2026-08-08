@@ -72,6 +72,15 @@
 /*            echo admin_url('generalreport?' . http_build_query($doctorTreatmentParams));*/
              echo admin_url('generalreport/doctor_treatment_table?' . http_build_query($doctorTreatmentParams));
         ?>';
-        initDataTable('.table-service_details', doctorTreatmentTableUrl, [], [0]);
+        // initDataTable('.table-service_details', doctorTreatmentTableUrl, [], [0]);
+         if (typeof app !== 'undefined' && app.options) {
+            app.options.tables_pagination_limit = 20;
+        }
+
+        var doctorTreatmentTable = initDataTable('.table-service_details', doctorTreatmentTableUrl, [], [0]);
+
+        if (doctorTreatmentTable) {
+            doctorTreatmentTable.page.len(20);
+        }
     });
 </script>
