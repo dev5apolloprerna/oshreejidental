@@ -170,6 +170,34 @@ foreach ($staff as $staff_item) {
     $staff_lookup[(int) $staff_item['staffid']] = trim(($staff_item['firstname'] ?? '') . ' ' . ($staff_item['lastname'] ?? ''));
 }
 
+// The treatment modal can assign any staff member as the doctor, while the
+// appointment dropdown above intentionally contains only role 1/admin staff.
+// Load any assigned doctors missing from that restricted list so historical
+// treatment rows always display the saved doctor's name.
+$assigned_doctor_ids = [];
+foreach ($doctor_rows as $appointment_doctor_ids) {
+    foreach ($appointment_doctor_ids as $doctor_id) {
+        $doctor_id = (int) $doctor_id;
+        if ($doctor_id > 0) {
+            $assigned_doctor_ids[$doctor_id] = $doctor_id;
+        }
+    }
+}
+
+$missing_doctor_ids = array_values(array_diff($assigned_doctor_ids, array_keys($staff_lookup)));
+if (!empty($missing_doctor_ids)) {
+    $CI->db->select('staffid, firstname, lastname');
+    $CI->db->from(db_prefix() . 'staff');
+    $CI->db->where_in('staffid', $missing_doctor_ids);
+
+    foreach ($CI->db->get()->result_array() as $doctor) {
+        $doctor_name = trim(($doctor['firstname'] ?? '') . ' ' . ($doctor['lastname'] ?? ''));
+        if ($doctor_name !== '') {
+            $staff_lookup[(int) $doctor['staffid']] = $doctor_name;
+        }
+    }
+}
+
 $history_labels = [
     'occupation' => 'Occupation',
     'marital_status' => 'Marital Status',

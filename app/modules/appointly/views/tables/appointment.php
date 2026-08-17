@@ -252,8 +252,20 @@
                                                 <boldit><?= _l('appointment_name'); ?></boldit>
                                             <?php
                                             if ($appointment['source'] == 'internal') {
-                                                echo '<a data-toggle="tooltip" title="' . _l('client') . '" target="_blank" href="' . admin_url('clients/client/' . $appointment['details']['userid'] . '?group=contacts&contactid=' . $appointment['contact_id'] . '') . '">'
-                                                    . (isset($appointment['name']) ? $appointment['name'] : $appointment['details']['full_name']) . '</a>';
+                                                $appointment_contact_id = (int) ($appointment['contact_id'] ?? 0);
+                                                $patient_id = $appointment_contact_id > 0
+                                                    ? (int) appointly_get_contact_customer_id($appointment_contact_id)
+                                                    : 0;
+                                                $patient_name = isset($appointment['name'])
+                                                    ? $appointment['name']
+                                                    : ($appointment['details']['full_name'] ?? '');
+
+                                                if ($patient_id > 0) {
+                                                    echo '<a data-toggle="tooltip" title="' . _l('client') . '" target="_blank" href="' . admin_url('clients/client/' . $patient_id . '?group=patient_profile') . '">'
+                                                        . e($patient_name) . '</a>';
+                                                } else {
+                                                    echo e($patient_name);
+                                                }
                                             }
                                             if ($appointment['source'] == 'lead_related') {
                                                 echo '<a target="_blank" href="' . admin_url('leads/index/' . $appointment['contact_id']) . '">'
