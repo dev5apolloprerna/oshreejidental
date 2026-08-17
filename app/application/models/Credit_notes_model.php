@@ -12,6 +12,24 @@ class Credit_notes_model extends App_Model
         $this->load->model('invoices_model');
     }
 
+    /**
+     * Restrict $data to real tblcreditnotes columns before an insert/update.
+     * See Invoices_model::filter_invoice_columns() for the same protection.
+     *
+     * @param  array $data
+     * @return array
+     */
+    private function filter_credit_note_columns($data)
+    {
+        static $columns = null;
+
+        if ($columns === null) {
+            $columns = $this->db->list_fields(db_prefix() . 'creditnotes');
+        }
+
+        return array_intersect_key($data, array_flip($columns));
+    }
+
     public function get_statuses()
     {
         return hooks()->apply_filters('before_get_credit_notes_statuses', [
@@ -198,6 +216,9 @@ class Credit_notes_model extends App_Model
         $data  = $hook['data'];
         $items = $hook['items'];
 
+        // Same protection as update() - only real tblcreditnotes columns.
+        $data = $this->filter_credit_note_columns($data);
+
         $this->db->insert(db_prefix() . 'creditnotes', $data);
         $insert_id = $this->db->insert_id();
         if ($insert_id) {
@@ -285,6 +306,12 @@ class Credit_notes_model extends App_Model
             }
         }
         unset($data['removed_items']);
+
+        // Only keep real tblcreditnotes columns. The edit form posts a
+        // hidden "isedit" helper field that is not an actual database
+        // column; passing it straight into update() throws
+        // "Unknown column 'isedit' in 'SET'" (mysqli_sql_exception).
+        $data = $this->filter_credit_note_columns($data);
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'creditnotes', $data);

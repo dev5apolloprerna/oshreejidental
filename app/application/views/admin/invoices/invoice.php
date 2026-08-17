@@ -34,6 +34,14 @@ $(function() {
     init_currency();
     // Project ajax search
     init_ajax_project_search_by_customer_id();
+    <?php if (isset($invoice) && !empty($invoice->project_id)) { ?>
+    // The ajax-select plugin finishes its own init ~500ms after being attached,
+    // so force a refresh afterwards to make sure the already-selected project
+    // (rendered server-side) is actually shown instead of the placeholder text.
+    setTimeout(function() {
+        $('#project_id').selectpicker('refresh');
+    }, 700);
+    <?php } ?>
     // Maybe items ajax search
     init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
 });

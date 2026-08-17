@@ -25,6 +25,24 @@ class Estimates_model extends App_Model
     }
 
     /**
+     * Restrict $data to real tblestimates columns before an insert/update.
+     * See Invoices_model::filter_invoice_columns() for the same protection.
+     *
+     * @param  array $data
+     * @return array
+     */
+    private function filter_estimate_columns($data)
+    {
+        static $columns = null;
+
+        if ($columns === null) {
+            $columns = $this->db->list_fields(db_prefix() . 'estimates');
+        }
+
+        return array_intersect_key($data, array_flip($columns));
+    }
+
+    /**
      * Get unique sale agent for estimates / Used for filters
      * @return array
      */
@@ -515,6 +533,9 @@ class Estimates_model extends App_Model
         $data  = $hook['data'];
         $items = $hook['items'];
 
+        // Same protection as update() - only real tblestimates columns.
+        $data = $this->filter_estimate_columns($data);
+
         $this->db->insert(db_prefix() . 'estimates', $data);
         $insert_id = $this->db->insert_id();
 
@@ -652,6 +673,12 @@ class Estimates_model extends App_Model
         }
 
         unset($data['removed_items']);
+
+        // Only keep real tblestimates columns. The edit form posts a hidden
+        // "isedit" helper field that is not an actual database column;
+        // passing it straight into update() throws
+        // "Unknown column 'isedit' in 'SET'" (mysqli_sql_exception).
+        $data = $this->filter_estimate_columns($data);
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'estimates', $data);

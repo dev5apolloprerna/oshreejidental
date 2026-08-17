@@ -41,6 +41,27 @@ class Invoices_model extends App_Model
         parent::__construct();
     }
 
+    /**
+     * Restrict $data to real tblinvoices columns before an insert/update.
+     * The invoice form posts a handful of hidden helper fields that are not
+     * database columns (e.g. invoiceid, isedit) - passing those straight
+     * through to $this->db->insert()/update() causes a fatal
+     * "Unknown column '...' in 'SET'" mysqli_sql_exception.
+     *
+     * @param  array $data
+     * @return array
+     */
+    private function filter_invoice_columns($data)
+    {
+        static $columns = null;
+
+        if ($columns === null) {
+            $columns = $this->db->list_fields(db_prefix() . 'invoices');
+        }
+
+        return array_intersect_key($data, array_flip($columns));
+    }
+
     public function get_statuses()
     {
         return $this->statuses;
@@ -410,6 +431,9 @@ class Invoices_model extends App_Model
 
         $data  = $hook['data'];
         $items = $hook['items'];
+
+        // Same protection as update() below - only real tblinvoices columns.
+        $data = $this->filter_invoice_columns($data);
 
         $this->db->insert(db_prefix() . 'invoices', $data);
         $insert_id = $this->db->insert_id();
@@ -889,6 +913,12 @@ class Invoices_model extends App_Model
         }
 
         unset($data['removed_items']);
+
+        // Only keep real tblinvoices columns. The edit form posts a few
+        // helper hidden fields (e.g. invoiceid, isedit) that are not actual
+        // database columns; passing them straight into update() throws
+        // "Unknown column '...' in 'SET'" (mysqli_sql_exception).
+        $data = $this->filter_invoice_columns($data);
 
         $this->db->where('id', $id)->update('invoices', $data);
 
