@@ -210,6 +210,7 @@
                         <input type="text" name="number" class="form-control"
                             value="<?php echo ($_is_draft) ? 'DRAFT' : $_invoice_number; ?>"
                             data-isedit="<?php echo e($isedit); ?>"
+                            data-original-number="<?php echo e($data_original_number); ?>"
                             data-prefix="<?php echo e(isset($invoice) ? $invoice->prefix : get_option('invoice_prefix')); ?>"
                             <?php echo ($_is_draft) ? 'disabled' : '' ?>>
                         <?php if ($format == 3) { ?>

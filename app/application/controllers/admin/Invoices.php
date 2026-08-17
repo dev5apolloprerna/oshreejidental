@@ -177,7 +177,7 @@ class Invoices extends AdminController
             'status !='  => Invoices_model::STATUS_DRAFT,
         ];
 
-        if ($excludeId !== '') {
+        if (!empty($excludeId)) {
             $where['id !='] = $excludeId;
         }
 

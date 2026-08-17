@@ -8202,6 +8202,9 @@ function validate_invoice_form(selector) {
           prefix: function () {
             return $('input[name="number"]').data("prefix");
           },
+          invoiceid: function () {
+            return $('input[name="invoiceid"]').val();
+          },
         },
       },
       messages: {
