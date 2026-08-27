@@ -13,7 +13,7 @@ return App_table::find('invoices')
             'number',
             'total',
             'total_tax',
-            'YEAR(date) as year',
+           db_prefix() . 'invoices.id as year',
             'date',
             get_sql_select_client_company(),
             db_prefix() . 'projects.name as project_name',

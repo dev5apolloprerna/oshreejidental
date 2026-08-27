@@ -1017,7 +1017,9 @@ class Misc_model extends App_Model
             $this->db->from(db_prefix() . 'contacts');
 
             $this->db->join(db_prefix() . 'clients', '' . db_prefix() . 'clients.userid=' . db_prefix() . 'contacts.userid', 'left');
+            $this->db->where(db_prefix() . 'clients.userid IS NOT NULL'); // skip orphaned/duplicate contacts with no matching client
             $this->db->where('(firstname LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+
                 OR lastname LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR email LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR CONCAT(firstname, \' \', lastname) LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
