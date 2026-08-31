@@ -5,9 +5,28 @@ class Nabh extends AdminController
     public function __construct()
     {
         parent::__construct();
-        // Loads resolve_patient_file_url(), which transparently falls back to a
-        // patient's pre-merger id when looking up x-ray/image files on disk.
-        $this->load->helper('patient_files');
+    }
+
+     private function resolve_current_branch_id()
+    {
+        $branchDb = (string) $this->input->cookie('branch');
+        $mainDb = $this->load->database('default', true);
+
+        if ($branchDb !== '') {
+            $row = $mainDb->select('branchid')->where('branch_db', $branchDb)->get(db_prefix() . 'branch')->row();
+            if ($row && isset($row->branchid) && (int) $row->branchid > 0) {
+                return (int) $row->branchid;
+            }
+        }
+
+        if (is_staff_logged_in()) {
+            $row = $mainDb->select('branch_id')->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+            if ($row && isset($row->branch_id) && (int) $row->branch_id > 0) {
+                return (int) $row->branch_id;
+            }
+        }
+
+        return 0;
     }
 
     /* =========================================================
@@ -21,8 +40,10 @@ class Nabh extends AdminController
             echo json_encode(['status'=>false,'data'=>[]]); exit;
         }
 
-        $this->db->where('appointment_type_id', $appointment_type_id);
-        $rows = $this->db->get(db_prefix().'appointment_type_pdf_master')->result_array();
+        $mapTable = db_prefix() . 'appointment_type_pdf_master';
+        $branchId = $this->resolve_current_branch_id();
+
+        $rows = $this->get_mapped_nabh_forms_for_appointment_type($appointment_type_id, $mapTable, $branchId);
 
         $data = [];
 
@@ -46,7 +67,38 @@ class Nabh extends AdminController
         echo json_encode(['status'=>true,'data'=>$data]);
         exit;
     }
-                public function all_forms_json()
+     private function get_mapped_nabh_forms_for_appointment_type($appointment_type_id, $mapTable, $branchId)
+    {
+        $queryMappedRows = function ($field, $withBranchFilter) use ($appointment_type_id, $mapTable, $branchId) {
+            $this->db->where($field, $appointment_type_id);
+
+            if ($withBranchFilter && $branchId > 0 && $this->db->field_exists('branch_id', $mapTable)) {
+                $this->db->group_start();
+                $this->db->where('branch_id', $branchId);
+                $this->db->or_where('branch_id', 0);
+                $this->db->group_end();
+            }
+
+            return $this->db->get($mapTable)->result_array();
+        };
+
+        $rows = $queryMappedRows('appointment_type_id', true);
+
+        if (empty($rows) && $this->db->field_exists('old_appointment_type_id', $mapTable)) {
+            $rows = $queryMappedRows('old_appointment_type_id', true);
+        }
+
+        if (empty($rows)) {
+            $rows = $queryMappedRows('appointment_type_id', false);
+        }
+
+        if (empty($rows) && $this->db->field_exists('old_appointment_type_id', $mapTable)) {
+            $rows = $queryMappedRows('old_appointment_type_id', false);
+        }
+
+        return $rows;
+    }
+ public function all_forms_json()
     {
         $patient_id = (int) $this->input->post('patient_id');
 
@@ -93,6 +145,11 @@ class Nabh extends AdminController
         }
 
         $rows = [];
+
+        $latestContext = $this->resolve_latest_patient_appointment_context($patient_id);
+
+        $patientBranchDoctorContext = $this->resolve_patient_created_branch_doctor_context($patient_id);
+
         foreach ($forms as $form) {
             $form_id = (int) ($form['pdf_id'] ?? 0);
             if ($form_id <= 0) {
@@ -118,18 +175,47 @@ class Nabh extends AdminController
                 }
             }
 
+
+             $appointmentId = !empty($submission['appointment_id'])
+                ? (int) $submission['appointment_id']
+                : (int) ($latestContext['appointment_id'] ?? 0);
+
+            $appointmentTypeId = !empty($submission['appointment_type_id'])
+                ? (int) $submission['appointment_type_id']
+                : (int) ($latestContext['appointment_type_id'] ?? 0);
+
+                        $doctorId = (int) ($patientBranchDoctorContext['doctor_id'] ?? 0);
+            if ($doctorId <= 0) {
+                $doctorId = !empty($submission['doctor_id'])
+                    ? (int) $submission['doctor_id']
+                    : ($appointmentId > 0 ? $this->resolve_doctor_for_appointment($appointmentId) : (int) ($latestContext['doctor_id'] ?? 0));
+            }
+
+            $doctorName = trim((string) ($patientBranchDoctorContext['doctor_name'] ?? ''));
+            if ($doctorName === '') {
+                $doctorName = !empty($submission['doctor_name'])
+                    ? trim((string) $submission['doctor_name'])
+                    : trim((string) ($latestContext['doctor_name'] ?? ''));
+            }
+
+            if ($doctorName === '' && $doctorId > 0 && function_exists('get_staff_full_name')) {
+                $doctorName = trim((string) get_staff_full_name($doctorId));
+            }
+
+
+
             $rows[] = [
-                'appointment_id' => !empty($submission['appointment_id']) ? (int) $submission['appointment_id'] : 0,
-                'appointment_type_id' => !empty($submission['appointment_type_id']) ? (int) $submission['appointment_type_id'] : 0,
+                'appointment_id' => $appointmentId,
+                'appointment_type_id' => $appointmentTypeId,
                 'appointment_date' => '-',
                 'form_id' => $form_id,
                 'form_name' => $form['pdf_name'] ?? ('Form #' . $form_id),
                 'has_en' => !empty($form['english_file_name']),
                 'has_gu' => !empty($form['gujarati_file_name']),
                 'is_filled' => !empty($submission),
-                'doctor_id' => !empty($submission['doctor_id']) ? (int) $submission['doctor_id'] : 0,
+                'doctor_id' => $doctorId,
                 'patient_name' => !empty($submission['patient_name']) ? trim((string) $submission['patient_name']) : '',
-                'doctor_name' => !empty($submission['doctor_name']) ? trim((string) $submission['doctor_name']) : '',
+                'doctor_name' => $doctorName,
                 'filled_at' => !empty($submission['updated_at']) ? $submission['updated_at'] : ($submission['created_at'] ?? ''),
                 'filled_preview' => !empty($filled_data) ? implode(' | ', $filled_data) : '',
             ];
@@ -137,6 +223,158 @@ class Nabh extends AdminController
 
         echo json_encode(['status' => true, 'data' => $rows]);
         exit;
+    }
+        private function resolve_default_doctor_id(): int
+    {
+        $defaultDoctorId = (int) get_option('appointly_responsible_person');
+        if ($defaultDoctorId > 0) {
+            return $defaultDoctorId;
+        }
+
+        $staffRow = $this->db
+            ->select('staffid')
+            ->from(db_prefix() . 'staff')
+            ->where('active', 1)
+            ->order_by('staffid', 'ASC')
+            ->limit(1)
+            ->get()
+            ->row_array();
+
+        return !empty($staffRow['staffid']) ? (int) $staffRow['staffid'] : 0;
+    }
+
+    private function resolve_doctor_for_appointment(int $appointment_id): int
+    {
+        if ($appointment_id > 0) {
+            $doctorRow = $this->db
+                ->select('staff')
+                ->from(db_prefix() . 'appointment_treatment')
+                ->where('appointment_id', $appointment_id)
+                ->order_by('id', 'DESC')
+                ->limit(1)
+                ->get()
+                ->row_array();
+
+            if (!empty($doctorRow['staff'])) {
+                return (int) $doctorRow['staff'];
+            }
+        }
+
+        return $this->resolve_default_doctor_id();
+    }
+    private function resolve_patient_created_branch_doctor_context(int $patient_id): array
+    {
+        $context = [
+            'doctor_id' => 0,
+            'doctor_name' => '',
+        ];
+
+        if ($patient_id <= 0) {
+            return $context;
+        }
+
+        $branchId = 0;
+        if ($this->db->field_exists('branch_id', db_prefix() . 'clients')) {
+            $clientRow = $this->db
+                ->select('branch_id')
+                ->from(db_prefix() . 'clients')
+                ->where('userid', $patient_id)
+                ->limit(1)
+                ->get()
+                ->row_array();
+
+            $branchId = !empty($clientRow['branch_id']) ? (int) $clientRow['branch_id'] : 0;
+        }
+
+        if ($branchId <= 0 && $this->db->field_exists('branch_id', db_prefix() . 'contacts')) {
+            $contactRow = $this->db
+                ->select('branch_id')
+                ->from(db_prefix() . 'contacts')
+                ->where('userid', $patient_id)
+                ->order_by('is_primary', 'DESC')
+                ->order_by('id', 'ASC')
+                ->limit(1)
+                ->get()
+                ->row_array();
+
+            $branchId = !empty($contactRow['branch_id']) ? (int) $contactRow['branch_id'] : 0;
+        }
+
+        if ($branchId <= 0 || !$this->db->table_exists(db_prefix() . 'branch')) {
+            return $context;
+        }
+
+        $branchRow = $this->db
+            ->select('staff_id')
+            ->from(db_prefix() . 'branch')
+            ->where('branchid', $branchId)
+            ->limit(1)
+            ->get()
+            ->row_array();
+
+        $doctorId = !empty($branchRow['staff_id']) ? (int) $branchRow['staff_id'] : 0;
+        if ($doctorId <= 0) {
+            return $context;
+        }
+
+        $context['doctor_id'] = $doctorId;
+        if (function_exists('get_staff_full_name')) {
+            $context['doctor_name'] = trim((string) get_staff_full_name($doctorId));
+        }
+
+        return $context;
+    }
+
+    
+    private function resolve_latest_patient_appointment_context(int $patient_id): array
+    {
+        $context = [
+            'appointment_id' => 0,
+            'appointment_type_id' => 0,
+            'doctor_id' => 0,
+            'doctor_name' => '',
+        ];
+
+        if ($patient_id <= 0) {
+            return $context;
+        }
+
+        $contactRows = $this->db
+            ->select('id')
+            ->from(db_prefix() . 'contacts')
+            ->where('userid', $patient_id)
+            ->get()
+            ->result_array();
+
+        $contactIds = array_values(array_filter(array_map('intval', array_column($contactRows, 'id'))));
+
+        if (empty($contactIds)) {
+            return $context;
+        }
+
+        $appointment = $this->db
+            ->select('id, type_id, date')
+            ->from(db_prefix() . 'appointly_appointments')
+            ->where_in('contact_id', $contactIds)
+            ->order_by('date', 'DESC')
+            ->order_by('id', 'DESC')
+            ->limit(1)
+            ->get()
+            ->row_array();
+
+        if (empty($appointment['id'])) {
+            return $context;
+        }
+
+        $context['appointment_id'] = (int) $appointment['id'];
+        $context['appointment_type_id'] = !empty($appointment['type_id']) ? (int) $appointment['type_id'] : 0;
+
+        $context['doctor_id'] = $this->resolve_doctor_for_appointment($context['appointment_id']);
+        if ($context['doctor_id'] > 0 && function_exists('get_staff_full_name')) {
+            $context['doctor_name'] = trim((string) get_staff_full_name($context['doctor_id']));
+        }
+
+        return $context;
     }
 
     public function patient_history_pdf($patient_id = 0)
@@ -505,7 +743,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
                 if ($file_name === '') {
                     continue;
                 }
-                $file_url = resolve_patient_file_url($patient_id, $file_name);
+                $file_url = base_url('uploads/clients/' . $patient_id . '/' . $file_name);
                 $file_ext = strtolower((string) pathinfo($file_name, PATHINFO_EXTENSION));
                 $is_image = in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'], true);
                 $preview = html_escape($file_url);
@@ -697,6 +935,11 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         $doctor_id           = (int)$this->input->get('doctor_id');
         $lang                = $this->input->get('lang');
 
+
+        if ($doctor_id <= 0 && $appointment_id > 0) {
+            $doctor_id = $this->resolve_doctor_for_appointment($appointment_id);
+        }
+
         // 1️⃣ Get template
         $pdf = $this->db->where('pdf_id',$pdf_id)
                         ->get('tblnabh_master')
@@ -733,7 +976,7 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
 
 
 
-        // 2️⃣ Get saved submission
+        /*// 2️⃣ Get saved submission
         $this->db->where('nabh_pdf_id',$pdf_id);
         $this->db->where('patient_id',$patient_id);
         $this->db->where('appointment_id',$appointment_id);
@@ -741,7 +984,18 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
 
         $row = $this->db->order_by('id','DESC')
                         ->get(db_prefix().'nabh_form_submissions')
-                        ->row_array();
+                        ->row_array();*/
+
+        // 2️⃣ Get saved submission for this appointment first,
+        // then fallback to the latest submission of the same patient + appointment type.
+        $row = $this->find_submission_for_prefill(
+            $pdf_id,
+            $patient_id,
+            $appointment_id,
+            $appointment_type_id,
+            $lang
+        );
+
 
         $saved = [];
         if ($row && !empty($row['form_data_json'])) {
@@ -884,6 +1138,10 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         $doctor_id     = (int)$payload['doctor_id'];
         $lang          = $payload['lang'];
 
+        if ($doctor_id <= 0 && $appointment_id > 0) {
+            $doctor_id = $this->resolve_doctor_for_appointment($appointment_id);
+        }
+
         $formData      = is_array($payload['form_data']) ? $payload['form_data'] : [];
 
        if ($doctor_name === '' && $doctor_id > 0 && function_exists('get_staff_full_name')) {
@@ -957,6 +1215,48 @@ $rx_start_date = (string) ($primary_contact->rx_str_date ?? '');
         }
 
         exit;
+    }
+
+ private function find_submission_for_prefill(
+        int $pdf_id,
+        int $patient_id,
+        int $appointment_id,
+        int $appointment_type_id,
+        string $lang
+    ): ?array
+    {
+        if ($pdf_id <= 0 || $patient_id <= 0) {
+            return null;
+        }
+
+        $table = db_prefix() . 'nabh_form_submissions';
+
+        $current = $this->db
+            ->where('nabh_pdf_id', $pdf_id)
+            ->where('patient_id', $patient_id)
+            ->where('appointment_id', $appointment_id)
+            ->where('lang', $lang)
+            ->order_by('id', 'DESC')
+            ->get($table)
+            ->row_array();
+
+        if (!empty($current)) {
+            return $current;
+        }
+
+        if ($appointment_type_id <= 0) {
+            return null;
+        }
+
+        return $this->db
+            ->where('nabh_pdf_id', $pdf_id)
+            ->where('patient_id', $patient_id)
+            ->where('appointment_type_id', $appointment_type_id)
+            ->where('lang', $lang)
+            ->order_by('updated_at', 'DESC')
+            ->order_by('id', 'DESC')
+            ->get($table)
+            ->row_array();
     }
 
 
@@ -1083,6 +1383,12 @@ public function print_pdf()
     $doctor_id      = (int)($req['doctor_id'] ?? 0);
     $lang           = (($req['lang'] ?? 'en') === 'gu') ? 'gu' : 'en';
 
+    if ($doctor_id <= 0 && $appointment_id > 0) {
+        $doctor_id = $this->resolve_doctor_for_appointment($appointment_id);
+        $req['doctor_id'] = $doctor_id;
+    }
+
+
     if (empty($req['doctor_name']) && $doctor_id > 0 && function_exists('get_staff_full_name')) {
         $req['doctor_name'] = trim((string)get_staff_full_name($doctor_id));
     }
@@ -1149,21 +1455,31 @@ public function print_pdf()
     if (!is_array($saved)) $saved = [];
 
     if (empty($saved)) {
-        $this->db->where('nabh_pdf_id', $nabh_pdf_id);
-        $this->db->where('appointment_id', $appointment_id);
-        $this->db->where('lang', $lang);
-        $this->db->order_by('id', 'DESC');
-        $row = $this->db->get(db_prefix() . 'nabh_form_submissions')->row();
+            $row = $this->find_submission_for_prefill(
+            $nabh_pdf_id,
+            (int) ($req['patient_id'] ?? 0),
+            $appointment_id,
+            (int) ($req['appointment_type_id'] ?? 0),
+            $lang
+        );
 
-        if ($row && !empty($row->form_data_json)) {
-            $decoded = json_decode($row->form_data_json, true);
+        if (!empty($row) && !empty($row['form_data_json'])) {
+            $decoded = json_decode($row['form_data_json'], true);
+
             if (is_array($decoded)) $saved = $decoded;
         }
-        if (empty($req['patient_name']) && $row && !empty($row->patient_name)) $req['patient_name'] = $row->patient_name;
-        if (empty($req['doctor_name'])  && $row && !empty($row->doctor_name))  $req['doctor_name']  = $row->doctor_name;
+       /* if (empty($req['patient_name']) && $row && !empty($row->patient_name)) $req['patient_name'] = $row->patient_name;
+        if (empty($req['doctor_name'])  && $row && !empty($row->doctor_name))  $req['doctor_name']  = $row->doctor_name;*/
 
-        if ($doctor_id <= 0 && $row && !empty($row->doctor_id)) {
-            $doctor_id = (int) $row->doctor_id;
+        if (empty($req['patient_name']) && !empty($row['patient_name'])) $req['patient_name'] = $row['patient_name'];
+        if (empty($req['doctor_name'])  && !empty($row['doctor_name']))  $req['doctor_name']  = $row['doctor_name'];
+
+/*        if ($doctor_id <= 0 && $row && !empty($row->doctor_id)) {
+            $doctor_id = (int) $row->doctor_id;*/
+                    
+            if ($doctor_id <= 0 && !empty($row['doctor_id'])) {
+            $doctor_id = (int) $row['doctor_id'];
+
             $req['doctor_id'] = $doctor_id;
         }
     }
@@ -1243,6 +1559,34 @@ public function print_pdf()
     }
 
     return $this->render_pdf_with_dompdf($html, $filename);
+
+
+    $saved = json_decode($submission['form_data_json'] ?? '{}', true);
+if (!is_array($saved)) {
+    $saved = [];
+}
+
+// doctor signature from doctor master table if needed
+if (empty($saved['doctor_signature_image']) && !empty($submission['doctor_id'])) {
+    $saved['doctor_signature_image'] = $this->resolve_doctor_signature_image((int) $submission['doctor_id']);
+}
+
+// patient signature normalize if you store raw base64
+if (!empty($saved['patient_signature_image'])) {
+    $saved['patient_signature_image'] = $this->normalize_signature_src_for_pdf((string) $saved['patient_signature_image']);
+}
+if (!empty($saved['doctor_signature_image'])) {
+    $saved['doctor_signature_image'] = $this->normalize_signature_src_for_pdf((string) $saved['doctor_signature_image']);
+}
+
+$html = file_get_contents($templatePath);
+$html = $this->set_form_values_for_pdf($html, $saved);
+
+if ($lang === 'gu') {
+    return $this->render_pdf_with_mpdf($html, $filename);
+}
+
+return $this->render_pdf_with_dompdf($html, $filename);
 }
 
 
@@ -1331,6 +1675,31 @@ private function normalize_patient_signature_value(string $signatureValue): stri
 
     return $html . $block;
 }*/
+
+private function local_path_to_site_url(string $path): string
+{
+    $path = trim($path);
+    if ($path === '') {
+        return '';
+    }
+
+    $realPath = realpath($path);
+    if ($realPath === false || !file_exists($realPath)) {
+        return '';
+    }
+
+    $normalizedRoot = str_replace('\\', '/', rtrim(realpath(FCPATH), DIRECTORY_SEPARATOR));
+    $normalizedPath = str_replace('\\', '/', $realPath);
+
+    if (strpos($normalizedPath, $normalizedRoot) !== 0) {
+        return '';
+    }
+
+    $relative = ltrim(substr($normalizedPath, strlen($normalizedRoot)), '/');
+    return rtrim(site_url(), '/') . '/' . $relative;
+}
+
+
 private function resolve_doctor_signature_image(int $doctor_id): string
 {
     if ($doctor_id <= 0) {
@@ -1349,8 +1718,10 @@ private function resolve_doctor_signature_image(int $doctor_id): string
         $candidate = FCPATH . "uploads/staff_profile_images/" . $doctor_id . "/doctor_sign/" . basename($doctorSignFile);
         if (file_exists($candidate)) {
             // Return site URL (JS/browser use) — normalize_signature_src_for_pdf converts to file:// for PDF
-            $relative = str_replace(FCPATH, "", $candidate);
-            return rtrim(site_url(), "/") . "/" . ltrim(str_replace(DIRECTORY_SEPARATOR, "/", $relative), "/");
+            $url = $this->local_path_to_site_url($candidate);
+            if ($url !== '') {
+                return $url;
+            }
         }
     }
 
@@ -1368,8 +1739,8 @@ private function resolve_doctor_signature_image(int $doctor_id): string
         return filemtime($b) <=> filemtime($a);
     });
 
-    $relative = str_replace(FCPATH, '', $files[0]);
-    return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+    $url = $this->local_path_to_site_url($files[0]);
+    return $url !== '' ? $url : '';
 }
 
 
@@ -1398,8 +1769,10 @@ private function resolve_doctor_profile_image(int $doctor_id): string
 
         foreach ($preferred as $candidate) {
             if (file_exists($candidate)) {
-                $relative = str_replace(FCPATH, '', $candidate);
-                return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
+                $url = $this->local_path_to_site_url($candidate);
+                if ($url !== '') {
+                    return $url;
+                }
             }
         }
     }
@@ -1417,9 +1790,9 @@ private function resolve_doctor_profile_image(int $doctor_id): string
         return filemtime($b) <=> filemtime($a);
     });
 
-    $relative = str_replace(FCPATH, '', $files[0]);
-    return rtrim(site_url(), '/') . '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $relative), '/');
-}
+       $url = $this->local_path_to_site_url($files[0]);
+    return $url !== '' ? $url : '';
+ }
 
 
    private function apply_saved_to_html_for_pdf($html, array $saved)
@@ -1609,7 +1982,7 @@ private function apply_party_defaults_for_pdf(DOMXPath $xpath, array $saved): ar
     return $saved;
 }
 
-private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, string $doctorSignImage, string $patientSignImage): void
+/*private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, string $doctorSignImage, string $patientSignImage): void
 {
     if ($doctorSignImage === '' && $patientSignImage === '') {
         return;
@@ -1637,7 +2010,7 @@ private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved, s
            // $img->setAttribute('src', $patientSignImage);
         }
     }
-}
+}*/
 
 private function normalize_signature_src_for_pdf(string $src): string
 {
@@ -1646,50 +2019,149 @@ private function normalize_signature_src_for_pdf(string $src): string
         return '';
     }
 
-    // base64 data URI — pass through directly (works in both Dompdf and mPDF)
-    if (strpos($src, 'data:image/') === 0) {
+    // Already base64
+    if (stripos($src, 'data:image/') === 0) {
         return $src;
     }
 
-    // Already a file:// path — pass through
-    if (strpos($src, 'file://') === 0) {
+    // Full URL
+    if (preg_match('~^https?://~i', $src)) {
         return $src;
     }
 
-    // Relative path starting with /uploads/
+    // /uploads/...
     if (strpos($src, '/uploads/') === 0) {
-        $candidate = FCPATH . ltrim($src, '/');
-        if (file_exists($candidate)) {
-            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
+        $localPath = FCPATH . ltrim($src, '/');
+        if (file_exists($localPath)) {
+            return $localPath;
         }
+        return rtrim(site_url(), '/') . $src;
     }
 
-    // Absolute URL starting with the site base (http:// or https://)
-    // resolve_doctor_signature_image() returns site_url()-based URLs — convert to file://
-    $siteBase = rtrim(site_url(), '/');
-    if (strpos($src, $siteBase) === 0) {
-        $relative = ltrim(substr($src, strlen($siteBase)), '/');
-        $candidate = FCPATH . $relative;
-        if (file_exists($candidate)) {
-            return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
+    // uploads/...
+    if (strpos($src, 'uploads/') === 0) {
+        $localPath = FCPATH . ltrim($src, '/');
+        if (file_exists($localPath)) {
+            return $localPath;
         }
+        return rtrim(site_url(), '/') . '/' . ltrim($src, '/');
     }
 
-    // Fallback: any http/https URL — try to map to local file via FCPATH
-    if (strpos($src, 'http://') === 0 || strpos($src, 'https://') === 0) {
-        // Strip scheme + host to get path portion
-        $parsed = parse_url($src);
-        if (!empty($parsed['path'])) {
-            $candidate = FCPATH . ltrim($parsed['path'], '/');
-            if (file_exists($candidate)) {
-                return 'file://' . str_replace(DIRECTORY_SEPARATOR, '/', realpath($candidate));
+    // Absolute local file path
+    if (file_exists($src)) {
+        return $src;
+    }
+
+    // Relative file path from project public root
+    $localPath = FCPATH . ltrim($src, '/');
+    if (file_exists($localPath)) {
+        return $localPath;
+    }
+
+    return '';
+}
+
+private function apply_signature_images_for_pdf(DOMXPath $xpath, array $saved): void
+{
+    $map = [
+        'patient_signature_image' => $saved['patient_signature_image'] ?? '',
+        'doctor_signature_image'  => $saved['doctor_signature_image'] ?? '',
+    ];
+
+    foreach ($map as $key => $rawValue) {
+        $normalizedVal = $this->normalize_signature_src_for_pdf((string) $rawValue);
+        if ($normalizedVal === '') {
+            continue;
+        }
+
+        foreach ($xpath->query("//img[@name='{$key}']") as $img) {
+            $img->setAttribute('src', $normalizedVal);
+        }
+
+        foreach ($xpath->query("//img[@id='{$key}']") as $img) {
+            $img->setAttribute('src', $normalizedVal);
+        }
+    }
+}
+
+private function set_form_values_for_pdf(string $html, array $saved): string
+{
+    libxml_use_internal_errors(true);
+
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $xpath = new DOMXPath($dom);
+
+    foreach ($saved as $key => $val) {
+        $val = is_scalar($val) ? (string) $val : '';
+
+        foreach ($xpath->query("//*[@name='{$key}']") as $node) {
+            $tag = strtolower($node->nodeName);
+
+            if ($tag === 'input') {
+                $type = strtolower((string) $node->getAttribute('type'));
+
+                if ($type === 'checkbox') {
+                    ((string) $val === '1' || strtolower($val) === 'true')
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } elseif ($type === 'radio') {
+                    ((string) $node->getAttribute('value') === (string) $val)
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } else {
+                    $node->setAttribute('value', $val);
+                }
+            } elseif ($tag === 'textarea') {
+                while ($node->firstChild) {
+                    $node->removeChild($node->firstChild);
+                }
+                $node->appendChild($dom->createTextNode($val));
             }
         }
-        // Cannot map to local — return as-is (Dompdf isRemoteEnabled will handle it)
-        return $src;
+
+        foreach ($xpath->query("//*[@id='{$key}']") as $node) {
+            $tag = strtolower($node->nodeName);
+
+            if ($tag === 'input') {
+                $type = strtolower((string) $node->getAttribute('type'));
+
+                if ($type === 'checkbox') {
+                    ((string) $val === '1' || strtolower($val) === 'true')
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } elseif ($type === 'radio') {
+                    ((string) $node->getAttribute('value') === (string) $val)
+                        ? $node->setAttribute('checked', 'checked')
+                        : $node->removeAttribute('checked');
+                } else {
+                    $node->setAttribute('value', $val);
+                }
+            } elseif ($tag === 'textarea') {
+                while ($node->firstChild) {
+                    $node->removeChild($node->firstChild);
+                }
+                $node->appendChild($dom->createTextNode($val));
+            }
+        }
     }
 
-    return $src;
+    // Apply signature images
+    $this->apply_signature_images_for_pdf($xpath, $saved);
+
+    // Hide submit bar in PDF
+    $submitBars = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' submit-bar ')]");
+    if ($submitBars && $submitBars->length > 0) {
+        foreach ($submitBars as $bar) {
+            $existingStyle = $bar->getAttribute('style');
+            $bar->setAttribute('style', trim($existingStyle . ';display:none !important;'));
+        }
+    }
+
+    $out = $dom->saveHTML();
+    libxml_clear_errors();
+
+    return $out;
 }
 
 private function extract_signature_image_value(array $saved, string $party): string
@@ -1923,36 +2395,34 @@ private function is_signature_related_context(string $context): bool
 private function render_pdf_with_mpdf($html, $filename)
 {
     $autoload = APPPATH . 'vendor/autoload.php';
-    if (!file_exists($autoload)) show_error('Composer autoload not found: ' . $autoload);
+    if (!file_exists($autoload)) {
+        show_error('Composer autoload not found: ' . $autoload);
+    }
     require_once $autoload;
 
-    // ✅ Font directory (local)
     $fontDirPath = FCPATH . 'assets/fonts/';
-    $fontFile    = $fontDirPath . 'NotoSansGujarati-Regular.ttf';
+    if (!is_dir($fontDirPath)) {
+        show_error('Font folder not found: ' . $fontDirPath);
+    }
 
-    if (!is_dir($fontDirPath)) show_error('Font folder not found: ' . $fontDirPath);
-    if (!file_exists($fontFile)) show_error('Font file not found: ' . $fontFile);
-
-    // ✅ Merge defaults + custom font
     $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
-    $fontDirs      = $defaultConfig['fontDir'];
+    $fontDirs = $defaultConfig['fontDir'];
 
     $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
-    $fontData          = $defaultFontConfig['fontdata'];
+    $fontData = $defaultFontConfig['fontdata'];
 
     $fontDirs[] = $fontDirPath;
 
-    // key = notogujarati (same name used in CSS)
     $fontData['notogujarati'] = [
         'R' => 'NotoSansGujarati-Regular.ttf',
-        // Optional if you have bold:
-         'B' => 'NotoSansGujarati-Bold.ttf',
+        'B' => 'NotoSansGujarati-Bold.ttf',
     ];
 
-$fontData['liberationsans'] = [
+    $fontData['liberationsans'] = [
         'R' => 'LiberationSans-Regular.ttf',
         'B' => 'LiberationSans-Bold.ttf',
     ];
+
     $mpdf = new \Mpdf\Mpdf([
         'mode' => 'utf-8',
         'format' => 'A4',
@@ -1960,30 +2430,45 @@ $fontData['liberationsans'] = [
         'margin_right' => 10,
         'margin_top' => 10,
         'margin_bottom' => 10,
-
-        'fontDir'   => $fontDirs,
-        'fontdata'  => $fontData,
+        'fontDir' => $fontDirs,
+        'fontdata' => $fontData,
         'default_font' => 'notogujarati',
-        'tempDir' => APPPATH . 'cache/mpdf', // ✅ make sure writable
+        'tempDir' => APPPATH . 'cache/mpdf',
     ]);
 
-    // ✅ THIS FIXES BROKEN GUJARATI WORDS / SHAPING
     $mpdf->autoScriptToLang = true;
-    $mpdf->autoLangToFont   = true;
-
-    // Speed/stability
+    $mpdf->autoLangToFont = true;
     $mpdf->setAutoTopMargin = 'stretch';
     $mpdf->setAutoBottomMargin = 'stretch';
-    $html = $this->mpdf_convert_checkboxes_to_symbols($html);
-    $html = $this->replace_text_inputs_with_underline($html);
+    $mpdf->shrink_tables_to_fit = 0;
 
-    $mpdf->WriteHTML($html);
+    $forceCss = '<style>
+        @page { margin: 10mm; }
+        body, table, tr, td, th, p, div, span, h1, h2, h3, h4, h5, h6 {
+            font-family: notogujarati !important;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>';
 
-    // Inline view in browser
-    $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
-    exit;
+    if (stripos($html, '</head>') !== false) {
+        $html = str_ireplace('</head>', $forceCss . '</head>', $html);
+    } else {
+        $html = $forceCss . $html;
+    }
+
+    $html = preg_replace('~\bpage\s*\{~i', '@page {', $html);
+
+    $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::DEFAULT_MODE);
+
+    $pdfBinary = $mpdf->Output($filename, \Mpdf\Output\Destination::STRING_RETURN);
+
+    return $this->output
+        ->set_content_type('application/pdf')
+        ->set_header('Content-Disposition: inline; filename="' . $filename . '"')
+        ->set_output($pdfBinary);
 }
-
 
 private function mpdf_convert_checkboxes_to_symbols($html)
 {
@@ -2045,15 +2530,17 @@ private function replace_text_inputs_with_underline($html)
         return '<span class="mpdf-uline" style="width:' . $width . ';">' . $safeValue . '</span>';
     }, $html);
 }
+
 private function render_pdf_with_dompdf(string $html, string $filename)
 {
     $autoload = APPPATH . 'vendor/autoload.php';
-    if (!file_exists($autoload)) show_error('Composer autoload not found: ' . $autoload);
+    if (!file_exists($autoload)) {
+        show_error('Composer autoload not found: ' . $autoload);
+    }
     require_once $autoload;
 
     $options = new \Dompdf\Options();
     $options->set('isHtml5ParserEnabled', true);
-    // Allow loading local file:// images (signatures stored on disk)
     $options->set('isRemoteEnabled', true);
     $options->set('defaultFont', 'DejaVu Sans');
     $options->set('fontSubsettingEnabled', true);
