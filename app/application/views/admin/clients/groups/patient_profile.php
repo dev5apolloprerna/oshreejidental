@@ -1,9 +1,26 @@
 <?php
 
 $CI = &get_instance();
-// Loads resolve_patient_file_url(), which transparently falls back to a
-// patient's pre-merger id when looking up x-ray/image files on disk.
-$CI->load->helper('patient_files');
+
+if (!function_exists('resolve_branch_upload_url')) {
+    function resolve_branch_upload_url($rel_dir, $new_id, $old_id, $filename, $fallback_url = null)
+    {
+        if ($filename === '' || $filename === null) {
+            return $fallback_url;
+        }
+        $new_path = FCPATH . 'uploads/' . $rel_dir . '/' . $new_id . '/' . $filename;
+        if (file_exists($new_path)) {
+            return base_url('uploads/' . $rel_dir . '/' . $new_id . '/' . $filename);
+        }
+        if ((int) $old_id > 0) {
+            $old_path = FCPATH . 'uploads/' . $rel_dir . '/' . $old_id . '/' . $filename;
+            if (file_exists($old_path)) {
+                return base_url('uploads/' . $rel_dir . '/' . $old_id . '/' . $filename);
+            }
+        }
+        return $fallback_url;
+    }
+}
 
 // $CI->db->select(db_prefix() . 'appointly_appointments.*,'.db_prefix().'staff.staffid,'.db_prefix().'staff.firstname,'.db_prefix().'staff.lastname,'.db_prefix() . 'staff.profile_image');
 // $CI->db->where('contact_id', $contact->id);
@@ -54,8 +71,6 @@ $CI->db->order_by(db_prefix() . 'tasks.id', 'desc');
 $lab_work_tasks = $CI->db->get(db_prefix() . 'tasks')->result_array();
 
 
-$CI->db->where('role', '1');
-$CI->db->or_where('admin', '1');
 $staff = $CI->db->get(db_prefix() . 'staff')->result_array();
 
 // new code start 
@@ -899,7 +914,16 @@ i.fa.fa-circle.text-danger-glow.blink {
                         <div class="row profile_top">
                             <div class="col-lg-3 person_img">
                                 <figure>
-                                    <?php $user_image_path = $contact->profile_image != '' ?base_url('uploads/client_profile_images/' . $contact->id . '/thumb_' . $contact->profile_image) : base_url('assets/images/user.jpg');
+                                    <?php
+                                    $user_image_path = $contact->profile_image != ''
+                                        ? resolve_branch_upload_url(
+                                            'client_profile_images',
+                                            $contact->id,
+                                            $contact->tbl_uniq_id ?? 0,
+                                            'thumb_' . $contact->profile_image,
+                                            base_url('assets/images/user.jpg')
+                                          )
+                                        : base_url('assets/images/user.jpg');
                                     ?>
                                     <img src="<?php echo $user_image_path;?>" alt="Person Image">
                                 </figure>
@@ -988,7 +1012,15 @@ i.fa.fa-circle.text-danger-glow.blink {
                             if (!empty($xray_file) && is_array($xray_file)) {
                                 foreach ($xray_file as $file) {
                                     if ($file !== null && isset($file->file_name)) {
-                                    $image_path = resolve_patient_file_url($client->userid, $file->file_name);
+                                    $image_path = resolve_branch_upload_url(
+                                        'clients',
+                                        $client->userid,
+                                        $client->tbl_uniq_id ?? 0,
+                                        $file->file_name
+                                    );
+                                    if ($image_path === null) {
+                                        continue;
+                                    }
                                     $file_extension = pathinfo($image_path, PATHINFO_EXTENSION);
                                     // Check if the file extension is one of the allowed image formats
                                     if (in_array($file_extension, ['jpg', 'jpeg', 'png'])) { ?>
@@ -2288,5 +2320,3 @@ function openNabhViewer(url){
 }
 
 </script>
-
-

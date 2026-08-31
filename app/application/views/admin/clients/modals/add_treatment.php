@@ -155,10 +155,11 @@ function add_existing_treatment(item, index, assignLog) {
 
     table_row += '<td></td>';
     table_row += '<td class="bold descriptions"><textarea name="existing_items[' + item.id + '][treatment]" class="form-control" rows="5">' + item.treatment + '</textarea></td>';
-    table_row += '<td><div class="row appoinment_dr_name"><div class="col-xl-7 col-lg-7 dr_name"><select name="existing_items[' + item.id + '][staff]" class="form-control" data-appointment-id="' + item.appointment_id + '" data-item-id="' + assignLog.id + '" onchange="alert(\'Are you sure you want to update the assignee?\')">';
+    var assignLogId = assignLog ? assignLog.id : item.id;
+    table_row += '<td><div class="row appoinment_dr_name"><div class="col-xl-7 col-lg-7 dr_name"><select name="existing_items[' + item.id + '][staff]" class="form-control" data-appointment-id="' + item.appointment_id + '" data-item-id="' + assignLogId + '">';
 
     $.each(staffs, function(i, stf) {
-        var selected = (stf.staffid == item.staff) ? ' selected' : '';
+        var selected = (String(stf.staffid) === String(item.staff)) ? ' selected' : '';
         table_row += '<option value="' + stf.staffid + '"' + selected + '>' + stf.firstname + ' ' + stf.lastname + '</option>';
     });
 
