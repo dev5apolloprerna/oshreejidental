@@ -1,6 +1,9 @@
 <?php
 
 $CI = &get_instance();
+// Loads resolve_patient_file_url(), which transparently falls back to a
+// patient's pre-merger id when looking up x-ray/image files on disk.
+$CI->load->helper('patient_files');
 
 // $CI->db->select(db_prefix() . 'appointly_appointments.*,'.db_prefix().'staff.staffid,'.db_prefix().'staff.firstname,'.db_prefix().'staff.lastname,'.db_prefix() . 'staff.profile_image');
 // $CI->db->where('contact_id', $contact->id);
@@ -37,55 +40,11 @@ if (!$contact) {
     return;
 }
  // new code end
-$medicalHistoryDefaults = array_fill_keys([
-    'occupation', 'allergies', 'medication', 'tobaco_past',
-    'tobaco_present', 'alcohol_past', 'alcohol_present', 'marital_status',
-    'medical_history', 'surgical_history', 'enviro_factors', 'risk_factors',
-    'chief_complaint', 'dental_history', 'diagnosis', 'disease',
-    'clinical_findings', 'current_treatment', 'previous_medication',
-    'current_medication', 'treatment_plan', 'history_comment', 'immediate_text',
-    'planned_text',
-], '');
-$medical_history = (object) array_merge(
-    $medicalHistoryDefaults,
-    isset($medical_history) && is_object($medical_history) ? get_object_vars($medical_history) : []
-);
+$CI->db->select(db_prefix() . 'appointly_appointments.*,');
+$CI->db->from(db_prefix() . 'appointly_appointments');
 
-
-$appointments_table = db_prefix() . 'appointly_appointments';
-/*$attendees_table = db_prefix() . 'appointly_attendees';
-$branchScopeId = function_exists('get_current_staff_branch_scope_id') ? (int) get_current_staff_branch_scope_id() : 0;
-$scopeWhere = '';
-
-if (!is_admin() && function_exists('build_staff_branch_scope_where')) {
-    $scopeWhere = build_staff_branch_scope_where(
-        $appointments_table,
-        'branch_id',
-        'created_by',
-        [$appointments_table . '.id IN (SELECT appointment_id FROM ' . $attendees_table . ' WHERE staff_id={staff_id})']
-    );
-} elseif ($branchScopeId > 0 && $CI->db->field_exists('branch_id', $appointments_table)) {
-    $scopeWhere = 'AND ' . $appointments_table . '.branch_id = ' . $branchScopeId;
-}*/
-
-$CI->db->select($appointments_table . '.*', false);
-$CI->db->from($appointments_table);
-
-$CI->db->where($appointments_table . '.contact_id', $contact->id);
-
-/*if ($scopeWhere !== '') {
-    $CI->db->where(substr($scopeWhere, 4), null, false);
-} elseif (!is_admin()) {
-    $staffId = (int) get_staff_user_id();
-    $CI->db->where($appointments_table . '.id IN (SELECT appointment_id FROM ' . $attendees_table . ' WHERE staff_id=' . $staffId . ')', null, false);
-}
-
-$CI->db->group_by($appointments_table . '.id');*/
-
-$CI->db->order_by($appointments_table . '.date', 'DESC');
-$CI->db->order_by($appointments_table . '.start_hour', 'DESC');
-$CI->db->order_by($appointments_table . '.id', 'DESC');
-
+$CI->db->where('contact_id', $contact->id);
+$CI->db->group_by(db_prefix() . 'appointly_appointments.id');
 $appointments = $CI->db->get()->result_array();
 
 $CI->db->where('rel_id', $client->userid);
@@ -110,13 +69,6 @@ $treatment_rows = [];
 $medicine_rows = [];
 $doctor_rows = [];
 $prescription_table_rows = [];
-$appointment_type_lookup = [];
-
-if (function_exists('get_appointment_types')) {
-    foreach (get_appointment_types() as $appointment_type) {
-        $appointment_type_lookup[(int) $appointment_type['id']] = $appointment_type['type'];
-    }
-}
 
 if (!empty($appointment_ids)) {
     $CI->db->select('appointment_id, treatment, staff');
@@ -168,34 +120,6 @@ if (!empty($appointment_ids)) {
 $staff_lookup = [];
 foreach ($staff as $staff_item) {
     $staff_lookup[(int) $staff_item['staffid']] = trim(($staff_item['firstname'] ?? '') . ' ' . ($staff_item['lastname'] ?? ''));
-}
-
-// The treatment modal can assign any staff member as the doctor, while the
-// appointment dropdown above intentionally contains only role 1/admin staff.
-// Load any assigned doctors missing from that restricted list so historical
-// treatment rows always display the saved doctor's name.
-$assigned_doctor_ids = [];
-foreach ($doctor_rows as $appointment_doctor_ids) {
-    foreach ($appointment_doctor_ids as $doctor_id) {
-        $doctor_id = (int) $doctor_id;
-        if ($doctor_id > 0) {
-            $assigned_doctor_ids[$doctor_id] = $doctor_id;
-        }
-    }
-}
-
-$missing_doctor_ids = array_values(array_diff($assigned_doctor_ids, array_keys($staff_lookup)));
-if (!empty($missing_doctor_ids)) {
-    $CI->db->select('staffid, firstname, lastname');
-    $CI->db->from(db_prefix() . 'staff');
-    $CI->db->where_in('staffid', $missing_doctor_ids);
-
-    foreach ($CI->db->get()->result_array() as $doctor) {
-        $doctor_name = trim(($doctor['firstname'] ?? '') . ' ' . ($doctor['lastname'] ?? ''));
-        if ($doctor_name !== '') {
-            $staff_lookup[(int) $doctor['staffid']] = $doctor_name;
-        }
-    }
 }
 
 $history_labels = [
@@ -1064,7 +988,7 @@ i.fa.fa-circle.text-danger-glow.blink {
                             if (!empty($xray_file) && is_array($xray_file)) {
                                 foreach ($xray_file as $file) {
                                     if ($file !== null && isset($file->file_name)) {
-                                    $image_path = base_url('uploads/clients/' . $client->userid . '/' . $file->file_name);
+                                    $image_path = resolve_patient_file_url($client->userid, $file->file_name);
                                     $file_extension = pathinfo($image_path, PATHINFO_EXTENSION);
                                     // Check if the file extension is one of the allowed image formats
                                     if (in_array($file_extension, ['jpg', 'jpeg', 'png'])) { ?>
@@ -1146,7 +1070,7 @@ i.fa.fa-circle.text-danger-glow.blink {
                                     <div>
                                         <p class="app_date"><i class="fa-regular fa-calendar calendar-icon" aria-hidden="true"></i>
                                         <?php echo date("d/m/y", strtotime($value['date'])) . ' ' .date("H:i A", strtotime($value['start_hour']));?></p>
-                                        <h3><?php echo function_exists('appointly_resolve_subject_for_display') ? appointly_resolve_subject_for_display($value['subject'] ?? '', (int)($value['type_id'] ?? 0), $value['name'] ?? '') : ($value['subject'] ?? ''); ?></h3>
+                                        <h3><?php echo $value['subject'];?></h3>
                                         <p><?php echo $value['description'];?></p>
                                     </div>
                                 </div>
@@ -1254,7 +1178,7 @@ if (!empty($check_prescription_exists)) { ?>
                                 <!--    </select>-->
                                 <!--Patient Consent Model-->
                                 <button class="btn btn-primary add_free_hand_dental" 
-                                    onclick="window.open('<?php echo admin_url('appointly/appointments/patient_signature_form/' . (int)$value['id'] . '/' . (int)$client->userid); ?>', '_blank');"   
+                                    onclick="openSignatureModal(<?php echo $value['id']; ?>, <?php echo $client->userid; ?>)"  
                                     style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">Patient Consent
                                 </button>
 
@@ -1697,7 +1621,6 @@ if (!empty($check_prescription_exists)) { ?>
                                         <th style="width: 60px;">#</th>
                                         <th style="width: 120px;">Date</th>
                                         <th style="width: 120px;">Appointment ID</th>
-                                        <th style="width: 180px;">Appointment Type</th>
                                         <th>Treatments</th>
                                         <th>Medicines</th>
                                         <th style="width: 180px;">Doctor</th>
@@ -1723,12 +1646,6 @@ if (!empty($check_prescription_exists)) { ?>
                                                 <td><?php echo (int) ($index + 1); ?></td>
                                                 <td><?php echo !empty($appointment['date']) ? date('d/m/Y', strtotime($appointment['date'])) : '-'; ?></td>
                                                 <td><?php echo $appointment_id ?: '-'; ?></td>
-                                                <td><?php
-                                                    $appointment_type_id = (int) ($appointment['type_id'] ?? 0);
-                                                    echo !empty($appointment_type_lookup[$appointment_type_id])
-                                                        ? e($appointment_type_lookup[$appointment_type_id])
-                                                        : '-';
-                                                ?></td>
                                                 <td><?php echo !empty($treatments) ? e(implode(', ', $treatments)) : '-'; ?></td>
                                                 <td><?php echo !empty($medicines) ? e(implode(', ', $medicines)) : '-'; ?></td>
                                                 <td><?php echo !empty($doctor_names) ? e(implode(', ', $doctor_names)) : '-'; ?></td>
@@ -1736,7 +1653,7 @@ if (!empty($check_prescription_exists)) { ?>
                                         <?php } ?>
                                     <?php } else { ?>
                                         <tr>
-                                            <td colspan="7" class="text-center">No treatment records available.</td>
+                                            <td colspan="6" class="text-center">No treatment records available.</td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -1956,9 +1873,6 @@ if (!empty($check_prescription_exists)) { ?>
     
     
     <script>
-if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
-    window.$ = window.jQuery;
-}
 document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('paste', function(event) {
         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -2048,9 +1962,9 @@ function open_patient_appointment_create_modal()
 
 <script>
 
-if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
-  window.$ = window.jQuery;
-}
+
+
+
  // window.openNabhFormsModal = function(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
   function openNabhFormsModal(appointmentTypeId, appointmentId, patientId, doctorId, patientName, doctorName) {
     if (typeof window.__openNabhFormsModalImpl === 'function') {
@@ -2115,7 +2029,6 @@ if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
         var doctorId = parseInt(row.doctor_id || '0', 10);
         var doctorName = row.doctor_name || '';
         var patientName = row.patient_name || (window.__ALL_NABH_META__.patient_name || '');
-        var appointmentId = parseInt(row.appointment_id || '0', 10);
 
         /*var viewUrl = admin_url + 'nabh/form/' + row.form_id
           + '?lang=' + encodeURIComponent(selectedLang)
@@ -2134,14 +2047,10 @@ if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
  var formNameHtml = escapeHtml(row.form_name || '-');
 
         var buildOpenBtn = function(langCode, label, btnClass) {
-            if (!appointmentId) {
-            return '<button class="btn btn-xs ' + btnClass + '" disabled="disabled" title="No appointment found for this patient.">' + label + '</button>';
-          }
-
           var viewUrl = admin_url + 'nabh/form/' + row.form_id
             + '?lang=' + encodeURIComponent(langCode)
             + '&nabh_pdf_id=' + encodeURIComponent(row.form_id)
-            + '&appointment_id=' + encodeURIComponent(appointmentId)
+            + '&appointment_id=' + encodeURIComponent(row.appointment_id)
             + '&appointment_type_id=' + encodeURIComponent(row.appointment_type_id || 0)
             + '&patient_id=' + encodeURIComponent(patientId)
             + '&doctor_id=' + encodeURIComponent(doctorId)
@@ -2151,14 +2060,11 @@ if (typeof window.$ !== 'function' && typeof window.jQuery === 'function') {
         };
 
         var buildPdfBtn = function(langCode, label) {
-
-        if (!appointmentId) {
-            return '<button class="btn btn-xs btn-default" disabled="disabled" title="No appointment found for this patient."><i class="fa-regular fa-file-pdf"></i> ' + label + '</button>';
-          }
-            var pdfUrl = admin_url + 'nabh/print_pdf'
+          var pdfUrl = admin_url + 'nabh/print_pdf'
             + '?nabh_pdf_id=' + encodeURIComponent(row.form_id)
             + '&lang=' + encodeURIComponent(langCode)
-            + '&appointment_id=' + encodeURIComponent(appointmentId)
+            + '&appointment_id=' + encodeURIComponent(row.appointment_id || 0)
+            + '&appointment_type_id=' + encodeURIComponent(row.appointment_type_id || 0)
             + '&patient_id=' + encodeURIComponent(patientId)
             + '&doctor_id=' + encodeURIComponent(doctorId)
             + '&patient_name=' + encodeURIComponent(patientName)
