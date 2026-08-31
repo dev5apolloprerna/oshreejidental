@@ -4,6 +4,72 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Clients extends AdminController
 {
+    private function resolve_current_patient_id($id, $phone = '')
+{
+    $id = (int) $id;
+    if ($id <= 0) {
+        return 0;
+    }
+ 
+    $exists = $this->db
+        ->select('userid')
+        ->from(db_prefix() . 'clients')
+        ->where('userid', $id)
+        ->get()
+        ->row();
+ 
+    if ($exists) {
+        return (int) $exists->userid;
+    }
+ 
+    $byOldUserid = $this->db
+        ->select('userid')
+        ->from(db_prefix() . 'contacts')
+        ->where('old_userid', $id)
+        ->where('old_userid !=', 0)
+        ->order_by('is_primary', 'DESC')
+        ->order_by('id', 'ASC')
+        ->get()
+        ->row();
+ 
+    if ($byOldUserid && (int) $byOldUserid->userid > 0) {
+        return (int) $byOldUserid->userid;
+    }
+ 
+    $byContactId = $this->db
+        ->select('userid')
+        ->from(db_prefix() . 'contacts')
+        ->where('id', $id)
+        ->get()
+        ->row();
+ 
+    if ($byContactId && (int) $byContactId->userid > 0) {
+        return (int) $byContactId->userid;
+    }
+ 
+    $phone = trim((string) $phone);
+    if ($phone !== '') {
+        $matches = $this->db
+            ->select('userid')
+            ->from(db_prefix() . 'contacts')
+            ->where('phonenumber', $phone)
+            ->get()
+            ->result_array();
+ 
+        $userids = array_values(array_unique(array_map(function ($row) {
+            return (int) $row['userid'];
+        }, $matches)));
+ 
+        if (count($userids) === 1 && $userids[0] > 0) {
+            return $userids[0];
+        }
+    }
+ 
+    return 0;
+}
+ 
+
+
     /* List all clients */
     public function index()
     {
