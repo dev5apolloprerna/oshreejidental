@@ -9332,24 +9332,17 @@ function add_batch_payment() {
       init_selectpicker();
       init_datepicker();
 
-      var $filterByClientSelect = $("#batch-payment-filter");
-      $filterByClientSelect.on("changed.bs.select", function () {
-        if ($filterByClientSelect.val() !== "") {
-          $(".batch_payment_item").each(function () {
-            if ($(this).data("clientid") == $filterByClientSelect.val()) {
-              $(this).find("input, select").prop("disabled", false);
-              $(this).removeClass("hide");
-            } else {
-              $(this).addClass("hide");
-              $(this).find("input, select").prop("disabled", true);
-            }
-          });
-        } else {
-          $(".batch_payment_item").each(function () {
-            $(this).removeClass("hide");
-            $(this).find("input, select").prop("disabled", false);
-          });
-        }
+      var $batchPaymentModal = $("#batch-payment-modal");
+      $batchPaymentModal.find("#batch-payment-filter").on("input search", function () {
+        var query = this.value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+        $batchPaymentModal.find(".batch_payment_item").each(function () {
+          var customer = ($(this).attr("data-client-name") || "")
+            .trim().toLocaleLowerCase().replace(/\s+/g, " ");
+          var matches = customer.indexOf(query) !== -1;
+          $(this).toggleClass("hide", !matches);
+          $(this).find("input, select").prop("disabled", !matches);
+        });
+        
       });
       appValidateForm($("#batch-payment-form"), {});
       $(".batch_payment_item").each(function () {
