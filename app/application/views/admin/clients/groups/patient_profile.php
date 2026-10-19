@@ -1210,7 +1210,7 @@ if (!empty($check_prescription_exists)) { ?>
                                 <!--    </select>-->
                                 <!--Patient Consent Model-->
                                 <button class="btn btn-primary add_free_hand_dental" 
-                                    onclick="openSignatureModal(<?php echo $value['id']; ?>, <?php echo $client->userid; ?>)"  
+                                    onclick="window.open('<?php echo admin_url('appointly/appointments/patient_signature_form/' . (int)$value['id'] . '/' . (int)$client->userid); ?>', '_blank');"
                                     style="border-radius: 31px; font-size: 12px; padding: 5px 5px 6px 9px; text-align: end; margin-top: 8px;">Patient Consent
                                 </button>
 
@@ -1664,6 +1664,7 @@ if (!empty($check_prescription_exists)) { ?>
                                             $appointment_id = (int) ($appointment['id'] ?? 0);
                                             $treatments = !empty($treatment_rows[$appointment_id]) ? array_unique($treatment_rows[$appointment_id]) : [];
                                             $medicines = !empty($medicine_rows[$appointment_id]) ? array_unique($medicine_rows[$appointment_id]) : [];
+                                            $is_cancelled = !empty($appointment['cancelled']);
 
                                             $doctor_names = [];
                                             if (!empty($doctor_rows[$appointment_id])) {
@@ -1674,11 +1675,18 @@ if (!empty($check_prescription_exists)) { ?>
                                                 }
                                             }
                                             ?>
-                                            <tr>
+                                            <tr <?php echo $is_cancelled ? 'style="background:#fff1f2;"' : ''; ?>>
                                                 <td><?php echo (int) ($index + 1); ?></td>
                                                 <td><?php echo !empty($appointment['date']) ? date('d/m/Y', strtotime($appointment['date'])) : '-'; ?></td>
                                                 <td><?php echo $appointment_id ?: '-'; ?></td>
-                                                <td><?php echo !empty($treatments) ? e(implode(', ', $treatments)) : '-'; ?></td>
+                                                <td>
+                                                    <?php if ($is_cancelled) { ?>
+                                                        <span class="label label-danger"><?php echo strtoupper(_l('appointment_cancelled')); ?></span>
+                                                        <?php if (!empty($treatments)) { echo '<br>' . e(implode(', ', $treatments)); } ?>
+                                                    <?php } else { ?>
+                                                        <?php echo !empty($treatments) ? e(implode(', ', $treatments)) : '-'; ?>
+                                                    <?php } ?>
+                                                </td>
                                                 <td><?php echo !empty($medicines) ? e(implode(', ', $medicines)) : '-'; ?></td>
                                                 <td><?php echo !empty($doctor_names) ? e(implode(', ', $doctor_names)) : '-'; ?></td>
                                             </tr>

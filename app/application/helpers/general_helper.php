@@ -669,10 +669,22 @@ function to_sql_date($date, $datetime = false)
             return $date;
         }
 
-        return hooks()->apply_filters(
-            'to_sql_date_formatted',
-            DateTime::createFromFormat($from_format, $date)->format($to_date)
-        );
+        $_date = DateTime::createFromFormat($from_format, $date);
+
+        // createFromFormat failed (e.g. date typed/submitted in a different
+        // format than expected) - fall back to a lenient parse instead of
+        // fatally crashing with "Call to a member function format() on bool".
+        if ($_date === false) {
+            $timestamp = strtotime($date);
+
+            if ($timestamp === false) {
+                return null;
+            }
+
+            return hooks()->apply_filters('to_sql_date_formatted', date($to_date, $timestamp));
+        }
+
+        return hooks()->apply_filters('to_sql_date_formatted', $_date->format($to_date));
     }
 
     if (strpos($date, ' ') === false) {

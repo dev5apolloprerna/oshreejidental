@@ -13,16 +13,21 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-4">
-                        <div class="form-group select-placeholder">
-                            <select id="batch-payment-filter" class="selectpicker" name="client_filter"
+                    <div class="form-group">
+                            <input type="search" id="batch-payment-filter" class="form-control"
+                                placeholder="<?php echo e(_l('batch_payment_filter_by_customer')); ?>"
+                                aria-label="<?php echo e(_l('batch_payment_filter_by_customer')); ?>"
+                                autocomplete="off">
+
+                            <!-- <select id="batch-payment-filter" class="selectpicker" name="client_filter"
                                 data-width="100%"
-                                data-none-selected-text="<?php echo _l('batch_payment_filter_by_customer') ?>">
+                                data-none-selected-text="<?php //echo _l('batch_payment_filter_by_customer') ?>">
                                 <option value=""></option>
-                                <?php foreach ($customers as $customer) { ?>
-                                <option value="<?php echo e($customer->userid); ?>"><?php echo e($customer->company); ?>
+                                <?php //foreach ($customers as $customer) { ?>
+                                <option value="<?php //echo e($customer->userid); ?>"><?php //echo e($customer->company); ?>
                                 </option>
-                                <?php } ?>
-                            </select>
+                                <?php //} ?>
+                            </select> -->
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -47,7 +52,9 @@
                                 <tbody>
                                     <?php foreach ($invoices as $index => $invoice) { ?>
                                     <tr class="batch_payment_item" data-clientid="<?php echo e($invoice->clientid); ?>"
-                                        data-invoiceId="<?php echo $invoice->id ?>">
+                                        data-invoiceId="<?php echo $invoice->id ?>"
+                                        data-client-name="<?php echo e($invoice->company); ?>"
+                                        >
                                         <td>
                                             <a href="<?php echo admin_url('invoices/list_invoices/' . $invoice->id); ?>"
                                                 target="_blank">
